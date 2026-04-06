@@ -11,7 +11,11 @@
 
 ## **"Informe de trabajo: AV1"**
 
-### NutriSense
+### ***Startup:*** NutriSense
+
+### ***Producto:*** NutriSense
+
+![Logo NutriSense](images/nutrisense-logo.png)
 
 ***Relación de integrantes:***
 
