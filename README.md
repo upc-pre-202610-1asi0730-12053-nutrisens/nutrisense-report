@@ -48,166 +48,166 @@ Abril, 2026
 
 [PROJECT REPORT COLLABORATION INSIGHTS](#project-report-collaboration-insights)
 
-[STUDENT OUTCOME](./docs/student-outcome.md#student-outcome)
+[STUDENT OUTCOME](./report/01-student-outcome.md#student-outcome)
 
-[CAPÍTULO I: INTRODUCCIÓN](./docs/1-chapter-I-introduction.md#capítulo-i-introducción)
+[CAPÍTULO I: INTRODUCCIÓN](./report/11-chapter1-introduction.md#capítulo-i-introducción)
 
-- [1.1. Startup Profile](./docs/1-chapter-I-introduction.md#11-startup-profile)
+- [1.1. Startup Profile](./report/11-chapter1-introduction.md#11-startup-profile)
 
-  - [1.1.1. Descripción del Startup](./docs/1-chapter-I-introduction.md#111-descripción-del-startup)
+  - [1.1.1. Descripción del Startup](./report/11-chapter1-introduction.md#111-descripción-del-startup)
 
-  - [1.1.2. Perfiles de integrantes del equipo](./docs/1-chapter-I-introduction.md#112-perfiles-de-integrantes-del-equipo)
+  - [1.1.2. Perfiles de integrantes del equipo](./report/11-chapter1-introduction.md#112-perfiles-de-integrantes-del-equipo)
 
-- [1.2. Solution Profile](./docs/1-chapter-I-introduction.md#12-solution-profile)
+- [1.2. Solution Profile](./report/11-chapter1-introduction.md#12-solution-profile)
 
-  - [1.2.1.  Antecedentes y problemática](./docs/1-chapter-I-introduction.md#121-antecedentes-y-problemática)
+  - [1.2.1.  Antecedentes y problemática](./report/11-chapter1-introduction.md#121-antecedentes-y-problemática)
 
-  - [1.2.2. Lean UX Process](./docs/1-chapter-I-introduction.md#122-lean-ux-process)
+  - [1.2.2. Lean UX Process](./report/11-chapter1-introduction.md#122-lean-ux-process)
 
-    - [1.2.2.1. Lean UX Problem Statements](./docs/1-chapter-I-introduction.md#1221-lean-ux-problem-statements)
+    - [1.2.2.1. Lean UX Problem Statements](./report/11-chapter1-introduction.md#1221-lean-ux-problem-statements)
 
-    - [1.2.2.2. Lean UX Assumptions](./docs/1-chapter-I-introduction.md#1222-lean-ux-assumptions)
+    - [1.2.2.2. Lean UX Assumptions](./report/11-chapter1-introduction.md#1222-lean-ux-assumptions)
 
-    - [1.2.2.3. Lean UX Hypothesis Statements](./docs/1-chapter-I-introduction.md#1223-lean-ux-hypothesis-statements)
+    - [1.2.2.3. Lean UX Hypothesis Statements](./report/11-chapter1-introduction.md#1223-lean-ux-hypothesis-statements)
 
-    - [1.2.2.4. Lean UX Canvas](./docs/1-chapter-I-introduction.md#1224-lean-ux-canvas)
+    - [1.2.2.4. Lean UX Canvas](./report/11-chapter1-introduction.md#1224-lean-ux-canvas)
 
-- [1.3. Segmentos Objetivo](./docs/1-chapter-I-introduction.md#13-segmentos-objetivo)
+- [1.3. Segmentos Objetivo](./report/11-chapter1-introduction.md#13-segmentos-objetivo)
 
-[CAPÍTULO II: REQUIREMENTS ELICITATION & ANALYSIS](./docs/2-chapter-II-requirements-elicitation-analysis.md#capítulo-ii-requirements-elicitation--analysis)
+[CAPÍTULO II: REQUIREMENTS ELICITATION & ANALYSIS](./report/12-chapter2-requirements-elicitation.md#capítulo-ii-requirements-elicitation--analysis)
 
-- [2.1. Competidores](./docs/2-chapter-II-requirements-elicitation-analysis.md#21-competidores)
+- [2.1. Competidores](./report/12-chapter2-requirements-elicitation.md#21-competidores)
 
-  - [2.1.1. Análisis competitivo](./docs/2-chapter-II-requirements-elicitation-analysis.md#211-análisis-competitivo)
+  - [2.1.1. Análisis competitivo](./report/12-chapter2-requirements-elicitation.md#211-análisis-competitivo)
 
-  - [2.1.2. Estrategias y tácticas frente a competidores](./docs/2-chapter-II-requirements-elicitation-analysis.md#212-estrategias-y-tácticas-frente-a-competidores)
+  - [2.1.2. Estrategias y tácticas frente a competidores](./report/12-chapter2-requirements-elicitation.md#212-estrategias-y-tácticas-frente-a-competidores)
 
-- [2.2. Entrevistas](./docs/2-chapter-II-requirements-elicitation-analysis.md#22-entrevistas)
+- [2.2. Entrevistas](./report/12-chapter2-requirements-elicitation.md#22-entrevistas)
 
-  - [2.2.1. Diseño de entrevistas](./docs/2-chapter-II-requirements-elicitation-analysis.md#221-diseño-de-entrevistas)
+  - [2.2.1. Diseño de entrevistas](./report/12-chapter2-requirements-elicitation.md#221-diseño-de-entrevistas)
 
-  - [2.2.2. Registro de entrevistas](./docs/2-chapter-II-requirements-elicitation-analysis.md#222-registro-de-entrevistas)
+  - [2.2.2. Registro de entrevistas](./report/12-chapter2-requirements-elicitation.md#222-registro-de-entrevistas)
 
-  - [2.2.3. Análisis de entrevistas](./docs/2-chapter-II-requirements-elicitation-analysis.md#223-análisis-de-entrevistas)
+  - [2.2.3. Análisis de entrevistas](./report/12-chapter2-requirements-elicitation.md#223-análisis-de-entrevistas)
 
-- [2.3. Needfinding](./docs/2-chapter-II-requirements-elicitation-analysis.md#23-needfinding)
+- [2.3. Needfinding](./report/12-chapter2-requirements-elicitation.md#23-needfinding)
 
-  - [2.3.1. User Personas](./docs/2-chapter-II-requirements-elicitation-analysis.md#231-user-personas)
+  - [2.3.1. User Personas](./report/12-chapter2-requirements-elicitation.md#231-user-personas)
 
-  - [2.3.2. User Task Matrix](./docs/2-chapter-II-requirements-elicitation-analysis.md#232-user-task-matrix)
+  - [2.3.2. User Task Matrix](./report/12-chapter2-requirements-elicitation.md#232-user-task-matrix)
 
-  - [2.3.3. User Journey Mapping](./docs/2-chapter-II-requirements-elicitation-analysis.md#233-user-journey-mapping)
+  - [2.3.3. User Journey Mapping](./report/12-chapter2-requirements-elicitation.md#233-user-journey-mapping)
 
-  - [2.3.4. Empathy Mapping](./docs/2-chapter-II-requirements-elicitation-analysis.md#234-empathy-mapping)
+  - [2.3.4. Empathy Mapping](./report/12-chapter2-requirements-elicitation.md#234-empathy-mapping)
 
-- [2.4. Big Picture EventStorming](./docs/2-chapter-II-requirements-elicitation-analysis.md#24-big-picture-eventstorming)
+- [2.4. Big Picture EventStorming](./report/12-chapter2-requirements-elicitation.md#24-big-picture-eventstorming)
 
-- [2.5. Ubiquitous Language](./docs/2-chapter-II-requirements-elicitation-analysis.md#25-ubiquitous-language)
+- [2.5. Ubiquitous Language](./report/12-chapter2-requirements-elicitation.md#25-ubiquitous-language)
 
-[CAPÍTULO III: REQUIREMENTS SPECIFICATION](./docs/3-chapter-III-requirements-specification.md#capítulo-iii-requirements-specification)
+[CAPÍTULO III: REQUIREMENTS SPECIFICATION](./report/13-chapter3-requirements-specification.md#capítulo-iii-requirements-specification)
 
-- [3.1. User Stories](./docs/3-chapter-III-requirements-specification.md#31-user-stories)
+- [3.1. User Stories](./report/13-chapter3-requirements-specification.md#31-user-stories)
 
-- [3.2. Impact Mapping](./docs/3-chapter-III-requirements-specification.md#32-impact-mapping)
+- [3.2. Impact Mapping](./report/13-chapter3-requirements-specification.md#32-impact-mapping)
 
-- [3.3. Product Backlog](./docs/3-chapter-III-requirements-specification.md#33-product-backlog)
+- [3.3. Product Backlog](./report/13-chapter3-requirements-specification.md#33-product-backlog)
 
-[CAPÍTULO IV: PRODUCT DESIGN](./docs/4-chapter-IV-product-design.md#capítulo-iv-product-design)
+[CAPÍTULO IV: PRODUCT DESIGN](./report/14-chapter4-product-design.md#capítulo-iv-product-design)
 
-- [4.1. Style Guidelines](./docs/4-chapter-IV-product-design.md#41-style-guidelines)
+- [4.1. Style Guidelines](./report/14-chapter4-product-design.md#41-style-guidelines)
 
-  - [4.1.1. General Style Guidelines](./docs/4-chapter-IV-product-design.md#411-general-style-guidelines)
+  - [4.1.1. General Style Guidelines](./report/14-chapter4-product-design.md#411-general-style-guidelines)
 
-  - [4.1.2. Web Style Guidelines](./docs/4-chapter-IV-product-design.md#412-web-style-guidelines)
+  - [4.1.2. Web Style Guidelines](./report/14-chapter4-product-design.md#412-web-style-guidelines)
 
-- [4.2. Information Architecture](./docs/4-chapter-IV-product-design.md#42-information-architecture)
+- [4.2. Information Architecture](./report/14-chapter4-product-design.md#42-information-architecture)
 
-  - [4.2.1. Organization Systems](./docs/4-chapter-IV-product-design.md#421-organization-systems)
+  - [4.2.1. Organization Systems](./report/14-chapter4-product-design.md#421-organization-systems)
 
-  - [4.2.2. Labeling Systems](./docs/4-chapter-IV-product-design.md#422-labeling-systems)
+  - [4.2.2. Labeling Systems](./report/14-chapter4-product-design.md#422-labeling-systems)
 
-  - [4.2.3. SEO Tags and Meta Tags](./docs/4-chapter-IV-product-design.md#423-seo-tags-and-meta-tags)
+  - [4.2.3. SEO Tags and Meta Tags](./report/14-chapter4-product-design.md#423-seo-tags-and-meta-tags)
 
-  - [4.2.4. Searching Systems](./docs/4-chapter-IV-product-design.md#424-searching-systems)
+  - [4.2.4. Searching Systems](./report/14-chapter4-product-design.md#424-searching-systems)
 
-  - [4.2.5. Navigation Systems](./docs/4-chapter-IV-product-design.md#425-navigation-systems)
+  - [4.2.5. Navigation Systems](./report/14-chapter4-product-design.md#425-navigation-systems)
 
-- [4.3. Landing Page UI Design](./docs/4-chapter-IV-product-design.md#43-landing-page-ui-design)
+- [4.3. Landing Page UI Design](./report/14-chapter4-product-design.md#43-landing-page-ui-design)
 
-  - [4.3.1. Landing Page Wireframe](./docs/4-chapter-IV-product-design.md#431-landing-page-wireframe)
+  - [4.3.1. Landing Page Wireframe](./report/14-chapter4-product-design.md#431-landing-page-wireframe)
 
-  - [4.3.2. Landing Page Mock-up](./docs/4-chapter-IV-product-design.md#432-landing-page-mock-up)
+  - [4.3.2. Landing Page Mock-up](./report/14-chapter4-product-design.md#432-landing-page-mock-up)
 
-- [4.4. Web Applications UX/UI Design](./docs/4-chapter-IV-product-design.md#44-web-applications-uxui-design)
+- [4.4. Web Applications UX/UI Design](./report/14-chapter4-product-design.md#44-web-applications-uxui-design)
 
-  - [4.4.1. Web Applications Wireframes](./docs/4-chapter-IV-product-design.md#441-web-applications-wireframes)
+  - [4.4.1. Web Applications Wireframes](./report/14-chapter4-product-design.md#441-web-applications-wireframes)
 
-  - [4.4.2. Web Applications Wireflow Diagrams](./docs/4-chapter-IV-product-design.md#442-web-applications-wireflow-diagrams)
+  - [4.4.2. Web Applications Wireflow Diagrams](./report/14-chapter4-product-design.md#442-web-applications-wireflow-diagrams)
 
-  - [4.4.2. Web Applications Mock-ups](./docs/4-chapter-IV-product-design.md#442-web-applications-mock-ups)
+  - [4.4.2. Web Applications Mock-ups](./report/14-chapter4-product-design.md#442-web-applications-mock-ups)
 
-  - [4.4.3. Web Applications User Flow Diagrams](./docs/4-chapter-IV-product-design.md#443-web-applications-user-flow-diagrams)
+  - [4.4.3. Web Applications User Flow Diagrams](./report/14-chapter4-product-design.md#443-web-applications-user-flow-diagrams)
 
-- [4.5. Web Applications Prototyping](./docs/4-chapter-IV-product-design.md#45-web-applications-prototyping)
+- [4.5. Web Applications Prototyping](./report/14-chapter4-product-design.md#45-web-applications-prototyping)
 
-- [4.6. Domain-Driven Software Architecture](./docs/4-chapter-IV-product-design.md#46-domain-driven-software-architecture)
+- [4.6. Domain-Driven Software Architecture](./report/14-chapter4-product-design.md#46-domain-driven-software-architecture)
 
-  - [4.6.1. Design-Level EventStorming](./docs/4-chapter-IV-product-design.md#461-design-level-eventstorming)
+  - [4.6.1. Design-Level EventStorming](./report/14-chapter4-product-design.md#461-design-level-eventstorming)
 
-  - [4.6.2. Software Architecture Context Diagram](./docs/4-chapter-IV-product-design.md#462-software-architecture-context-diagram)
+  - [4.6.2. Software Architecture Context Diagram](./report/14-chapter4-product-design.md#462-software-architecture-context-diagram)
 
-  - [4.6.3. Software Architecture Container Diagrams](./docs/4-chapter-IV-product-design.md#463-software-architecture-container-diagrams)
+  - [4.6.3. Software Architecture Container Diagrams](./report/14-chapter4-product-design.md#463-software-architecture-container-diagrams)
 
-  - [4.6.4. Software Architecture Components Diagrams](./docs/4-chapter-IV-product-design.md#464-software-architecture-components-diagrams)
+  - [4.6.4. Software Architecture Components Diagrams](./report/14-chapter4-product-design.md#464-software-architecture-components-diagrams)
 
-- [4.7. Software Object-Oriented Design](./docs/4-chapter-IV-product-design.md#47-software-object-oriented-design)
+- [4.7. Software Object-Oriented Design](./report/14-chapter4-product-design.md#47-software-object-oriented-design)
 
-  - [4.7.1. Class Diagrams](./docs/4-chapter-IV-product-design.md#471-class-diagrams)
+  - [4.7.1. Class Diagrams](./report/14-chapter4-product-design.md#471-class-diagrams)
 
-- [4.8. Database Design](./docs/4-chapter-IV-product-design.md#48-database-design)
+- [4.8. Database Design](./report/14-chapter4-product-design.md#48-database-design)
   
-  - [4.8.1. Database Diagrams](./docs/4-chapter-IV-product-design.md#481-database-diagrams)
+  - [4.8.1. Database Diagrams](./report/14-chapter4-product-design.md#481-database-diagrams)
 
-[CAPÍTULO V: PRODUCT IMPLEMENTATION, VALIDATION & DEPLOYMENT](./docs/5-chapter-V-product-implementation-validation-deployment.md#capítulo-v-product-implementation-validation--deployment)
+[CAPÍTULO V: PRODUCT IMPLEMENTATION, VALIDATION & DEPLOYMENT](./report/15-chapter5-product-implementation.md#capítulo-v-product-implementation-validation--deployment)
 
-- [5.1. Software Configuration Management](./docs/5-chapter-V-product-implementation-validation-deployment.md#51-software-configuration-management)
+- [5.1. Software Configuration Management](./report/15-chapter5-product-implementation.md#51-software-configuration-management)
 
-  - [5.1.1. Software Development Environment Configuration](./docs/5-chapter-V-product-implementation-validation-deployment.md#511-software-development-environment-configuration)
+  - [5.1.1. Software Development Environment Configuration](./report/15-chapter5-product-implementation.md#511-software-development-environment-configuration)
 
-  - [5.1.2. Source Code Management](./docs/5-chapter-V-product-implementation-validation-deployment.md#512-source-code-management)
+  - [5.1.2. Source Code Management](./report/15-chapter5-product-implementation.md#512-source-code-management)
 
-  - [5.1.3. Source Code Style Guide & Conventions](./docs/5-chapter-V-product-implementation-validation-deployment.md#513-source-code-style-guide--conventions)
+  - [5.1.3. Source Code Style Guide & Conventions](./report/15-chapter5-product-implementation.md#513-source-code-style-guide--conventions)
 
-  - [5.1.4. Software Deployment Configuration](./docs/5-chapter-V-product-implementation-validation-deployment.md#514-software-deployment-configuration)
+  - [5.1.4. Software Deployment Configuration](./report/15-chapter5-product-implementation.md#514-software-deployment-configuration)
 
-- [5.2. Landing Page, Services & Applications Implementation](./docs/5-chapter-V-product-implementation-validation-deployment.md#52-landing-page-services--applications-implementation)
+- [5.2. Landing Page, Services & Applications Implementation](./report/15-chapter5-product-implementation.md#52-landing-page-services--applications-implementation)
 
-  - [5.2.1. Sprint 1](./docs/5-chapter-V-product-implementation-validation-deployment.md#521-sprint-1)
+  - [5.2.1. Sprint 1](./report/15-chapter5-product-implementation.md#521-sprint-1)
 
-    - [5.2.1.1. Sprint Planning 1](./docs/5-chapter-V-product-implementation-validation-deployment.md#5211-sprint-planning-1)
+    - [5.2.1.1. Sprint Planning 1](./report/15-chapter5-product-implementation.md#5211-sprint-planning-1)
 
-    - [5.2.1.2. Aspect Leaders and Collaborators](./docs/5-chapter-V-product-implementation-validation-deployment.md#5212-aspect-leaders-and-collaborators)
+    - [5.2.1.2. Aspect Leaders and Collaborators](./report/15-chapter5-product-implementation.md#5212-aspect-leaders-and-collaborators)
 
-    - [5.2.1.3. Sprint Backlog 1](./docs/5-chapter-V-product-implementation-validation-deployment.md#5213-sprint-backlog-1)
+    - [5.2.1.3. Sprint Backlog 1](./report/15-chapter5-product-implementation.md#5213-sprint-backlog-1)
 
-    - [5.2.1.4. Development Evidence for Sprint Review](./docs/5-chapter-V-product-implementation-validation-deployment.md#5214-development-evidence-for-sprint-review)
+    - [5.2.1.4. Development Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5214-development-evidence-for-sprint-review)
 
-    - [5.2.1.5. Execution Evidence for Sprint Review](./docs/5-chapter-V-product-implementation-validation-deployment.md#5215-execution-evidence-for-sprint-review)
+    - [5.2.1.5. Execution Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5215-execution-evidence-for-sprint-review)
 
-    - [5.2.1.6. Services Documentation Evidence for Sprint Review](./docs/5-chapter-V-product-implementation-validation-deployment.md#5216-services-documentation-evidence-for-sprint-review)
+    - [5.2.1.6. Services Documentation Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5216-services-documentation-evidence-for-sprint-review)
 
-    - [5.2.1.7. Software Deployment Evidence for Sprint Review](./docs/5-chapter-V-product-implementation-validation-deployment.md#5217-software-deployment-evidence-for-sprint-review)
+    - [5.2.1.7. Software Deployment Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5217-software-deployment-evidence-for-sprint-review)
 
-    - [5.2.1.8. Team Collaboration Insights during Sprint](./docs/5-chapter-V-product-implementation-validation-deployment.md#5218-team-collaboration-insights-during-sprint)
+    - [5.2.1.8. Team Collaboration Insights during Sprint](./report/15-chapter5-product-implementation.md#5218-team-collaboration-insights-during-sprint)
 
-- [5.3. Validation Interviews](./docs/5-chapter-V-product-implementation-validation-deployment.md#53-validation-interviews)
+- [5.3. Validation Interviews](./report/15-chapter5-product-implementation.md#53-validation-interviews)
 
-  - [5.3.1. Diseño de Entrevistas](./docs/5-chapter-V-product-implementation-validation-deployment.md#531-diseño-de-entrevistas)
+  - [5.3.1. Diseño de Entrevistas](./report/15-chapter5-product-implementation.md#531-diseño-de-entrevistas)
 
-  - [5.3.2. Registro de Entrevistas](./docs/5-chapter-V-product-implementation-validation-deployment.md#532-registro-de-entrevistas)
+  - [5.3.2. Registro de Entrevistas](./report/15-chapter5-product-implementation.md#532-registro-de-entrevistas)
 
-  - [5.3.3. Evaluaciones según heurísticas](./docs/5-chapter-V-product-implementation-validation-deployment.md#533-evaluaciones-según-heurísticas)
+  - [5.3.3. Evaluaciones según heurísticas](./report/15-chapter5-product-implementation.md#533-evaluaciones-según-heurísticas)
 
-- [5.4. Video About-the-Product](./docs/5-chapter-V-product-implementation-validation-deployment.md#54-video-about-the-product)
+- [5.4. Video About-the-Product](./report/15-chapter5-product-implementation.md#54-video-about-the-product)
 
 <div style="page-break-after: always"></div>
