@@ -1,4 +1,4 @@
-![Logo UPC](images/logoUPC.png)
+![Logo UPC](assets/img/logoUPC.png)
 
 # UNIVERSIDAD PERUANA DE CIENCIAS APLICADAS
 
@@ -15,7 +15,7 @@
 
 ### ***Producto:*** NutriSense
 
-![Logo NutriSense](images/nutrisense-logo.png)
+![Logo NutriSense](assets/img/nutrisense-logo.png)
 
 ***Relación de integrantes:***
 
