@@ -158,3 +158,44 @@ We believe that the conversion rate from Basic to Pro subscriptions will increas
 
 ## 1.3. Segmentos Objetivo
 
+### Segmento Objetivo 1: Personas que buscan perder peso
+
+Nuestro primer segmento objetivo son adultos que tienen como meta la pérdida de peso y la mejora de sus hábitos alimentarios. Se trata de personas que buscan controlar su ingesta calórica de manera progresiva y sostenible, sin seguir planes dietéticos rígidos, y que necesitan orientación práctica en su vida cotidiana, especialmente cuando comen fuera de casa o se encuentran en entornos alimentarios poco familiares.
+
+**Aspectos demográficos:**
+- Sexo: Masculino y femenino
+- Edades: 25 – 60 años
+- Nivel socioeconómico: B y C (medio y medio-alto)
+
+**Aspectos geográficos:**
+- Nacionalidad: Peruana
+  - Zona geográfica: Urbana
+- Departamentos: Lima
+
+**Aspectos psicográficos:**
+- Valores: bienestar personal, salud preventiva, equilibrio entre vida social y hábitos saludables
+- Estilos de vida: personas con rutinas laborales exigentes, que comen con frecuencia fuera de casa y disponen de tiempo limitado para planificar sus comidas
+- Intereses: salud, bienestar, alimentación consciente, seguimiento de progreso físico
+- Personalidad: motivados pero con dificultad para mantener la constancia; buscan soluciones prácticas que se adapten a su ritmo de vida sin requerir conocimientos nutricionales avanzados
+- Frustraciones: no saber cuántas calorías consumen realmente al comer fuera, no recibir orientación relevante según su contexto, y sentir que las apps actuales son útiles para registrar pero no para decidir
+
+### Segmento Objetivo 2: Personas que buscan ganar masa muscular
+
+Nuestro segundo segmento objetivo son jóvenes adultos que practican ejercicio de forma regular y tienen como meta la ganancia de masa muscular. Su principal necesidad es el control preciso de macronutrientes, especialmente proteínas, y mantener su disciplina nutricional incluso cuando su entorno cambia por viajes, eventos sociales o variaciones climáticas.
+
+**Aspectos demográficos:**
+- Sexo: Masculino y femenino
+- Edades: 18 – 32 años
+- Nivel socioeconómico: B y C (medio y medio-alto)
+
+**Aspectos geográficos:**
+- Nacionalidad: Peruana
+- Zona geográfica: Urbana
+- Departamentos: Lima
+
+**Aspectos psicográficos:**
+- Valores: disciplina, rendimiento físico, constancia, superación personal
+- Estilos de vida: activos, con rutinas de entrenamiento establecidas de 3 a 6 días por semana; usan habitualmente dispositivos tecnológicos como smartphones y smartwatches
+- Intereses: fitness, nutrición deportiva, seguimiento de métricas corporales, tecnología aplicada al rendimiento
+- Personalidad: metódicos y orientados a resultados; frustrados cuando su progreso se ve interrumpido por factores externos que no pueden controlar
+- Frustraciones: perder el control de sus macros cuando viajan o cuando su rutina cambia, la dificultad de registrar comidas complejas en apps actuales, y la falta de sugerencias adaptadas a su contexto geográfico o climático
