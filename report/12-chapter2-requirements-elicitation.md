@@ -12,6 +12,90 @@
 
 ### 2.2.2. Registro de entrevistas
 
+| Segmento: Pérdida de peso | Entrevista #1 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio | |
+| Duración | |
+| URL | |
+| Screenshot | |
+| Resumen | |
+
+<div style="page-break-after: always"></div>
+
+| Segmento: Pérdida de peso | Entrevista #2 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio | |
+| Duración | |
+| URL | |
+| Screenshot | |
+| Resumen | |
+
+<div style="page-break-after: always"></div>
+
+| Segmento: Pérdida de peso | Entrevista #3 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio | |
+| Duración | |
+| URL | |
+| Screenshot | |
+| Resumen | |
+
+<div style="page-break-after: always"></div>
+
+| Segmento: Ganancia de Masa Muscular | Entrevista #4 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio | |
+| Duración | |
+| URL | |
+| Screenshot | |
+| Resumen | |
+
+<div style="page-break-after: always"></div>
+
+| Segmento: Ganancia de Masa Muscular | Entrevista #5 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio | |
+| Duración | |
+| URL | |
+| Screenshot | |
+| Resumen | |
+
+<div style="page-break-after: always"></div>
+
+| Segmento: Ganancia de Masa Muscular | Entrevista #6 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio | |
+| Duración | |
+| URL | |
+| Screenshot | |
+| Resumen | |
+
+<div style="page-break-after: always"></div>
+
 ### 2.2.3. Análisis de entrevistas
 
 ## 2.3. Needfinding
