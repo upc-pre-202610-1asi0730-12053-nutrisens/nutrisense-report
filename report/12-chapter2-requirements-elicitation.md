@@ -118,43 +118,21 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
 
 ### 2.1.2. Estrategias y tácticas frente a competidores
 
-El análisis competitivo revela que los actores establecidos tienen ventajas claras
-en escala de base de datos, reconocimiento de marca y presupuesto de marketing.
-Sin embargo, ninguno ha desarrollado recomendaciones contextuales en tiempo real
-basadas en clima, ubicación geográfica y disponibilidad de ingredientes, que
-constituye el espacio diferencial que la plataforma busca ocupar.
-<br><br>**Frente a Fitia — aprovechar su debilidad tecnológica**
-<br>La principal brecha de Fitia es la ausencia total de análisis visual y
-recomendaciones contextuales. El posicionamiento apunta a ser su evolución
-natural: pasar del simple registro calórico a la orientación activa en el momento
-exacto de la decisión alimentaria. Como táctica concreta, se desarrollará contenido
-en redes sociales que ilustre escenarios donde la plataforma resuelve problemas
-que Fitia no puede abordar, como elegir qué pedir en un restaurante desconocido
-estando de viaje. Paralelamente, se priorizará desde el inicio una cobertura sólida
-de alimentos peruanos y latinoamericanos para no ceder ese terreno regional.
-<br><br>**Frente a MyFitnessPal — competir en experiencia, no en escala**
-<br>Igualar los 14 millones de alimentos o el reconocimiento global de MyFitnessPal
-no es viable ni estratégicamente necesario. La apuesta es ofrecer una experiencia
-más inteligente y menos sobrecargada. En términos tácticos, se enfatizará la
-sencillez del flujo de registro mediante Smart Scan frente al proceso de búsqueda
-manual, y se resaltará la política de privacidad transparente frente a los
-antecedentes públicos de esa plataforma en el tema. En lo económico, el
-diferencial es significativo para el mercado latinoamericano: el plan Pro cuesta
-USD 14.99/mes frente a los aproximadamente USD 19.99/mes del Premium de
-MyFitnessPal, con una propuesta de valor más contextualizada y un plan de entrada
-(Basic a USD 7.99/mes) que reduce la barrera de conversión inicial.
-<br><br>**Frente a Cronometer — ampliar el segmento objetivo**
-<br>Cronometer domina un nicho bien definido pero de volumen reducido. La estrategia
-no pasa por competir en tracking exhaustivo de micronutrientes, sino por capturar
-a usuarios que buscan resultados concretos —perder peso o ganar masa— con el
-menor esfuerzo posible, en contraposición al perfil de usuario de Cronometer, que
-disfruta del análisis nutricional detallado como fin en sí mismo. La accesibilidad
-de precios refuerza este posicionamiento: el plan Premium a USD 19.99/mes es
-comparable al Gold de Cronometer, pero incluye funciones contextuales —Modo
-Viaje, análisis de menús, wearable sync— que esa plataforma no ofrece. En el
-largo plazo, se evaluará incorporar seguimiento de micronutrientes seleccionados
-como función Premium para capturar también ese segmento sin comprometer la
-propuesta central.
+### 2.1.2. Estrategias y tácticas frente a competidores
+
+El análisis competitivo revela que los actores establecidos tienen ventajas claras en escala de base de datos, reconocimiento de marca y presupuesto de marketing. Sin embargo, ninguno ha desarrollado recomendaciones contextuales en tiempo real basadas en clima, ubicación geográfica y disponibilidad de ingredientes, que constituye el espacio diferencial que la plataforma busca ocupar.
+
+**Frente a Fitia: aprovechar su debilidad tecnológica**
+
+La principal brecha de Fitia es la ausencia total de análisis visual y recomendaciones contextuales. El posicionamiento apunta a ser su evolución natural: pasar del simple registro calórico a la orientación activa en el momento exacto de la decisión alimentaria. Como táctica concreta, se desarrollará contenido en redes sociales que ilustre escenarios donde la plataforma resuelve problemas que Fitia no puede abordar, como elegir qué pedir en un restaurante desconocido estando de viaje. Paralelamente, se priorizará desde el inicio una cobertura sólida de alimentos peruanos y latinoamericanos para no ceder ese terreno regional.
+
+**Frente a MyFitnessPal: competir en experiencia**
+
+Igualar los 14 millones de alimentos o el reconocimiento global de MyFitnessPal no es viable ni estratégicamente necesario. La apuesta es ofrecer una experiencia más inteligente y menos sobrecargada. En términos tácticos, se enfatizará la sencillez del flujo de registro mediante Smart Scan frente al proceso de búsqueda manual, y se resaltará la política de privacidad transparente frente a los antecedentes públicos de esa plataforma en el tema. En lo económico, el diferencial es significativo para el mercado latinoamericano: el plan Pro cuesta USD 14.99/mes frente a los aproximadamente USD 19.99/mes del Premium de MyFitnessPal, con una propuesta de valor más contextualizada y un plan de entrada (Basic a USD 7.99/mes) que reduce la barrera de conversión inicial.
+
+**Frente a Cronometer: ampliar el segmento objetivo**
+
+Cronometer domina un nicho bien definido pero de volumen reducido. La estrategia no pasa por competir en tracking exhaustivo de micronutrientes, sino por capturar a usuarios que buscan resultados concretos con el menor esfuerzo posible, en contraposición al perfil de usuario de Cronometer, que disfruta del análisis nutricional detallado como fin en sí mismo. La accesibilidad de precios refuerza este posicionamiento: el plan Premium a USD 19.99/mes es comparable al Gold de Cronometer, pero incluye funciones contextuales que esa plataforma no ofrece. En el largo plazo, se evaluará incorporar seguimiento de micronutrientes seleccionados como función Premium para capturar también ese segmento sin comprometer la propuesta central.
 
 ## 2.2. Entrevistas
 
