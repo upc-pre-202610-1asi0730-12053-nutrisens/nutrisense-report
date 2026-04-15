@@ -13,29 +13,32 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
 ### 2.1.1. Análisis competitivo
 
 <table>
+  <colgroup>
+    <col width="10%"> <col width="10%"> <col width="20%"> <col width="20%"> <col width="20%"> <col width="20%"> </colgroup>
+  
   <thead>
     <tr>
       <th colspan="6" style="text-align: left;"><b>Competitive Analysis Landscape</b></th>
     </tr>
     <tr>
-      <th style="width: 10%;">¿Por qué llevar a cabo este análisis?</th>
-      <td colspan="5" style="width: 90%;">
+      <th colspan="2">¿Por qué llevar a cabo este análisis?</th>
+      <td colspan="4">
         ¿Qué ofrecen los principales competidores del mercado de nutrición digital y en qué aspectos NutriSense puede diferenciarse para capturar usuarios en el mercado latinoamericano?
         <br><br>
       </td>
     </tr>
     <tr>
-      <th colspan="2" width="20%" style="width: 20%;"><i>Nombre y logo</i></th>
-      <th width="20%" style="width: 20%; text-align: center; vertical-align: top;">
+      <th colspan="2"><i>Nombre y logo</i></th>
+      <th style="text-align: center; vertical-align: top;">
         <img src="../assets/img/nutrisense-logo.png" width="120" alt="Logo Startup"><br><b>NutriSense</b>
       </th>
-      <th width="20%" style="width: 20%; text-align: center; vertical-align: top;">
+      <th style="text-align: center; vertical-align: top;">
         <img src="../assets/img/competitors/fitia.png" width="120" alt="Logo Fitia"><br><b>Fitia</b>
       </th>
-      <th width="20%" style="width: 20%; text-align: center; vertical-align: top;">
+      <th style="text-align: center; vertical-align: top;">
         <img src="../assets/img/competitors/myfitness.png" width="120" alt="Logo MyFitnessPal"><br><b>MyFitnessPal</b>
       </th>
-      <th width="20%" style="width: 20%; text-align: center; vertical-align: top;">
+      <th style="text-align: center; vertical-align: top;">
         <img src="../assets/img/competitors/cronometer.png" width="120" alt="Logo Cronometer"><br><b>Cronometer</b>
       </th>
     </tr>
@@ -57,7 +60,7 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
       <td>Tracking exhaustivo de más de 80 micronutrientes. Herramienta de referencia para deportistas, personas con condiciones médicas y profesionales de la salud que requieren precisión nutricional.</td>
     </tr>
     <tr>
-      <td rowspan="2"><b>Perfil de Marketing</b></td>
+      <td rowspan="2" style="vertical-align: middle; text-align: center;"><b>Perfil de Marketing</b></td>
       <td>Mercado objetivo</td>
       <td>Adultos de 18 a 60 años en Perú y Latinoamérica con metas físicas definidas (pérdida de peso o ganancia de masa muscular), que comen frecuentemente fuera de casa o viajan con regularidad y buscan recomendaciones nutricionales contextuales.</td>
       <td>Adultos hispanohablantes, principalmente peruanos y latinoamericanos, interesados en controlar su alimentación diaria. Perfil mayoritariamente femenino, rango de 20 a 45 años, con acceso a smartphone.</td>
@@ -72,7 +75,7 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
       <td>Marketing educativo orientado a comunidades de salud y bienestar avanzado. Presencia en foros especializados (Reddit, comunidades de deportistas). Recomendaciones de profesionales de la salud como canal orgánico principal.</td>
     </tr>
     <tr>
-      <td rowspan="3"><b>Perfil de Producto</b></td>
+      <td rowspan="3" style="vertical-align: middle; text-align: center;"><b>Perfil de Producto</b></td>
       <td>Productos y servicios</td>
       <td>Plataforma web SaaS con registro nutricional, Smart Scan (análisis de fotos de platos y menús), motor de recomendaciones contextuales por clima y ubicación, Modo Viaje, módulo de despensa, sincronización con Google Fit, dashboard de progreso y exportación de reportes PDF.</td>
       <td>Aplicación móvil y web con registro de alimentos, base de datos nutricional latinoamericana, planes de alimentación básicos, seguimiento de macros y calorías, y versión premium con funciones adicionales.</td>
@@ -94,7 +97,7 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
       <td>Aplicación móvil (iOS y Android) y plataforma web. Distribución orgánica a través de recomendaciones de profesionales de la salud y comunidades especializadas.</td>
     </tr>
     <tr>
-      <td rowspan="4"><b>Análisis SWOT</b></td>
+      <td rowspan="4" style="vertical-align: middle; text-align: center;"><b>Análisis SWOT</b></td>
       <td>Fortalezas</td>
       <td>Recomendaciones contextuales únicas (clima, ubicación, despensa). Diferenciación clara frente a competidores existentes. Plataforma web sin necesidad de instalación.</td>
       <td>Base de datos con amplia cobertura de alimentos peruanos y latinoamericanos. Marca reconocida en el mercado local. Interfaz completamente en español adaptada al contexto cultural latinoamericano.</td>
