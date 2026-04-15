@@ -18,22 +18,31 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
       <th colspan="6" style="text-align: left;"><b>Competitive Analysis Landscape</b></th>
     </tr>
     <tr>
-      <td style="width: 20%;">¿Por qué llevar a cabo este análisis?</td>
-      <td colspan="5">
+      <th style="width: 10%;">¿Por qué llevar a cabo este análisis?</th>
+      <td colspan="5" style="width: 90%;">
         ¿Qué ofrecen los principales competidores del mercado de nutrición digital y en qué aspectos NutriSense puede diferenciarse para capturar usuarios en el mercado latinoamericano?
-        <br><br></td>
+        <br><br>
+      </td>
+    </tr>
+    <tr>
+      <th colspan="2" width="20%" style="width: 20%;"><i>Nombre y logo</i></th>
+      <th width="20%" style="width: 20%; text-align: center; vertical-align: top;">
+        <img src="../assets/img/nutrisense-logo.png" width="120" alt="Logo Startup"><br><b>NutriSense</b>
+      </th>
+      <th width="20%" style="width: 20%; text-align: center; vertical-align: top;">
+        <img src="../assets/img/competitors/fitia.png" width="120" alt="Logo Fitia"><br><b>Fitia</b>
+      </th>
+      <th width="20%" style="width: 20%; text-align: center; vertical-align: top;">
+        <img src="../assets/img/competitors/myfitness.png" width="120" alt="Logo MyFitnessPal"><br><b>MyFitnessPal</b>
+      </th>
+      <th width="20%" style="width: 20%; text-align: center; vertical-align: top;">
+        <img src="../assets/img/competitors/cronometer.png" width="120" alt="Logo Cronometer"><br><b>Cronometer</b>
+      </th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td colspan="2"><i>Nombre y logo</i></td>
-      <td><center><img src="../assets/img/nutrisense-logo.png" width="150" alt="Logo Startup"><br><b>NutriSense</b></td>
-      <td><center><img src="../assets/img/competitors/fitia.png" width="150" alt="Logo Startup"><br><b>Fitia</b></td>
-      <td><center><img src="../assets/img/competitors/myfitness.png" width="150" alt="Logo Startup"><br><b>MyFitnessPal</b></td>
-      <td><center><img src="../assets/img/competitors/cronometer.png" width="150" alt="Logo Startup"><br><b>Cronometer</b></td>
-    </tr>
-    <tr>
-      <td rowspan="2"><b>Perfil</b></td>
+      <td rowspan="2" style="vertical-align: middle; text-align: center;"><b>Perfil</b></td>
       <td>Overview</td>
       <td>Plataforma web SaaS de nutrición inteligente contextual. Combina seguimiento nutricional con recomendaciones personalizadas en tiempo real basadas en clima, ubicación geográfica y disponibilidad de ingredientes.</td>
       <td>Aplicación SaaS de nutrición de origen peruano con amplia base de datos de alimentos latinoamericanos. Fuerte presencia en Perú y países hispanohablantes. Enfocada en registro calórico y planes básicos de alimentación.</td>
