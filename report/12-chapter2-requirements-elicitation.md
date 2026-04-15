@@ -12,6 +12,110 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
 
 ### 2.1.1. Análisis competitivo
 
+<table>
+  <thead>
+    <tr>
+      <th colspan="6" style="text-align: left;"><b>Competitive Analysis Landscape</b></th>
+    </tr>
+    <tr>
+      <td style="width: 20%;">¿Por qué llevar a cabo este análisis?</td>
+      <td colspan="5">
+        ¿Qué ofrecen los principales competidores del mercado de nutrición digital y en qué aspectos NutriSense puede diferenciarse para capturar usuarios en el mercado latinoamericano?
+        <br><br></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="2"><i>Nombre y logo</i></td>
+      <td><center><img src="../assets/img/nutrisense-logo.png" width="150" alt="Logo Startup"><br><b>NutriSense</b></td>
+      <td><center><img src="../assets/img/competitors/fitia.png" width="150" alt="Logo Startup"><br><b>Fitia</b></td>
+      <td><center><img src="../assets/img/competitors/myfitness.png" width="150" alt="Logo Startup"><br><b>MyFitnessPal</b></td>
+      <td><center><img src="../assets/img/competitors/cronometer.png" width="150" alt="Logo Startup"><br><b>Cronometer</b></td>
+    </tr>
+    <tr>
+      <td rowspan="2"><b>Perfil</b></td>
+      <td>Overview</td>
+      <td>Plataforma web SaaS de nutrición inteligente contextual. Combina seguimiento nutricional con recomendaciones personalizadas en tiempo real basadas en clima, ubicación geográfica y disponibilidad de ingredientes.</td>
+      <td>Aplicación SaaS de nutrición de origen peruano con amplia base de datos de alimentos latinoamericanos. Fuerte presencia en Perú y países hispanohablantes. Enfocada en registro calórico y planes básicos de alimentación.</td>
+      <td>Plataforma SaaS de seguimiento nutricional líder a nivel mundial. Cuenta con más de 14 millones de alimentos en su base de datos, integración con wearables y una comunidad global activa.</td>
+      <td>Plataforma SaaS especializada en el tracking exhaustivo de micronutrientes (vitaminas, minerales, aminoácidos). Orientada a usuarios con necesidades nutricionales específicas y control de salud profundo.</td>
+    </tr>
+    <tr>
+      <td>Ventaja competitiva / Valor</td>
+      <td>Única plataforma que adapta las recomendaciones según el clima actual, la ubicación geográfica (Modo Viaje) y los ingredientes disponibles en casa. Análisis de menús de restaurante personalizado al perfil del usuario.</td>
+      <td>Base de datos nutricional con fuerte cobertura de alimentos peruanos y latinoamericanos. Interfaz en español optimizada para el mercado local. Reconocimiento de marca consolidado en Perú.</td>
+      <td>Base de datos masiva (más de 14 millones de alimentos), integración con más de 50 aplicaciones y wearables, y comunidad activa de usuarios. Posicionamiento global como estándar del sector.</td>
+      <td>Tracking exhaustivo de más de 80 micronutrientes. Herramienta de referencia para deportistas, personas con condiciones médicas y profesionales de la salud que requieren precisión nutricional.</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><b>Perfil de Marketing</b></td>
+      <td>Mercado objetivo</td>
+      <td>Adultos de 18 a 60 años en Perú y Latinoamérica con metas físicas definidas (pérdida de peso o ganancia de masa muscular), que comen frecuentemente fuera de casa o viajan con regularidad y buscan recomendaciones nutricionales contextuales.</td>
+      <td>Adultos hispanohablantes, principalmente peruanos y latinoamericanos, interesados en controlar su alimentación diaria. Perfil mayoritariamente femenino, rango de 20 a 45 años, con acceso a smartphone.</td>
+      <td>Usuarios globales de 18 a 45 años interesados en perder peso, ganar músculo o mantener un estilo de vida saludable. Fuerte presencia en mercados anglófonos (EE.UU., Reino Unido, Australia) con crecimiento en Latinoamérica.</td>
+      <td>Usuarios con necesidades nutricionales avanzadas: deportistas de alto rendimiento, personas con condiciones médicas (diabetes, enfermedad celíaca, insuficiencia renal) y profesionales de la salud. Rango de 25 a 50 años.</td>
+    </tr>
+    <tr>
+      <td>Estrategias de marketing</td>
+      <td>Marketing de contenido en redes sociales (Instagram, TikTok) dirigido a comunidades fitness y de alimentación saludable en Latinoamérica. Estrategia de referidos entre usuarios. Alianzas con nutricionistas y entrenadores personales como canales de distribución.</td>
+      <td>Redes sociales con contenido en español orientado a hábitos saludables. Publicidad digital segmentada en Perú y Latinoamérica. Presencia en tiendas de aplicaciones (App Store y Google Play) como canal principal de adquisición.</td>
+      <td>Campañas de publicidad digital masiva a nivel global. Partnerships con marcas de fitness y wearables (Fitbit, Garmin, Apple Health). Programa de referidos y comunidad de usuarios activa. Presencia en medios especializados en salud y bienestar.</td>
+      <td>Marketing educativo orientado a comunidades de salud y bienestar avanzado. Presencia en foros especializados (Reddit, comunidades de deportistas). Recomendaciones de profesionales de la salud como canal orgánico principal.</td>
+    </tr>
+    <tr>
+      <td rowspan="3"><b>Perfil de Producto</b></td>
+      <td>Productos y servicios</td>
+      <td>Plataforma web SaaS con registro nutricional, Smart Scan (análisis de fotos de platos y menús), motor de recomendaciones contextuales por clima y ubicación, Modo Viaje, módulo de despensa, sincronización con Google Fit, dashboard de progreso y exportación de reportes PDF.</td>
+      <td>Aplicación móvil y web con registro de alimentos, base de datos nutricional latinoamericana, planes de alimentación básicos, seguimiento de macros y calorías, y versión premium con funciones adicionales.</td>
+      <td>Aplicación móvil y web con registro de alimentos, escáner de código de barras, registro de ejercicio, integración con más de 50 aplicaciones y wearables, análisis de macros, recetas y comunidad de usuarios.</td>
+      <td>Aplicación móvil y web con tracking exhaustivo de micronutrientes, registro de alimentos, análisis de composición corporal, diarios de salud y reportes detallados para profesionales.</td>
+    </tr>
+    <tr>
+      <td>Precios y costos</td>
+      <td>Tres planes de suscripción mensual sin modelo freemium: Basic ($7.99 — registro manual y dashboard), Pro ($14.99/mes — Smart Scan, clima, viaje, wearable, despensa), Premium ($ 19.90/mes — análisis de menú, PDF, historial ilimitado).</td>
+      <td>Modelo freemium con plan gratuito limitado y plan premium de aproximadamente S/ 25–30/mes (varía por región). Las funciones avanzadas de planes y seguimiento detallado requieren suscripción paga.</td>
+      <td>Modelo freemium con plan gratuito funcional y plan Premium de aproximadamente USD 19.99/mes o USD 79.99/año. El plan gratuito incluye el registro básico y la base de datos completa.</td>
+      <td>Modelo freemium con plan gratuito completo en funciones básicas y plan Gold de USD 9.99/mes o USD 49.99/año. El plan gratuito ya incluye el tracking de micronutrientes, lo que reduce la fricción de conversión.</td>
+    </tr>
+    <tr>
+      <td>Canales de distribución</td>
+      <td>Plataforma web accesible desde cualquier navegador (desktop y móvil). Sin aplicación nativa en el alcance inicial. Distribución directa vía web y marketing digital.</td>
+      <td>Aplicación móvil (iOS y Android) como canal principal. Versión web disponible pero con funcionalidad reducida respecto a la app móvil.</td>
+      <td>Aplicación móvil (iOS y Android) y plataforma web completa. Integración como canal de distribución secundario a través de partnerships con wearables y otras aplicaciones de salud.</td>
+      <td>Aplicación móvil (iOS y Android) y plataforma web. Distribución orgánica a través de recomendaciones de profesionales de la salud y comunidades especializadas.</td>
+    </tr>
+    <tr>
+      <td rowspan="4"><b>Análisis SWOT</b></td>
+      <td>Fortalezas</td>
+      <td>Recomendaciones contextuales únicas (clima, ubicación, despensa). Diferenciación clara frente a competidores existentes. Plataforma web sin necesidad de instalación.</td>
+      <td>Base de datos con amplia cobertura de alimentos peruanos y latinoamericanos. Marca reconocida en el mercado local. Interfaz completamente en español adaptada al contexto cultural latinoamericano.</td>
+      <td>Base de datos más grande del sector (más de 14 millones de alimentos). Reconocimiento de marca global. Integraciones con prácticamente todos los wearables y aplicaciones de fitness del mercado.</td>
+      <td>Tracking de micronutrientes más exhaustivo del mercado. Base de usuarios fiel y altamente comprometida. Precio competitivo con plan gratuito robusto que no limita las funciones core.</td>
+    </tr>
+    <tr>
+      <td>Debilidades</td>
+      <td>Marca nueva sin reconocimiento en el mercado. Dependencia de APIs de terceros para funciones core (Google Cloud Vision, OpenWeatherMap). Base de datos de alimentos inicial limitada comparada con competidores establecidos. Sin aplicación móvil nativa en el alcance inicial.</td>
+      <td>Sin recomendaciones contextuales basadas en clima o ubicación. Sin análisis de fotos de platos o menús. Funcionalidades de wearable limitadas. Cobertura reducida fuera de Latinoamérica.</td>
+      <td>Interfaz percibida como sobrecargada por muchos usuarios. Historial de problemas de privacidad y seguridad de datos (brecha de seguridad en 2018). Plan gratuito con publicidad intrusiva. Precio del plan premium elevado para el mercado latinoamericano.</td>
+      <td>Curva de aprendizaje alta para usuarios sin conocimientos nutricionales avanzados. Interfaz menos intuitiva para el usuario casual. Sin recomendaciones contextuales ni análisis de imágenes. Comunidad significativamente más pequeña que MyFitnessPal.</td>
+    </tr>
+    <tr>
+      <td>Oportunidades</td>
+      <td>Creciente adopción de tecnología de salud en Latinoamérica. Demanda insatisfecha de herramientas nutricionales contextuales. Tendencia creciente de turismo interno en Perú (Modo Viaje). Alianzas potenciales con nutricionistas, gimnasios y cadenas de restaurantes.</td>
+      <td>Expansión a otros mercados latinoamericanos con bases de datos locales. Incorporación de funciones de IA para personalización. Alianzas con supermercados y servicios de delivery locales.</td>
+      <td>Expansión en mercados emergentes de Asia y Latinoamérica. Incorporación de funciones de IA generativa para recomendaciones. Alianzas con aseguradoras de salud como canal B2B.</td>
+      <td>Crecimiento del segmento de salud preventiva y nutrición de precisión. Alianzas con clínicas, hospitales y profesionales de la salud. Expansión de funciones hacia gestión de enfermedades crónicas.</td>
+    </tr>
+    <tr>
+      <td>Amenazas</td>
+      <td>Competidores establecidos con mayor presupuesto que podrían replicar las funciones contextuales. Cambios en las políticas de uso o precios de las APIs de terceros. Baja disposición a pagar por aplicaciones de nutrición en el mercado peruano. Dependencia de la confianza del usuario para compartir datos de salud.</td>
+      <td>Posible entrada de competidores globales con localización para el mercado latinoamericano. Usuarios que migran a plataformas con mayor integración tecnológica. Dificultad para competir en funciones avanzadas frente a plataformas con mayor inversión en I+D.</td>
+      <td>Saturación del mercado de aplicaciones de nutrición. Regulaciones de privacidad más estrictas (GDPR, leyes locales de protección de datos). Nuevos entrantes con propuestas más innovadoras y precios más competitivos.</td>
+      <td>Público objetivo de nicho con bajo potencial de crecimiento masivo. Competencia de plataformas médicas especializadas con mayor respaldo clínico. Dificultad para atraer usuarios casuales que representan el mayor volumen del mercado.</td>
+    </tr>
+  </tbody>
+</table>
+
 ### 2.1.2. Estrategias y tácticas frente a competidores
 
 ## 2.2. Entrevistas
