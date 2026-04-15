@@ -42,16 +42,15 @@ La arquitectura de NutriSense se basa en Domain-Driven Design (DDD), centrando e
 <br>A continuación, se identifican y describen los contextos delimitados que componen la solución:
 | Bounded Context | Descripción | Módulos incluidos |
 | :--- | :--- | :--- |
-| Identity & Access | Gestión de autenticación, autorización y perfiles de usuario. | User & Auth |
-| Nutrition Tracking | Registro y análisis de alimentos mediante logs y Smart Scan. | Nutrition Log, Smart Scan |
-| Body & Health Metrics | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
-| Smart Recommendations | Motor de sugerencias personalizadas según contexto y clima. | Recommendations Engine |
-| Activity & Wearable Sync | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
-| Analytics & Reporting | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
-| Subscriptions & Billing | Gestión de planes, facturación y control de features Premium. | Subscriptions |
+| **Identity & Access** | Gestión de autenticación, autorización y perfiles de usuario. | User & Auth |
+| **Nutrition Tracking** | Registro y análisis de alimentos mediante logs y Smart Scan. | Nutrition Log, Smart Scan |
+| **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
+| **Smart Recommendations** | Motor de sugerencias personalizadas según contexto y clima. | Recommendations Engine |
+| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
+| **Analytics & Reporting** | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
+| **Subscriptions & Billing** | Gestión de planes, facturación y control de features Premium. | Subscriptions |
 
 ### 4.6.1. Design-Level EventStorming
-
 
 ### 4.6.2. Software Architecture Context Diagram
 
