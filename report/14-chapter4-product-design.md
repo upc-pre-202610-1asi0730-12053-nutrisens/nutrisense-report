@@ -66,7 +66,7 @@ En esta sección se presenta el modelado del comportamiento del sistema mediante
 | **Subscriptions:** Benefits Disabled | **Smart Recs:** Lock Premium Features | Restringe el acceso a funcionalidades avanzadas tras la expiración o cancelación del plan. |
 
 <br>**EventStorming**
-![EventStorming Diagram](../assets/img/artifacts/EventStorming.png)
+![EventStorming Diagram](../assets/img/artifacts/eventStorming.png)
 Para poder apreciar mejor el EventStorming le recomendamos ingresar al siguiente link:
 [Visualizar EventStorming en Miro](https://miro.com/welcomeonboard/NUZxcUQ2Qk5GeExXSmt6NWVib0EyQ2I1NWRoVWNiVWY1Y2xHOUVwWHcxQzhnY3RmTWZpRTJQWU9MTTBSVnZ1WjdvY3ZNaisrTmpVbGZNaUJvcVpPd2pqSXhvNThQV28wWnlBTXZDMFE5SXJkUjM0K21IRkpUQ3ZHMkJOZ2RwcExhWWluRVAxeXRuUUgwWDl3Mk1qRGVRPT0hdjE=?share_link_id=134220967869)
 
