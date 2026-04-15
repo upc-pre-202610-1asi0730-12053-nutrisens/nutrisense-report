@@ -12,38 +12,21 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
 
 ### 2.1.1. Análisis competitivo
 
-<style>
-  thead.repeat {
-    display: table-header-group;
-  }
-  table {
-    width: 100%;
-  }
-</style>
-
 <table>
   <colgroup>
-    <col width="10%"> <col width="10%"> <col width="20%"> <col width="20%"> <col width="20%"> <col width="20%">
-  </colgroup>
-  <tbody>
+    <col width="10%"> <col width="10%"> <col width="20%"> <col width="20%"> <col width="20%"> <col width="20%"> </colgroup>
+  
+  <thead>
     <tr>
       <th colspan="6" style="text-align: left;"><b>Competitive Analysis Landscape</b></th>
     </tr>
-    <tr style="border-bottom: 1px solid black;">
+    <tr>
       <th colspan="2">¿Por qué llevar a cabo este análisis?</th>
       <td colspan="4">
         ¿Qué ofrecen los principales competidores del mercado de nutrición digital y en qué aspectos NutriSense puede diferenciarse para capturar usuarios en el mercado latinoamericano?
         <br><br>
       </td>
     </tr>
-  </tbody>
-</table>
-
-<table>
-  <colgroup>
-    <col width="10%"> <col width="10%"> <col width="20%"> <col width="20%"> <col width="20%"> <col width="20%">
-  </colgroup>
-  <thead class="repeat">
     <tr>
       <th colspan="2"><i>Nombre y logo</i></th>
       <th style="text-align: center; vertical-align: top;">
