@@ -75,7 +75,8 @@ Para poder apreciar mejor el EventStorming le recomendamos ingresar al siguiente
 ### 4.6.2. Software Architecture Context Diagram
 
 El Diagrama de Contexto (Nivel 1 del modelo C4) representa a NutriSense como un sistema centralizado y detalla su interacción con los actores principales y sistemas externos. Este diagrama permite visualizar el alcance global de la solución y los límites del sistema con servicios de terceros que alimentan la lógica de nutrición y salud.
-<br>**Elementos:**
+
+**Elementos:**
 
  - **NutriSense:** Sistema central que provee las funcionalidades de seguimiento nutricional, escaneo de comidas y recomendaciones inteligentes.
  - **User:** Persona que utiliza la plataforma para gestionar sus objetivos de salud, registrar sus comidas y monitorear su actividad física.
@@ -86,7 +87,7 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a NutriSense como un 
 	- **OpenWeatherMap:** Provee datos climáticos para ajustar las sugerencias de comidas.
 	- **Stripe:** Gestiona de forma segura los pagos y el estado de las suscripciones.
 
-![Context Diagram](../assets/img/artifacts/nutriSense-SystemContext.png)
+![Context Diagram](../assets/img/artifacts/nutrisense-SystemContext.png)
 
 ### 4.6.3. Software Architecture Container Diagrams
 
