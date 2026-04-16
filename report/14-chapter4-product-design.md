@@ -110,6 +110,44 @@ El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema NutriSen
 
 ### 4.6.4. Software Architecture Components Diagrams
 
+El Diagrama de Componentes (Nivel 3 del modelo C4) describe la estructura interna de los contenedores principales de NutriSense. En esta sección se detallan los módulos lógicos, sus responsabilidades específicas y las tecnologías utilizadas para la implementación de cada componente.
+
+**A. Web Application Components (Frontend)**
+
+Este contenedor se organiza para garantizar una interfaz reactiva y una gestión de datos eficiente en el lado del cliente.
+
+**Elementos:**
+
+ - **UI Components:** Biblioteca de vistas y elementos visuales reutilizables (Dashboard, Scan, Progress).
+    - **Tecnología:** `PrimeVue`.
+ - **Vue Router:** Componente encargado de la navegación y el enrutamiento entre las diferentes secciones de la aplicación.
+    - **Tecnología:** `Vue Router`.
+ - **State Store (Pinia):** Actúa como la fuente única de verdad, gestionando el estado global y la sincronización de datos.
+    - **Tecnología:** `Pinia`.
+ - **API Client:** Encargado de orquestar las peticiones asíncronas y la comunicación con el servidor de API.
+    - **Tecnología:** `Axios (JSON/HTTPS)`.
+
+![Web Component Diagram](../assets/img/artifacts/nutrisense-WebComponentsDiagram.png)
+
+![Web Component Diagram Summarized](../assets/img/artifacts/nutrisense-WebComponentsDiagram1.png)
+
+**B. API Application Components (Backend)**
+
+El backend se divide en módulos que representan los 7 Bounded Contexts del dominio, asegurando una arquitectura desacoplada y escalable.
+
+**Elementos:**
+
+ - **Modulos de Dominio (Identity, Nutrition, Health, Recs, Activity, Analytics, Billing):** Implementan las reglas de negocio específicas para cada contexto identificado.
+    - **Tecnología:** `C# / ASP.NET Core`.
+ - **Data Access Layer (Repository):** Componente que centraliza el acceso a datos y la persistencia de la información mediante el patrón Repository.
+    - **Tecnología:** `Entity Framework Core`.
+ - **Integrations Hub:** Orquestador de la comunicación con las APIs externas (Stripe, Google Fit, Weather, Vision).
+    - **Tecnología:** `HttpClient (.NET)`.
+
+![API Component Diagram](../assets/img/artifacts/nutrisense-APIComponentsDiagram.png)
+
+![API Component Diagram Summarized](../assets/img/artifacts/nutrisense-APIComponentsDiagram1.png)
+
 ## 4.7. Software Object-Oriented Design
 
 ### 4.7.1. Class Diagrams
