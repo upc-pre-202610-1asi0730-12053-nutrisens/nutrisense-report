@@ -39,7 +39,8 @@
 ## 4.6. Domain-Driven Software Architecture
 
 La arquitectura de NutriSense se basa en Domain-Driven Design (DDD), centrando el diseño en los procesos críticos de salud y nutrición. El sistema se organiza en 7 Bounded Contexts independientes, lo que garantiza una separación clara de responsabilidades y un lenguaje común entre el equipo técnico y el negocio. Este enfoque modular permite que funcionalidades clave, como el análisis de imágenes y el motor de recomendaciones, sean altamente escalables, facilitando un mantenimiento eficiente y una evolución alineada con los requerimientos del dominio.
-<br>A continuación, se identifican y describen los contextos delimitados que componen la solución:
+
+A continuación, se identifican y describen los contextos delimitados que componen la solución:
 | Bounded Context | Descripción | Módulos incluidos |
 | :--- | :--- | :--- |
 | **Identity & Access** | Gestión de autenticación, autorización y perfiles de usuario. | User & Auth |
