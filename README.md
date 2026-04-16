@@ -23,7 +23,7 @@
 | :---: | :---: |
 | Del Aguila Del Aguila, Olenka Priscilla | U202411669 |
 | Espinoza Cruz, Angela Milagros | U202415495 |
-| Mora Rivera, Joel Fernando | U20241B2027 |
+| Mora Rivera, Joel Fernando | U20241B227 |
 | Vergraray Calderon, Rose Almendra | U20241D159 |
 | Villarreal Bazan, Angel Martin | U202417857 |
 
@@ -39,6 +39,8 @@ Abril, 2026
 <div style="page-break-after: always"></div>
 
 ## PROJECT REPORT COLLABORATION INSIGHTS
+
+Repositorio del informe del proyecto en GitHub: [nutrisense-report](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report)
 
 <div style="page-break-after: always"></div>
 
