@@ -91,6 +91,23 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a NutriSense como un 
 
 ### 4.6.3. Software Architecture Container Diagrams
 
+El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema NutriSense en sus principales unidades lógicas de ejecución. En este nivel, se especifican las responsabilidades de cada contenedor, las tecnologías elegidas para su implementación y los protocolos de comunicación que permiten la interacción entre ellos y con los sistemas externos.
+
+**Elementos:**
+
+ - **Web Application:** Frontend donde los usuarios interactúan con la plataforma, gestionan sus metas y visualizan sus progresos.
+    - **Tecnología:** `Vue.js (con PrimeVue para UI y Pinia para el estado)`.
+ - **API Application:** Backend que maneja la lógica de negocio, el motor de recomendaciones, el procesamiento de imágenes y la integración con servicios externos.
+    - **Tecnología:** `ASP.NET Core (C#)`.
+ - **Database:** Almacena la información de usuarios, registros nutricionales, historial de métricas y datos de facturación.
+    - **Tecnología:** `PostgreSQL`.
+ - **External Systems:** APIs de terceros que se integran con el backend para extender las capacidades del sistema.
+    - **Tecnología:** `JSON/HTTPS (REST)`.
+
+![Container Diagram](../assets/img/artifacts/nutrisense-ContainerDiagram.png)
+
+![Container Diagram Summarized](../assets/img/artifacts/nutrisense-ContainerDiagram1.png)
+
 ### 4.6.4. Software Architecture Components Diagrams
 
 ## 4.7. Software Object-Oriented Design
