@@ -10,6 +10,10 @@ NutriSense busca un tono equilibrado entre lo motivador y lo accesible, con un l
 
 La identidad visual de NutriSense busca transmitir bienestar, modernidad y confianza. El nombre combina "Nutrición" y "Sense" (sentido / sensorial), reflejando la propuesta de una plataforma inteligente que adapta las recomendaciones al contexto del usuario. El logo, acompañado del nombre en tipografía Poppins, transmite una imagen limpia y contemporánea, apta tanto para interfaces digitales como para materiales de comunicación.
 
+<p align="center">
+  <img src="../assets/img/nutrisense-logo.png" alt="NutriSense Logo" />
+</p>
+
 **Typography**
 
 Para mantener la legibilidad y la personalidad visual de NutriSense se establecen dos tipografías complementarias: Poppins como fuente primaria y Questrial como fuente secundaria, ambas provenientes de Google Fonts y con alta compatibilidad en entornos digitales.
@@ -20,6 +24,10 @@ Questrial es una sans-serif de trazo amigable y legible, utilizada para cuerpos 
 
 Los tamaños base definidos son: H1 en 48px, H2 en 36px, H3 en 28px, H4 en 24px, cuerpo de texto en 16px y caption en 13px. 
 
+<p align="center">
+  <img src="../assets/img/style-guidelines/poppins.png" alt="Poppins" /> <img src="../assets/img/style-guidelines/questrial.png" alt="Questrial" />
+</p>
+
 **Colors**
 
 La paleta de NutriSense fue diseñada para evocar salud, naturaleza y bienestar digital, con tonos cálidos y orgánicos que contrastan con un color principal de acento tecnológico.
@@ -29,6 +37,10 @@ El color principal es el verde azulado (`#508B89`), que transmite calma, salud y
 Como color de fondo predominante se usa el melocotón muy claro (`#FFE9DE`), que aporta calidez y diferencia a NutriSense de plataformas de salud de estética clínica. El color de llamada a la acción es un melocotón medio (`#F4C5AE`), complementado por su variante activa (`#E0A98E`), que se aplica en botones secundarios y elementos interactivos.
 
 Los colores neutros incluyen blanco (`#FFFFFF`) para fondos limpios, negro (`#000000`) para textos de alto contraste y dos tonos de texto: gris oscuro (`#1A1A1A`) para texto principal y gris medio (`#5C5C5C`) para texto secundario. El color de bordes y separadores es un gris cálido (`#E0D6D0`) que armoniza con el fondo melocotón.
+
+<p align="center">
+  <img src="../assets/img/style-guidelines/colors.png" alt="Colors" />
+</p>
 
 **Spacing**
 
