@@ -12,11 +12,9 @@
 
 ### 4.2.2. Labeling Systems
 
+Las etiquetas empleadas en NutriSense priorizan la brevedad y la claridad, evitando tecnicismos que puedan confundir a usuarios no especializados.
 
-Las etiquetas empleadas en NutriSense priorizan la brevedad y la claridad, evitando
-tecnicismos que puedan confundir a usuarios no especializados.
-
-**Landing Page — menú de navegación**
+**Landing Page**
 
 | Etiqueta | Contenido que representa |
 |---|---|
@@ -25,7 +23,7 @@ tecnicismos que puedan confundir a usuarios no especializados.
 | Contact | Formulario y canales de contacto |
 | Log In | Acceso a la Web Application |
 
-**Web Application — barra lateral / navegación principal**
+**Web Application**
 
 | Etiqueta | Contenido que representa |
 |---|---|
@@ -35,18 +33,64 @@ tecnicismos que puedan confundir a usuarios no especializados.
 | Recommendations | Sugerencias contextuales (clima, viaje) |
 | Pantry | Ingredientes disponibles y recetas |
 | Body Tracking | Registro de peso, talla, BMI y TDEE |
-| Wearable Sync | Conexión con Google Fit |
+| Wearable| Conexión con Google Fit |
 | Analytics | Historial y reportes de progreso |
-| Profile & Settings | Datos personales, restricciones, suscripción |
+| Profile| Datos personales, restricciones, suscripción |
 | Subscriptions | Planes y facturación |
 
-Las etiquetas de encabezado dentro de cada módulo siguen la misma lógica de concisión:
-"Today's Summary", "Log a Meal", "Scan a Dish", "My Pantry", "Weekly Report". En todas las
-vistas se usan atributos `alt` descriptivos en imágenes e íconos para garantizar
-accesibilidad con lectores de pantalla.
-
+Las etiquetas de encabezado dentro de cada módulo siguen la misma lógica de concisión: "Today's Summary", "Log a Meal", "Scan a Dish", "My Pantry", "Weekly Report". En todas las vistas se usan atributos `alt` descriptivos en imágenes e íconos para garantizar accesibilidad con lectores de pantalla.
 
 ### 4.2.3. SEO Tags and Meta Tags
+
+
+A continuación se detallan los valores asignados a las principales páginas de la experiencia.
+
+**Landing Page**
+
+| Tag | Valor |
+|---|---|
+| Title | NutriSense: Smart Nutrition, Your Way |
+| Description | NutriSense is the smart nutrition platform that adapts meal recommendations to your location, weather, and health profile. Lose weight or gain muscle, on your terms. |
+| Keywords | nutrition app, calorie tracker, smart nutrition, weight loss, muscle gain, meal planner, food tracker, NutriSense, diet app, healthy eating |
+| Author | NutriSense Team |
+
+**Features Page**
+
+| Tag | Valor |
+|---|---|
+| Title | Features: NutriSense |
+| Description | Explore all NutriSense features: Smart Scan food analysis, weather-based recommendations, travel mode, pantry recipes, wearable sync, and more. |
+| Keywords | NutriSense features, smart scan, calorie tracker, travel mode, weather nutrition, meal logging, wearable sync, recipe ideas, menu analysis |
+| Author | NutriSense Team |
+
+**About Us Page**
+
+| Tag | Valor |
+|---|---|
+| Title | About Us: NutriSense |
+| Description | Learn about the NutriSense team and our mission to empower people to eat better through visual food analysis and context-aware smart recommendations. |
+| Keywords | NutriSense team, about NutriSense, nutrition mission, healthy eating platform, Latin America nutrition app |
+| Author | NutriSense Team |
+
+**Contact Page**
+
+| Tag | Valor |
+|---|---|
+| Title | Contact: NutriSense |
+| Description | Get in touch with the NutriSense team. Send us a message for questions, feedback, or partnership inquiries. |
+| Keywords | NutriSense contact, nutrition app support, feedback, partnership, customer service |
+| Author | NutriSense Team |
+
+**Web Application**
+
+| Tag | Valor |
+|---|---|
+| Title | NutriSense App – Your Smart Nutrition Assistant |
+| Description | Log your meals, analyze dishes with your camera, and receive personalized recommendations based on your weather and location. Reach your goal with NutriSense. |
+| Keywords | nutrition log, calorie tracking, smart scan, weather recommendations, travel mode, wearable sync, NutriSense app, meal tracker, healthy eating assistant |
+| Author | NutriSense Team |
+
+Todas las páginas incluyen `charset="UTF-8"`, `robots: index, follow`, etiqueta canónica (`rel="canonical"`) y Open Graph tags para compartir en redes sociales.
 
 ### 4.2.4. Searching Systems
 
