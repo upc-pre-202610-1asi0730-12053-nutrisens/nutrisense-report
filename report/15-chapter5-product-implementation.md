@@ -16,6 +16,64 @@
 
 #### 5.2.1.1. Sprint Planning 1
 
+
+<table>
+  <tr>
+    <th colspan="2">Sprint #</th>
+    <th colspan="2">Sprint 1</th>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Planning Background</th>
+  </tr>
+  <tr>
+    <td colspan="2">Date</td>
+    <td colspan="2">2026-04-21</td>
+  </tr>
+  <tr>
+    <td colspan="2">Time</td>
+    <td colspan="2">06:00 PM (GMT-5)</td>
+  </tr>
+  <tr>
+    <td colspan="2">Location</td>
+    <td colspan="2">Reunión presencial</td>
+  </tr>
+  <tr>
+    <td colspan="2">Prepared By</td>
+    <td colspan="2">Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Attendees (to planning meeting)</td>
+    <td colspan="2">Del Aguila Del Aguila, Olenka Priscilla / Espinoza Cruz, Angela Milagros / Mora Rivera, Joel Fernando / Vergraray Calderon, Rose Almendra / Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint n – 1 Review Summary</th>
+  </tr>
+  <tr>
+    <td colspan="4">No aplica. El Sprint 1 es el primero de la cadencia del proyecto NutriSense. No existe sprint anterior que revisar.</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint n – 1 Retrospective Summary</th>
+  </tr>
+  <tr>
+    <td colspan="4">No aplica. Al ser la primera iteración, no hay retrospectiva previa documentada. El equipo acordó en esta reunión establecer como normas de trabajo el uso de GitFlow con ramas <code>feature/</code>, <code>develop</code> y <code>main</code>, Conventional Commits para todos los mensajes, y revisión de Pull Requests con mínimo un aprobador antes de hacer merge a <code>develop</code>.</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Goal &amp; User Stories</th>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 1 Goal</td>
+    <td colspan="2">Our focus is on delivering a fully functional and publicly accessible NutriSense Landing Page in both English and Spanish. We believe it delivers a clear understanding of the platform's value proposition, subscription plans, and team identity to potential users from both target segments,adults seeking weight loss and young adults seeking muscle gain. This will be confirmed when any visitor can navigate all landing page sections (Hero, Features, Plans, About Us, FAQ, Contact), switch the interface language between English (en_US) and Spanish (es_419), and access the web application entry point from the landing page without any broken links or accessibility violations.</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 1 Velocity</td>
+    <td colspan="2">15 Story Points</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sum of Story Points</td>
+    <td colspan="2">15 Story Points</td>
+  </tr>
+</table>
+
 #### 5.2.1.2. Aspect Leaders and Collaborators
 
 #### 5.2.1.3. Sprint Backlog 1
