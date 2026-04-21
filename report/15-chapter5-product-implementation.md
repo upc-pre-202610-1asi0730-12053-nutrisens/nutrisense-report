@@ -131,7 +131,45 @@ URL del Board (Trello): https://trello.com/invite/b/69e7e914df07d176838add9d/ATT
 
 #### 5.2.1.5. Execution Evidence for Sprint Review
 
+Durante el Sprint 1, el equipo completó la implementación y despliegue público del sitio web estático (Landing Page) de NutriSense. Se entregaron las diez User Stories comprometidas (US01–US10), cubriendo la totalidad de las secciones del sitio: Hero con carrusel de tres diapositivas, sección de funciones principales con subpágina completa, tabla comparativa de planes de suscripción, módulo de internacionalización en_US / es_419 con persistencia de sesión, subpágina About Us con misión, visión y tarjetas del equipo, acordeón de preguntas frecuentes, formulario de contacto con validación del lado cliente, acceso persistente al login desde todas las páginas, sección de redes sociales y subpágina de Términos y Condiciones. El sitio fue desplegado en GitHub Pages.
+
+A continuación se presentan screenshots de las principales vistas implementadas durante el sprint.
+
+**Hero Section (Call to Action)**
+![Hero](../assets/img/hero.png)
+
+**Main Features Section y enlace a subpágina completa**
+![Main features](../assets/img/main.png)
+
+**Subscription Plans Comparison Table**
+![Suscriptions](../assets/img/suscriptions.png)
+
+**About Us (misión, visión y equipo)**
+![About-us](../assets/img/about-us.png)
+
+**FAQ accordion**
+![FAQ](../assets/img/faq.png)
+
+**Contact page con formulario y validación**
+![Contact](../assets/img/contact.png)
+
+**Terms and Conditions subpage**
+![Terms](../assets/img/terms.png)
+
+**Footer con redes sociales, selector de idioma y enlace legal**
+![Footer](../assets/img/footer.png)
+
+**Cambio de idioma activo**
+![Language](../assets/img/language.png)
+
+El video de demostración del Sprint 1 ilustra la navegación completa por todas las secciones de la Landing Page, el cambio de idioma entre inglés y español, la validación del formulario de contacto y el acceso al punto de entrada de la aplicación web desde la página de inicio.
+
+**URL del video de demostración del Sprint 1:** *(Insertar enlace a Microsoft Stream / YouTube)*
+
+
 #### 5.2.1.6. Services Documentation Evidence for Sprint Review
+
+El Sprint 1 tuvo como único alcance la implementación del sitio web estático (Landing Page) de NutriSense. En esta iteración no se desarrollaron ni desplegaron Web Services, endpoints RESTful ni ningún componente de backend. Por ello, no existe documentación de servicios con OpenAPI que reportar en este sprint.
 
 #### 5.2.1.7. Software Deployment Evidence for Sprint Review
 
