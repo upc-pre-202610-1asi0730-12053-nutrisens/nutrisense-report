@@ -23,7 +23,7 @@
 El Sprint 1 tiene como objetivo principal entregar el sitio web estático (Landing Page) de NutriSense completamente funcional, accesible y desplegado públicamente. Todos los User Stories de este sprint pertenecen al Epic EP01 Landing Page y cubren las secciones del sitio: Hero con carrusel, Funciones principales, Comparativa de planes, Cambio de idioma, Términos y condiciones, About Us, FAQ, formulario de contacto y enlaces a redes sociales. El entregable del sprint es la Landing Page publicada en GitHub Pages y accesible desde cualquier navegador de escritorio o móviL.
 A continuación se presenta el board del sprint en Trello y la tabla de work-items correspondiente.
 
-![Board Sprint 1](../assets/sprint1/sprintbacklog.png)
+![Board Sprint 1](../assets/img/sprint1/sprintbacklog.png)
 URL del Board (Trello): https://trello.com/invite/b/69e7e914df07d176838add9d/ATTIdd4dfe357744be4dc97cce9e1ff43aeeC1917E49/sprint-1
 
 | US ID | US Title | Task ID | Task Title | Description | Est. (h) | Assigned To | Status |
