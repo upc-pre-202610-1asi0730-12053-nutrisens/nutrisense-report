@@ -16,7 +16,6 @@
 
 #### 5.2.1.1. Sprint Planning 1
 
-
 <table>
   <tr>
     <th colspan="2">Sprint #</th>
