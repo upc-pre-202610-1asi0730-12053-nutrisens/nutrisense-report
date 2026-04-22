@@ -36,6 +36,11 @@ En conjunto, estos hallazgos orientan el desarrollo de nuestra plataforma hacia 
 
 ### 2.3.3. User Journey Mapping
 
+**Segmento 1: Pérdida de peso**
+
+
+**Segmento 2: Ganancia de masa muscular**
+
 ### 2.3.4. Empathy Mapping
 
 ## 2.4. Big Picture EventStorming
