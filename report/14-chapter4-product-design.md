@@ -176,6 +176,56 @@ Diseño Inclusivo
 | **Priorizar el contenido (P6)** | En mobile, el hero coloca el título "Smart Nutrition" y el botón "Go to app" en la parte superior visible sin necesidad de scroll, priorizando el mensaje principal y la acción de conversión antes que cualquier otro contenido. |
 | **Ser consistente (P3)** | El patrón de tarjeta en la página de funcionalidades mobile (ícono a la izquierda, título a la derecha, descripción abajo) se repite de forma idéntica en todas las entradas, estableciendo un modelo de lectura predecible que el usuario solo necesita aprender una vez. |
 
+**Contact, About-us & Terms**
+
+<center>
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="../assets/img/wireframe/landing/mobile/contact.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/landing/mobile/about-us.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/landing/mobile/terms.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+  </table>
+</div>
+</center>
+
+Elementos de Diseño
+
+| Elemento | Justificación |
+|---|---|
+| **Shape** | Las tarjetas de Misión y Visión en About Us mantienen las esquinas redondeadas y el ícono circular superpuesto en la parte superior, adaptando fielmente la forma orgánica de la versión desktop al formato de una sola columna. El formulario de contacto conserva bordes rectos en los campos de texto, transmitiendo formalidad y estructura. |
+| **Space** | En Términos y Condiciones, el contenido legal ocupa casi todo el ancho de la pantalla con márgenes mínimos, priorizando la legibilidad del texto extenso en pantalla pequeña. En About Us, se preserva espacio vertical generoso entre el bloque introductorio y las tarjetas de Misión/Visión para separar visualmente las secciones. |
+| **Direction** | En About Us, las tarjetas de Misión y Visión se apilan verticalmente una debajo de la otra, adaptando el layout de dos columnas del desktop a una dirección de lectura descendente natural para el usuario móvil. En Contacto, el formulario ocupa toda la columna sin elementos paralelos, dirigiendo la atención exclusivamente al llenado de campos. |
+| **Size** | En Términos y Condiciones, los títulos de sección numerados son visualmente más grandes que el cuerpo del texto, permitiendo que el usuario escanee rápidamente las secciones legales sin necesidad de leer el documento completo en una pantalla reducida. |
+
+Heurísticas de Nielsen
+
+| Heurística | Justificación |
+|---|---|
+| **Consistencia y estándares (H4)** | El navbar hamburguesa y el footer de dos columnas se repiten de forma idéntica en las tres páginas móviles (Contacto, About Us, Términos), manteniendo la coherencia estructural establecida en la landing mobile y reduciendo la desorientación del usuario al navegar entre vistas. |
+| **Prevención de errores (H5)** | El formulario de contacto en mobile presenta los campos apilados verticalmente con etiquetas explícitas encima de cada input, eliminando ambigüedad sobre qué información ingresar en cada campo. El campo de mensaje tiene una altura generosa que reduce el riesgo de enviar mensajes incompletos. |
+| **Diseño estético y minimalista (H8)** | La página de Términos y Condiciones en mobile elimina cualquier elemento decorativo adicional, presentando únicamente el bloque de texto legal sobre fondo blanco. Esto respeta el principio de no añadir información que compita con el contenido relevante en una pantalla de espacio reducido. |
+| **Visibilidad del estado del sistema (H1)** | El hero de la página de Contacto muestra el número de teléfono de forma visible e inmediata sobre la imagen de fondo, comunicando al usuario desde el primer momento que existe un canal de contacto directo antes de que llegue al formulario. |
+
+Arquitectura de la Información (AI)
+
+| Principio AI | Justificación |
+|---|---|
+| **Disclosure** | En About Us mobile, el párrafo introductorio aparece primero como contexto general, y solo después se revelan las tarjetas de Misión y Visión como profundización. Esto aplica el principio de mostrar información suficiente para orientar al usuario antes de presentar el detalle. |
+| **Objects** | Las tarjetas de Misión y Visión en mobile tratan cada concepto como un objeto independiente con ícono, título y descripción propios, preservando su identidad visual incluso al reorganizarse en columna única. Cada tarjeta funciona como una entidad autónoma con atributos diferenciados. |
+| **Front Doors** | La página de Contacto ofrece dos puntos de entrada al mismo objetivo: el número telefónico visible en el hero y el formulario escrito debajo. Esto garantiza que usuarios que lleguen directamente a esta página desde cualquier canal encuentren siempre una vía de acción inmediata. |
+| **Focused Navigation** | El panel hamburguesa agrupa los ítems de navegación (Features, Contact, Terms and Conditions, About Us) definidos por su contenido y no por su posición en pantalla. El usuario accede a la navegación como una acción deliberada, manteniendo el foco en el contenido mientras no la necesita. |
+
+Diseño Inclusivo
+
+| Principio | Justificación |
+|---|---|
+| **Proporciona experiencias comparables (P1)** | Los campos del formulario de contacto en mobile están dimensionados con altura suficiente para ser accionables con el dedo, ofreciendo una experiencia de llenado equivalente a la versión desktop sin requerir precisión de cursor. |
+| **Priorizar el contenido (P6)** | En About Us mobile, el título "We are NutriSmart!" ocupa la parte superior visible de la pantalla sin necesidad de scroll, priorizando el mensaje de identidad de marca antes que cualquier otro contenido. Las tarjetas de Misión y Visión destacan sus títulos en negrita sobre fondo oscuro para facilitar el escaneo. |
+| **Ser consistente (P3)** | El footer mantiene la misma estructura de dos columnas en las tres páginas móviles, con los mismos enlaces (Features, Contact, Terms and Conditions, About Us) y el selector de idioma en la misma posición. Esta consistencia permite al usuario ubicar recursos secundarios sin esfuerzo cognitivo adicional. |
+| **Considera la situación del usuario (P2)** | La página de Términos y Condiciones en mobile adapta el texto legal a columna única con interlineado generoso, reconociendo que el usuario puede estar leyendo en condiciones de movilidad o con pantalla de tamaño reducido, donde la densidad de texto dificulta la lectura. |
+
 ### 4.3.2. Landing Page Mock-up
 
 ## 4.4. Web Applications UX/UI Design
