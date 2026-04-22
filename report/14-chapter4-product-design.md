@@ -436,6 +436,58 @@ Diseño Inclusivo
 
 ### 4.4.1. Web Applications Wireframes
 
+**Login, Dashboard, Analytics, Daily log & Balance progress**
+
+<center>
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="../assets/img/wireframe/webapp/login.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/webapp/dashboard.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/webapp/analytics.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/webapp/dailylog.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/webapp/balanceprogress.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+  </table>
+</div>
+</center>
+
+## Elementos de Diseño
+
+| Elemento | Justificación |
+|---|---|
+| **Shape** | La barra lateral de navegación usa un layout rectangular fijo con ítems de texto e ícono alineados verticalmente. Las tarjetas de métricas (calorías, IMC, BMR, TDEE) son rectangulares con esquinas redondeadas y jerarquía numérica prominente. El ítem activo del menú lateral se resalta con un fondo diferenciado que indica la sección actual. En Login, los campos de entrada usan forma de píldora con bordes redondeados, diferenciándolos visualmente de los campos rectangulares del wireframe de la landing. |
+| **Space** | El layout de la aplicación divide la pantalla en dos zonas fijas: sidebar izquierdo de navegación y área de contenido principal. Dentro del área de contenido, las tarjetas de métricas se distribuyen en una fila horizontal superior, seguidas de bloques de contenido secundario en grid de dos columnas. Este uso del espacio establece una jerarquía clara entre datos primarios y secundarios. |
+| **Direction** | En Dashboard y Analytics, la lectura sigue un patrón en Z: de izquierda a derecha en la fila de métricas superiores, luego diagonal hacia el bloque principal de contenido y finalmente al panel lateral derecho. En Daily Log, la dirección es vertical descendente dentro de cada bloque de comidas, con el panel de búsqueda fijo a la derecha. |
+| **Size** | Los valores numéricos clave (1340 kcal, 70.2 kg, 24.1 IMC) se muestran en un tamaño notablemente mayor al de sus etiquetas y unidades de medida, estableciendo una jerarquía tipográfica que permite al usuario escanear los datos más relevantes sin leer el contexto completo. |
+
+Heurísticas de Nielsen
+
+| Heurística | Justificación |
+|---|---|
+| **Visibilidad del estado del sistema (H1)** | El Dashboard saluda al usuario por nombre ("Good morning, Ana") con fecha actual, comunicando que el sistema está activo y contextualizado en tiempo real. Las barras de progreso en Daily Log muestran el porcentaje de cada macronutriente consumido respecto a la meta diaria. En Body Progress, la fecha de logro estimada ("~August 14, 2026") informa al usuario sobre su proyección actual. |
+| **Reconocer antes que recordar (H6)** | El menú lateral muestra todos los ítems de navegación visibles de forma permanente, divididos en secciones PRINCIPAL y TOOLS. El ítem activo está resaltado, eliminando la necesidad de que el usuario recuerde en qué sección se encuentra. En Daily Log, cada comida muestra nombre, cantidad, calorías y macros en la misma fila, evitando que el usuario deba navegar para recordar qué registró. |
+| **Flexibilidad y eficiencia en el uso (H7)** | En Body Progress, los filtros de tiempo "7 days", "30 days" y "90 days" permiten al usuario experto cambiar el rango del gráfico con un solo clic sin necesidad de configurar fechas manualmente. En Analytics, el botón "Export to PDF" y los mismos filtros de rango ofrecen atajos directos para usuarios avanzados. |
+| **Prevención de errores (H5)** | En Body Progress, el campo "Log weight" muestra el peso actual como placeholder ("E.g.: 70.2") y lo confirma debajo del campo ("Current weight: 70.2 kg"), permitiendo al usuario verificar el valor antes de guardar. El campo "Update height" incluye la nota "BMI is automatically recalculated", informando las consecuencias de la acción antes de ejecutarla. |
+
+Arquitectura de la Información (AI)
+
+| Principio AI | Justificación |
+|---|---|
+| **Objects** | Cada entrada del Daily Log trata la comida como un objeto con atributos propios: nombre, cantidad, calorías y macros (P, C, G). Cada registro del Log History en Body Progress tiene fecha, peso y variación como atributos independientes. Estos objetos se comportan como entidades vivas que acumulan historial y generan proyecciones. |
+| **Multiple Classification** | La navegación lateral organiza el contenido en dos categorías diferenciadas: PRINCIPAL (Dashboard, Daily log, Smart Scan, Recommendations, Body progress) y TOOLS (Pantry, Wearable, Analytics, Subscription). Esta clasificación permite al usuario acceder al contenido tanto por flujo de uso habitual como por tipo de herramienta. |
+| **Choices** | En Analytics, los filtros "7 days", "30 days" y "90 days" ofrecen tres perspectivas temporales significativas del progreso del usuario. En Login, el enlace "Forgot your password?" y "Create account" ofrecen rutas alternativas sin obligar al usuario a abandonar el flujo principal. |
+| **Growth** | La estructura de Daily Log organiza las comidas por categoría (Breakfast, Lunch, Snack, Dinner) con entradas expandibles dentro de cada bloque. Esto permite que el número de alimentos registrados por comida crezca sin romper la jerarquía visual, añadiendo filas dentro del bloque correspondiente. |
+
+Diseño Inclusivo
+
+| Principio | Justificación |
+|---|---|
+| **Priorizar el contenido (P6)** | En Dashboard, las tres tarjetas superiores (Calories Consumed, Calories Remaining, Net Balance) presentan los datos más relevantes para el seguimiento diario del usuario en la parte más visible de la pantalla, antes que cualquier otro contenido. Los valores numéricos en tamaño grande priorizan el dato sobre su contexto. |
+| **Proporciona experiencias comparables (P1)** | El panel de búsqueda de alimentos en Daily Log incluye un campo de texto con placeholder descriptivo ("E.g.: rice, chicken breast, yogurt...") que orienta al usuario sobre el tipo de entrada esperada, ofreciendo una experiencia de búsqueda accesible tanto para usuarios que conocen los nombres exactos como para quienes buscan por categoría general. |
+| **Deja al usuario mandar (P4)** | En Body Progress, el usuario puede editar su meta de peso y actualizar su altura en cualquier momento desde el panel lateral. En Analytics, el botón "Export to PDF" da al usuario control sobre sus propios datos, permitiéndole exportarlos cuando lo considere necesario. |
+| **Agrega valor (P7)** | El bloque "Active Streak" en Dashboard muestra el número de días consecutivos con registro completo, agregando valor motivacional más allá del simple registro de datos. La integración con Google Fit que descuenta calorías activas del balance diario ("Active (Google Fit): -300 kcal") agrega valor contextual que una app de nutrición estándar no ofrece. |
+
 ### 4.4.2. Web Applications Wireflow Diagrams
 
 ### 4.4.2. Web Applications Mock-ups
