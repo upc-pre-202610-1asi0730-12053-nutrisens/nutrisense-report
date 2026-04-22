@@ -382,6 +382,56 @@ Diseño Inclusivo
 | **Priorizar el contenido (P6)** | El título "Smart Nutrition" y el botón "Go to app" ocupan la parte superior visible de la pantalla sin necesidad de scroll, priorizando el mensaje principal y la acción de conversión. En la página de funcionalidades, cada tarjeta posiciona el título en negrita antes que la descripción, facilitando el escaneo rápido del contenido. |
 | **Ser consistente (P3)** | El patrón de tarjeta en la página de funcionalidades mobile replica exactamente la misma estructura que la versión desktop (ícono a la izquierda, título a la derecha, descripción abajo), estableciendo un modelo de lectura familiar para usuarios que hayan interactuado previamente con la versión de escritorio. |
 
+**Contact, About-us & Terms**
+
+<center>
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="../assets/img/mockup/landing/mobile/contact.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/landing/mobile/about-us.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/landing/mobile/terms.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+  </table>
+</div>
+</center>
+
+Elementos de Diseño
+
+| Elemento | Justificación |
+|---|---|
+| **Colour** | Los bordes rosados de los campos del formulario en Contacto y el botón "Submit" en el mismo tono salmón mantienen la paleta cromática de la plataforma incluso en los elementos interactivos más funcionales. En About Us, las manchas de acuarela rosada y verde azulado sobre el fondo blanco del hero replican el lenguaje visual decorativo de la versión desktop adaptado al ancho móvil. |
+| **Texture** | En Contacto, la fotografía del hero muestra un grupo de personas diversas y sonrientes ocupando el ancho completo de la pantalla, introduciendo textura fotográfica humana que contextualiza la página antes del formulario. En About Us, las manchas de acuarela aportan textura orgánica al encabezado, diferenciando visualmente la página institucional de las demás. |
+| **Shape** | Las tarjetas de Misión y Visión en About Us mobile conservan las esquinas redondeadas con fondo verde oscuro y el ícono circular superpuesto en la parte superior, manteniendo la forma orgánica de la versión desktop en columna única. El logo de NutriSense en el footer combina una forma circular ilustrada con texto, funcionando como un objeto visual compacto adaptado al espacio reducido. |
+| **Size** | En Términos y Condiciones, el título "Terms and conditions" ocupa las dos primeras líneas visibles con un tamaño notablemente mayor al cuerpo del texto, estableciendo jerarquía inmediata en una página de contenido denso. Los íconos de redes sociales en el footer tienen un tamaño táctil generoso que los hace accionables sin requerir precisión. |
+
+Heurísticas de Nielsen
+
+| Heurística | Justificación |
+|---|---|
+| **Consistencia y estándares (H4)** | El navbar con logo y hamburguesa, y el footer con estructura de dos columnas, íconos de redes sociales a color y selector de idioma se replican de forma idéntica en las tres páginas móviles, manteniendo el patrón establecido en la landing mobile y generando predictibilidad en la navegación. |
+| **Prevención de errores (H5)** | Los campos del formulario de Contacto tienen bordes rosados claramente visibles sobre fondo blanco, delimitando el área de interacción y reduciendo el riesgo de que el usuario toque fuera del campo. El campo de mensaje tiene altura generosa para evitar que el usuario envíe mensajes incompletos por falta de espacio visual. |
+| **Visibilidad del estado del sistema (H1)** | El número de teléfono real (+51 984231995) aparece superpuesto sobre la fotografía del hero en Contacto junto al ícono de llamada, comunicando de forma inmediata que existe un canal de contacto directo disponible antes de que el usuario llegue al formulario. |
+| **Diseño estético y minimalista (H8)** | La página de Términos y Condiciones en mobile presenta el contenido legal en una sola tarjeta blanca sin imágenes, íconos ni elementos decorativos adicionales. Esta decisión respeta el principio de eliminar todo lo que no contribuya directamente a la comprensión del contenido legal en pantalla reducida. |
+
+Arquitectura de la Información (AI)
+
+| Principio AI | Justificación |
+|---|---|
+| **Objects** | El logo de NutriSense en navbar y footer de las tres páginas mobile es un objeto visual completo con ilustración, nombre de marca y tagline, comportándose de forma consistente como elemento de identidad en todas las vistas. Las tarjetas de Misión y Visión tratan cada concepto como un objeto independiente con ícono, título y descripción propios. |
+| **Disclosure** | En About Us mobile, el párrafo introductorio aparece antes de las tarjetas de Misión y Visión, revelando el propósito general de la empresa antes de profundizar en sus valores institucionales. En Términos y Condiciones, los títulos de sección numerados permiten al usuario anticipar la estructura del documento sin leerlo completo. |
+| **Front Doors** | La página de Contacto mobile ofrece dos puertas de entrada al mismo objetivo: el número telefónico visible en el hero y el formulario escrito debajo. Esto garantiza que usuarios que lleguen directamente a esta página desde cualquier canal encuentren siempre una vía de acción inmediata adecuada a su preferencia. |
+| **Focused Navigation** | El footer en las tres páginas mobile presenta los mismos enlaces de navegación (Features, Contact, Terms and Conditions, About Us) definidos por su contenido, permitiendo al usuario reorientarse dentro de la plataforma desde cualquier página sin necesidad de volver al inicio. |
+
+Diseño Inclusivo
+
+| Principio | Justificación |
+|---|---|
+| **Considera la situación del usuario (P2)** | Los campos del formulario de Contacto tienen altura suficiente para ser accionables con el dedo en condiciones de movilidad, y el botón "Submit" está posicionado debajo del último campo con espacio de separación que evita envíos accidentales al terminar de escribir el mensaje. |
+| **Proporciona experiencias comparables (P1)** | Los íconos de redes sociales en el footer usan sus colores de marca oficiales (rojo Gmail, azul Facebook, gradiente Instagram, azul LinkedIn), permitiendo que usuarios con distintos niveles de alfabetización digital identifiquen los canales por color y forma sin depender únicamente del texto en pantalla reducida. |
+| **Priorizar el contenido (P6)** | En About Us mobile, las tarjetas de Misión y Visión con fondo verde oscuro y texto blanco destacan visualmente sobre el fondo salmón de la página, priorizando el contenido institucional más relevante mediante contraste cromático deliberado incluso en formato de columna única. |
+| **Ser consistente (P3)** | La estructura del footer se replica de forma idéntica en las tres páginas mobile con los mismos bloques (logo + enlaces + redes sociales + selector de idioma), estableciendo un patrón reconocible que permite al usuario ubicar recursos secundarios sin esfuerzo cognitivo adicional independientemente de la página en que se encuentre. |
+
 ## 4.4. Web Applications UX/UI Design
 
 ### 4.4.1. Web Applications Wireframes
