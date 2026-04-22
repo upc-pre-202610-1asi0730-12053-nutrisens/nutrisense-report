@@ -445,6 +445,8 @@ Diseño Inclusivo
       <td><img src="../assets/img/wireframe/webapp/login.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
       <td><img src="../assets/img/wireframe/webapp/dashboard.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
       <td><img src="../assets/img/wireframe/webapp/analytics.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+    <tr>
       <td><img src="../assets/img/wireframe/webapp/dailylog.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
       <td><img src="../assets/img/wireframe/webapp/balanceprogress.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
     </tr>
