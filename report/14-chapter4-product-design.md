@@ -454,7 +454,7 @@ Diseño Inclusivo
 </div>
 </center>
 
-## Elementos de Diseño
+Elementos de Diseño
 
 | Elemento | Justificación |
 |---|---|
@@ -546,6 +546,60 @@ Diseño Inclusivo
 ### 4.4.2. Web Applications Wireflow Diagrams
 
 ### 4.4.2. Web Applications Mock-ups
+
+**Login, Dashboard, Analytics, Daily log & Balance progress**
+
+<center>
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="../assets/img/mockup/webapp/login.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/webapp/dashboard.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/webapp/analytics.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+    <tr>
+      <td><img src="../assets/img/mockup/webapp/dailylog.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/webapp/balanceprogress.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+  </table>
+</div>
+</center>
+
+Elementos de Diseño
+
+| Elemento | Justificación |
+|---|---|
+| **Colour** | La paleta de la aplicación usa el verde azulado como color primario de acción e identidad, aplicado consistentemente en el ítem activo del menú lateral, los botones de acción principales ("Save entry", "+ Log weight", filtros activos), las barras de progreso de macronutrientes y los gráficos de Analytics. El color rosado/salmón se reserva exclusivamente para estados de alerta o exceso (barras "Over goal" en Analytics, indicador de Fats en Daily Log), creando un sistema cromático semántico donde el verde representa progreso positivo y el rosado representa advertencia. |
+| **Colour (íconos de navegación)** | Cada ítem del menú lateral tiene un ícono temático con color propio: un grid para Dashboard, un check para Daily log, un reloj para Recommendations, una línea de tendencia para Body progress, un corazón para Pantry, y un gráfico de barras para Analytics. Estos íconos reemplazan los placeholders del wireframe, permitiendo al usuario reconocer cada sección por forma y color sin leer la etiqueta. |
+| **Shape** | El gráfico de barras en Analytics usa dos colores de barra diferenciados (verde azulado para "On target", rosado para "Over goal") con una línea punteada horizontal que marca la meta calórica. Esta representación visual permite al usuario evaluar su desempeño semanal de un vistazo sin necesidad de leer los valores numéricos de cada barra. El gráfico de línea en Body Progress muestra la evolución del peso con área sombreada bajo la curva, reforzando visualmente la tendencia descendente. |
+| **Size** | En Dashboard, el número "1340" de calorías consumidas y el "460" de calorías restantes se muestran en un tamaño notablemente mayor a sus etiquetas y unidades, estableciendo jerarquía numérica que permite al usuario escanear el estado diario en menos de un segundo. En Login, el título "Welcome back" ocupa el ancho completo del panel derecho, priorizando la bienvenida sobre el formulario. |
+
+Heurísticas de Nielsen
+
+| Heurística | Justificación |
+|---|---|
+| **Visibilidad del estado del sistema (H1)** | En Dashboard, la tarjeta "Calories Consumed" muestra una barra de progreso verde que indica visualmente qué porcentaje de la meta diaria ha sido consumido. En Analytics, la etiqueta "✓ Within target" en verde y "⚠ Below target" en amarillo comunican el estado de cada métrica de forma inmediata sin requerir interpretación del usuario. En Body Progress, el gráfico de línea muestra la trayectoria real del peso versus la meta con una línea punteada de referencia. |
+| **Relación entre el sistema y el mundo real (H2)** | En Daily Log, cada comida usa un ícono de reloj con color diferenciado por tiempo del día (naranja para Breakfast, verde para Lunch, rosado para Snack), conectando el registro nutricional con el contexto temporal real del usuario. En Login, el panel izquierdo usa el verde azulado oscuro con ilustración del logo y funcionalidades clave, comunicando el valor del producto en el lenguaje cotidiano del usuario antes de que inicie sesión. |
+| **Prevención de errores (H5)** | En Body Progress, el campo "Log weight" muestra el peso actual como placeholder ("E.g.: 70.2") y lo confirma debajo del campo ("Current weight: 70.2 kg"), permitiendo al usuario verificar el valor de referencia antes de registrar uno nuevo. El botón "Update height" aparece visualmente desactivado (gris claro) cuando no hay cambios pendientes, previniendo guardados accidentales sin modificaciones. |
+| **Reconocer antes que recordar (H6)** | En Analytics, la leyenda del gráfico de barras incluye tres categorías con color y etiqueta ("Over goal" en rosado, "On target" en verde, "No data" en gris), permitiendo al usuario interpretar el gráfico por reconocimiento visual sin necesidad de recordar el significado de cada color. El indicador de días "M T W T F S S" en el panel de macros usa el mismo color verde para los días con registro completo, reforzando el patrón de reconocimiento. |
+
+Arquitectura de la Información (AI)
+
+| Principio AI | Justificación |
+|---|---|
+| **Objects** | En Dashboard, el gráfico donut de macros trata cada nutriente (Protein, Carbohydrates, Fat) como un objeto con color propio y valor numérico actual versus meta. Cada segmento del donut representa un objeto vivo que cambia a medida que el usuario registra alimentos durante el día. En Analytics, cada barra del gráfico es un objeto con atributos de fecha, valor calórico y estado respecto a la meta. |
+| **Disclosure** | En Dashboard, la sección "Today's log" muestra únicamente el nombre, contenido resumido, hora y calorías totales de cada comida, sin detallar los alimentos individuales. El usuario que quiera ver el detalle completo puede navegar a Daily Log, donde accede a cada alimento con sus macros desglosados. |
+| **Multiple Classification** | En Analytics, el progreso del usuario puede evaluarse simultáneamente desde cuatro perspectivas en las tarjetas superiores: ingesta calórica promedio, ingesta proteica promedio, racha de consistencia y variación de peso semanal. Cada métrica ofrece una clasificación diferente del mismo período de tiempo. |
+| **Growth** | En Daily Log, cada bloque de comida (Breakfast, Lunch, Snack, Dinner) puede expandirse con nuevas entradas sin alterar la estructura de la página. El sistema escala verticalmente añadiendo filas dentro del bloque correspondiente, manteniendo la organización por tiempo del día independientemente del número de alimentos registrados. |
+
+Diseño Inclusivo
+
+| Principio | Justificación |
+|---|---|
+| **Agrega valor (P7)** | El gráfico donut en Dashboard agrega valor visual respecto a la presentación de barras del wireframe, permitiendo al usuario ver la proporción relativa de cada macronutriente dentro del total consumido y no solo los valores absolutos. La etiqueta "-300 Google Fit" en el Dashboard comunica que la actividad física real del usuario ya está descontada del balance calórico, un nivel de personalización que agrega valor diferencial. |
+| **Priorizar el contenido (P6)** | En Analytics, las cuatro tarjetas de métricas superiores (calorías, proteínas, racha, peso) presentan el dato más relevante en tamaño grande con una etiqueta de estado debajo, priorizando la información de desempeño antes de mostrar los gráficos detallados. El usuario puede entender su situación semanal leyendo solo la fila superior. |
+| **Proporciona experiencias comparables (P1)** | El sistema de color semántico (verde para positivo, rosado para alerta) se aplica de forma consistente en Daily Log, Dashboard y Analytics, garantizando que un usuario que aprende el significado de los colores en una sección pueda interpretarlos correctamente en cualquier otra vista de la aplicación. |
+| **Deja al usuario mandar (P4)** | En Body Progress, el enlace "Edit goal →" permite al usuario modificar su meta de peso en cualquier momento sin necesidad de contactar soporte ni navegar a configuración. En Analytics, el botón "Export to PDF" y los filtros de rango temporal dan al usuario control completo sobre cómo y cuándo accede a sus propios datos históricos. |
 
 ### 4.4.3. Web Applications User Flow Diagrams
 
