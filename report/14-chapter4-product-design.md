@@ -338,7 +338,7 @@ Diseño Inclusivo
 <div align="center">
   <table>
     <tr>
-      <td><img src="../assets/img/mockup/landing/mobile/main.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/landing/mobile/menu.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
       <td><img src="../assets/img/mockup/landing/mobile/features.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
       <td><img src="../assets/img/mockup/landing/mobile/main-menu.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
     </tr>
