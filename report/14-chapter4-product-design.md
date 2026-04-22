@@ -228,6 +228,61 @@ Diseño Inclusivo
 
 ### 4.3.2. Landing Page Mock-up
 
+**Desktop Web Browser**
+
+**Main & Features**
+
+<center>
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="../assets/img/mockup/landing/desktop/main.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/landing/desktop/features.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+  </table>
+</div>
+</center>
+
+Elementos de Diseño
+
+| Elemento | Justificación |
+|---|---|
+| **Colour** | Se aplica una paleta de tonos cálidos con fondo salmón/rosado como color dominante en ambas páginas, complementado con un verde oscuro en el navbar y footer. Esta combinación transmite salud, calidez y naturalidad, alineada con el propósito nutricional de la plataforma. Las tarjetas de funcionalidades usan fondo blanco para generar contraste sobre el fondo salmón y destacar el contenido. |
+| **Texture** | En la landing, las secciones de Smart Scan, Global Nutrition y Your Weather usan imágenes fotográficas reales de alimentos y dispositivos móviles como fondo, introduciendo textura orgánica que contrasta con las secciones de fondo plano. Esto genera profundidad visual y contextualiza cada funcionalidad con evidencia visual real. |
+| **Shape** | Los íconos de cada funcionalidad son ilustraciones de línea fina con estilo outline consistente, reemplazando los placeholders del wireframe. Las tarjetas mantienen esquinas redondeadas. Los botones de objetivo ("I want to gain muscle mass") adoptan formas redondeadas con fondo gris oscuro que los distingue como elementos interactivos. |
+| **Colour (contraste)** | El plan Premium incluye un fondo verde oscuro que lo diferencia visualmente de los planes Basic y Pro en fondo blanco, reforzando su etiqueta "Recommended" y dirigiendo la atención del usuario hacia la opción de mayor valor sin necesidad de texto adicional. |
+
+Heurísticas de Nielsen
+
+| Heurística | Justificación |
+|---|---|
+| **Consistencia y estándares (H4)** | El navbar verde oscuro con logo a la izquierda y links a la derecha se mantiene idéntico en ambas páginas. El footer replica la misma estructura de columnas con enlaces, redes sociales reales (Gmail, Facebook, Instagram, LinkedIn) y selector de idioma, estableciendo un patrón reconocible en toda la plataforma. |
+| **Reconocer antes que recordar (H6)** | Los íconos outline de cada funcionalidad son metáforas visuales directas de su función: una cámara para Smart Scan, un avión para Travel Mode, un tenedor y plato para Meal Logging. El usuario reconoce la funcionalidad por el ícono antes de leer el título, reduciendo la carga cognitiva. |
+| **Relación entre el sistema y el mundo real (H2)** | Las imágenes fotográficas reales de alimentos frescos, dispositivos móviles con la app activa y fondos con salpicaduras de color conectan el sistema con el mundo real del usuario. Esto hace que la plataforma se perciba como una herramienta tangible y no como un producto abstracto. |
+| **Diseño estético y minimalista (H8)** | La sección de funcionalidades en la landing muestra solo 6 tarjetas con ícono, nombre y descripción breve, redirigiendo al usuario a la página de funcionalidades para ver el listado completo. Esto evita saturar la landing con información que compite con el llamado a la acción principal. |
+
+Arquitectura de la Información (AI)
+
+| Principio AI | Justificación |
+|---|---|
+| **Exemplars** | Las secciones de Smart Scan, Global Nutrition y Your Weather usan imágenes reales de la app en uso sobre dispositivos móviles como ejemplos concretos de cada funcionalidad. Esto aplica el principio de mostrar ejemplares que ilustren el contenido de cada categoría antes de que el usuario profundice. |
+| **Choices** | La sección "Join us and transform your life" presenta dos opciones de objetivo con íconos ilustrativos (figura muscular vs. figura delgada), haciendo que la elección sea visualmente significativa y no solo textual, facilitando la toma de decisión del usuario. |
+| **Disclosure** | La landing muestra una vista previa de 6 funcionalidades en la sección "Features to enjoy" sin detallar todas las capacidades de cada una. El usuario que quiera profundizar puede navegar a la página de funcionalidades, donde encuentra las 10 tarjetas completas con descripciones detalladas. |
+| **Objects** | El logo de NutriSmart en navbar y footer incorpora un ícono de hoja y el tagline "Smart Nutrition Platform", tratando la marca como un objeto vivo con identidad visual propia. Esto refuerza la coherencia entre todas las páginas y hace que la marca sea reconocible como entidad independiente. |
+
+Diseño Inclusivo
+
+| Principio | Justificación |
+|---|---|
+| **Agrega valor (P7)** | Los íconos outline temáticos reemplazan los placeholders genéricos del wireframe, agregando valor semántico real a cada tarjeta. Un ícono de cámara para Smart Scan o un avión para Travel Mode comunica la función de forma inmediata, mejorando la experiencia de usuarios con distintos niveles de alfabetización digital. |
+| **Priorizar el contenido (P6)** | El plan Premium se distingue visualmente con fondo verde oscuro y la etiqueta "Recommended" destacada, priorizando la opción más completa sin ocultar las alternativas. El usuario puede comparar los tres planes de forma simultánea sin necesidad de navegar entre páginas. |
+| **Ofrecer opciones (P5)** | El footer incluye íconos de redes sociales reales (Gmail, Facebook, Instagram, LinkedIn) como canales alternativos de contacto e información. El selector de idioma permite cambiar el idioma de la interfaz, ampliando el acceso a usuarios hispanohablantes y angloparlantes. |
+| **Proporciona experiencias comparables (P1)** | Los íconos outline de línea fina tienen un estilo visual consistente y reconocible que funciona correctamente en distintas resoluciones de pantalla. Esto garantiza que la experiencia de reconocimiento visual de funcionalidades sea equivalente para usuarios en monitores de alta y baja densidad de píxeles. |
+
+**Mobile Web Browser**
+
+
+
 ## 4.4. Web Applications UX/UI Design
 
 ### 4.4.1. Web Applications Wireframes
