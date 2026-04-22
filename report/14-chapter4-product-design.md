@@ -134,6 +134,7 @@ Diseño Inclusivo
     <tr>
       <td><img src="../assets/img/wireframe/landing/mobile/main.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
       <td><img src="../assets/img/wireframe/landing/mobile/features.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/landing/mobile/main-menu.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
     </tr>
   </table>
 </div>
