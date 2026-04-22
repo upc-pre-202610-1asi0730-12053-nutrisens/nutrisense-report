@@ -332,7 +332,55 @@ Diseño Inclusivo
 
 **Mobile Web Browser**
 
+**Main & Features**
 
+<center>
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="../assets/img/mockup/landing/mobile/main.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/landing/mobile/features.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/mockup/landing/mobile/main-menu.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+  </table>
+</div>
+</center>
+
+Elementos de Diseño
+
+| Elemento | Justificación |
+|---|---|
+| **Colour** | La paleta salmón/rosado como fondo dominante y el verde oscuro del navbar se mantienen consistentes con la versión desktop, garantizando coherencia de identidad visual entre plataformas. El panel de navegación hamburguesa adopta el mismo verde oscuro del navbar, y los círculos decorativos del fondo del panel combinan el rosado y el blanco de la paleta general. |
+| **Texture** | El hero de la landing mobile incorpora una fotografía de alimentos frescos como banda superior y manchas de acuarela en verde azulado como elementos decorativos alrededor de las imágenes de producto. Esta textura orgánica se adapta al ancho reducido de pantalla sin perder la riqueza visual presente en la versión desktop. |
+| **Shape** | Las tarjetas de funcionalidades en la página de features adoptan el mismo patrón ícono-título-descripción con esquinas redondeadas, pero en layout de columna única que ocupa el ancho completo de la pantalla. El botón "Go to app" usa forma de píldora con fondo rosado pastel, diferenciándolo del texto circundante como elemento de acción primaria. |
+| **Size** | El título "Smart Nutrition" ocupa casi el ancho completo de la pantalla en dos líneas con una jerarquía tipográfica dominante. Los íconos outline en las tarjetas de funcionalidades tienen un tamaño generoso respecto al ancho de la tarjeta, haciéndolos reconocibles en pantallas de densidad variable sin necesidad de ampliar. |
+
+Heurísticas de Nielsen
+
+| Heurística | Justificación |
+|---|---|
+| **Consistencia y estándares (H4)** | El menú hamburguesa despliega un panel con el mismo conjunto de ítems de navegación (About Us, Features, Contact, Links, Log in) que la versión desktop, manteniendo consistencia en el contenido accesible independientemente del dispositivo. El botón "✕" para cerrar el panel sigue la convención estándar de cierre en interfaces móviles. |
+| **Relación entre el sistema y el mundo real (H2)** | Las imágenes de la app activa sobre dispositivos móviles reales en las secciones Smart Scan y Global Nutrition muestran el producto en su contexto de uso natural. Las manchas de acuarela y fotografías de alimentos conectan la plataforma con el mundo real de la nutrición cotidiana del usuario. |
+| **Reconocer antes que recordar (H6)** | Los íconos outline temáticos en las tarjetas de funcionalidades mobile (cámara para Smart Scan, avión para Travel Mode, gorro de chef para Recipe Suggestions) permiten al usuario identificar la función visualmente antes de leer el título, reduciendo la carga de memoria en una interfaz de consumo vertical y rápido. |
+| **Diseño estético y minimalista (H8)** | La versión mobile de la página de funcionalidades presenta las tarjetas en columna única con solo ícono, título en negrita y una línea de descripción, eliminando cualquier elemento visual que no aporte información funcional directa. El fondo salmón liso entre tarjetas actúa como separador neutro sin añadir ruido visual. |
+
+Arquitectura de la Información (AI)
+
+| Principio AI | Justificación |
+|---|---|
+| **Disclosure** | En la landing mobile, cada sección de funcionalidad principal (Smart Scan, Global Nutrition) muestra la imagen del producto en contexto y una descripción breve antes de invitar al usuario a profundizar. La información se revela progresivamente a medida que el usuario hace scroll, sin sobrecargar la pantalla inicial. |
+| **Objects** | Las imágenes de la app activa sobre smartphones tratan el producto como un objeto vivo con comportamientos propios: el teléfono muestra la interfaz de Smart Scan en uso real, comunicando que la app es un objeto funcional y no una representación abstracta. |
+| **Focused Navigation** | El panel hamburguesa agrupa la navegación como una acción deliberada del usuario, manteniendo los ítems definidos por su contenido. Los indicadores de carrusel (puntos) debajo de la banda de imagen del hero comunican que existe contenido navegable horizontalmente, orientando al usuario sobre las posibilidades de exploración disponibles. |
+| **Growth** | El layout de tarjetas apiladas en la página de funcionalidades mobile permite incorporar nuevas funcionalidades simplemente añadiendo tarjetas al final de la lista sin rediseñar la estructura, escalando de forma natural con el crecimiento del producto. |
+
+Diseño Inclusivo
+
+| Principio | Justificación |
+|---|---|
+| **Considera la situación del usuario (P2)** | El botón "Go to app" tiene forma de píldora con área táctil generosa, diseñado para ser accionable con el pulgar en una sola mano. Las tarjetas de funcionalidades tienen altura suficiente para evitar toques accidentales en elementos adyacentes, reconociendo que el usuario móvil interactúa con el dedo en condiciones de movimiento. |
+| **Proporciona experiencias comparables (P1)** | La versión mobile presenta el mismo contenido disponible en desktop (funcionalidades, secciones de producto, navegación completa), reorganizado en columna única. El usuario móvil accede a información equivalente sin versiones reducidas, garantizando paridad de experiencia entre dispositivos. |
+| **Priorizar el contenido (P6)** | El título "Smart Nutrition" y el botón "Go to app" ocupan la parte superior visible de la pantalla sin necesidad de scroll, priorizando el mensaje principal y la acción de conversión. En la página de funcionalidades, cada tarjeta posiciona el título en negrita antes que la descripción, facilitando el escaneo rápido del contenido. |
+| **Ser consistente (P3)** | El patrón de tarjeta en la página de funcionalidades mobile replica exactamente la misma estructura que la versión desktop (ícono a la izquierda, título a la derecha, descripción abajo), estableciendo un modelo de lectura familiar para usuarios que hayan interactuado previamente con la versión de escritorio. |
 
 ## 4.4. Web Applications UX/UI Design
 
