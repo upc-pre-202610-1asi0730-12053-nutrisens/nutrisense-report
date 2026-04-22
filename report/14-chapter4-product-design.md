@@ -490,6 +490,59 @@ Diseño Inclusivo
 | **Deja al usuario mandar (P4)** | En Body Progress, el usuario puede editar su meta de peso y actualizar su altura en cualquier momento desde el panel lateral. En Analytics, el botón "Export to PDF" da al usuario control sobre sus propios datos, permitiéndole exportarlos cuando lo considere necesario. |
 | **Agrega valor (P7)** | El bloque "Active Streak" en Dashboard muestra el número de días consecutivos con registro completo, agregando valor motivacional más allá del simple registro de datos. La integración con Google Fit que descuenta calorías activas del balance diario ("Active (Google Fit): -300 kcal") agrega valor contextual que una app de nutrición estándar no ofrece. |
 
+**Recommendations, SmartScan, Suscription & Pantry**
+
+<center>
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="../assets/img/wireframe/webapp/recommendations.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/webapp/smartscan.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/webapp/suscription.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+    <tr>
+      <td><img src="../assets/img/wireframe/webapp/pantry.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+  </table>
+</div>
+</center>
+
+Elementos de Diseño
+
+| Elemento | Justificación |
+|---|---|
+| **Shape** | En Smart Scan, las zonas de carga de imagen usan bordes punteados para indicar áreas de arrastrar y soltar, diferenciándose visualmente de los bordes sólidos de las tarjetas de contenido. En Recommendations, las etiquetas de atributos (320 kcal, P 32g, Light) usan forma de píldora redondeada para distinguirse del texto corrido. En Subscription, los indicadores de características de cada plan usan círculos rellenos como bullets, estableciendo una lista visual reconocible. |
+| **Space** | En Recommendations, el panel lateral derecho con "Active filters" y "Daily balance" ocupa aproximadamente un tercio del ancho de la pantalla, dejando dos tercios para las tarjetas de recomendaciones. Este balance espacial prioriza el contenido principal sin eliminar el contexto secundario relevante. En Pantry, el layout de dos columnas separa la gestión de ingredientes de las recetas sugeridas, organizando el flujo de causa-efecto de izquierda a derecha. |
+| **Direction** | En Recommendations, la lectura sigue una dirección horizontal de izquierda a derecha dentro de cada tarjeta de plato: imagen → nombre → descripción → etiquetas → botón de acción. Esta dirección guía al usuario hacia el punto de conversión ("+Add to log") de forma natural. En Subscription, las tres tarjetas de plan se alinean horizontalmente permitiendo comparación visual simultánea. |
+| **Size** | En Subscription, el precio de cada plan ($9.99, $14.99, $19.99) se muestra en un tamaño notablemente mayor al del nombre del plan y la descripción, facilitando la comparación económica inmediata sin necesidad de leer el contenido completo de cada tarjeta. |
+
+Heurísticas de Nielsen
+
+| Heurística | Justificación |
+|---|---|
+| **Visibilidad del estado del sistema (H1)** | En Recommendations, el banner superior indica el contexto actual de forma explícita: ciudad, temperatura, condición climática y hace cuánto se actualizó ("Updated 5 mins ago"). En Smart Scan, el botón en la esquina superior derecha indica el plan actual del usuario ("Plan Premium"), informando qué funcionalidades tiene disponibles antes de que intente usarlas. |
+| **Prevención de errores (H5)** | En Recommendations, el panel "Active filters" muestra los filtros activos aplicados a todas las sugerencias (Lactose-free, Seafood-free) con botón de eliminación por filtro. Esto previene que el usuario reciba recomendaciones que no puede consumir sin necesidad de revisar su perfil. En Pantry, el resumen calórico al final de la lista de ingredientes indica explícitamente cuántas calorías quedan disponibles para las recetas sugeridas. |
+| **Reconocer antes que recordar (H6)** | En Pantry, cada ingrediente de la lista incluye su categoría debajo del nombre (Grain, Animal protein, Fruit, Vegetable, Seasoning), permitiendo al usuario reconocer el tipo de ingrediente sin necesidad de recordarlo. En Smart Scan, las dos opciones (Scan food dish / Scan restaurant menu) están separadas en tarjetas distintas con título y descripción, evitando que el usuario deba recordar qué opción usar según su contexto. |
+| **Libertad y control del usuario (H3)** | En Recommendations, los filtros activos tienen un botón "x" individual que permite al usuario eliminar cada restricción de forma independiente sin necesidad de ir a la configuración del perfil. En Smart Scan, cada opción ofrece dos métodos de entrada alternativos ("Take photo" y "Upload image"), dando al usuario control sobre cómo interactúa con la funcionalidad. |
+
+Arquitectura de la Información (AI)
+
+| Principio AI | Justificación |
+|---|---|
+| **Objects** | En Recommendations, cada plato sugerido es un objeto con atributos propios: nombre, descripción contextual, calorías, proteínas, etiqueta de intensidad y acción de registro. En Pantry, cada ingrediente es un objeto con nombre y categoría, que al combinarse con otros objetos genera un nuevo objeto: la receta sugerida con sus propios atributos nutricionales. |
+| **Choices** | En Smart Scan, la pantalla presenta exactamente dos opciones claramente diferenciadas: escanear un plato individual o escanear un menú de restaurante. Esta bifurcación binaria reduce la carga de decisión del usuario y encamina el flujo según su contexto de uso real. En Subscription, las tres tarjetas de plan ofrecen opciones con distintos niveles de funcionalidad y precio para diferentes perfiles de usuario. |
+| **Exemplars** | En Pantry, la receta sugerida "Chicken and Cucumber Salad" muestra un ejemplo concreto del resultado que el usuario puede obtener a partir de sus ingredientes disponibles, ilustrando el valor de la funcionalidad antes de que el usuario agregue más ingredientes. |
+| **Multiple Classification** | En Recommendations, cada plato puede clasificarse simultáneamente por múltiples atributos: calorías, contenido proteico y nivel de intensidad (Light). Esto permite al usuario evaluar cada opción desde distintos criterios de decisión sin navegar a una vista de detalle. |
+
+Diseño Inclusivo
+
+| Principio | Justificación |
+|---|---|
+| **Considera la situación del usuario (P2)** | En Recommendations, el contexto climático y de ubicación detectado automáticamente ("It's hot in Lima — 31°C · Sunny") adapta las sugerencias al entorno físico real del usuario en ese momento, reconociendo que las necesidades nutricionales varían según la situación contextual y no solo según los objetivos declarados. |
+| **Ofrecer opciones (P5)** | En Smart Scan, la zona de carga de imagen ofrece tres métodos alternativos de entrada: arrastrar y soltar, tomar foto y subir imagen. Esto contempla distintos contextos de uso: usuario en escritorio con archivo guardado, usuario con cámara web disponible, o usuario que prefiere cargar desde galería. |
+| **Priorizar el contenido (P6)** | En Subscription, el contenido de cada plan se organiza jerárquicamente: precio como dato primario en tamaño grande, descripción resumida en una línea, y lista de características detalladas como contenido secundario. Esto permite al usuario tomar una decisión preliminar por precio antes de leer los detalles. |
+| **Agrega valor (P7)** | En Pantry, el sistema cruza los ingredientes disponibles del usuario con su déficit calórico restante y sus restricciones activas para generar recetas personalizadas etiquetadas con el objetivo del usuario ("Weight-loss"). Este cruce de variables agrega un valor que ninguna app de recetas estándar ofrece, mejorando directamente la experiencia de usuarios con metas nutricionales específicas. |
+
 ### 4.4.2. Web Applications Wireflow Diagrams
 
 ### 4.4.2. Web Applications Mock-ups
