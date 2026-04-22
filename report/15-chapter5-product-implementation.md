@@ -127,12 +127,19 @@ Para garantizar la integridad y el control total sobre las modificaciones del so
 La solución se ha segmentado en repositorios independientes para mantener una arquitectura limpia y una separación de responsabilidades clara:
 
  - **nutrisense-website:** Repositorio dedicado al sitio de presentación estática (Landing Page).
+
     [Link del repositorio nutrisense-website](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-website)
+
  - **nutrisense-platform:** Contiene el núcleo de la solución (Backend), desarrollado como una API RESTful en C#. Este repositorio aloja la lógica de negocio, los servicios de dominio y las suites de pruebas automatizadas.
+
     [Link del repositorio nutrisense-platform](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform)
+
  - **nutrisense-webapp** Espacio reservado para el código del cliente web (Frontend) construido en Vue.js.
+
     [Link del repositorio nutrisense-webapp](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp)
+
  - **nutrisense-report:** Repositorio de soporte utilizado para la gestión de la documentación técnica y los informes del proyecto.
+  
     [Link del repositorio nutrisense-report](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report)
 
 **Implementación de GitFlow**
@@ -175,6 +182,8 @@ Se emplea la versión 2.0.0 de Semantic Versioning bajo el esquema vX.Y.Z:
 - **Z (PATCH):** Correcciones menores o parches que no afectan la funcionalidad.
 
 ### 5.1.3. Source Code Style Guide & Conventions
+
+
 
 ### 5.1.4. Software Deployment Configuration
 
