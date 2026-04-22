@@ -135,7 +135,7 @@ Este contenedor se organiza para garantizar una interfaz reactiva y una gestión
 
 **B. API Application Components (Backend)**
 
-El backend se divide en módulos que representan los 7 Bounded Contexts del dominio, asegurando una arquitectura desacoplada y escalable.
+El backend se divide en módulos que representan los 7 Bounded Contexts del dominio, asegurando una arquitectura desacoplada y escalable. Adicionalmente, cuenta con un Data Access Layer que centraliza la persistencia de datos mediante el patrón Repository, gestionando todas las operaciones de lectura y escritura hacia la base de datos.
 
 **Elementos:**
 
@@ -143,8 +143,6 @@ El backend se divide en módulos que representan los 7 Bounded Contexts del domi
     - **Tecnología:** `C# / ASP.NET Core`.
  - **Data Access Layer (Repository):** Componente que centraliza el acceso a datos y la persistencia de la información mediante el patrón Repository.
     - **Tecnología:** `Entity Framework Core`.
- - **Integrations Hub:** Orquestador de la comunicación con las APIs externas (Stripe, Google Fit, Weather, Vision).
-    - **Tecnología:** `HttpClient (.NET)`.
 
 ![API Component Diagram](../assets/img/artifacts/nutrisense-APIComponentsDiagram.png)
 
