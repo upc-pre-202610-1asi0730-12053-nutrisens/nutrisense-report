@@ -21,8 +21,19 @@
 ## 4.3. Landing Page UI Design
 
 ### 4.3.1. Landing Page Wireframe
-| ![Main](../assets/img/wireframe/landing/desktop/main.png) | ![Features](../assets/img/wireframe/landing/desktop/features.png)  |
-|---|---|
+
+**Main and Features**
+
+<center>
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="../assets/img/wireframe/landing/desktop/main.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+      <td><img src="../assets/img/wireframe/landing/desktop/features.png" style="max-width:100%; max-height:300px; object-fit:contain;" /></td>
+    </tr>
+  </table>
+</div>
+</center>
 
 Elementos de Diseño
 
@@ -59,7 +70,6 @@ Diseño Inclusivo
 | **Ofrecer opciones (P5)** | El footer incluye un selector de idioma, permitiendo al usuario adaptar el idioma de la interfaz. Esto amplía el acceso a personas de distintas lenguas maternas, ofreciendo una vía alternativa de interacción. |
 | **Ser consistente (P3)** | Los componentes de tarjeta siguen el mismo patrón ícono → título → descripción en todas las funcionalidades de ambas páginas. Esta consistencia estructural hace predecible la lectura y reduce la fricción para usuarios con distintos niveles de familiaridad digital. |
 | **Considera la situación del usuario (P2)** | La sección FAQ al final de ambas páginas responde dudas contextuales frecuentes como alergias, viajes y sincronización de ejercicio, anticipando distintos contextos de uso y demostrando consideración por usuarios con necesidades y situaciones de vida diversas. |
-
 
 ### 4.3.2. Landing Page Mock-up
 
