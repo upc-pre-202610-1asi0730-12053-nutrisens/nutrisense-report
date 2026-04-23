@@ -19,7 +19,7 @@ Con el fin de centralizar la administración de tareas y asegurar la sincronía 
     [Link de registro o inicio de sesion](https://trello.com)
 
     **Evidencia de uso:**  
-    
+
 
 
  - **Microsoft Teams:** Herramienta de tipo SaaS. Se empleó como el centro neurálgico para la comunicación formal y síncrona del equipo. Esta plataforma permitió integrar las sesiones de videoconferencia con el almacenamiento compartido de archivos y el chat grupal, facilitando la toma de decisiones estratégicas y la organización de reuniones de sprint review y daily stand-ups.
@@ -40,7 +40,7 @@ Para la fase de análisis y especificación de los requerimientos de NutriSense,
 
     **Evidencia de uso:**  
 
-
+   
 
  - **Structurizr:** Herramienta de tipo SaaS. Se utilizó para la especificación técnica de los requisitos arquitectónicos mediante el modelo C4. Esta suite permitió documentar el contexto del sistema, los contenedores y los componentes de manera jerárquica, asegurando que el diseño de software esté alineado estrictamente con las capacidades funcionales exigidas por la plataforma. 
 
