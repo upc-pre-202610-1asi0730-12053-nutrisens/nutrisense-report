@@ -53,6 +53,7 @@ En conjunto, estos hallazgos orientan el desarrollo de nuestra plataforma hacia 
 
 ![nombre](../assets/img/chapter2-neeedfinding-images/DaphneFaustorVergaray_UJM(1).png)
 
+
 ### 2.3.4. Empathy Mapping
 
 ## 2.4. Big Picture EventStorming
