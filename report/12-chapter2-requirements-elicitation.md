@@ -74,8 +74,7 @@ Finalmente, la estructuración del Big Picture Event Storming organiza los eleme
 
 
 
-Para poder apreciar mejor el Big Picture Event Storming le recomendamos ingresar al siguiente link
-
+Para poder apreciar mejor el Big Picture Event Storming, le recomendamos ingresar al siguiente link: [Tablero de Miro: Big Picture Event Storming](https://miro.com/app/board/uXjVGnTlN0E=/?share_link_id=736747337916)
 
 ## 2.5. Ubiquitous Language
 
