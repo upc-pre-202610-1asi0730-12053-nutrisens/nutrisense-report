@@ -89,7 +89,7 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a NutriSense como un 
 	- `OpenWeatherMap:` Provee datos climáticos para ajustar las sugerencias de comidas.
 	- `Stripe:` Gestiona de forma segura los pagos y el estado de las suscripciones.
 
-![Context Diagram](../assets/img/artifacts/nutrisense-SystemContext.png)
+![Context Diagram]()
 
 ### 4.6.3. Software Architecture Container Diagrams
 
@@ -106,9 +106,9 @@ El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema NutriSen
  - **External Systems:** APIs de terceros que se integran con el backend para extender las capacidades del sistema.
     - **Tecnología:** `JSON/HTTPS (REST)`.
 
-![Container Diagram](../assets/img/artifacts/nutrisense-ContainerDiagram.png)
+![Container Diagram]()
 
-![Container Diagram Summarized](../assets/img/artifacts/nutrisense-ContainerDiagram1.png)
+![Container Diagram Summarized]()
 
 ### 4.6.4. Software Architecture Components Diagrams
 
@@ -129,9 +129,9 @@ Este contenedor se organiza para garantizar una interfaz reactiva y una gestión
  - **API Client:** Encargado de orquestar las peticiones asíncronas y la comunicación con el servidor de API.
     - **Tecnología:** `Axios (JSON/HTTPS)`.
 
-![Web Component Diagram](../assets/img/artifacts/nutrisense-WebComponentsDiagram.png)
+![Web Component Diagram]()
 
-![Web Component Diagram Summarized](../assets/img/artifacts/nutrisense-WebComponentsDiagram1.png)
+![Web Component Diagram Summarized]()
 
 **B. API Application Components (Backend)**
 
@@ -144,9 +144,9 @@ El backend se divide en módulos que representan los 7 Bounded Contexts del domi
  - **Data Access Layer (Repository):** Componente que centraliza el acceso a datos y la persistencia de la información mediante el patrón Repository.
     - **Tecnología:** `Entity Framework Core`.
 
-![API Component Diagram](../assets/img/artifacts/nutrisense-APIComponentsDiagram.png)
+![API Component Diagram]()
 
-![API Component Diagram Summarized](../assets/img/artifacts/nutrisense-APIComponentsDiagram1.png)
+![API Component Diagram Summarized]()
 
 ## 4.7. Software Object-Oriented Design
 
