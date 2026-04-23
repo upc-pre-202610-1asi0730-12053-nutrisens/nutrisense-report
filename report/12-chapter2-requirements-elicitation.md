@@ -47,8 +47,11 @@ En conjunto, estos hallazgos orientan el desarrollo de nuestra plataforma hacia 
 
 **Segmento 1: Pérdida de peso**
 
+![nombre](../assets/img/chapter2-neeedfinding-images/JorgeDelAguila_UJM(4).png)
 
 **Segmento 2: Ganancia de masa muscular**
+
+![nombre](../assets/img/chapter2-neeedfinding-images/DaphneFaustorVergary_UJM(1).png)
 
 ### 2.3.4. Empathy Mapping
 
