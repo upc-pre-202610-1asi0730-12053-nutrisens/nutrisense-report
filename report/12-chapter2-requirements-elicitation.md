@@ -51,7 +51,7 @@ En conjunto, estos hallazgos orientan el desarrollo de nuestra plataforma hacia 
 
 **Segmento 2: Ganancia de masa muscular**
 
-![nombre](../assets/img/chapter2-neeedfinding-images/DaphneFaustorVergary_UJM(1).png)
+![nombre](../assets/img/chapter2-neeedfinding-images/DaphneFaustorVergaray_UJM(1).png)
 
 ### 2.3.4. Empathy Mapping
 
