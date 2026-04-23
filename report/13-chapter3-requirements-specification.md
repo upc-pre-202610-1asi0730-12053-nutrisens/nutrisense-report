@@ -76,4 +76,14 @@
 
 ## 3.2. Impact Mapping
 
+***Imapct Map - Segmento 1: Pérdida de peso***
+
+![ImpacMap-1](../assets/img/chapter3/ImpactMap-WeightLoss.png)
+
+***Imapct Map - Segmento 2: Ganancia de masa muscular***
+
+![ImpacMap-2](../assets/img/chapter3/ImpactMap-MuscleGain.png)
+
+<div style="page-break-after: always"></div>
+
 ## 3.3. Product Backlog
