@@ -81,3 +81,81 @@ Para poder apreciar mejor el Big Picture Event Storming, le recomendamos ingresa
 El presente Ubiquitous Language establece un conjunto estructurado de términos y conceptos clave propios del dominio de nuestra plataforma, con el propósito de definir un lenguaje común, preciso y libre de ambigüedades entre los distintos stakeholders y el equipo de desarrollo. Este glosario se fundamenta en los principios de Domain Driven Design, permitiendo alinear la comprensión del negocio de la nutrición personalizada, el seguimiento de métricas de salud y la generación de recomendaciones contextuales. Cada término ha sido definido considerando su significado específico dentro del dominio, garantizando consistencia semántica, trazabilidad conceptual y una comunicación efectiva que facilite el análisis, diseño e implementación de la solución.
 
 **User & Profile**
+
+| Término | Definición |
+| :--- | :--- |
+| **User (Usuario)** | Persona que utiliza la plataforma para gestionar su nutrición, actividad física y objetivos de salud. |
+| **User Profile (Perfil de Usuario)** | Conjunto de datos personales y de salud del usuario (edad, sexo, peso, altura, nivel de actividad y restricciones). |
+| **Goal (Meta)** | Objetivo principal del usuario: perder peso, ganar masa muscular o mantener su condición actual. |
+| **Dietary Restrictions** | Limitaciones en la dieta del usuario debido a alergias, intolerancias o condiciones médicas. |
+| **Subscription Plan** | Nivel de acceso contratado (Basic, Pro, Premium) que determina las funciones disponibles. |
+
+**Body & Health Metrics**
+
+| Término | Definición |
+| :--- | :--- |
+| **Weight (Peso)** | Medida corporal del usuario registrada periódicamente para evaluar el progreso. |
+| **Height (Altura)** | Medida física utilizada junto con el peso para calcular indicadores de salud. |
+| **BMI (IMC)** | Indicador que relaciona peso y altura para estimar el estado físico del usuario. |
+| **BMR (Tasa Metabólica Basal)** | Cantidad de calorías que el cuerpo necesita en reposo para funciones vitales. |
+| **TDEE (Gasto Calórico Diario)** | Calorías totales que el usuario quema en un día, considerando su actividad física. |
+| **Daily Calorie Target** | Número de calorías que el usuario debe consumir diariamente según su meta. |
+
+**Nutrition Tracking**
+
+| Término | Definición |
+| :--- | :--- |
+| **Meal (Comida)** | Ingesta de alimentos registrada en momentos específicos: desayuno, almuerzo, cena o snack. |
+| **Food Item (Alimento)** | Producto individual consumido por el usuario con información nutricional asociada. |
+| **Nutrition Log** | Historial de alimentos consumidos por el usuario, organizado por día. |
+| **Calories (Calorías)** | Unidad de energía proporcionada por los alimentos consumidos. |
+| **Macronutrients (Macros)** | Componentes primarios de los alimentos: proteínas, carbohidratos y grasas. |
+| **Daily Intake** | Total de calorías y macronutrientes consumidos por el usuario en un día. |
+
+**Smart Scan**
+
+| Término | Definición |
+| :--- | :--- |
+| **Smart Scan** | Función que analiza imágenes de comida o menús para estimar su valor nutricional. |
+| **Dish Photo (Foto de Plato)** | Imagen de comida tomada por el usuario para identificar componentes y calorías. |
+| **Menu Photo (Foto de Menú)** | Imagen de un menú de restaurante utilizada para recomendar opciones saludables. |
+| **Food Analysis** | Proceso de estimación de calorías y macronutrientes a partir de una imagen. |
+| **Manual Confirmation** | Validación del usuario de los resultados del análisis antes de guardarlos. |
+
+**Recommendations**
+
+| Término | Definición |
+| :--- | :--- |
+| **Recommendation** | Sugerencia personalizada de alimentos basada en el perfil del usuario. |
+| **Context Aware Rec.** | Recomendación que considera factores como clima, ubicación y estado del usuario. |
+| **Weather Condition** | Estado del clima (calor, frío, etc.) que influye en las recomendaciones dietéticas. |
+| **Travel Mode** | Función que adapta las recomendaciones según la ciudad o país donde se encuentra el usuario. |
+| **Pantry (Despensa)** | Lista de ingredientes disponibles en el hogar registrados por el usuario. |
+| **Recipe Suggestion** | Sugerencia de preparación basada en ingredientes disponibles y necesidades nutricionales. |
+| **Macro Deficit** | Diferencia entre los macronutrientes consumidos y los requeridos para el día. |
+
+**Activity & Energy Balance**
+
+| Término | Definición |
+| :--- | :--- |
+| **Physical Activity** | Ejercicio realizado por el usuario que contribuye al gasto calórico diario. |
+| **Active Calories** | Calorías quemadas a través de la actividad física. |
+| **Energy Balance** | Relación entre las calorías consumidas y las calorías quemadas en un día. |
+
+**Progress & Analytics**
+
+| Término | Definición |
+| :--- | :--- |
+| **Progress (Progreso)** | Evolución del usuario respecto a su meta, basada en métricas corporales y consumo. |
+| **Daily Summary** | Visión general del consumo de calorías y macros frente al objetivo diario. |
+| **Streak (Racha)** | Número de días consecutivos en los que el usuario registra su información completa. |
+| **Alert (Alerta)** | Notificación cuando el usuario supera o no alcanza sus metas nutricionales. |
+| **Trend (Tendencia)** | Patrón de cambio en métricas como el peso o el consumo a lo largo del tiempo. |
+
+**Domain Concepts Clave**
+
+| Término | Definición |
+| :--- | :--- |
+| **Personalized Nutrition** | Enfoque que adapta las recomendaciones a las características y contexto del usuario. |
+| **Health Goal Achievement** | Cumplimiento de metas físicas mediante el monitoreo y recomendaciones. |
+| **Contextual Awareness** | Capacidad del sistema para considerar factores externos como clima y ubicación. |
