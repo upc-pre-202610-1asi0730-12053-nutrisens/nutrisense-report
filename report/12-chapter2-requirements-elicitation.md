@@ -56,6 +56,14 @@ En conjunto, estos hallazgos orientan el desarrollo de nuestra plataforma hacia 
 
 ### 2.3.4. Empathy Mapping
 
+**Segmento 1: Pérdida de peso**
+
+![nombre](../assets/img/chapter2-neeedfinding-images/JorgeDelAguila_EM(1).png)
+
+**Segmento 2: Ganancia de masa muscular**
+
+![nombre](../assets/img/chapter2-neeedfinding-images/DaphneFaustorVergaray_EM(1).png)
+
 ## 2.4. Big Picture EventStorming
 
 En esta sección se desarrolla el modelado del dominio del sistema mediante la técnica de Big Picture Event Storming, con el propósito de construir una visión integral del negocio de nuestra plataforma bajo los principios de Domain Driven Design. Este proceso permitió identificar los eventos de dominio más relevantes, estableciendo su secuencia temporal y las relaciones de causalidad que definen el comportamiento del sistema a nivel global.
