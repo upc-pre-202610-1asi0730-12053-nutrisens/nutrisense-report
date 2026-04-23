@@ -82,6 +82,10 @@ Para la fase de construcción de la plataforma, se seleccionaron entornos de des
 
    ![VSCode Evidence](../assets/img/evidence/vscode.png)
 
+- **Rider:** Herramienta de tipo Desktop (IDE). Se empleó como el entorno de desarrollo integrado especializado para la arquitectura del backend en ASP.NET Core con C#. Su potente motor de análisis de código permitió gestionar de forma robusta los componentes del dominio y asegurar que la lógica del servidor cumpliera con los estándares de rendimiento exigidos por la plataforma.
+
+    [Link de descarga](https://www.jetbrains.com/rider/)
+
  - **WebStorm** Herramienta de tipo Desktop (IDE). Se empleó como el entorno de desarrollo integrado especializado para la arquitectura del frontend en Vue.js. Su potente motor de análisis de código permitió gestionar de forma robusta los componentes reactivos de la interfaz y asegurar que la lógica de cliente cumpliera con los estándares de rendimiento exigidos por la plataforma.	
 
     [Link de descarga](https://www.jetbrains.com/webstorm/)
