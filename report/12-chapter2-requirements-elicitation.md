@@ -31,17 +31,173 @@ Para comprender de manera integral las necesidades, comportamientos y motivacion
 
 ### 2.3.2. User Task Matrix
 
+**Segmento 1: Pérdida de peso**
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Task</th>
+      <th colspan="2">Jorge Del Aguila</th>
+      <th colspan="2">Anthony López</th>
+      <th colspan="2">Evelyn Díaz</th>
+    </tr>
+    <tr>
+      <th>Frequency</th>
+      <th>Importance</th>
+      <th>Frequency</th>
+      <th>Importance</th>
+      <th>Frequency</th>
+      <th>Importance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Control the amount of food consumed daily</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Estimate the calories of food before consuming them</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Decide what to eat when away from home</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+    </tr>
+    <tr>
+      <td>Evaluate progress in relation to weight</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Avoid foods perceived as unhealthy</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Adapt eating habits according to daily routine</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+  </tbody>
+</table>
 
+<br>
+
+**Segmento 2: Ganancia de masa muscular**
+
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Task</th>
+      <th colspan="2">Daphne Vergaray</th>
+      <th colspan="2">David Ramos</th>
+      <th colspan="2">Maria Roque</th>
+    </tr>
+    <tr>
+      <th>Frequency</th>
+      <th>Importance</th>
+      <th>Frequency</th>
+      <th>Importance</th>
+      <th>Frequency</th>
+      <th>Importance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Calculate the amount of protein consumed daily</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Plan meals according to muscle gain physical goals</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Adjust nutrition according to physical activity</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Search for suitable options when eating away from home</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+    </tr>
+    <tr>
+      <td>Maintain consistency in nutrition over time</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Evaluate if foods meet nutritional requirements</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Normally</td>
+      <td>High</td>
+      <td>Sometimes</td>
+      <td>Medium</td>
+    </tr>
+  </tbody>
+</table>
 
 **Análisis de User Task Matrix**
+
 El análisis de las matrices permite identificar patrones clave en el comportamiento de los usuarios y extraer información relevante para el desarrollo de nuestra plataforma.
 En el segmento de pérdida de peso, las tareas con mayor frecuencia e importancia se centran en el control de la ingesta alimentaria y la toma de decisiones en contextos cotidianos. Destacan especialmente controlar la cantidad de alimentos consumidos y decidir qué comer fuera de casa, lo que evidencia que los principales desafíos no radican únicamente en el conocimiento nutricional, sino en la incertidumbre al momento de elegir en situaciones reales.
+
 En el segmento de ganancia de masa muscular, las tareas críticas están orientadas a la optimización nutricional, principalmente en el cálculo de proteínas y la evaluación de requerimientos nutricionales. Esto refleja un comportamiento más analítico, donde la precisión y la consistencia son determinantes para alcanzar los objetivos físicos.
+
 Al comparar ambos segmentos, se identifican similitudes relevantes: en ambos casos, existe una alta importancia en el control de la alimentación y en la toma de decisiones fuera del entorno controlado. Sin embargo, difieren en su enfoque: el segmento de pérdida de peso tiende a ser más reactivo y contextual, mientras que el de ganancia muscular es más planificado y orientado a métricas específicas.
+
 A partir de ello, se derivan insights clave para nuestra plataforma. En primer lugar, es fundamental diseñar soluciones que brinden soporte en la toma de decisiones en tiempo real, especialmente en contextos como restaurantes o situaciones variables. En segundo lugar, la plataforma debe ofrecer niveles diferenciados de profundidad, combinando simplicidad para usuarios que buscan orientación rápida y precisión para aquellos que requieren control detallado de nutrientes. Finalmente, se valida que el uso de datos contextuales como la ubicación, clima y la disponibilidad que representan un factor crítico para mejorar la relevancia de las recomendaciones y la adherencia del usuario.
+
 En conjunto, estos hallazgos orientan el desarrollo de nuestra plataforma hacia una solución adaptativa, contextual y centrada en el usuario, capaz de responder a necesidades reales y mejorar la toma de decisiones alimenticias de manera efectiva.
-
-
 
 ### 2.3.3. User Journey Mapping
 
