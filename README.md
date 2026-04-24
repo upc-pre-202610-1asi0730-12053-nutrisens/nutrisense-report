@@ -212,4 +212,10 @@ Repositorio del informe del proyecto en GitHub: [nutrisense-report](https://gith
 
 - [5.4. Video About-the-Product](./report/15-chapter5-product-implementation.md#54-video-about-the-product)
 
+[Conclusiones](./report/28-conclusions.md)
+
+[Bibliografía](./report/29-bibliography.md)
+
+[Anexos](./report/30-annexes.md)
+
 <div style="page-break-after: always"></div>
