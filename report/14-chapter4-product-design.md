@@ -127,7 +127,7 @@
 
 | <center>**Wireflow** |
 |---|
-|![Wearable Wireflow](../assets/img/wireflows/wearable.png)|
+|![Wearable Wireflow](../assets/img/wireflows/wereable.png)|
 
 ### WireFlow 7 — Subscription
 
