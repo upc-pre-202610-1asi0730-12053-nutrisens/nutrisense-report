@@ -131,7 +131,7 @@
 
 ### WireFlow 7 — Subscription
 
-| **User Goal N°7** | As a health seeker, I want to subscribe to a paid plan to access NutriSmart's advanced features. |
+| **User Goal N°7** | As a health seeker, I want to subscribe to a paid plan to access NutriSense's advanced features. |
 |---|---|
 
 | **Task Flow** |
