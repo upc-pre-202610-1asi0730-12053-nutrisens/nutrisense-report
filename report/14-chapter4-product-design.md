@@ -32,16 +32,16 @@
 
 ### WireFlow 1 — Dashboard
 
-| **User Goal N°1** | Como buscador saludable, quiero visualizar un resumen de mi progreso nutricional diario y recibir alertas cuando supere mis límites calóricos, para mantener el control de mi alimentación. |
+| **User Goal N°1** | As a health seeker, I want to view a summary of my daily nutritional progress and receive alerts when I exceed my caloric limits, in order to stay in control of my diet. |
 |---|---|
 
 | **Task Flow** |
 |---|
-| 1. El buscador saludable accede al Dashboard. |
-| 2. El buscador saludable visualiza sus calorías consumidas, quemadas y el balance neto del día. |
-| 3. El buscador saludable registra sus comidas a lo largo del día. |
-| 4. El buscador saludable completa su registro diario. |
-| 5. El buscador saludable visualiza su racha activa de 7 días consecutivos completada. |
+| 1. The health seeker accesses the Dashboard. |
+| 2. The health seeker views their calories consumed, burned, and the net balance for the day. |
+| 3. The health seeker logs their meals throughout the day. |
+| 4. The health seeker completes their daily log. |
+| 5. The health seeker views their active streak of 7 consecutive completed days. |
 
 | <center>**Wireflow** |
 |---|
@@ -49,16 +49,16 @@
 
 ### WireFlow 2 — Daily Log
 
-| **User Goal N°2** | Como buscador saludable, quiero buscar y registrar los alimentos que consumo en mi registro diario, para llevar un control preciso de mis macronutrientes y calorías. |
+| **User Goal N°2** | As a health seeker, I want to search for and log the foods I consume in my daily record, in order to keep precise track of my macronutrients and calories. |
 |---|---|
 
 | **Task Flow** |
 |---|
-| 1. El buscador saludable accede a la sección Daily Log. |
-| 2. El buscador saludable escribe el nombre del alimento en el buscador. |
-| 3. El buscador saludable selecciona el alimento deseado de los resultados. |
-| 4. El buscador saludable selecciona la porción y la comida (Breakfast / Lunch / Dinner). |
-| 5. El buscador saludable visualiza la confirmación del alimento añadido al log. |
+| 1. The health seeker accesses the Daily Log section. |
+| 2. The health seeker types the name of the food in the search bar. |
+| 3. The health seeker selects the desired food from the results. |
+| 4. The health seeker selects the portion size and meal (Breakfast / Lunch / Dinner). |
+| 5. The health seeker views the confirmation that the food has been added to the log. |
 
 | <center>**Wireflow** |
 |---|
@@ -66,16 +66,16 @@
 
 ### WireFlow 3 — Smart Scan
 
-| **User Goal N°3** | Como buscador saludable, quiero escanear o fotografiar un plato o menú para identificar automáticamente sus ingredientes y registrar su información nutricional, ahorrando tiempo en el registro manual. |
+| **User Goal N°3** | As a health seeker, I want to scan or photograph a dish or menu to automatically identify its ingredients and log its nutritional information, saving time on manual entry. |
 |---|---|
 
 | **Task Flow** |
 |---|
-| 1. El buscador saludable accede a la sección Smart Scan. |
-| 2. El buscador saludable selecciona la opción *"Take photo"* o *"Upload image"*. |
-| 3. El buscador saludable captura o sube una foto de un plato. |
-| 4. El buscador saludable visualiza los ingredientes identificados que componen el plato. |
-| 5. El buscador saludable confirma y guarda el registro nutricional. |
+| 1. The health seeker accesses the Smart Scan section. |
+| 2. The health seeker selects the *"Take photo"* or *"Upload image"* option. |
+| 3. The health seeker captures or uploads a photo of a dish. |
+| 4. The health seeker views the identified ingredients that make up the dish. |
+| 5. The health seeker confirms and saves the nutritional log. |
 
 | <center>**Wireflow** |
 |---|
@@ -83,15 +83,15 @@
 
 ### WireFlow 4 — Recommendations
 
-| **User Goal N°4** | Como buscador saludable, quiero recibir recomendaciones de platos personalizadas según mi ubicación y clima actual, para elegir opciones que se adapten a mi contexto y perfil nutricional. |
+| **User Goal N°4** | As a health seeker, I want to receive personalized dish recommendations based on my current location and weather, in order to choose options that fit my context and nutritional profile. |
 |---|---|
 
 | **Task Flow** |
 |---|
-| 1. El buscador saludable accede a la sección Recommendations. |
-| 2. El sistema detecta automáticamente la ubicación y temperatura del usuario. |
-| 3. El buscador saludable visualiza las recomendaciones de platos personalizadas según su ubicación y clima actual. |
-| 4. El buscador saludable selecciona un plato recomendado. |
+| 1. The health seeker accesses the Recommendations section. |
+| 2. The system automatically detects the user's location and temperature. |
+| 3. The health seeker views personalized dish recommendations based on their current location and weather. |
+| 4. The health seeker selects a recommended dish. |
 
 | <center>**Wireflow** |
 |---|
@@ -99,15 +99,15 @@
 
 ### WireFlow 5 — Body Progress
 
-| **User Goal N°5** | Como buscador saludable, quiero registrar y actualizar mi peso corporal para monitorear mi evolución física y mantener datos precisos sobre mi progreso. |
+| **User Goal N°5** | As a health seeker, I want to log and update my body weight to monitor my physical progress and keep accurate data about my evolution. |
 |---|---|
 
 | **Task Flow** |
 |---|
-| 1. El buscador saludable accede a la sección Body Progress. |
-| 2. El buscador saludable ingresa un nuevo valor de peso. |
-| 3. El buscador saludable visualiza la previsualización del BMI y TDEE actualizados. |
-| 4. El buscador saludable presiona *"Save entry"* para confirmar el nuevo registro de peso. |
+| 1. The health seeker accesses the Body Progress section. |
+| 2. The health seeker enters a new weight value. |
+| 3. The health seeker views a preview of the updated BMI and TDEE. |
+| 4. The health seeker presses *"Save entry"* to confirm the new weight record. |
 
 | <center>**Wireflow** |
 |---|
@@ -115,15 +115,15 @@
 
 ### WireFlow 6 — Wearable
 
-| **User Goal N°6** | Como buscador saludable, quiero conectar mi dispositivo wearable o registrar manualmente mi actividad física, para que mis calorías quemadas se reflejen con precisión en mi balance nutricional diario. |
+| **User Goal N°6** | As a health seeker, I want to connect my wearable device or manually log my physical activity, so that my burned calories are accurately reflected in my daily nutritional balance. |
 |---|---|
 
 | **Task Flow** |
 |---|
-| 1. El buscador saludable accede a la sección Wearable. |
-| 2. El buscador saludable selecciona la opción *"Connect to Google Fit"*. |
-| 3. La conexión con Google Fit se completa exitosamente. |
-| 4. El buscador saludable visualiza el dashboard completo con los datos sincronizados desde Google Fit. |
+| 1. The health seeker accesses the Wearable section. |
+| 2. The health seeker selects the *"Connect to Google Fit"* option. |
+| 3. The connection with Google Fit is completed successfully. |
+| 4. The health seeker views the complete dashboard with data synced from Google Fit. |
 
 | <center>**Wireflow** |
 |---|
@@ -131,17 +131,17 @@
 
 ### WireFlow 7 — Subscription
 
-| **User Goal N°7** | Como buscador saludable, quiero suscribirme a un plan de pago para acceder a las funcionalidades avanzadas de NutriSmart. |
+| **User Goal N°7** | As a health seeker, I want to subscribe to a paid plan to access NutriSmart's advanced features. |
 |---|---|
 
 | **Task Flow** |
 |---|
-| 1. El buscador saludable accede a la sección Subscription and Billing. |
-| 2. El buscador saludable visualiza los tres planes disponibles: Basic ($9.99), Pro ($14.99) y Premium ($19.99). |
-| 3. El buscador saludable selecciona el plan deseado. |
-| 4. El buscador saludable ingresa sus datos bancarios en el formulario de pago. |
-| 5. El buscador saludable presiona el botón *"Pay"*. |
-| 6. El buscador saludable visualiza la confirmación de pago y el mensaje de bienvenida al plan seleccionado. |
+| 1. The health seeker accesses the Subscription and Billing section. |
+| 2. The health seeker views the three available plans: Basic ($9.99), Pro ($14.99), and Premium ($19.99). |
+| 3. The health seeker selects the desired plan. |
+| 4. The health seeker enters their banking details in the payment form. |
+| 5. The health seeker presses the *"Pay"* button. |
+| 6. The health seeker views the payment confirmation and the welcome message for the selected plan. |
 
 | <center>**Wireflow** |
 |---|
