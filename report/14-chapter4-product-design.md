@@ -100,6 +100,8 @@ El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema NutriSen
 
  - **Web Application:** Servidor web que entrega los archivos estáticos al navegador del usuario para inicializar la aplicación.
     - **Tecnología:** `Nginx`.
+ - **Landing Page:** Sitio web estático que presenta la propuesta de valor de NutriSense y redirige a los usuarios hacia la aplicación web.
+    - **Tecnología:** `HTML5 + CSS3 + JavaScript`.
  - **Single Page Application:** Frontend donde los usuarios interactúan con la plataforma, gestionan sus metas y visualizan sus progresos. Se ejecuta completamente en el navegador del usuario.
     - **Tecnología:** `Vue.js (con PrimeVue para UI y Pinia para el estado)`.
  - **API Application:** Backend que maneja la lógica de negocio, el motor de recomendaciones, el procesamiento de imágenes y la integración con servicios externos.
