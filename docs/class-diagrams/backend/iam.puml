@@ -1,0 +1,145 @@
+@startuml NutriSense - Identity & Access Management (Backend)
+
+package "NutriSense.IAM.Domain.Model.Aggregates" {
+  class "«Aggregate Root»\nUserAccount" as UserAccount {
+    -Guid _id
+    -Email _email
+    -HashedPassword _password
+    -FullName _fullName
+    -UserRole _role
+    -bool _isActive
+    -DateTime _createdAt
+    -- methods --
+    +UserAccount(Email email, HashedPassword password, FullName fullName, UserRole role)
+    +Guid GetId()
+    +Email GetEmail()
+    +FullName GetFullName()
+    +UserRole GetRole()
+    +bool IsActive()
+    +void Activate()
+    +void Deactivate()
+    +void ChangePassword(HashedPassword newPassword)
+    +UserRegisteredEvent RaiseRegisteredEvent()
+  }
+}
+
+package "NutriSense.IAM.Domain.Model.ValueObjects" {
+  class "«Value Object»\nEmail" as Email {
+    -string _value
+    +Email(string value)
+    +string GetValue()
+    +bool IsValid()
+    +bool Equals(Email other)
+  }
+
+  class "«Value Object»\nHashedPassword" as HashedPassword {
+    -string _hash
+    +HashedPassword(string rawPassword)
+    +bool Verify(string rawPassword)
+    +string GetHash()
+  }
+
+  class "«Value Object»\nFullName" as FullName {
+    -string _firstName
+    -string _lastName
+    +FullName(string firstName, string lastName)
+    +string GetDisplayName()
+    +bool Equals(FullName other)
+  }
+
+  enum UserRole {
+    FreeUser
+    PremiumUser
+    Admin
+  }
+}
+
+package "NutriSense.IAM.Domain.Model.Events" {
+  class "«Domain Event»\nUserRegisteredEvent" as UserRegisteredEvent {
+    +Guid UserId
+    +string Email
+    +DateTime OccurredOn
+    +UserRegisteredEvent(Guid userId, string email)
+  }
+
+  class "«Domain Event»\nUserPasswordChangedEvent" as UserPasswordChangedEvent {
+    +Guid UserId
+    +DateTime OccurredOn
+    +UserPasswordChangedEvent(Guid userId)
+  }
+}
+
+package "NutriSense.IAM.Domain.Repositories" {
+  interface "«Repository»\nIUserAccountRepository" as IUserAccountRepository {
+    +Task<UserAccount?> FindByIdAsync(Guid id)
+    +Task<UserAccount?> FindByEmailAsync(Email email)
+    +Task SaveAsync(UserAccount account)
+    +Task<bool> ExistsByEmailAsync(Email email)
+  }
+}
+
+package "NutriSense.IAM.Application.Services" {
+  class "«Application Service»\nAuthApplicationService" as AuthApplicationService {
+    -IUserAccountRepository _repository
+    -ITokenService _tokenService
+    +AuthApplicationService(IUserAccountRepository repo, ITokenService tokenService)
+    +Task<AuthResponse> SignUpAsync(SignUpCommand cmd)
+    +Task<AuthResponse> SignInAsync(SignInCommand cmd)
+    +Task SignOutAsync(Guid userId)
+  }
+}
+
+package "NutriSense.IAM.Interfaces.REST" {
+  class "«Controller»\nAuthController" as AuthController {
+    -AuthApplicationService _service
+    +AuthController(AuthApplicationService service)
+    +Task<IActionResult> SignUp(SignUpRequest request)
+    +Task<IActionResult> SignIn(SignInRequest request)
+    +Task<IActionResult> SignOut()
+  }
+
+  class "«Assembler»\nUserAccountAssembler" as UserAccountAssembler {
+    +static UserAccount ToEntityFromRequest(SignUpRequest request)
+    +static AuthResponse ToResponseFromEntity(UserAccount account, string token)
+  }
+
+  class SignUpRequest {
+    +string? FirstName
+    +string? LastName
+    +string? Email
+    +string? Password
+  }
+
+  class SignInRequest {
+    +string? Email
+    +string? Password
+  }
+
+  class AuthResponse {
+    +Guid? UserId
+    +string? FullName
+    +string? Token
+    +string? Role
+    +AuthResponse(string message)
+  }
+}
+
+' Relationships
+UserAccount *-- Email : has >
+UserAccount *-- HashedPassword : has >
+UserAccount *-- FullName : has >
+UserAccount --> UserRole : assigned >
+UserAccount ..> UserRegisteredEvent : raises >
+UserAccount ..> UserPasswordChangedEvent : raises >
+IUserAccountRepository ..> UserAccount : manages >
+AuthApplicationService --> IUserAccountRepository : uses >
+AuthApplicationService ..> UserRegisteredEvent : publishes >
+AuthController --> AuthApplicationService : uses >
+AuthController ..> SignUpRequest : receives >
+AuthController ..> SignInRequest : receives >
+AuthController ..> AuthResponse : returns >
+UserAccountAssembler ..> UserAccount : creates >
+UserAccountAssembler ..> SignUpRequest : uses >
+UserAccountAssembler ..> AuthResponse : creates >
+
+@enduml

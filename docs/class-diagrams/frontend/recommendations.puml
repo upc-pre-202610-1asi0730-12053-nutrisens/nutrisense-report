@@ -1,0 +1,85 @@
+@startuml NutriSense - Smart Recommendations Frontend (Vue)
+
+package "smart-recommendations" {
+
+  package "domain.model" {
+    class RecommendationItem {
+      +id: String
+      +foodName: String
+      +reason: String
+      +reasonCode: String
+      +matchScore: Number
+      +externalFoodId: String
+    }
+
+    class RecommendationSetData {
+      +setId: String
+      +generatedAt: String
+      +contextSummary: String
+      +items: RecommendationItem[]
+      +getTopItems(n: Number): RecommendationItem[]
+    }
+  }
+
+  package "application.services" {
+    class "«Service»\nRecommendationApiService" as RecommendationApiService {
+      -baseUrl: String
+      +generateRecommendations(userId: String): Promise<RecommendationSetData>
+      +getLatestRecommendations(userId: String): Promise<RecommendationSetData>
+    }
+  }
+
+  package "infrastructure.stores" {
+    class "«Store»\nUseRecommendationStore" as UseRecommendationStore {
+      -recommendationSet: RecommendationSetData
+      -isLoading: Boolean
+      -errorMessage: String
+      +loadLatestRecommendations(userId): Promise<void>
+      +refreshRecommendations(userId): Promise<void>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nRecommendationCard" as RecommendationCard {
+      +item: RecommendationItem
+      -- emits --
+      add-to-log(food: Object)
+    }
+
+    class "«Component»\nRecommendationContextBanner" as RecommendationContextBanner {
+      +contextSummary: String
+      +generatedAt: String
+    }
+
+    class "«Component»\nRecommendationList" as RecommendationList {
+      +items: RecommendationItem[]
+      +isLoading: Boolean
+      -- emits --
+      add-to-log(food: Object)
+    }
+  }
+
+  package "presentation.pages" {
+    class "«Component»\nRecommendationsPage" as RecommendationsPage {
+      -store: UseRecommendationStore
+      +handleAddToLog(food: Object): void
+      +refreshRecommendations(): void
+    }
+  }
+
+}
+
+' Relationships
+RecommendationSetData *-- "1..*" RecommendationItem : contains >
+UseRecommendationStore --> RecommendationApiService : calls >
+UseRecommendationStore --> RecommendationSetData : manages >
+RecommendationsPage *-- RecommendationContextBanner : contains >
+RecommendationsPage *-- RecommendationList : contains >
+RecommendationsPage --> UseRecommendationStore : uses >
+RecommendationList *-- "0..*" RecommendationCard : renders >
+RecommendationCard --> RecommendationItem : displays >
+RecommendationContextBanner --> RecommendationSetData : reads >
+RecommendationCard -up-> RecommendationList : emits add-to-log
+RecommendationList -up-> RecommendationsPage : emits add-to-log
+
+@enduml

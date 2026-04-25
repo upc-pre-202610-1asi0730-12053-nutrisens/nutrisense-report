@@ -1,0 +1,159 @@
+@startuml NutriSense - Body & Health Metrics (Backend)
+
+package "NutriSense.BodyMetrics.Domain.Model.Aggregates" {
+  class "«Aggregate Root»\nHealthProfile" as HealthProfile {
+    -Guid _id
+    -Guid _userId
+    -BiologicalSex _biologicalSex
+    -DateOfBirth _dateOfBirth
+    -HeightCm _height
+    -List<WeightRecord> _weightHistory
+    -HealthGoal _goal
+    -ActivityLevel _activityLevel
+    -DateTime _updatedAt
+    -- methods --
+    +HealthProfile(Guid userId, BiologicalSex sex, DateOfBirth dob, HeightCm height, HealthGoal goal)
+    +void RecordWeight(WeightRecord record)
+    +WeightRecord? GetLatestWeight()
+    +BmiValue CalculateBmi()
+    +TdeeValue CalculateTdee()
+    +CalorieTarget DeriveCalorieTarget()
+    +HealthProfileUpdatedEvent RaiseUpdatedEvent()
+  }
+}
+
+package "NutriSense.BodyMetrics.Domain.Model.Entities" {
+  class WeightRecord {
+    -Guid _id
+    -WeightKg _weight
+    -DateOnly _recordedOn
+    +WeightRecord(WeightKg weight, DateOnly date)
+    +Guid GetId()
+    +WeightKg GetWeight()
+    +DateOnly GetDate()
+  }
+}
+
+package "NutriSense.BodyMetrics.Domain.Model.ValueObjects" {
+  class "«Value Object»\nWeightKg" as WeightKg {
+    -decimal _value
+    +WeightKg(decimal value)
+    +decimal GetValue()
+  }
+
+  class "«Value Object»\nHeightCm" as HeightCm {
+    -decimal _value
+    +HeightCm(decimal value)
+    +decimal GetValue()
+  }
+
+  class "«Value Object»\nBmiValue" as BmiValue {
+    -decimal _value
+    +BmiValue(decimal value)
+    +decimal GetValue()
+    +string GetCategory()
+  }
+
+  class "«Value Object»\nTdeeValue" as TdeeValue {
+    -decimal _kcal
+    +TdeeValue(decimal kcal)
+    +decimal GetKcal()
+  }
+
+  class "«Value Object»\nCalorieTarget" as CalorieTarget {
+    -decimal _dailyKcal
+    -string _macroRatio
+    +CalorieTarget(decimal kcal, string macroRatio)
+    +decimal GetDailyKcal()
+    +string GetMacroRatio()
+  }
+
+  class "«Value Object»\nDateOfBirth" as DateOfBirth {
+    -DateOnly _value
+    +DateOfBirth(DateOnly value)
+    +int GetAge()
+  }
+
+  enum BiologicalSex {
+    Male
+    Female
+  }
+
+  enum HealthGoal {
+    LoseWeight
+    GainMuscle
+    Maintain
+  }
+
+  enum ActivityLevel {
+    Sedentary
+    LightlyActive
+    ModeratelyActive
+    VeryActive
+    ExtraActive
+  }
+}
+
+package "NutriSense.BodyMetrics.Domain.Model.Events" {
+  class "«Domain Event»\nHealthProfileUpdatedEvent" as HealthProfileUpdatedEvent {
+    +Guid UserId
+    +CalorieTarget CalorieTarget
+    +TdeeValue Tdee
+    +DateTime OccurredOn
+  }
+}
+
+package "NutriSense.BodyMetrics.Domain.Repositories" {
+  interface "«Repository»\nIHealthProfileRepository" as IHealthProfileRepository {
+    +Task<HealthProfile?> FindByUserIdAsync(Guid userId)
+    +Task SaveAsync(HealthProfile profile)
+  }
+}
+
+package "NutriSense.BodyMetrics.Application.Services" {
+  class "«Application Service»\nBodyMetricsAppService" as BodyMetricsAppService {
+    -IHealthProfileRepository _repository
+    +BodyMetricsAppService(IHealthProfileRepository repo)
+    +Task<HealthProfile> InitializeProfileAsync(InitProfileCommand cmd)
+    +Task RecordWeightAsync(RecordWeightCommand cmd)
+    +Task UpdateGoalAsync(UpdateGoalCommand cmd)
+    +Task<HealthProfile?> GetProfileAsync(Guid userId)
+    +Task<MetricsSummaryResponse> GetMetricsSummaryAsync(Guid userId)
+  }
+}
+
+package "NutriSense.BodyMetrics.Interfaces.REST" {
+  class "«Controller»\nHealthProfileController" as HealthProfileController {
+    -BodyMetricsAppService _service
+    +HealthProfileController(BodyMetricsAppService service)
+    +Task<IActionResult> InitializeProfile(InitProfileRequest request)
+    +Task<IActionResult> RecordWeight(RecordWeightRequest request)
+    +Task<IActionResult> GetMetricsSummary(Guid userId)
+    +Task<IActionResult> UpdateGoal(UpdateGoalRequest request)
+  }
+
+  class "«Assembler»\nHealthProfileAssembler" as HealthProfileAssembler {
+    +static HealthProfile ToEntityFromRequest(InitProfileRequest request)
+    +static MetricsSummaryResponse ToResponseFromEntity(HealthProfile profile)
+  }
+}
+
+' Relationships
+HealthProfile *-- "0..*" WeightRecord : tracks >
+HealthProfile *-- HeightCm : has >
+HealthProfile *-- DateOfBirth : has >
+HealthProfile --> BiologicalSex : is >
+HealthProfile --> HealthGoal : pursues >
+HealthProfile --> ActivityLevel : classified as >
+HealthProfile ..> BmiValue : computes >
+HealthProfile ..> TdeeValue : computes >
+HealthProfile ..> CalorieTarget : derives >
+HealthProfile ..> HealthProfileUpdatedEvent : raises >
+WeightRecord *-- WeightKg : records >
+IHealthProfileRepository ..> HealthProfile : manages >
+BodyMetricsAppService --> IHealthProfileRepository : uses >
+BodyMetricsAppService ..> HealthProfileUpdatedEvent : publishes >
+HealthProfileController --> BodyMetricsAppService : uses >
+HealthProfileAssembler ..> HealthProfile : creates >
+
+@enduml

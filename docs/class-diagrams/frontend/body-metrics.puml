@@ -1,0 +1,116 @@
+@startuml NutriSense - Body & Health Metrics Frontend (Vue)
+
+package "body-metrics" {
+
+  package "domain.model" {
+    class HealthProfileData {
+      +userId: String
+      +biologicalSex: String
+      +dateOfBirth: String
+      +heightCm: Number
+      +currentWeightKg: Number
+      +goal: String
+      +activityLevel: String
+      +bmi: Number
+      +bmiCategory: String
+      +tdeeKcal: Number
+      +dailyCalorieTarget: Number
+      +getBmiCategory(): String
+    }
+
+    class WeightEntry {
+      +id: String
+      +weightKg: Number
+      +recordedOn: String
+    }
+  }
+
+  package "application.services" {
+    class "«Service»\nBodyMetricsApiService" as BodyMetricsApiService {
+      -baseUrl: String
+      +getHealthProfile(userId: String): Promise<HealthProfileData>
+      +initializeProfile(request: Object): Promise<HealthProfileData>
+      +recordWeight(request: Object): Promise<WeightEntry>
+      +updateGoal(request: Object): Promise<HealthProfileData>
+      +getWeightHistory(userId: String): Promise<WeightEntry[]>
+    }
+  }
+
+  package "infrastructure.stores" {
+    class "«Store»\nUseBodyMetricsStore" as UseBodyMetricsStore {
+      -profile: HealthProfileData
+      -weightHistory: WeightEntry[]
+      -isLoading: Boolean
+      +loadProfile(userId): Promise<void>
+      +initializeProfile(request): Promise<void>
+      +recordWeight(weightKg): Promise<void>
+      +updateGoal(goal): Promise<void>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nBmiGauge" as BmiGauge {
+      +bmiValue: Number
+      +bmiCategory: String
+    }
+
+    class "«Component»\nWeightHistoryChart" as WeightHistoryChart {
+      +history: WeightEntry[]
+      +goalWeightKg: Number
+    }
+
+    class "«Component»\nCalorieTargetCard" as CalorieTargetCard {
+      +dailyTarget: Number
+      +tdee: Number
+      +goal: String
+    }
+
+    class "«Component»\nRecordWeightForm" as RecordWeightForm {
+      -weightKg: Number
+      -errorMessage: String
+      -- methods --
+      +submitWeight(): void
+      -- emits --
+      weight-recorded(entry: Object)
+    }
+
+    class "«Component»\nProfileSetupForm" as ProfileSetupForm {
+      -sex: String
+      -dateOfBirth: String
+      -heightCm: Number
+      -weightKg: Number
+      -goal: String
+      -activityLevel: String
+      -errorMessage: String
+      -- methods --
+      +submitProfile(): void
+      -- emits --
+      profile-initialized(profile: Object)
+    }
+  }
+
+  package "presentation.pages" {
+    class "«Component»\nHealthDashboardPage" as HealthDashboardPage {
+      -store: UseBodyMetricsStore
+      +handleWeightRecorded(entry: Object): void
+    }
+  }
+
+}
+
+' Relationships
+HealthProfileData *-- "0..*" WeightEntry : history >
+UseBodyMetricsStore --> BodyMetricsApiService : calls >
+UseBodyMetricsStore --> HealthProfileData : manages >
+HealthDashboardPage *-- BmiGauge : contains >
+HealthDashboardPage *-- WeightHistoryChart : contains >
+HealthDashboardPage *-- CalorieTargetCard : contains >
+HealthDashboardPage *-- RecordWeightForm : contains >
+HealthDashboardPage --> UseBodyMetricsStore : uses >
+BmiGauge --> HealthProfileData : reads >
+WeightHistoryChart --> WeightEntry : renders >
+CalorieTargetCard --> HealthProfileData : reads >
+RecordWeightForm -up-> HealthDashboardPage : emits weight-recorded
+ProfileSetupForm ..> UseBodyMetricsStore : uses >
+
+@enduml

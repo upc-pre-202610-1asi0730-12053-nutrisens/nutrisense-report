@@ -1,0 +1,131 @@
+@startuml NutriSense - Analytics & Reporting (Backend)
+
+package "NutriSense.Analytics.Domain.Model.Aggregates" {
+  class "«Aggregate Root»\nProgressInsight" as ProgressInsight {
+    -Guid _id
+    -Guid _userId
+    -InsightPeriod _period
+    -WeightTrend _weightTrend
+    -CalorieTrend _calorieTrend
+    -MacroBreakdown _macroBreakdown
+    -GoalAdherenceRate _goalAdherence
+    -DateTime _generatedAt
+    -- methods --
+    +ProgressInsight(Guid userId, InsightPeriod period)
+    +void SetWeightTrend(WeightTrend trend)
+    +void SetCalorieTrend(CalorieTrend trend)
+    +void SetMacroBreakdown(MacroBreakdown breakdown)
+    +void SetGoalAdherence(GoalAdherenceRate rate)
+    +ProgressInsightGeneratedEvent RaiseGeneratedEvent()
+  }
+}
+
+package "NutriSense.Analytics.Domain.Model.ValueObjects" {
+  class "«Value Object»\nInsightPeriod" as InsightPeriod {
+    -DateOnly _from
+    -DateOnly _to
+    -PeriodType _type
+    +InsightPeriod(DateOnly from, DateOnly to, PeriodType type)
+    +int GetDays()
+    +PeriodType GetType()
+  }
+
+  class "«Value Object»\nWeightTrend" as WeightTrend {
+    -decimal _startKg
+    -decimal _endKg
+    -decimal _deltaKg
+    +WeightTrend(decimal start, decimal end)
+    +decimal GetDelta()
+    +string GetTrendDirection()
+  }
+
+  class "«Value Object»\nCalorieTrend" as CalorieTrend {
+    -decimal _averageDailyKcal
+    -decimal _targetKcal
+    -decimal _adherencePercent
+    +CalorieTrend(decimal avg, decimal target)
+    +decimal GetAdherencePercent()
+  }
+
+  class "«Value Object»\nMacroBreakdown" as MacroBreakdown {
+    -decimal _avgProteinPct
+    -decimal _avgCarbsPct
+    -decimal _avgFatPct
+    +MacroBreakdown(decimal protein, decimal carbs, decimal fat)
+    +decimal GetProteinPct()
+    +decimal GetCarbsPct()
+    +decimal GetFatPct()
+  }
+
+  class "«Value Object»\nGoalAdherenceRate" as GoalAdherenceRate {
+    -decimal _percent
+    +GoalAdherenceRate(decimal percent)
+    +decimal GetPercent()
+    +string GetLabel()
+  }
+
+  enum PeriodType {
+    Weekly
+    Monthly
+    Custom
+  }
+}
+
+package "NutriSense.Analytics.Domain.Model.Events" {
+  class "«Domain Event»\nProgressInsightGeneratedEvent" as ProgressInsightGeneratedEvent {
+    +Guid InsightId
+    +Guid UserId
+    +InsightPeriod Period
+    +DateTime OccurredOn
+  }
+}
+
+package "NutriSense.Analytics.Domain.Repositories" {
+  interface "«Repository»\nIProgressInsightRepository" as IProgressInsightRepository {
+    +Task<ProgressInsight?> FindLatestByUserIdAsync(Guid userId)
+    +Task<List<ProgressInsight>> FindByUserInRangeAsync(Guid userId, DateOnly from, DateOnly to)
+    +Task SaveAsync(ProgressInsight insight)
+  }
+}
+
+package "NutriSense.Analytics.Application.Services" {
+  class "«Application Service»\nAnalyticsAppService" as AnalyticsAppService {
+    -IProgressInsightRepository _repository
+    +AnalyticsAppService(IProgressInsightRepository repo)
+    +Task<ProgressInsight> GenerateProgressInsightAsync(GenerateInsightCommand cmd)
+    +Task<ProgressInsight?> GetLatestInsightAsync(Guid userId)
+    +Task<DashboardResponse> GetDashboardDataAsync(Guid userId)
+  }
+}
+
+package "NutriSense.Analytics.Interfaces.REST" {
+  class "«Controller»\nAnalyticsController" as AnalyticsController {
+    -AnalyticsAppService _service
+    +AnalyticsController(AnalyticsAppService service)
+    +Task<IActionResult> GenerateInsight(GenerateInsightRequest request)
+    +Task<IActionResult> GetDashboard(Guid userId)
+    +Task<IActionResult> GetLatestInsight(Guid userId)
+  }
+
+  class "«Assembler»\nProgressInsightAssembler" as ProgressInsightAssembler {
+    +static InsightPeriod ToPeriodFromRequest(GenerateInsightRequest request)
+    +static DashboardResponse ToResponseFromEntity(ProgressInsight insight)
+  }
+}
+
+' Relationships
+ProgressInsight *-- InsightPeriod : covers >
+ProgressInsight *-- WeightTrend : tracks >
+ProgressInsight *-- CalorieTrend : tracks >
+ProgressInsight *-- MacroBreakdown : analyzes >
+ProgressInsight *-- GoalAdherenceRate : measures >
+ProgressInsight ..> ProgressInsightGeneratedEvent : raises >
+InsightPeriod --> PeriodType : classified as >
+IProgressInsightRepository ..> ProgressInsight : manages >
+AnalyticsAppService --> IProgressInsightRepository : uses >
+AnalyticsAppService ..> ProgressInsightGeneratedEvent : publishes >
+AnalyticsController --> AnalyticsAppService : uses >
+ProgressInsightAssembler ..> InsightPeriod : creates >
+ProgressInsightAssembler ..> ProgressInsight : uses >
+
+@enduml

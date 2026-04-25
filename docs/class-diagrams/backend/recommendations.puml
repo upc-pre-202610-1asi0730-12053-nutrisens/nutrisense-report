@@ -1,0 +1,125 @@
+@startuml NutriSense - Smart Recommendations (Backend)
+
+package "NutriSense.SmartRecs.Domain.Model.Aggregates" {
+  class "«Aggregate Root»\nRecommendationSet" as RecommendationSet {
+    -Guid _id
+    -Guid _userId
+    -RecommendationContext _context
+    -List<FoodRecommendation> _items
+    -DateTime _generatedAt
+    -bool _wasApplied
+    -- methods --
+    +RecommendationSet(Guid userId, RecommendationContext context)
+    +void AddRecommendation(FoodRecommendation item)
+    +void MarkAsApplied()
+    +List<FoodRecommendation> GetTopN(int n)
+    +RecommendationGeneratedEvent RaiseGeneratedEvent()
+  }
+}
+
+package "NutriSense.SmartRecs.Domain.Model.Entities" {
+  class FoodRecommendation {
+    -Guid _id
+    -string _foodName
+    -NutritionalReason _reason
+    -decimal _matchScore
+    -string _externalFoodId
+    +FoodRecommendation(string foodName, NutritionalReason reason, decimal score, string externalId)
+    +Guid GetId()
+    +decimal GetMatchScore()
+    +NutritionalReason GetReason()
+  }
+}
+
+package "NutriSense.SmartRecs.Domain.Model.ValueObjects" {
+  class "«Value Object»\nRecommendationContext" as RecommendationContext {
+    -decimal _calorieBudget
+    -decimal _proteinDeficit
+    -WeatherCondition _weather
+    -TimeOfDay _timeOfDay
+    +RecommendationContext(decimal calorieBudget, decimal proteinDeficit, WeatherCondition weather, TimeOfDay time)
+    +decimal GetCalorieBudget()
+    +WeatherCondition GetWeather()
+    +TimeOfDay GetTimeOfDay()
+  }
+
+  class "«Value Object»\nNutritionalReason" as NutritionalReason {
+    -string _code
+    -string _description
+    +NutritionalReason(string code, string description)
+    +string GetCode()
+    +string GetDescription()
+  }
+
+  enum WeatherCondition {
+    Hot
+    Cold
+    Rainy
+    Neutral
+  }
+
+  enum TimeOfDay {
+    Breakfast
+    Lunch
+    Dinner
+    Snack
+  }
+}
+
+package "NutriSense.SmartRecs.Domain.Model.Events" {
+  class "«Domain Event»\nRecommendationGeneratedEvent" as RecommendationGeneratedEvent {
+    +Guid SetId
+    +Guid UserId
+    +int ItemCount
+    +DateTime OccurredOn
+  }
+}
+
+package "NutriSense.SmartRecs.Domain.Repositories" {
+  interface "«Repository»\nIRecommendationSetRepository" as IRecommendationSetRepository {
+    +Task<RecommendationSet?> FindLatestByUserIdAsync(Guid userId)
+    +Task SaveAsync(RecommendationSet set)
+    +Task<List<RecommendationSet>> FindByUserInRangeAsync(Guid userId, DateTime from, DateTime to)
+  }
+}
+
+package "NutriSense.SmartRecs.Application.Services" {
+  class "«Application Service»\nRecommendationAppService" as RecommendationAppService {
+    -IRecommendationSetRepository _repository
+    -IWeatherContextService _weatherService
+    -IFoodDataService _foodDataService
+    +RecommendationAppService(IRecommendationSetRepository repo, IWeatherContextService weather, IFoodDataService food)
+    +Task<RecommendationSet> GenerateRecommendationsAsync(GenerateRecsCommand cmd)
+    +Task<RecommendationSet?> GetLatestRecommendationsAsync(Guid userId)
+  }
+}
+
+package "NutriSense.SmartRecs.Interfaces.REST" {
+  class "«Controller»\nRecommendationController" as RecommendationController {
+    -RecommendationAppService _service
+    +RecommendationController(RecommendationAppService service)
+    +Task<IActionResult> GenerateRecommendations(GenerateRecsRequest request)
+    +Task<IActionResult> GetLatestRecommendations(Guid userId)
+  }
+
+  class "«Assembler»\nRecommendationAssembler" as RecommendationAssembler {
+    +static RecommendationContext ToContextFromRequest(GenerateRecsRequest request)
+    +static RecommendationSetResponse ToResponseFromEntity(RecommendationSet set)
+  }
+}
+
+' Relationships
+RecommendationSet *-- RecommendationContext : has >
+RecommendationSet *-- "1..*" FoodRecommendation : contains >
+RecommendationSet ..> RecommendationGeneratedEvent : raises >
+FoodRecommendation *-- NutritionalReason : has >
+RecommendationContext --> WeatherCondition : uses >
+RecommendationContext --> TimeOfDay : uses >
+IRecommendationSetRepository ..> RecommendationSet : manages >
+RecommendationAppService --> IRecommendationSetRepository : uses >
+RecommendationAppService ..> RecommendationGeneratedEvent : publishes >
+RecommendationController --> RecommendationAppService : uses >
+RecommendationAssembler ..> RecommendationContext : creates >
+RecommendationAssembler ..> RecommendationSet : uses >
+
+@enduml

@@ -1,0 +1,140 @@
+@startuml NutriSense - Activity & Wearable Sync (Backend)
+
+package "NutriSense.ActivitySync.Domain.Model.Aggregates" {
+  class "«Aggregate Root»\nActivitySyncSession" as ActivitySyncSession {
+    -Guid _id
+    -Guid _userId
+    -SyncProvider _provider
+    -SyncStatus _status
+    -List<ActivityRecord> _records
+    -DateTime _syncedAt
+    -DateTime _periodStart
+    -DateTime _periodEnd
+    -- methods --
+    +ActivitySyncSession(Guid userId, SyncProvider provider, DateTime periodStart, DateTime periodEnd)
+    +void AddRecord(ActivityRecord record)
+    +void MarkCompleted()
+    +void MarkFailed(string reason)
+    +CaloricBalance CalculateCaloricBalance()
+    +ActivitySyncCompletedEvent RaiseCompletedEvent()
+  }
+}
+
+package "NutriSense.ActivitySync.Domain.Model.Entities" {
+  class ActivityRecord {
+    -Guid _id
+    -ActivityType _type
+    -DurationMinutes _duration
+    -CaloriesBurned _caloriesBurned
+    -DateTime _performedAt
+    +ActivityRecord(ActivityType type, DurationMinutes duration, CaloriesBurned kcal, DateTime performedAt)
+    +Guid GetId()
+    +CaloriesBurned GetCaloriesBurned()
+    +ActivityType GetType()
+  }
+}
+
+package "NutriSense.ActivitySync.Domain.Model.ValueObjects" {
+  class "«Value Object»\nDurationMinutes" as DurationMinutes {
+    -int _value
+    +DurationMinutes(int value)
+    +int GetValue()
+  }
+
+  class "«Value Object»\nCaloriesBurned" as CaloriesBurned {
+    -decimal _kcal
+    +CaloriesBurned(decimal kcal)
+    +decimal GetKcal()
+  }
+
+  class "«Value Object»\nCaloricBalance" as CaloricBalance {
+    -decimal _totalBurned
+    -int _stepsCount
+    +CaloricBalance(decimal burned, int steps)
+    +decimal GetTotalBurned()
+    +int GetStepsCount()
+  }
+
+  enum SyncProvider {
+    GoogleFit
+    Manual
+  }
+
+  enum SyncStatus {
+    Pending
+    InProgress
+    Completed
+    Failed
+  }
+
+  enum ActivityType {
+    Walking
+    Running
+    Cycling
+    Swimming
+    Strength
+    Other
+  }
+}
+
+package "NutriSense.ActivitySync.Domain.Model.Events" {
+  class "«Domain Event»\nActivitySyncCompletedEvent" as ActivitySyncCompletedEvent {
+    +Guid SessionId
+    +Guid UserId
+    +CaloricBalance Balance
+    +DateTime OccurredOn
+  }
+}
+
+package "NutriSense.ActivitySync.Domain.Repositories" {
+  interface "«Repository»\nIActivitySyncSessionRepository" as IActivitySyncSessionRepository {
+    +Task<ActivitySyncSession?> FindByIdAsync(Guid id)
+    +Task<ActivitySyncSession?> FindLatestByUserIdAsync(Guid userId)
+    +Task SaveAsync(ActivitySyncSession session)
+    +Task<List<ActivitySyncSession>> FindByUserInRangeAsync(Guid userId, DateTime from, DateTime to)
+  }
+}
+
+package "NutriSense.ActivitySync.Application.Services" {
+  class "«Application Service»\nActivitySyncAppService" as ActivitySyncAppService {
+    -IActivitySyncSessionRepository _repository
+    -IGoogleFitService _googleFitService
+    +ActivitySyncAppService(IActivitySyncSessionRepository repo, IGoogleFitService googleFit)
+    +Task<ActivitySyncSession> SyncFromGoogleFitAsync(SyncFromProviderCommand cmd)
+    +Task<ActivitySyncSession> LogManualActivityAsync(LogManualActivityCommand cmd)
+    +Task<ActivitySyncSession?> GetLatestSessionAsync(Guid userId)
+  }
+}
+
+package "NutriSense.ActivitySync.Interfaces.REST" {
+  class "«Controller»\nActivitySyncController" as ActivitySyncController {
+    -ActivitySyncAppService _service
+    +ActivitySyncController(ActivitySyncAppService service)
+    +Task<IActionResult> SyncFromGoogleFit(SyncFromProviderRequest request)
+    +Task<IActionResult> LogManualActivity(LogManualActivityRequest request)
+    +Task<IActionResult> GetLatestSession(Guid userId)
+  }
+
+  class "«Assembler»\nActivitySyncAssembler" as ActivitySyncAssembler {
+    +static ActivityRecord ToEntityFromRequest(LogManualActivityRequest request)
+    +static ActivitySyncResponse ToResponseFromEntity(ActivitySyncSession session)
+  }
+}
+
+' Relationships
+ActivitySyncSession *-- "0..*" ActivityRecord : contains >
+ActivitySyncSession --> SyncProvider : via >
+ActivitySyncSession --> SyncStatus : has >
+ActivitySyncSession ..> CaloricBalance : computes >
+ActivitySyncSession ..> ActivitySyncCompletedEvent : raises >
+ActivityRecord *-- DurationMinutes : lasts >
+ActivityRecord *-- CaloriesBurned : burns >
+ActivityRecord --> ActivityType : classified as >
+IActivitySyncSessionRepository ..> ActivitySyncSession : manages >
+ActivitySyncAppService --> IActivitySyncSessionRepository : uses >
+ActivitySyncAppService ..> ActivitySyncCompletedEvent : publishes >
+ActivitySyncController --> ActivitySyncAppService : uses >
+ActivitySyncAssembler ..> ActivityRecord : creates >
+ActivitySyncAssembler ..> ActivitySyncSession : uses >
+
+@enduml

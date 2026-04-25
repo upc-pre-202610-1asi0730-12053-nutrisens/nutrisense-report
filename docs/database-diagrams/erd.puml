@@ -1,0 +1,309 @@
+# Database Design — NutriSense
+
+## Introducción
+
+Esta sección presenta el diseño de base de datos de NutriSense para el curso **1ASI0730 Aplicaciones Web**. El motor de persistencia es **PostgreSQL**, elegido por su robustez transaccional, soporte nativo a UUIDs y tipos avanzados como `DECIMAL` de precisión arbitraria, claves foráneas con integridad referencial declarativa y la facilidad de integración con Entity Framework Core en ASP.NET Core a través del proveedor Npgsql.
+
+El diseño sigue el nivel **físico** del modelado de datos: se especifican tablas, columnas con sus tipos de datos nativos de PostgreSQL, constraints (`PRIMARY KEY`, `FOREIGN KEY`, `UNIQUE`, `NOT NULL`) y las relaciones entre tablas con su cardinalidad. Cada tabla corresponde al aggregate root o entidad principal de su bounded context. Los value objects del modelo de dominio (como `Email`, `WeightKg`, `BillingPeriod`) se aplanan como columnas escalares dentro de la tabla del aggregate al que pertenecen, siguiendo la recomendación de persistencia de aggregates en DDD para bases de datos relacionales.
+
+Las claves primarias son de tipo `UUID` generadas en el servidor de aplicaciones, lo que permite la creación de entidades offline y elimina la dependencia del autoincremento de la base de datos. Las claves foráneas entre bounded contexts se expresan como referencias a `user_accounts.id`, garantizando la integridad de datos a nivel global, pero sin acoplar los esquemas internos de cada contexto entre sí.
+
+---
+
+## Database Diagrams
+
+### ERD General — NutriSense (todos los bounded contexts)
+
+El diagrama presenta las 11 tablas principales del sistema y sus relaciones. Las tablas se agrupan según su bounded context:
+
+| Bounded Context | Tablas |
+|---|---|
+| Identity & Access Management | `user_accounts` |
+| Nutrition Tracking | `consumption_logs`, `food_entries` |
+| Body & Health Metrics | `health_profiles`, `weight_records` |
+| Smart Recommendations | `recommendation_sets`, `food_recommendations` |
+| Activity & Wearable Sync | `activity_sync_sessions`, `activity_records` |
+| Analytics & Reporting | `progress_insights` |
+| Subscriptions & Billing | `subscriptions` |
+
+```plantuml
+@startuml NutriSense - ERD General (PostgreSQL)
+
+!define PK <b><color:DarkBlue>PK</color></b>
+!define FK <color:DarkGreen>FK</color>
+!define UK <i><color:DarkOrange>UK</color></i>
+
+skinparam linetype ortho
+skinparam ClassBackgroundColor #FAFAF6
+skinparam ClassBorderColor #C0BDB4
+skinparam ClassFontSize 12
+skinparam ArrowColor #73726C
+
+' ─────────────────────────────────────────
+' BC-01  Identity & Access Management
+' ─────────────────────────────────────────
+entity "user_accounts" as UAcc {
+  * id : UUID <<PK>>
+  --
+  * email : VARCHAR(320) <<UK>>
+  * hashed_password : VARCHAR(255)
+  * first_name : VARCHAR(100)
+  * last_name : VARCHAR(100)
+  * role : VARCHAR(20)  
+  * is_active : BOOLEAN DEFAULT TRUE
+  * created_at : TIMESTAMP WITH TIME ZONE
+  * updated_at : TIMESTAMP WITH TIME ZONE
+}
+note right of UAcc : BC-01 · Identity & Access Management\nrole ∈ {free_user, premium_user, admin}
+
+' ─────────────────────────────────────────
+' BC-02  Nutrition Tracking
+' ─────────────────────────────────────────
+entity "consumption_logs" as CLog {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * log_date : DATE
+  * created_at : TIMESTAMP WITH TIME ZONE
+  * updated_at : TIMESTAMP WITH TIME ZONE
+}
+note right of CLog : BC-02 · Nutrition Tracking\nUNIQUE (user_id, log_date)
+
+entity "food_entries" as FEnt {
+  * id : UUID <<PK>>
+  --
+  * consumption_log_id : UUID <<FK>>
+  * external_food_id : VARCHAR(100)
+  * external_food_source : VARCHAR(20)
+  * food_name : VARCHAR(255)
+  * amount : DECIMAL(8,2)
+  * unit : VARCHAR(20)
+  * calories : DECIMAL(8,2)
+  * protein_grams : DECIMAL(8,2)
+  * carbs_grams : DECIMAL(8,2)
+  * fat_grams : DECIMAL(8,2)
+  * created_at : TIMESTAMP WITH TIME ZONE
+}
+note right of FEnt : external_food_source ∈ {open_food_facts, usda}
+
+' ─────────────────────────────────────────
+' BC-03  Body & Health Metrics
+' ─────────────────────────────────────────
+entity "health_profiles" as HPro {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>> <<UK>>
+  * biological_sex : VARCHAR(10)
+  * date_of_birth : DATE
+  * height_cm : DECIMAL(5,2)
+  * health_goal : VARCHAR(20)
+  * activity_level : VARCHAR(25)
+  * created_at : TIMESTAMP WITH TIME ZONE
+  * updated_at : TIMESTAMP WITH TIME ZONE
+}
+note right of HPro : BC-03 · Body & Health Metrics\nhealth_goal ∈ {lose_weight, gain_muscle, maintain}\nactivity_level ∈ {sedentary, lightly_active,\nmoderately_active, very_active, extra_active}
+
+entity "weight_records" as WRec {
+  * id : UUID <<PK>>
+  --
+  * health_profile_id : UUID <<FK>>
+  * weight_kg : DECIMAL(6,2)
+  * recorded_on : DATE
+  * created_at : TIMESTAMP WITH TIME ZONE
+}
+
+' ─────────────────────────────────────────
+' BC-04  Smart Recommendations
+' ─────────────────────────────────────────
+entity "recommendation_sets" as RecSet {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * calorie_budget : DECIMAL(8,2)
+  * protein_deficit : DECIMAL(8,2)
+  * weather_condition : VARCHAR(20)
+  * time_of_day : VARCHAR(15)
+  * was_applied : BOOLEAN DEFAULT FALSE
+  * generated_at : TIMESTAMP WITH TIME ZONE
+}
+note right of RecSet : BC-04 · Smart Recommendations\nweather_condition ∈ {hot, cold, rainy, neutral}\ntime_of_day ∈ {breakfast, lunch, dinner, snack}
+
+entity "food_recommendations" as FRec {
+  * id : UUID <<PK>>
+  --
+  * recommendation_set_id : UUID <<FK>>
+  * food_name : VARCHAR(255)
+  * reason_code : VARCHAR(50)
+  * reason_description : VARCHAR(500)
+  * match_score : DECIMAL(5,4)
+  * external_food_id : VARCHAR(100)
+}
+note right of FRec : match_score ∈ [0.0000, 1.0000]
+
+' ─────────────────────────────────────────
+' BC-05  Activity & Wearable Sync
+' ─────────────────────────────────────────
+entity "activity_sync_sessions" as ASess {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * provider : VARCHAR(20)
+  * status : VARCHAR(15)
+  * period_start : TIMESTAMP WITH TIME ZONE
+  * period_end : TIMESTAMP WITH TIME ZONE
+  * total_calories_burned : DECIMAL(8,2)
+  * steps_count : INTEGER DEFAULT 0
+  * synced_at : TIMESTAMP WITH TIME ZONE
+}
+note right of ASess : BC-05 · Activity & Wearable Sync\nprovider ∈ {google_fit, manual}\nstatus ∈ {pending, in_progress, completed, failed}
+
+entity "activity_records" as ARec {
+  * id : UUID <<PK>>
+  --
+  * session_id : UUID <<FK>>
+  * activity_type : VARCHAR(20)
+  * duration_minutes : INTEGER
+  * calories_burned : DECIMAL(7,2)
+  * performed_at : TIMESTAMP WITH TIME ZONE
+  * created_at : TIMESTAMP WITH TIME ZONE
+}
+note right of ARec : activity_type ∈ {walking, running, cycling,\nswimming, strength, other}
+
+' ─────────────────────────────────────────
+' BC-06  Analytics & Reporting
+' ─────────────────────────────────────────
+entity "progress_insights" as PIns {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * period_from : DATE
+  * period_to : DATE
+  * period_type : VARCHAR(10)
+  * weight_start_kg : DECIMAL(6,2)
+  * weight_end_kg : DECIMAL(6,2)
+  * avg_daily_kcal : DECIMAL(8,2)
+  * calorie_target_kcal : DECIMAL(8,2)
+  * avg_protein_pct : DECIMAL(5,2)
+  * avg_carbs_pct : DECIMAL(5,2)
+  * avg_fat_pct : DECIMAL(5,2)
+  * goal_adherence_pct : DECIMAL(5,2)
+  * generated_at : TIMESTAMP WITH TIME ZONE
+}
+note right of PIns : BC-06 · Analytics & Reporting\nperiod_type ∈ {weekly, monthly, custom}
+
+' ─────────────────────────────────────────
+' BC-07  Subscriptions & Billing
+' ─────────────────────────────────────────
+entity "subscriptions" as Sub {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>> <<UK>>
+  * plan_type : VARCHAR(20)
+  * status : VARCHAR(15)
+  * billing_period_start : DATE
+  * billing_period_end : DATE
+  * stripe_customer_id : VARCHAR(100)
+  * stripe_subscription_id : VARCHAR(100)
+  * created_at : TIMESTAMP WITH TIME ZONE
+  * renews_at : TIMESTAMP WITH TIME ZONE
+  o cancelled_at : TIMESTAMP WITH TIME ZONE
+}
+note right of Sub : BC-07 · Subscriptions & Billing\nplan_type ∈ {free, premium, premium_annual}\nstatus ∈ {active, cancelled, past_due, trialing}
+
+' ─────────────────────────────────────────
+' Relationships
+' ─────────────────────────────────────────
+UAcc ||--o{ CLog   : "1 user\nlogs food in *"
+CLog ||--o{ FEnt   : "1 log\ncontains *"
+
+UAcc ||--o| HPro   : "1 user\nhas 0..1"
+HPro ||--o{ WRec   : "1 profile\ntracks *"
+
+UAcc ||--o{ RecSet : "1 user\nreceives *"
+RecSet ||--o{ FRec  : "1 set\nincludes *"
+
+UAcc ||--o{ ASess  : "1 user\nsyncs *"
+ASess ||--o{ ARec  : "1 session\ncontains *"
+
+UAcc ||--o{ PIns   : "1 user\ngenerates *"
+
+UAcc ||--o| Sub    : "1 user\nholds 0..1"
+
+@enduml
+```
+
+---
+
+### Descripción de constraints por tabla
+
+**`user_accounts`**
+- `PRIMARY KEY (id)`
+- `UNIQUE (email)`
+- `CHECK (role IN ('free_user', 'premium_user', 'admin'))`
+- `NOT NULL` en todos los campos excepto nada (todos requeridos)
+
+**`consumption_logs`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (user_id) REFERENCES user_accounts(id) ON DELETE CASCADE`
+- `UNIQUE (user_id, log_date)` — un usuario tiene máximo un log por día
+
+**`food_entries`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (consumption_log_id) REFERENCES consumption_logs(id) ON DELETE CASCADE`
+- `CHECK (amount > 0)`
+- `CHECK (calories >= 0)`
+- `CHECK (external_food_source IN ('open_food_facts', 'usda'))`
+
+**`health_profiles`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (user_id) REFERENCES user_accounts(id) ON DELETE CASCADE`
+- `UNIQUE (user_id)` — un usuario tiene exactamente un perfil de salud
+- `CHECK (height_cm > 0)`
+- `CHECK (health_goal IN ('lose_weight', 'gain_muscle', 'maintain'))`
+- `CHECK (activity_level IN ('sedentary', 'lightly_active', 'moderately_active', 'very_active', 'extra_active'))`
+
+**`weight_records`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (health_profile_id) REFERENCES health_profiles(id) ON DELETE CASCADE`
+- `CHECK (weight_kg > 0)`
+
+**`recommendation_sets`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (user_id) REFERENCES user_accounts(id) ON DELETE CASCADE`
+- `CHECK (weather_condition IN ('hot', 'cold', 'rainy', 'neutral'))`
+- `CHECK (time_of_day IN ('breakfast', 'lunch', 'dinner', 'snack'))`
+
+**`food_recommendations`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (recommendation_set_id) REFERENCES recommendation_sets(id) ON DELETE CASCADE`
+- `CHECK (match_score BETWEEN 0.0 AND 1.0)`
+
+**`activity_sync_sessions`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (user_id) REFERENCES user_accounts(id) ON DELETE CASCADE`
+- `CHECK (provider IN ('google_fit', 'manual'))`
+- `CHECK (status IN ('pending', 'in_progress', 'completed', 'failed'))`
+- `CHECK (period_end > period_start)`
+
+**`activity_records`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (session_id) REFERENCES activity_sync_sessions(id) ON DELETE CASCADE`
+- `CHECK (duration_minutes > 0)`
+- `CHECK (calories_burned >= 0)`
+- `CHECK (activity_type IN ('walking', 'running', 'cycling', 'swimming', 'strength', 'other'))`
+
+**`progress_insights`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (user_id) REFERENCES user_accounts(id) ON DELETE CASCADE`
+- `CHECK (period_to >= period_from)`
+- `CHECK (period_type IN ('weekly', 'monthly', 'custom'))`
+- `CHECK (avg_protein_pct + avg_carbs_pct + avg_fat_pct BETWEEN 99.0 AND 101.0)`
+- `CHECK (goal_adherence_pct BETWEEN 0.0 AND 100.0)`
+
+**`subscriptions`**
+- `PRIMARY KEY (id)`
+- `FOREIGN KEY (user_id) REFERENCES user_accounts(id) ON DELETE CASCADE`
+- `UNIQUE (user_id)` — un usuario tiene máximo una suscripción activa
+- `CHECK (plan_type IN ('free', 'premium', 'premium_annual'))`
+- `CHECK (status IN ('active', 'cancelled', 'past_due', 'trialing'))`
+- `CHECK (billing_period_end > billing_period_start)`

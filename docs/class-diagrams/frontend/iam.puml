@@ -1,0 +1,96 @@
+@startuml NutriSense - IAM Frontend (Vue)
+
+package "iam" {
+
+  package "domain.model" {
+    class UserSession {
+      +userId: String
+      +fullName: String
+      +email: String
+      +role: String
+      +token: String
+      +isAuthenticated(): Boolean
+    }
+  }
+
+  package "application.services" {
+    class "«Service»\nAuthApiService" as AuthApiService {
+      -baseUrl: String
+      +signUp(request: Object): Promise<UserSession>
+      +signIn(request: Object): Promise<UserSession>
+      +signOut(): Promise<void>
+    }
+  }
+
+  package "infrastructure.stores" {
+    class "«Store»\nUseAuthStore" as UseAuthStore {
+      -session: UserSession
+      -isLoading: Boolean
+      -errorMessage: String
+      +signUp(firstName, lastName, email, password): Promise<void>
+      +signIn(email, password): Promise<void>
+      +signOut(): void
+      +isLoggedIn(): Boolean
+      +getRole(): String
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nSignUpForm" as SignUpForm {
+      -firstName: String
+      -lastName: String
+      -email: String
+      -password: String
+      -errorMessage: String
+      -- methods --
+      +submitSignUp(): void
+      +clearForm(): void
+      -- emits --
+      sign-up-completed(session: Object)
+    }
+
+    class "«Component»\nSignInForm" as SignInForm {
+      -email: String
+      -password: String
+      -errorMessage: String
+      -- methods --
+      +submitSignIn(): void
+      -- emits --
+      sign-in-completed(session: Object)
+    }
+
+    class "«Component»\nUserProfileCard" as UserProfileCard {
+      +userId: String
+      +fullName: String
+      +role: String
+    }
+  }
+
+  package "presentation.pages" {
+    class "«Component»\nSignUpPage" as SignUpPage {
+      -store: UseAuthStore
+      +handleSignUpCompleted(session: Object): void
+    }
+
+    class "«Component»\nSignInPage" as SignInPage {
+      -store: UseAuthStore
+      +handleSignInCompleted(session: Object): void
+    }
+  }
+
+}
+
+' Relationships
+UseAuthStore --> AuthApiService : calls >
+UseAuthStore --> UserSession : manages >
+SignUpForm ..> UseAuthStore : uses >
+SignInForm ..> UseAuthStore : uses >
+UserProfileCard --> UserSession : displays >
+SignUpPage *-- SignUpForm : contains >
+SignInPage *-- SignInForm : contains >
+SignUpPage --> UseAuthStore : uses >
+SignInPage --> UseAuthStore : uses >
+SignUpForm -up-> SignUpPage : emits sign-up-completed
+SignInForm -up-> SignInPage : emits sign-in-completed
+
+@enduml

@@ -1,0 +1,95 @@
+@startuml NutriSense - Analytics & Reporting Frontend (Vue)
+
+package "analytics" {
+
+  package "domain.model" {
+    class ProgressInsightData {
+      +insightId: String
+      +periodFrom: String
+      +periodTo: String
+      +periodType: String
+      +weightDeltaKg: Number
+      +weightTrendDirection: String
+      +averageDailyKcal: Number
+      +calorieAdherencePct: Number
+      +avgProteinPct: Number
+      +avgCarbsPct: Number
+      +avgFatPct: Number
+      +goalAdherencePct: Number
+      +goalAdherenceLabel: String
+    }
+  }
+
+  package "application.services" {
+    class "«Service»\nAnalyticsApiService" as AnalyticsApiService {
+      -baseUrl: String
+      +getDashboard(userId: String): Promise<ProgressInsightData>
+      +getLatestInsight(userId: String): Promise<ProgressInsightData>
+      +generateInsight(userId: String, periodType: String): Promise<ProgressInsightData>
+    }
+  }
+
+  package "infrastructure.stores" {
+    class "«Store»\nUseAnalyticsStore" as UseAnalyticsStore {
+      -insight: ProgressInsightData
+      -isLoading: Boolean
+      +loadDashboard(userId): Promise<void>
+      +generateInsight(userId, periodType): Promise<void>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nWeightProgressChart" as WeightProgressChart {
+      +deltaKg: Number
+      +trendDirection: String
+      +periodLabel: String
+    }
+
+    class "«Component»\nMacroDistributionChart" as MacroDistributionChart {
+      +proteinPct: Number
+      +carbsPct: Number
+      +fatPct: Number
+    }
+
+    class "«Component»\nCalorieAdherenceMeter" as CalorieAdherenceMeter {
+      +adherencePct: Number
+      +averageDailyKcal: Number
+    }
+
+    class "«Component»\nGoalAdherenceBadge" as GoalAdherenceBadge {
+      +adherencePct: Number
+      +label: String
+    }
+
+    class "«Component»\nPeriodSelector" as PeriodSelector {
+      -selectedPeriod: String
+      -- emits --
+      period-changed(period: String)
+    }
+  }
+
+  package "presentation.pages" {
+    class "«Component»\nAnalyticsDashboardPage" as AnalyticsDashboardPage {
+      -store: UseAnalyticsStore
+      +handlePeriodChanged(period: String): void
+    }
+  }
+
+}
+
+' Relationships
+UseAnalyticsStore --> AnalyticsApiService : calls >
+UseAnalyticsStore --> ProgressInsightData : manages >
+AnalyticsDashboardPage *-- WeightProgressChart : contains >
+AnalyticsDashboardPage *-- MacroDistributionChart : contains >
+AnalyticsDashboardPage *-- CalorieAdherenceMeter : contains >
+AnalyticsDashboardPage *-- GoalAdherenceBadge : contains >
+AnalyticsDashboardPage *-- PeriodSelector : contains >
+AnalyticsDashboardPage --> UseAnalyticsStore : uses >
+WeightProgressChart --> ProgressInsightData : reads >
+MacroDistributionChart --> ProgressInsightData : reads >
+CalorieAdherenceMeter --> ProgressInsightData : reads >
+GoalAdherenceBadge --> ProgressInsightData : reads >
+PeriodSelector -up-> AnalyticsDashboardPage : emits period-changed
+
+@enduml

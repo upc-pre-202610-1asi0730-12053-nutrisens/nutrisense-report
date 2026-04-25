@@ -1,0 +1,98 @@
+@startuml NutriSense - Activity & Wearable Sync Frontend (Vue)
+
+package "activity-sync" {
+
+  package "domain.model" {
+    class ActivityEntryItem {
+      +id: String
+      +type: String
+      +durationMinutes: Number
+      +caloriesBurned: Number
+      +performedAt: String
+    }
+
+    class SyncSessionData {
+      +sessionId: String
+      +provider: String
+      +status: String
+      +syncedAt: String
+      +totalCaloriesBurned: Number
+      +stepsCount: Number
+      +records: ActivityEntryItem[]
+    }
+  }
+
+  package "application.services" {
+    class "«Service»\nActivitySyncApiService" as ActivitySyncApiService {
+      -baseUrl: String
+      +syncFromGoogleFit(userId: String): Promise<SyncSessionData>
+      +logManualActivity(request: Object): Promise<SyncSessionData>
+      +getLatestSession(userId: String): Promise<SyncSessionData>
+    }
+  }
+
+  package "infrastructure.stores" {
+    class "«Store»\nUseActivityStore" as UseActivityStore {
+      -latestSession: SyncSessionData
+      -isSyncing: Boolean
+      -errorMessage: String
+      +syncFromGoogleFit(userId): Promise<void>
+      +logManualActivity(request): Promise<void>
+      +loadLatestSession(userId): Promise<void>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nSyncStatusCard" as SyncStatusCard {
+      +status: String
+      +syncedAt: String
+      +provider: String
+      -- emits --
+      sync-requested()
+    }
+
+    class "«Component»\nActivitySummaryPanel" as ActivitySummaryPanel {
+      +totalCaloriesBurned: Number
+      +stepsCount: Number
+    }
+
+    class "«Component»\nManualActivityForm" as ManualActivityForm {
+      -activityType: String
+      -durationMinutes: Number
+      -errorMessage: String
+      -- methods --
+      +submitActivity(): void
+      -- emits --
+      activity-logged(entry: Object)
+    }
+
+    class "«Component»\nActivityRecordList" as ActivityRecordList {
+      +records: ActivityEntryItem[]
+    }
+  }
+
+  package "presentation.pages" {
+    class "«Component»\nActivityPage" as ActivityPage {
+      -store: UseActivityStore
+      +handleSyncRequested(): void
+      +handleActivityLogged(entry: Object): void
+    }
+  }
+
+}
+
+' Relationships
+SyncSessionData *-- "0..*" ActivityEntryItem : contains >
+UseActivityStore --> ActivitySyncApiService : calls >
+UseActivityStore --> SyncSessionData : manages >
+ActivityPage *-- SyncStatusCard : contains >
+ActivityPage *-- ActivitySummaryPanel : contains >
+ActivityPage *-- ManualActivityForm : contains >
+ActivityPage *-- ActivityRecordList : contains >
+ActivityPage --> UseActivityStore : uses >
+SyncStatusCard -up-> ActivityPage : emits sync-requested
+ManualActivityForm -up-> ActivityPage : emits activity-logged
+ActivityRecordList --> ActivityEntryItem : renders >
+ActivitySummaryPanel --> SyncSessionData : reads >
+
+@enduml

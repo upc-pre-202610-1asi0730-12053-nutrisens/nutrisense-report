@@ -1,0 +1,117 @@
+@startuml NutriSense - Nutrition Tracking Frontend (Vue)
+
+package "nutrition-tracking" {
+
+  package "domain.model" {
+    class FoodEntryItem {
+      +entryId: String
+      +foodName: String
+      +amountGrams: Number
+      +calories: Number
+      +protein: Number
+      +carbs: Number
+      +fat: Number
+    }
+
+    class DailyLog {
+      +logId: String
+      +date: String
+      +entries: FoodEntryItem[]
+      +totalCalories: Number
+      +totalProtein: Number
+      +totalCarbs: Number
+      +totalFat: Number
+      +getCalorieSummary(): Object
+    }
+  }
+
+  package "application.services" {
+    class "«Service»\nNutritionApiService" as NutritionApiService {
+      -baseUrl: String
+      +getDailyLog(userId: String, date: String): Promise<DailyLog>
+      +logFood(request: Object): Promise<FoodEntryItem>
+      +updateEntry(entryId: String, request: Object): Promise<FoodEntryItem>
+      +removeEntry(logId: String, entryId: String): Promise<void>
+      +searchFoods(query: String): Promise<Object[]>
+    }
+  }
+
+  package "infrastructure.stores" {
+    class "«Store»\nUseNutritionStore" as UseNutritionStore {
+      -dailyLog: DailyLog
+      -isLoading: Boolean
+      -searchResults: Object[]
+      +loadDailyLog(userId, date): Promise<void>
+      +logFood(request: Object): Promise<void>
+      +updateEntry(entryId, request): Promise<void>
+      +removeEntry(logId, entryId): Promise<void>
+      +searchFoods(query: String): Promise<void>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nFoodSearchBar" as FoodSearchBar {
+      -query: String
+      -results: Object[]
+      -isSearching: Boolean
+      -- methods --
+      +search(): void
+      +clearSearch(): void
+      -- emits --
+      food-selected(food: Object)
+    }
+
+    class "«Component»\nFoodLogEntry" as FoodLogEntry {
+      +entry: FoodEntryItem
+      -- emits --
+      entry-removed(entryId: String)
+      entry-updated(entryId: String, newAmount: Number)
+    }
+
+    class "«Component»\nDailyMacroSummary" as DailyMacroSummary {
+      +totalCalories: Number
+      +totalProtein: Number
+      +totalCarbs: Number
+      +totalFat: Number
+      +calorieTarget: Number
+    }
+
+    class "«Component»\nAddFoodModal" as AddFoodModal {
+      -selectedFood: Object
+      -amountGrams: Number
+      -errorMessage: String
+      -- methods --
+      +confirmAdd(): void
+      +cancel(): void
+      -- emits --
+      food-logged(entry: Object)
+    }
+  }
+
+  package "presentation.pages" {
+    class "«Component»\nDailyLogPage" as DailyLogPage {
+      -store: UseNutritionStore
+      -selectedDate: String
+      +handleFoodLogged(entry: Object): void
+      +handleEntryRemoved(entryId: String): void
+    }
+  }
+
+}
+
+' Relationships
+DailyLog *-- "0..*" FoodEntryItem : contains >
+UseNutritionStore --> NutritionApiService : calls >
+UseNutritionStore --> DailyLog : manages >
+DailyLogPage *-- FoodSearchBar : contains >
+DailyLogPage *-- "0..*" FoodLogEntry : contains >
+DailyLogPage *-- DailyMacroSummary : contains >
+DailyLogPage *-- AddFoodModal : contains >
+DailyLogPage --> UseNutritionStore : uses >
+FoodLogEntry --> FoodEntryItem : displays >
+FoodSearchBar -up-> DailyLogPage : emits food-selected
+FoodLogEntry -up-> DailyLogPage : emits entry-removed
+AddFoodModal -up-> DailyLogPage : emits food-logged
+DailyMacroSummary --> DailyLog : reads >
+
+@enduml

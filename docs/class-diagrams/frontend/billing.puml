@@ -1,0 +1,109 @@
+@startuml NutriSense - Subscriptions & Billing Frontend (Vue)
+
+package "billing" {
+
+  package "domain.model" {
+    class SubscriptionData {
+      +subscriptionId: String
+      +userId: String
+      +plan: String
+      +status: String
+      +renewsAt: String
+      +features: String[]
+      +isPremium(): Boolean
+      +isActive(): Boolean
+    }
+
+    class PlanOption {
+      +planKey: String
+      +displayName: String
+      +priceMonthly: Number
+      +priceAnnual: Number
+      +features: String[]
+    }
+  }
+
+  package "application.services" {
+    class "«Service»\nBillingApiService" as BillingApiService {
+      -baseUrl: String
+      +getCurrentSubscription(userId: String): Promise<SubscriptionData>
+      +createSubscription(request: Object): Promise<SubscriptionData>
+      +cancelSubscription(subscriptionId: String): Promise<void>
+      +getAvailablePlans(): Promise<PlanOption[]>
+    }
+  }
+
+  package "infrastructure.stores" {
+    class "«Store»\nUseBillingStore" as UseBillingStore {
+      -subscription: SubscriptionData
+      -availablePlans: PlanOption[]
+      -isLoading: Boolean
+      -errorMessage: String
+      +loadSubscription(userId): Promise<void>
+      +loadPlans(): Promise<void>
+      +subscribe(planKey, billingCycle): Promise<void>
+      +cancel(): Promise<void>
+      +isPremium(): Boolean
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nCurrentPlanCard" as CurrentPlanCard {
+      +subscription: SubscriptionData
+      -- emits --
+      cancel-requested()
+    }
+
+    class "«Component»\nPlanComparisonTable" as PlanComparisonTable {
+      +plans: PlanOption[]
+      +currentPlanKey: String
+      -- emits --
+      plan-selected(planKey: String)
+    }
+
+    class "«Component»\nPaymentConfirmModal" as PaymentConfirmModal {
+      -selectedPlan: PlanOption
+      -billingCycle: String
+      -isProcessing: Boolean
+      -errorMessage: String
+      -- methods --
+      +confirmPayment(): void
+      +cancel(): void
+      -- emits --
+      payment-confirmed(planKey: String, cycle: String)
+    }
+
+    class "«Component»\nFeatureGate" as FeatureGate {
+      +featureKey: String
+      +requiredPlan: String
+      +isUnlocked: Boolean
+    }
+  }
+
+  package "presentation.pages" {
+    class "«Component»\nSubscriptionPage" as SubscriptionPage {
+      -store: UseBillingStore
+      +handlePlanSelected(planKey: String): void
+      +handleCancelRequested(): void
+      +handlePaymentConfirmed(planKey, cycle): void
+    }
+  }
+
+}
+
+' Relationships
+UseBillingStore --> BillingApiService : calls >
+UseBillingStore --> SubscriptionData : manages >
+UseBillingStore --> "0..*" PlanOption : manages >
+SubscriptionPage *-- CurrentPlanCard : contains >
+SubscriptionPage *-- PlanComparisonTable : contains >
+SubscriptionPage *-- PaymentConfirmModal : contains >
+SubscriptionPage --> UseBillingStore : uses >
+CurrentPlanCard --> SubscriptionData : displays >
+PlanComparisonTable --> PlanOption : renders >
+FeatureGate --> SubscriptionData : checks >
+CurrentPlanCard -up-> SubscriptionPage : emits cancel-requested
+PlanComparisonTable -up-> SubscriptionPage : emits plan-selected
+PaymentConfirmModal -up-> SubscriptionPage : emits payment-confirmed
+
+@enduml

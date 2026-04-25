@@ -1,0 +1,127 @@
+@startuml NutriSense - Subscriptions & Billing (Backend)
+
+package "NutriSense.Billing.Domain.Model.Aggregates" {
+  class "«Aggregate Root»\nSubscription" as Subscription {
+    -Guid _id
+    -Guid _userId
+    -PlanType _plan
+    -SubscriptionStatus _status
+    -BillingPeriod _billingPeriod
+    -StripeCustomerId _stripeCustomerId
+    -StripeSubscriptionId _stripeSubscriptionId
+    -DateTime _createdAt
+    -DateTime _renewsAt
+    -- methods --
+    +Subscription(Guid userId, PlanType plan, BillingPeriod period)
+    +void Activate(StripeCustomerId customerId, StripeSubscriptionId subId)
+    +void Cancel()
+    +void Renew(BillingPeriod newPeriod)
+    +bool IsFeatureAvailable(string featureKey)
+    +SubscriptionActivatedEvent RaiseActivatedEvent()
+    +SubscriptionCancelledEvent RaiseCancelledEvent()
+  }
+}
+
+package "NutriSense.Billing.Domain.Model.ValueObjects" {
+  class "«Value Object»\nBillingPeriod" as BillingPeriod {
+    -DateOnly _start
+    -DateOnly _end
+    +BillingPeriod(DateOnly start, DateOnly end)
+    +DateOnly GetStart()
+    +DateOnly GetEnd()
+    +bool IsActive()
+  }
+
+  class "«Value Object»\nStripeCustomerId" as StripeCustomerId {
+    -string _value
+    +StripeCustomerId(string value)
+    +string GetValue()
+  }
+
+  class "«Value Object»\nStripeSubscriptionId" as StripeSubscriptionId {
+    -string _value
+    +StripeSubscriptionId(string value)
+    +string GetValue()
+  }
+
+  enum PlanType {
+    Free
+    Premium
+    PremiumAnnual
+  }
+
+  enum SubscriptionStatus {
+    Active
+    Cancelled
+    PastDue
+    Trialing
+  }
+}
+
+package "NutriSense.Billing.Domain.Model.Events" {
+  class "«Domain Event»\nSubscriptionActivatedEvent" as SubscriptionActivatedEvent {
+    +Guid SubscriptionId
+    +Guid UserId
+    +PlanType Plan
+    +DateTime OccurredOn
+  }
+
+  class "«Domain Event»\nSubscriptionCancelledEvent" as SubscriptionCancelledEvent {
+    +Guid SubscriptionId
+    +Guid UserId
+    +DateTime OccurredOn
+  }
+}
+
+package "NutriSense.Billing.Domain.Repositories" {
+  interface "«Repository»\nISubscriptionRepository" as ISubscriptionRepository {
+    +Task<Subscription?> FindByUserIdAsync(Guid userId)
+    +Task<Subscription?> FindByStripeSubscriptionIdAsync(StripeSubscriptionId stripeId)
+    +Task SaveAsync(Subscription subscription)
+  }
+}
+
+package "NutriSense.Billing.Application.Services" {
+  class "«Application Service»\nBillingAppService" as BillingAppService {
+    -ISubscriptionRepository _repository
+    -IStripePaymentService _stripeService
+    +BillingAppService(ISubscriptionRepository repo, IStripePaymentService stripe)
+    +Task<Subscription> CreateSubscriptionAsync(CreateSubscriptionCommand cmd)
+    +Task CancelSubscriptionAsync(CancelSubscriptionCommand cmd)
+    +Task<Subscription?> GetCurrentSubscriptionAsync(Guid userId)
+    +Task HandleStripeWebhookAsync(StripeWebhookPayload payload)
+  }
+}
+
+package "NutriSense.Billing.Interfaces.REST" {
+  class "«Controller»\nSubscriptionController" as SubscriptionController {
+    -BillingAppService _service
+    +SubscriptionController(BillingAppService service)
+    +Task<IActionResult> CreateSubscription(CreateSubscriptionRequest request)
+    +Task<IActionResult> CancelSubscription(Guid subscriptionId)
+    +Task<IActionResult> GetCurrentSubscription(Guid userId)
+    +Task<IActionResult> HandleStripeWebhook(StripeWebhookRequest request)
+  }
+
+  class "«Assembler»\nSubscriptionAssembler" as SubscriptionAssembler {
+    +static CreateSubscriptionCommand ToCommandFromRequest(CreateSubscriptionRequest request)
+    +static SubscriptionResponse ToResponseFromEntity(Subscription subscription)
+  }
+}
+
+' Relationships
+Subscription *-- BillingPeriod : has >
+Subscription *-- StripeCustomerId : linked to >
+Subscription *-- StripeSubscriptionId : linked to >
+Subscription --> PlanType : of type >
+Subscription --> SubscriptionStatus : has >
+Subscription ..> SubscriptionActivatedEvent : raises >
+Subscription ..> SubscriptionCancelledEvent : raises >
+ISubscriptionRepository ..> Subscription : manages >
+BillingAppService --> ISubscriptionRepository : uses >
+BillingAppService ..> SubscriptionActivatedEvent : publishes >
+BillingAppService ..> SubscriptionCancelledEvent : publishes >
+SubscriptionController --> BillingAppService : uses >
+SubscriptionAssembler ..> Subscription : uses >
+
+@enduml

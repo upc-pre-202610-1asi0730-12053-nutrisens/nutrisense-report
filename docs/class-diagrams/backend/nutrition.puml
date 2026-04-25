@@ -1,0 +1,144 @@
+@startuml NutriSense - Nutrition Tracking (Backend)
+
+package "NutriSense.NutritionTracking.Domain.Model.Aggregates" {
+  class "«Aggregate Root»\nConsumptionLog" as ConsumptionLog {
+    -Guid _id
+    -Guid _userId
+    -LogDate _logDate
+    -List<FoodEntry> _entries
+    -DateTime _createdAt
+    -DateTime _updatedAt
+    -- methods --
+    +ConsumptionLog(Guid userId, LogDate date)
+    +Guid GetId()
+    +void AddEntry(FoodEntry entry)
+    +void RemoveEntry(Guid entryId)
+    +void UpdateEntry(Guid entryId, Quantity quantity)
+    +MacroSummary CalculateDailyMacros()
+    +ConsumptionUpdatedEvent RaiseUpdatedEvent()
+  }
+}
+
+package "NutriSense.NutritionTracking.Domain.Model.Entities" {
+  class FoodEntry {
+    -Guid _id
+    -FoodId _foodId
+    -string _foodName
+    -Quantity _quantity
+    -NutritionalInfo _nutritionalInfo
+    +FoodEntry(FoodId foodId, string name, Quantity qty, NutritionalInfo info)
+    +Guid GetId()
+    +NutritionalInfo GetScaledNutrition()
+  }
+}
+
+package "NutriSense.NutritionTracking.Domain.Model.ValueObjects" {
+  class "«Value Object»\nLogDate" as LogDate {
+    -DateOnly _value
+    +LogDate(DateOnly date)
+    +DateOnly GetValue()
+    +bool Equals(LogDate other)
+  }
+
+  class "«Value Object»\nFoodId" as FoodId {
+    -string _externalId
+    -string _source
+    +FoodId(string externalId, string source)
+    +string GetExternalId()
+    +string GetSource()
+  }
+
+  class "«Value Object»\nQuantity" as Quantity {
+    -decimal _amount
+    -string _unit
+    +Quantity(decimal amount, string unit)
+    +decimal GetAmount()
+    +string GetUnit()
+    +Quantity ScaleTo(decimal newAmount)
+  }
+
+  class "«Value Object»\nNutritionalInfo" as NutritionalInfo {
+    -decimal _calories
+    -decimal _proteinGrams
+    -decimal _carbsGrams
+    -decimal _fatGrams
+    +NutritionalInfo(decimal calories, decimal protein, decimal carbs, decimal fat)
+    +decimal GetCalories()
+    +decimal GetProtein()
+    +decimal GetCarbs()
+    +decimal GetFat()
+    +NutritionalInfo Scale(decimal factor)
+  }
+
+  class "«Value Object»\nMacroSummary" as MacroSummary {
+    +decimal TotalCalories
+    +decimal TotalProtein
+    +decimal TotalCarbs
+    +decimal TotalFat
+    +MacroSummary(decimal cal, decimal prot, decimal carb, decimal fat)
+  }
+}
+
+package "NutriSense.NutritionTracking.Domain.Model.Events" {
+  class "«Domain Event»\nConsumptionUpdatedEvent" as ConsumptionUpdatedEvent {
+    +Guid LogId
+    +Guid UserId
+    +LogDate LogDate
+    +MacroSummary DailyMacros
+    +DateTime OccurredOn
+  }
+}
+
+package "NutriSense.NutritionTracking.Domain.Repositories" {
+  interface "«Repository»\nIConsumptionLogRepository" as IConsumptionLogRepository {
+    +Task<ConsumptionLog?> FindByUserAndDateAsync(Guid userId, LogDate date)
+    +Task<ConsumptionLog?> FindByIdAsync(Guid id)
+    +Task SaveAsync(ConsumptionLog log)
+    +Task<List<ConsumptionLog>> FindByUserInRangeAsync(Guid userId, LogDate from, LogDate to)
+  }
+}
+
+package "NutriSense.NutritionTracking.Application.Services" {
+  class "«Application Service»\nNutritionTrackingAppService" as NutritionTrackingAppService {
+    -IConsumptionLogRepository _repository
+    +NutritionTrackingAppService(IConsumptionLogRepository repo)
+    +Task<ConsumptionLog> LogFoodAsync(LogFoodCommand cmd)
+    +Task UpdateEntryAsync(UpdateEntryCommand cmd)
+    +Task RemoveEntryAsync(RemoveEntryCommand cmd)
+    +Task<ConsumptionLog?> GetDailyLogAsync(Guid userId, LogDate date)
+    +Task<List<ConsumptionLog>> GetLogsInRangeAsync(Guid userId, LogDate from, LogDate to)
+  }
+}
+
+package "NutriSense.NutritionTracking.Interfaces.REST" {
+  class "«Controller»\nConsumptionLogController" as ConsumptionLogController {
+    -NutritionTrackingAppService _service
+    +ConsumptionLogController(NutritionTrackingAppService service)
+    +Task<IActionResult> LogFood(LogFoodRequest request)
+    +Task<IActionResult> UpdateEntry(Guid entryId, UpdateEntryRequest request)
+    +Task<IActionResult> RemoveEntry(Guid logId, Guid entryId)
+    +Task<IActionResult> GetDailyLog(Guid userId, DateOnly date)
+  }
+
+  class "«Assembler»\nConsumptionLogAssembler" as ConsumptionLogAssembler {
+    +static FoodEntry ToEntityFromRequest(LogFoodRequest request)
+    +static DailyLogResponse ToResponseFromEntity(ConsumptionLog log)
+  }
+}
+
+' Relationships
+ConsumptionLog *-- "1..*" FoodEntry : contains >
+ConsumptionLog *-- LogDate : for >
+FoodEntry *-- FoodId : identifies >
+FoodEntry *-- Quantity : has >
+FoodEntry *-- NutritionalInfo : provides >
+ConsumptionLog ..> MacroSummary : computes >
+ConsumptionLog ..> ConsumptionUpdatedEvent : raises >
+IConsumptionLogRepository ..> ConsumptionLog : manages >
+NutritionTrackingAppService --> IConsumptionLogRepository : uses >
+NutritionTrackingAppService ..> ConsumptionUpdatedEvent : publishes >
+ConsumptionLogController --> NutritionTrackingAppService : uses >
+ConsumptionLogAssembler ..> FoodEntry : creates >
+ConsumptionLogAssembler ..> ConsumptionLog : uses >
+
+@enduml
