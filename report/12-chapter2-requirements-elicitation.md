@@ -75,7 +75,7 @@
 | Distrito |San Borja|
 | Ocupación |Estudiante universitario|
 | Timming inicio |16:01 - 19:06|
-| Duración |3:05|
+| Duración |3:05 minutos|
 | URL | |
 | Screenshot |![Entrevista 2 Seg2](../assets/img/interviews/2_2.png)|
 | Resumen |Rando es un joven universitario que entrena cuatro veces por semana con el enfoque de ganar masa muscular. Su principal desafío es la gestión del tiempo, ya que sus deberes académicos suelen interferir con su capacidad para asistir al gimnasio y ajustar su ingesta calórica diaria. Aunque ya utiliza tecnología como un smartwatch para medir pasos y pulsaciones, y lleva un control manual de sus proteínas, manifiesta que las aplicaciones de nutrición convencionales le resultan confusas o poco atractivas. Considera que la aplicación propuesta sería de gran valor para mantener su disciplina, destacando la importancia de contar con sugerencias de gastronomía local que encajen con su dieta al viajar. Asimismo, resalta como una herramienta fundamental la automatización en el ajuste de porciones basada en la actividad física registrada por sus dispositivos, lo que facilitaría significativamente el seguimiento de su régimen alimenticio.|
