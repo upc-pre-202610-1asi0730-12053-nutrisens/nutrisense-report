@@ -88,6 +88,7 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a NutriSense como un 
 	- `Google Fit API:` Sincroniza datos de actividad física y gasto energético.
 	- `OpenWeatherMap:` Provee datos climáticos para ajustar las sugerencias de comidas.
 	- `Stripe:` Gestiona de forma segura los pagos y el estado de las suscripciones.
+	- `Geolocation API:` Provee la ubicación actual del usuario para el Modo Viaje y las recomendaciones contextuales.
 
 ![Context Diagram](../assets/img/artifacts/nutrisense-SystemContext.png)
 
