@@ -48,89 +48,79 @@
 
 ## 4.7. Software Object-Oriented Design
 
-# 4.7. Software Object-Oriented Design
-
 En esta sección, el equipo presenta y explica los diagramas que presentan un mayor detalle sobre la implementación de componentes para cada bounded context. Los diagramas de clases están organizados en dos grupos: **FrontEnd** (Vue 3 + PrimeVue) y **Backend** (ASP.NET Core + C#), con un diagrama por cada uno de los 7 bounded contexts definidos en la arquitectura DDD de NutriSense. Las principales características consideradas en los diagramas son las siguientes.
 
-**Arquitectura en capas DDD.** Cada bounded context sigue la estructura de capas `domain`, `application`, `interfaces` e `infrastructure`. Las clases del dominio (aggregates, value objects, domain events, repositories) residen en `domain.model`; los application services coordinan los casos de uso en la capa `application`; los controllers, assemblers y resources conforman la capa `interfaces.REST` en el backend; y los API services, stores y componentes Vue conforman las capas `application.services`, `infrastructure.stores` y `presentation` en el frontend.
+**Arquitectura en capas DDD.** Cada bounded context sigue la estructura de capas `dofeature/diagrams`, `application`, `interfaces` e `infrastructure`. Las clases del dominio (aggregates, value objects, dofeature/diagrams events, repositories) residen en `dofeature/diagrams.model`; los application services coordinan los casos de uso en la capa `application`; los controllers, assemblers y resources conforman la capa `interfaces.REST` en el backend; y los API services, stores y componentes Vue conforman las capas `application.services`, `infrastructure.stores` y `presentation` en el frontend.
 
-**Estereotipos UML.** Se utilizan los estereotipos `«Aggregate Root»`, `«Value Object»`, `«Domain Event»`, `«Repository»`, `«Application Service»`, `«Controller»`, `«Assembler»`, `«Component»` y `«Service»` para distinguir el rol DDD de cada elemento.
+**Estereotipos UML.** Se utilizan los estereotipos `«Aggregate Root»`, `«Value Object»`, `«Dofeature/diagrams Event»`, `«Repository»`, `«Application Service»`, `«Controller»`, `«Assembler»`, `«Component»` y `«Service»` para distinguir el rol DDD de cada elemento.
 
 **Visibilidad explícita.** Todos los miembros de cada clase incluyen su modificador de acceso: `+` (público), `-` (privado) y `#` (protegido).
 
 **Relaciones tipificadas.** Los diagramas emplean composición (`*--`), agregación (`o--`), dependencia (`..>`), realización (`..|>`), herencia (`--|>`) y asociación con nombre, dirección y multiplicidad según corresponda.
 
-**Stack del curso.** El frontend está implementado en **Vue 3** con **PrimeVue** como biblioteca de UI y **Pinia** para la gestión de estado reactivo. El backend está implementado en **ASP.NET Core** con **C#**, exponiendo una API REST documentada con **OpenAPI/Swagger**.
+### 4.7.1. Class Diagrams
 
----
-
-## 4.7.1. Class Diagrams
-
-### FrontEnd
+#### FrontEnd
 
 #### Identity & Access Management
 
-![IAM Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/frontend/iam.puml)
+![IAM Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/frontend/iam.puml)
 
 #### Nutrition Tracking
 
-![Nutrition Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/frontend/nutrition.puml)
+![Nutrition Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/frontend/nutrition.puml)
 
 #### Body & Health Metrics
 
-![Body Metrics Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/frontend/body-metrics.puml)
+![Body Metrics Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/frontend/body-metrics.puml)
 
 #### Smart Recommendations
 
-![Recommendations Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/frontend/recommendations.puml)
+![Recommendations Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/frontend/recommendations.puml)
 
 #### Activity & Wearable Sync
 
-![Activity Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/frontend/activity.puml)
+![Activity Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/frontend/activity.puml)
 
 #### Analytics & Reporting
 
-![Analytics Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/frontend/analytics.puml)
+![Analytics Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/frontend/analytics.puml)
 
 #### Subscriptions & Billing
 
-![Billing Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/frontend/billing.puml)
+![Billing Frontend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/frontend/billing.puml)
 
----
-
-### Backend
+#### Backend
 
 #### Identity & Access Management
 
-![IAM Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/backend/iam.puml)
+![IAM Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/backend/iam.puml)
 
 #### Nutrition Tracking
 
-![Nutrition Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/backend/nutrition.puml)
+![Nutrition Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/backend/nutrition.puml)
 
 #### Body & Health Metrics
 
-![Body Metrics Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/backend/body-metrics.puml)
+![Body Metrics Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/backend/body-metrics.puml)
 
 #### Smart Recommendations
 
-![Recommendations Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/backend/recommendations.puml)
+![Recommendations Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/backend/recommendations.puml)
 
 #### Activity & Wearable Sync
 
-![Activity Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/backend/activity.puml)
+![Activity Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/backend/activity.puml)
 
 #### Analytics & Reporting
 
-![Analytics Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/backend/analytics.puml)
+![Analytics Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/backend/analytics.puml)
 
 #### Subscriptions & Billing
 
-![Billing Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/class-diagrams/backend/billing.puml)
+![Billing Backend](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/class-diagrams/backend/billing.puml)
 
----
-
-# 4.8. Database Design
+## 4.8. Database Design
 
 Los diagramas de base de datos de NutriSense se presentan a nivel físico, detallando la estructura completa de cada tabla junto con sus columnas, tipos de datos nativos de PostgreSQL, restricciones de integridad referencial y relaciones entre entidades. El diseño está organizado por Bounded Context, de modo que cada contexto delimitado agrupa sus propias tablas con una nomenclatura consistente con el lenguaje ubicuo del dominio.
 
@@ -156,10 +146,8 @@ Los diagramas de base de datos de NutriSense se presentan a nivel físico, detal
 
 **Índices.** Se definen índices sobre las columnas de búsqueda más frecuentes: `user_id` en todas las tablas asociadas a un usuario, `email` en `user_accounts`, y la combinación `(user_id, log_date)` en `consumption_logs`, optimizando las consultas del dashboard diario y los reportes de progreso.
 
----
-
 ## 4.8.1. Database Diagrams
 
 El diagrama a continuación presenta el modelo entidad-relación físico general de NutriSense, consolidando las 11 tablas de los siete Bounded Contexts y sus relaciones de integridad referencial.
 
-![NutriSense ERD](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/main/docs/database-diagrams/nutrisense-erd.puml)
+![NutriSense ERD](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-GRUPO/nutrisense-report/feature/diagrams/docs/database-diagrams/nutrisense-erd.puml)
