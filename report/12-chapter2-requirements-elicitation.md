@@ -21,7 +21,7 @@
 | Timming inicio |0:06 - 3:46|
 | Duración |3:41 minutos|
 | URL | |
-| Screenshot |![Entrevista 1 Seg1](../assets/img/interviews/1_1.png)|
+| Screenshot |![Entrevista 1 Seg1](../assets/img/interviews/Entrevista1-seg1.png)|
 | Resumen |Evelyn describe su rutina diaria como permanentemente activa debido a su labor docente, la cual le exige estar en constante movimiento entre clases y actividades con sus alumnos. Su motivación para buscar un mejor control alimenticio nace de preocupaciones de salud, específicamente por el aumento de peso relacionado con la edad y niveles elevados de azúcar, por lo cual cuenta actualmente con asesoría de un nutricionista. Al comer fuera de casa, no conoce el valor calórico exacto, pero aplica una estrategia de control basada en evitar la repetición de carbohidratos y equilibrar las proteínas y verduras. Ella califica como una "idea magnífica" la posibilidad de usar una aplicación que analice sus platos mediante fotografías, ya que le permitiría contar con una herramienta de apoyo precisa para el control riguroso de su ingesta diaria. Asimismo, aprueba totalmente la función de sugerencias según el clima como un complemento útil para su alimentación.|
 
 <div style="page-break-after: always"></div>
@@ -35,7 +35,7 @@
 | Timming inicio |3:47 - 8:04|
 | Duración |4:18 minutos |
 | URL | |
-| Screenshot |![Entrevista 2 Seg1](../assets/img/interviews/1_2.png)|
+| Screenshot |![Entrevista 2 Seg1](../assets/img/interviews/Entrevista2-seg1.png)|
 | Resumen |Jorge es un profesional cuya jornada laboral transcurre mayoritariamente en una oficina, permaneciendo sentado aproximadamente el 90% de su tiempo, mientras que el resto lo dedica a la coordinación en taller. A pesar de este sedentarismo laboral, mantiene una rutina de ejercicio nocturno de lunes a viernes con el objetivo de combatir su sobrepeso actual mediante un déficit calórico. En cuanto a su alimentación, suele consumir menús diarios calculando las porciones de manera visual o "al ojo", sin tener certeza sobre el valor calórico real de sus platos. Se muestra muy interesado en utilizar una herramienta tecnológica que analice su metabolismo y las fotos de su comida, asegurando que, de ser efectiva, la recomendaría a su círculo cercano. Respecto a las sugerencias por clima, aunque vive en una zona predominantemente cálida, considera que podrían ser útiles en momentos específicos de lluvia para elegir alimentos como café o sándwiches.|
 
 <div style="page-break-after: always"></div>
@@ -49,7 +49,7 @@
 | Timming inicio |8:05 - 11:59|
 | Duración |3:53 minutos|
 | URL | |
-| Screenshot |![Entrevista 3 Seg1](../assets/img/interviews/1_3.png)|
+| Screenshot |![Entrevista 3 Seg1](../assets/img/interviews/Entrevista3-seg1.png)|
 | Resumen |Daniela mantiene una rutina mayoritariamente sedentaria debido a sus estudios universitarios, aunque intenta realizar pausas activas y camina diariamente hacia el transporte público. Su principal desafío para perder peso y mejorar su alimentación es un diagnóstico médico de Síndrome de Ovario Poliquístico (SOP), lo cual dificulta la pérdida de peso y le genera constantes antojos de alimentos poco saludables. Al igual que los otros entrevistados, suele medir sus porciones de forma estimada cuando come en restaurantes, pero carece de información calórica real. Ella utilizaría la aplicación propuesta para mantener la disciplina en su alimentación, especialmente cuando sale a comer fuera. Además, destaca que la función de sugerencias por clima sería muy innovadora, mencionando que durante el invierno suele sentir más hambre y deseos de consumir dulces, por lo que una guía adecuada le ayudaría a evitar alimentos que no son saludables.|
 
 <div style="page-break-after: always"></div>
@@ -91,7 +91,7 @@
 | Timming inicio |19:07 - 22:58|
 | Duración | 3:52 minutos |
 | URL | |
-| Screenshot | ![Entrevista3 Seg2](../assets/img/chapter2/Entrevista1-seg2.png) |
+| Screenshot | ![Entrevista3 Seg2](../assets/img/interviews/Entrevista1-seg2.png) |
 | Resumen | Daphne Faustor, profesional de 25 años en el área de Marketing y Publicidad, nos comenta que mantiene un estilo de vida activo entrenando fuerza y cardio de 5 a 6 veces por semana para aumentar su masa muscular. Usa su Apple Watch todo el día para monitorear sus pasos y entrenamientos de cardio. Aunque antes seguía dietas estrictas, hoy rechaza el pesaje manual de alimentos porque le resulta estresante y le quita tiempo en su rutina de estudio y trabajo. Prefiere guiarse por referencias visuales, como "puñados". Cuando viaja le encanta probar la comida local, pero siente la frustración de que las opciones baratas suelan ser comida chatarra. Por esta razón, le entusiasma la idea de una plataforma automatizada que use los datos de su smartwatch para sugerirle platos locales que encajen con su dieta, permitiéndole disfrutar de sus viajes y cuidar su nutrición sin complicaciones. |
 
 <div style="page-break-after: always"></div>
