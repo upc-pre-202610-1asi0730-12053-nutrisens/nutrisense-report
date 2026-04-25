@@ -80,7 +80,7 @@ Las entrevistas fueron diseñadas con preguntas diferenciadas según cada segmen
 | Segmento: Pérdida de peso | Entrevista #3 |
 | --- | --- |
 | Nombres y Apellidos |Larisa Ramírez|
-| Edad |19|
+| Edad |25|
 | Distrito |San Miguel |
 | Ocupación |Estudiante de Administración y Marketing|
 | Timming inicio |8:05 - 11:59|
