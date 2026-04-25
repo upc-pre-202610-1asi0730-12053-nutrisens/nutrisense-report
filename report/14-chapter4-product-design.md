@@ -121,37 +121,93 @@ El Diagrama de Componentes (Nivel 3 del modelo C4) describe la estructura intern
 
 **A. Single Page Application Components (Frontend)**
 
-Este contenedor se organiza para garantizar una interfaz reactiva y una gestión de datos eficiente en el lado del cliente.
+El Single Page Application se organiza en 7 Bounded Contexts, cada uno con 4 capas siguiendo el patrón de arquitectura del Domain-Driven Design. 
 
-**Elementos:**
-
- - **UI Components:** Biblioteca de vistas y elementos visuales reutilizables (Dashboard, Scan, Progress).
-    - **Tecnología:** `PrimeVue`.
- - **Vue Router:** Componente encargado de la navegación y el enrutamiento entre las diferentes secciones de la aplicación.
-    - **Tecnología:** `Vue Router`.
- - **State Store (Pinia):** Actúa como la fuente única de verdad, gestionando el estado global y la sincronización de datos.
-    - **Tecnología:** `Pinia`.
- - **API Client:** Encargado de orquestar las peticiones asíncronas y la comunicación con el servidor de API.
-    - **Tecnología:** `Axios (JSON/HTTPS)`.
+El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque, dado que Structurizr no soporta la agrupación visual por Bounded Context en las vistas de componentes.
 
 ![Web Component Diagram](../assets/img/artifacts/nutrisense-WebComponentsDiagram.png)
 
-![Web Component Diagram Summarized](../assets/img/artifacts/nutrisense-WebComponentsDiagram1.png)
+Cada Bounded Context contiene una capa de Presentation con las vistas Vue, una capa de Application con los servicios JavaScript que orquestan la lógica del cliente, una capa de Domain con los modelos e interfaces, y una capa de Infrastructure con el cliente HTTP Axios que se comunica con el API Application.
+
+Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context, se presenta a continuación un diagrama de detalle individual por cada uno.
+
+**Bounded Contexts:**
+
+ - **Identity & Access:** Gestiona las vistas de login, registro y perfil del usuario.
+
+    ![IAM Frontend Diagram](../assets/img/artifacts/nutrisense-IAMFrontendDiagram.png)
+
+ - **Nutrition Tracking:** Gestiona las vistas de registro de comidas, Smart Scan y escaneo de menús.
+    
+    ![Nutrition Frontend Diagram](../assets/img/artifacts/nutrisense-NutritionFrontendDiagram.png)
+
+ - **Body & Health Metrics:** Gestiona las vistas de métricas corporales, historial de peso y objetivos de salud.
+    
+    ![Body Frontend Diagram](../assets/img/artifacts/nutrisense-BodyFrontendDiagram.png)
+
+ - **Smart Recommendations:** Gestiona las vistas de recomendaciones personalizadas, Modo Viaje y Despensa.
+    
+    ![Recs Frontend Diagram](../assets/img/artifacts/nutrisense-RecsFrontendDiagram.png)
+
+ - **Activity & Wearable Sync:** Gestiona las vistas de registro de actividad física y sincronización con wearables.
+    
+    ![Activity Frontend Diagram](../assets/img/artifacts/nutrisense-ActivityFrontendDiagram.png)
+
+ - **Analytics & Reporting:** Gestiona las vistas del dashboard, gráficas de progreso y rachas.
+    
+    ![Analytics Frontend Diagram](../assets/img/artifacts/nutrisense-AnalyticsFrontendDiagram.png)
+
+ - **Subscriptions & Billing:** Gestiona las vistas de planes de suscripción y pagos.
+    
+    ![Billing Frontend Diagram](../assets/img/artifacts/nutrisense-BillingFrontendDiagram.png)
 
 **B. API Application Components (Backend)**
 
-El backend se divide en módulos que representan los 7 Bounded Contexts del dominio, asegurando una arquitectura desacoplada y escalable. Adicionalmente, cuenta con un Data Access Layer que centraliza la persistencia de datos mediante el patrón Repository, gestionando todas las operaciones de lectura y escritura hacia la base de datos.
+El API Application se organiza en 7 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design.
 
-**Elementos:**
-
- - **Modulos de Dominio (Identity, Nutrition, Health, Recs, Activity, Analytics, Billing):** Implementan las reglas de negocio específicas para cada contexto identificado.
-    - **Tecnología:** `C# / ASP.NET Core`.
- - **Data Access Layer (Repository):** Componente que centraliza el acceso a datos y la persistencia de la información mediante el patrón Repository.
-    - **Tecnología:** `Entity Framework Core`.
+El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque, dado que Structurizr no soporta la agrupación visual por Bounded Context en las vistas de componentes.
 
 ![API Component Diagram](../assets/img/artifacts/nutrisense-APIComponentsDiagram.png)
 
-![API Component Diagram Summarized](../assets/img/artifacts/nutrisense-APIComponentsDiagram1.png)
+Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. 
+
+Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context, se presenta a continuación un diagrama de detalle individual por cada uno.
+
+**Bounded Contexts:**
+
+ - **Identity & Access:** Maneja la autenticación, autorización y perfiles de usuario.
+
+    ![IAM Backend Diagram](../assets/img/artifacts/nutrisense-IAMBackendDiagram.png)
+
+ - **Nutrition Tracking:** Gestiona el registro de comidas y el procesamiento de Smart Scan. Se integra con Google Cloud Vision y Nutrition Data Providers.
+
+    ![Nutrition Backend Diagram](../assets/img/artifacts/nutrisense-NutritionBackendDiagram.png)
+
+ - **Body & Health Metrics:** Calcula índices de salud como BMI y TDEE y registra el historial de peso.
+
+    ![Body Backend Diagram](../assets/img/artifacts/nutrisense-BodyBackendDiagram.png)
+
+ - **Smart Recommendations:** Procesa datos contextuales para generar sugerencias personalizadas. Se integra con OpenWeatherMap y Geolocation API.
+
+    ![Recs Backend Diagram](../assets/img/artifacts/nutrisense-RecsBackendDiagram.png)
+
+ - **Activity & Wearable Sync:** Sincroniza pasos y datos de actividad desde Google Fit.
+
+    ![Activity Backend Diagram](../assets/img/artifacts/nutrisense-ActivityBackendDiagram.png)
+
+ - **Analytics & Reporting:** Genera gráficas de progreso, rachas y reportes del usuario.
+
+    ![Analytics Backend Diagram](../assets/img/artifacts/nutrisense-AnalyticsBackendDiagram.png)
+
+ - **Subscriptions & Billing:** Gestiona los niveles de suscripción e integra con Stripe para el procesamiento de pagos.
+
+    ![Billing Backend Diagram](../assets/img/artifacts/nutrisense-BillingBackendDiagram.png)
+
+**Shared Kernel:**
+
+Componente transversal utilizado por todos los Bounded Contexts que agrupa clases base, interfaces compartidas y objetos de valor reutilizables. No contiene lógica de negocio propia ni acceso a base de datos.
+
+![Shared Kernel Diagram](../assets/img/artifacts/nutrisense-SharedKernelDiagram.png)
 
 ## 4.7. Software Object-Oriented Design
 
