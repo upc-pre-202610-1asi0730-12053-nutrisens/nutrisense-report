@@ -10,6 +10,43 @@
 
 ### 2.2.1. Diseño de entrevistas
 
+Las entrevistas fueron diseñadas con preguntas diferenciadas según cada segmento objetivo, organizadas en bloques temáticos que permiten recopilar información sobre el perfil del usuario, sus hábitos actuales y la validación de las funcionalidades propuestas.
+
+##### Segmento 1 — Pérdida de Peso (Adultos de 25 a 60 años)
+
+**Bloque 1: Perfil y biografía**
+
+1. ¿Cuál es su nombre, edad y a qué se dedica?
+2. ¿Cómo describiría su rutina diaria en cuanto a movimiento físico? ¿Diría que es una persona que pasa mucho tiempo sentada, o que se mueve bastante durante el día?
+
+**Bloque 2: Control calórico y conocimiento nutricional**
+
+3. ¿Tiene alguna meta física actualmente, como bajar de peso o mejorar su alimentación? ¿Qué es lo que más le cuesta lograr?
+4. Cuando come fuera de casa, en un restaurante, en la calle o en el trabajo, ¿sabe con certeza cuánto está comiendo en términos de calorías, o simplemente calcula una cifra aproximada?
+
+**Bloque 3: Validación de funciones**
+
+5. Si una aplicación pudiera analizar la foto de su plato o del menú de un restaurante y decirle automáticamente qué tan saludable es esa comida para usted, ¿la usaría? ¿Por qué?
+6. ¿Le parecería útil que la aplicación le sugiera qué comer según el clima del día, por ejemplo, algo más ligero cuando hace mucho calor, o algo más sustancioso cuando hace frío?
+
+##### Segmento 2 — Ganancia de Masa Muscular (Jóvenes de 18 a 32 años)
+
+**Bloque 1: Perfil y biografía**
+
+1. ¿Cuál es tu nombre, edad y a qué te dedicas?
+2. ¿Con qué frecuencia entrenas a la semana y hace cuánto tiempo llevas haciéndolo?
+3. ¿Qué dispositivos usas normalmente? ¿Tienes smartwatch, reloj deportivo o algún accesorio que te mida los pasos o el ejercicio?
+
+**Bloque 2: Macros, adaptabilidad y contexto**
+
+4. ¿Llevas algún control de lo que comes, especialmente de cuánta proteína consumes al día? ¿Qué es lo que más te incomoda de las aplicaciones que has probado para registrar tu comida?
+5. Cuando viajas o tu rutina cambia por algún motivo, trabajo, viaje, eventos, ¿cómo afecta eso tu alimentación y tu entrenamiento?
+
+**Bloque 3: Validación de funciones**
+
+6. Si estuvieras de viaje en una ciudad que no conoces y una aplicación te sugiriera automáticamente platos típicos de esa zona que encajan con tu dieta, ¿lo usarías? ¿Qué te parecería eso?
+7. Si tu reloj o tu celular midiera automáticamente cuánto te moviste en el día y la aplicación ajustara sola cuánto deberías comer ese día según eso, ¿qué valor le darías a esa función?
+
 ### 2.2.2. Registro de entrevistas
 
 | Segmento: Pérdida de peso | Entrevista #1 |
