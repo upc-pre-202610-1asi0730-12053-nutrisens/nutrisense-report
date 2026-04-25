@@ -37,7 +37,7 @@ Para comprender de manera integral las necesidades, comportamientos y motivacion
     <tr>
       <th rowspan="2">Task</th>
       <th colspan="2">Jorge Del Aguila</th>
-      <th colspan="2">Anthony López</th>
+      <th colspan="2">Larisa Ramirez</th>
       <th colspan="2">Evelyn Díaz</th>
     </tr>
     <tr>
@@ -117,7 +117,7 @@ Para comprender de manera integral las necesidades, comportamientos y motivacion
       <th rowspan="2">Task</th>
       <th colspan="2">Daphne Vergaray</th>
       <th colspan="2">David Ramos</th>
-      <th colspan="2">Maria Roque</th>
+      <th colspan="2">Rando Lopez</th>
     </tr>
     <tr>
       <th>Frequency</th>
