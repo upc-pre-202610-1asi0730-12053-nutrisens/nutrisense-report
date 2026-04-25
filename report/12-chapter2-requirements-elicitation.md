@@ -56,29 +56,29 @@
 
 | Segmento: Ganancia de Masa Muscular | Entrevista #1 |
 | --- | --- |
-| Nombres y Apellidos | |
-| Edad | |
-| Distrito | |
-| Ocupación | |
-| Timming inicio | |
-| Duración | |
+| Nombres y Apellidos |David Miguel Ramos Parihuamán|
+| Edad |19|
+| Distrito |Surco|
+| Ocupación |Estudiante universitario|
+| Timming inicio |12:13 - 16:00|
+| Duración |3:47 minutos|
 | URL | |
-| Screenshot | |
-| Resumen | |
+| Screenshot |![Entrevista 1 Seg2](../assets/img/interviews/2_1.png)|
+| Resumen |David es un estudiante universitario que entrena en el gimnasio de dos a tres veces por semana con el objetivo de aumentar su masa muscular, proceso que inició hace aproximadamente dos meses. Su mayor dificultad para mantener la constancia radica en los viajes y en las alteraciones de su rutina debidas a responsabilidades académicas y laborales, lo que le complica identificar alimentos locales adecuados y mantener su ritmo de entrenamiento fuera de su entorno habitual. Actualmente monitorea sus pasos con un smartwatch y sigue una dieta basada en las recomendaciones de sus instructores para controlar calorías y proteínas. David ve en la aplicación propuesta una solución para reducir la carga mental durante sus viajes, valorando especialmente las sugerencias de platos típicos adaptados a su dieta y el ajuste automático de porciones según su actividad física, lo cual le permitiría regular su alimentación con precisión incluso cuando sus estudios le impiden asistir al gimnasio.|
 
 <div style="page-break-after: always"></div>
 
 | Segmento: Ganancia de Masa Muscular | Entrevista #2 |
 | --- | --- |
-| Nombres y Apellidos | |
-| Edad | |
-| Distrito | |
-| Ocupación | |
-| Timming inicio | |
-| Duración | |
+| Nombres y Apellidos |Rando López|
+| Edad |22|
+| Distrito |San Borja|
+| Ocupación |Estudiante universitario|
+| Timming inicio |16:01 - 19:06|
+| Duración |3:05|
 | URL | |
-| Screenshot | |
-| Resumen | |
+| Screenshot |![Entrevista 2 Seg2](../assets/img/interviews/2_2.png)|
+| Resumen |Rando es un joven universitario que entrena cuatro veces por semana con el enfoque de ganar masa muscular. Su principal desafío es la gestión del tiempo, ya que sus deberes académicos suelen interferir con su capacidad para asistir al gimnasio y ajustar su ingesta calórica diaria. Aunque ya utiliza tecnología como un smartwatch para medir pasos y pulsaciones, y lleva un control manual de sus proteínas, manifiesta que las aplicaciones de nutrición convencionales le resultan confusas o poco atractivas. Considera que la aplicación propuesta sería de gran valor para mantener su disciplina, destacando la importancia de contar con sugerencias de gastronomía local que encajen con su dieta al viajar. Asimismo, resalta como una herramienta fundamental la automatización en el ajuste de porciones basada en la actividad física registrada por sus dispositivos, lo que facilitaría significativamente el seguimiento de su régimen alimenticio.|
 
 <div style="page-break-after: always"></div>
 
