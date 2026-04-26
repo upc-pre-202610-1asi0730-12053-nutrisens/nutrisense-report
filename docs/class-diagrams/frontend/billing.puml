@@ -1,0 +1,134 @@
+@startuml NutriSense - Subscriptions & Billing Frontend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "billing" {
+
+  package "domain.model" {
+    class SubscriptionPlan {
+      +id: String
+      +name: PlanTier
+      +priceUsd: Number
+      +billingCycle: BillingCycle
+      +features: String[]
+      +maxMealScans: Number
+      +hasAdvancedAnalytics: Boolean
+    }
+
+    class ActiveSubscription {
+      +id: String
+      +userId: String
+      +plan: SubscriptionPlan
+      +status: SubscriptionStatus
+      +startDate: String
+      +endDate: String
+      +stripeSubscriptionId: String
+      +isActive(): Boolean
+      +daysRemaining(): Number
+    }
+
+    class Payment {
+      +id: String
+      +amount: Number
+      +currency: String
+      +status: PaymentStatus
+      +paidAt: String
+      +stripePaymentIntentId: String
+    }
+
+    enum PlanTier {
+      BASIC
+      PRO
+      PREMIUM
+    }
+
+    enum BillingCycle {
+      MONTHLY
+      ANNUAL
+    }
+
+    enum SubscriptionStatus {
+      ACTIVE
+      CANCELLED
+      EXPIRED
+      PAST_DUE
+    }
+
+    enum PaymentStatus {
+      PENDING
+      SUCCEEDED
+      FAILED
+    }
+  }
+
+  package "application" {
+    class BillingStore {
+      -availablePlans: SubscriptionPlan[]
+      -activeSubscription: ActiveSubscription
+      -paymentHistory: Payment[]
+      -loading: Boolean
+      +fetchAvailablePlans(): Promise<void>
+      +fetchActiveSubscription(userId: String): Promise<void>
+      +subscribe(planId: String, paymentToken: String): Promise<void>
+      +cancelSubscription(subscriptionId: String): Promise<void>
+      +fetchPaymentHistory(userId: String): Promise<void>
+    }
+  }
+
+  package "infrastructure" {
+    class BillingApiService {
+      -httpClient: AxiosInstance
+      +getAvailablePlans(): Promise<SubscriptionPlan[]>
+      +getActiveSubscription(userId: String): Promise<ActiveSubscription>
+      +postSubscribe(planId: String, paymentToken: String): Promise<ActiveSubscription>
+      +postCancelSubscription(subscriptionId: String): Promise<void>
+      +getPaymentHistory(userId: String): Promise<Payment[]>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nSubscriptionPlansView" as SubscriptionPlansView {
+      +highlightedPlan: PlanTier
+      +selectPlan(planId: String): void
+      +proceedToPayment(plan: SubscriptionPlan): void
+    }
+
+    class "«Component»\nPaymentFormView" as PaymentFormView {
+      -stripeCardElement: Object
+      -selectedPlan: SubscriptionPlan
+      +initStripe(): void
+      +submitPayment(): void
+      +handlePaymentError(error: String): void
+    }
+
+    class "«Component»\nActivePlanCard" as ActivePlanCard {
+      +subscription: ActiveSubscription
+      +cancelSubscription(): void
+      +getDaysRemainingLabel(): String
+    }
+
+    class "«Component»\nBillingHistoryView" as BillingHistoryView {
+      +paymentHistory: Payment[]
+      +downloadInvoice(paymentId: String): void
+    }
+  }
+}
+
+' Relationships
+BillingStore --> BillingApiService : uses
+BillingStore --> SubscriptionPlan : manages "0..*"
+BillingStore --> ActiveSubscription : manages "0..1"
+BillingStore --> Payment : manages "0..*"
+ActiveSubscription --> SubscriptionPlan : references "1"
+ActiveSubscription --> SubscriptionStatus : has "1"
+Payment --> PaymentStatus : has "1"
+SubscriptionPlan --> PlanTier : has "1"
+SubscriptionPlan --> BillingCycle : has "1"
+SubscriptionPlansView --> BillingStore : uses
+PaymentFormView --> BillingStore : uses
+PaymentFormView --> SubscriptionPlan : uses "1"
+ActivePlanCard --> ActiveSubscription : displays "1"
+BillingHistoryView --> BillingStore : uses
+
+@enduml

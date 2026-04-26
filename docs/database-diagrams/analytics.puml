@@ -1,0 +1,83 @@
+@startuml NutriSense - Analytics & Reporting Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(analytics_aggregates, "analytics_aggregates") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(user_id) : UUID NOT NULL
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(progress_reports, "progress_reports") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(analytics_aggregate_id) : UUID NOT NULL
+  report_type : VARCHAR(20) NOT NULL
+    CHECK (report_type IN ('WEEKLY','MONTHLY','CUSTOM'))
+  period_start : DATE NOT NULL
+  period_end : DATE NOT NULL
+  average_calories_kcal : NUMERIC(8,2) NOT NULL
+  weight_delta_kg : NUMERIC(6,2)
+  goal_achievement_percent : NUMERIC(5,2)
+    CHECK (goal_achievement_percent BETWEEN 0 AND 100)
+  generated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(streaks, "streaks") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(analytics_aggregate_id) : UUID NOT NULL
+  streak_type : VARCHAR(20) NOT NULL
+    CHECK (streak_type IN
+      ('LOGGING_STREAK','GOAL_STREAK','ACTIVITY_STREAK'))
+  current_count : INT NOT NULL DEFAULT 0 CHECK (current_count >= 0)
+  longest_count : INT NOT NULL DEFAULT 0 CHECK (longest_count >= 0)
+  last_updated : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(daily_balances, "daily_balances") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(analytics_aggregate_id) : UUID NOT NULL
+  balance_date : DATE NOT NULL
+  calories_consumed_kcal : NUMERIC(8,2) NOT NULL DEFAULT 0
+  calories_burned_kcal : NUMERIC(8,2) NOT NULL DEFAULT 0
+  net_calories_kcal : NUMERIC(8,2) GENERATED ALWAYS AS
+    (calories_consumed_kcal - calories_burned_kcal) STORED
+  goal_met : BOOLEAN NOT NULL DEFAULT FALSE
+}
+
+' Constraints
+note right of analytics_aggregates
+  UNIQUE (user_id)
+end note
+
+note right of progress_reports
+  CHECK (period_end >= period_start)
+  INDEX (analytics_aggregate_id, report_type)
+  INDEX (analytics_aggregate_id, generated_at DESC)
+end note
+
+note right of streaks
+  UNIQUE (analytics_aggregate_id, streak_type)
+end note
+
+note right of daily_balances
+  UNIQUE (analytics_aggregate_id, balance_date)
+  INDEX (analytics_aggregate_id, balance_date DESC)
+end note
+
+' Relationships
+analytics_aggregates ||--o{ progress_reports : "generates\n(1 to 0..*)"
+analytics_aggregates ||--o{ streaks : "tracks\n(1 to 0..*)"
+analytics_aggregates ||--o{ daily_balances : "records\n(1 to 0..*)"
+
+@enduml

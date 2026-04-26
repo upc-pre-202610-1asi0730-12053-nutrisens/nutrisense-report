@@ -1,0 +1,130 @@
+@startuml NutriSense - Nutrition Tracking Frontend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "nutrition" {
+
+  package "domain.model" {
+    class NutritionLog {
+      +id: String
+      +userId: String
+      +date: String
+      +meals: Meal[]
+      +totalCalories(): Number
+      +totalMacros(): MacroSummary
+    }
+
+    class Meal {
+      +id: String
+      +name: String
+      +calories: Number
+      +protein: Number
+      +carbs: Number
+      +fat: Number
+      +mealType: MealType
+      +loggedAt: String
+    }
+
+    class ScanResult {
+      +id: String
+      +imageUrl: String
+      +recognizedItems: FoodItem[]
+      +confidence: Number
+      +scannedAt: String
+    }
+
+    class FoodItem {
+      +fdcId: String
+      +name: String
+      +calories: Number
+      +servingSize: Number
+      +unit: String
+    }
+
+    class MacroSummary {
+      +totalProtein: Number
+      +totalCarbs: Number
+      +totalFat: Number
+    }
+
+    enum MealType {
+      BREAKFAST
+      LUNCH
+      DINNER
+      SNACK
+    }
+  }
+
+  package "application" {
+    class NutritionStore {
+      -currentLog: NutritionLog
+      -scanResult: ScanResult
+      -loading: Boolean
+      -error: String
+      +fetchDailyLog(date: String): Promise<void>
+      +addMeal(meal: Meal): Promise<void>
+      +removeMeal(mealId: String): Promise<void>
+      +scanMealImage(image: File): Promise<void>
+      +searchFood(query: String): Promise<FoodItem[]>
+      +clearScan(): void
+    }
+  }
+
+  package "infrastructure" {
+    class NutritionApiService {
+      -httpClient: AxiosInstance
+      +getDailyLog(userId: String, date: String): Promise<NutritionLog>
+      +postMeal(logId: String, meal: Object): Promise<Meal>
+      +deleteMeal(mealId: String): Promise<void>
+      +postScanImage(image: File): Promise<ScanResult>
+      +searchFoodItems(query: String): Promise<FoodItem[]>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nNutritionLogView" as NutritionLogView {
+      -selectedDate: String
+      +changeDate(date: String): void
+      +openAddMealDialog(): void
+    }
+
+    class "«Component»\nMealEntryForm" as MealEntryForm {
+      -selectedFood: FoodItem
+      -servingSize: Number
+      -mealType: MealType
+      +submitMeal(): void
+      +searchFood(query: String): void
+      -- emits --
+      meal-added(meal: Object)
+    }
+
+    class "«Component»\nScanMealView" as ScanMealView {
+      -imagePreview: String
+      -isScanning: Boolean
+      +uploadImage(file: File): void
+      +confirmScanResult(): void
+      +retakeScan(): void
+    }
+
+    class "«Component»\nMacroSummaryCard" as MacroSummaryCard {
+      +summary: MacroSummary
+      +renderPieChart(): void
+    }
+  }
+}
+
+' Relationships
+NutritionStore --> NutritionApiService : uses
+NutritionStore --> NutritionLog : manages "1"
+NutritionStore --> ScanResult : manages "0..1"
+NutritionLog *--> Meal : contains "0..*"
+NutritionLog --> MacroSummary : computes "1"
+ScanResult *--> FoodItem : contains "1..*"
+Meal --> MealType : has "1"
+NutritionLogView --> NutritionStore : uses
+MealEntryForm --> NutritionStore : uses
+ScanMealView --> NutritionStore : uses
+MacroSummaryCard --> MacroSummary : displays
+
+@enduml

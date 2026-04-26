@@ -1,0 +1,161 @@
+@startuml NutriSense - Smart Recommendations Backend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.SmartRecommendations" {
+
+  package "Interfaces.REST" {
+    class RecommendationsController {
+      -recsCommandService: IRecsCommandService
+      -recsQueryService: IRecsQueryService
+      +GetRecommendations(userId: Guid, travelMode: Boolean): IActionResult
+      +PostGenerateRecommendation(request: GenerateRecsRequest): IActionResult
+      +GetPantryItems(userId: Guid): IActionResult
+      +PostPantryItem(request: AddPantryItemRequest): IActionResult
+      +DeletePantryItem(itemId: Guid): IActionResult
+    }
+
+    class GenerateRecsRequest {
+      +UserId: Guid
+      +TravelMode: Boolean
+      +Latitude: Decimal
+      +Longitude: Decimal
+    }
+
+    class RecommendationResponse {
+      +Id: Guid
+      +Title: String
+      +Description: String
+      +MealSuggestions: List<MealSuggestionDto>
+      +RecommendationType: String
+      +GeneratedAt: DateTime
+    }
+
+    class RecommendationAssembler {
+      +{static} ToResponseFromEntity(rec: RecommendationEngine): RecommendationResponse
+    }
+  }
+
+  package "Application" {
+    interface IRecsCommandService {
+      +Handle(command: GenerateRecommendationCommand): RecommendationResponse
+      +Handle(command: AddPantryItemCommand): PantryItemResponse
+      +Handle(command: RemovePantryItemCommand): void
+    }
+
+    interface IRecsQueryService {
+      +Handle(query: GetRecommendationsQuery): List<RecommendationResponse>
+    }
+
+    class RecsCommandServiceImpl {
+      -recsRepository: IRecommendationRepository
+      -weatherClient: IWeatherApiClient
+      -geolocationService: IGeolocationService
+      +Handle(command: GenerateRecommendationCommand): RecommendationResponse
+      +Handle(command: AddPantryItemCommand): PantryItemResponse
+    }
+
+    class GenerateRecommendationCommand {
+      +UserId: Guid
+      +TravelMode: Boolean
+      +Location: GeoCoordinates
+    }
+  }
+
+  package "Domain" {
+    class RecommendationEngine {
+      +Id: Guid
+      +UserId: Guid
+      -rules: List<RecommendationRule>
+      -pantryItems: List<PantryItem>
+      +GenerateRecommendation(context: WeatherContext, goal: GoalType): Recommendation
+      +AddPantryItem(item: PantryItem): void
+      +RemovePantryItem(itemId: Guid): void
+    }
+
+    class Recommendation {
+      +Id: Guid
+      +Title: String
+      +Description: String
+      +MealSuggestions: List<MealSuggestion>
+      +Type: RecommendationType
+      +GeneratedAt: DateTime
+    }
+
+    class WeatherContext {
+      +TemperatureCelsius: Decimal
+      +Humidity: Decimal
+      +Condition: String
+      +City: String
+    }
+
+    class GeoCoordinates {
+      +Latitude: Decimal
+      +Longitude: Decimal
+    }
+
+    class PantryItem {
+      +Id: Guid
+      +Name: String
+      +Quantity: Decimal
+      +Unit: String
+      +ExpiresAt: DateOnly
+    }
+
+    enum RecommendationType {
+      WEATHER_BASED
+      GOAL_BASED
+      TRAVEL_MODE
+      PANTRY_BASED
+    }
+
+    class RecommendationGeneratedEvent {
+      +EngineId: Guid
+      +UserId: Guid
+      +Type: RecommendationType
+      +OccurredOn: DateTime
+    }
+
+    interface IRecommendationRepository {
+      +FindByUserId(userId: Guid): RecommendationEngine
+      +Save(engine: RecommendationEngine): void
+      +Update(engine: RecommendationEngine): void
+    }
+  }
+
+  package "Infrastructure" {
+    class RecommendationRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): RecommendationEngine
+      +Save(engine: RecommendationEngine): void
+      +Update(engine: RecommendationEngine): void
+    }
+
+    interface IWeatherApiClient {
+      +GetWeatherByCoordinates(coords: GeoCoordinates): WeatherContext
+    }
+
+    class OpenWeatherMapClientImpl {
+      -apiKey: String
+      -httpClient: HttpClient
+      +GetWeatherByCoordinates(coords: GeoCoordinates): WeatherContext
+    }
+  }
+}
+
+' Relationships
+RecommendationsController --> IRecsCommandService : uses
+RecommendationsController --> IRecsQueryService : uses
+RecommendationsController --> RecommendationAssembler : uses
+RecsCommandServiceImpl ..|> IRecsCommandService
+RecsCommandServiceImpl --> IRecommendationRepository : uses
+RecsCommandServiceImpl --> IWeatherApiClient : uses
+RecommendationRepositoryImpl ..|> IRecommendationRepository
+OpenWeatherMapClientImpl ..|> IWeatherApiClient
+RecommendationEngine *--> PantryItem : contains "0..*"
+RecommendationEngine --> Recommendation : generates "0..*"
+Recommendation --> RecommendationType : has "1"
+RecommendationEngine --> RecommendationGeneratedEvent : fires "0..*"
+
+@enduml
