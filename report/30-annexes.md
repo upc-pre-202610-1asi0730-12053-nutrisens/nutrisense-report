@@ -1,1 +1,3 @@
 # ANEXOS
+
+- Link de la exposicion AV1: [AV1 Expo](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQDYzAsUnHVKQrGA3GjF4vwpAZybVP6LfXTGzVlqISNDMlk?e=nW4ADD&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)
