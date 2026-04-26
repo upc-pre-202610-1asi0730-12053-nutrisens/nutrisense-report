@@ -1,0 +1,172 @@
+@startuml NutriSense - Nutrition Tracking Backend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.NutritionTracking" {
+
+  package "Interfaces.REST" {
+    class NutritionController {
+      -nutritionCommandService: INutritionCommandService
+      -nutritionQueryService: INutritionQueryService
+      +GetDailyLog(userId: Guid, date: String): IActionResult
+      +PostAddMeal(request: AddMealRequest): IActionResult
+      +DeleteMeal(mealId: Guid): IActionResult
+      +PostScanMeal(image: IFormFile): IActionResult
+    }
+
+    class AddMealRequest {
+      +UserId: Guid
+      +Name: String
+      +Calories: Decimal
+      +Protein: Decimal
+      +Carbs: Decimal
+      +Fat: Decimal
+      +MealType: String
+    }
+
+    class MealResponse {
+      +Id: Guid
+      +Name: String
+      +Calories: Decimal
+      +Protein: Decimal
+      +Carbs: Decimal
+      +Fat: Decimal
+      +MealType: String
+      +LoggedAt: DateTime
+    }
+
+    class NutritionLogAssembler {
+      +{static} ToResponseFromEntity(log: NutritionLog): NutritionLogResponse
+      +{static} ToMealFromRequest(request: AddMealRequest): Meal
+    }
+  }
+
+  package "Application" {
+    interface INutritionCommandService {
+      +Handle(command: AddMealCommand): MealResponse
+      +Handle(command: RemoveMealCommand): void
+      +Handle(command: LogScannedMealCommand): NutritionLogResponse
+    }
+
+    interface INutritionQueryService {
+      +Handle(query: GetDailyLogQuery): NutritionLogResponse
+    }
+
+    class NutritionCommandServiceImpl {
+      -nutritionLogRepository: INutritionLogRepository
+      -visionClient: IGoogleVisionClient
+      +Handle(command: AddMealCommand): MealResponse
+      +Handle(command: RemoveMealCommand): void
+      +Handle(command: LogScannedMealCommand): NutritionLogResponse
+    }
+
+    class AddMealCommand {
+      +UserId: Guid
+      +Name: String
+      +Macros: MacroNutrients
+      +MealType: MealType
+    }
+
+    class GetDailyLogQuery {
+      +UserId: Guid
+      +Date: DateOnly
+    }
+  }
+
+  package "Domain" {
+    class NutritionLog {
+      +Id: Guid
+      +UserId: Guid
+      +Date: DateOnly
+      -meals: List<Meal>
+      +AddMeal(meal: Meal): void
+      +RemoveMeal(mealId: Guid): void
+      +GetTotalCalories(): Decimal
+      +GetMacroSummary(): MacroNutrients
+    }
+
+    class Meal {
+      +Id: Guid
+      +Name: String
+      +Macros: MacroNutrients
+      +MealType: MealType
+      +LoggedAt: DateTime
+    }
+
+    class MacroNutrients {
+      +Calories: Decimal
+      +Protein: Decimal
+      +Carbs: Decimal
+      +Fat: Decimal
+    }
+
+    class ScanResult {
+      +Id: Guid
+      +ImageUrl: String
+      +RecognizedItems: List<String>
+      +Confidence: Decimal
+    }
+
+    enum MealType {
+      BREAKFAST
+      LUNCH
+      DINNER
+      SNACK
+    }
+
+    class MealLoggedEvent {
+      +LogId: Guid
+      +UserId: Guid
+      +Calories: Decimal
+      +OccurredOn: DateTime
+    }
+
+    interface INutritionLogRepository {
+      +FindByUserAndDate(userId: Guid, date: DateOnly): NutritionLog
+      +Save(log: NutritionLog): void
+      +Update(log: NutritionLog): void
+    }
+  }
+
+  package "Infrastructure" {
+    class NutritionLogRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserAndDate(userId: Guid, date: DateOnly): NutritionLog
+      +Save(log: NutritionLog): void
+      +Update(log: NutritionLog): void
+    }
+
+    interface IGoogleVisionClient {
+      +AnalyzeImage(image: Byte[]): ScanResult
+    }
+
+    class GoogleVisionClientImpl {
+      -apiKey: String
+      -httpClient: HttpClient
+      +AnalyzeImage(image: Byte[]): ScanResult
+    }
+
+    class OpenFoodFactsClient {
+      -httpClient: HttpClient
+      +SearchFood(query: String): List<FoodItem>
+      +GetFoodById(fdcId: String): FoodItem
+    }
+  }
+}
+
+' Relationships
+NutritionController --> INutritionCommandService : uses
+NutritionController --> INutritionQueryService : uses
+NutritionController --> NutritionLogAssembler : uses
+NutritionCommandServiceImpl ..|> INutritionCommandService
+NutritionCommandServiceImpl --> INutritionLogRepository : uses
+NutritionCommandServiceImpl --> IGoogleVisionClient : uses
+NutritionLogRepositoryImpl ..|> INutritionLogRepository
+GoogleVisionClientImpl ..|> IGoogleVisionClient
+NutritionLog *--> Meal : contains "0..*"
+Meal --> MacroNutrients : has "1"
+Meal --> MealType : has "1"
+NutritionLog --> MealLoggedEvent : fires "0..*"
+
+@enduml

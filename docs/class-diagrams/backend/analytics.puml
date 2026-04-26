@@ -1,0 +1,164 @@
+@startuml NutriSense - Analytics & Reporting Backend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.AnalyticsReporting" {
+
+  package "Interfaces.REST" {
+    class AnalyticsController {
+      -analyticsCommandService: IAnalyticsCommandService
+      -analyticsQueryService: IAnalyticsQueryService
+      +GetProgressReport(userId: Guid, type: String): IActionResult
+      +PostGenerateReport(request: GenerateReportRequest): IActionResult
+      +GetStreaks(userId: Guid): IActionResult
+      +GetDailyBalances(userId: Guid, from: String, to: String): IActionResult
+    }
+
+    class GenerateReportRequest {
+      +UserId: Guid
+      +ReportType: String
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+    }
+
+    class ProgressReportResponse {
+      +Id: Guid
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+      +AverageCalories: Decimal
+      +WeightDeltaKg: Decimal
+      +GoalAchievementPercent: Decimal
+      +ReportType: String
+    }
+
+    class AnalyticsAssembler {
+      +{static} ToProgressReportResponse(aggregate: AnalyticsAggregate): ProgressReportResponse
+      +{static} ToStreakResponse(streak: Streak): StreakResponse
+    }
+  }
+
+  package "Application" {
+    interface IAnalyticsCommandService {
+      +Handle(command: GenerateProgressReportCommand): ProgressReportResponse
+      +Handle(command: UpdateStreakCommand): StreakResponse
+    }
+
+    interface IAnalyticsQueryService {
+      +Handle(query: GetProgressReportQuery): ProgressReportResponse
+      +Handle(query: GetStreaksQuery): List<StreakResponse>
+      +Handle(query: GetDailyBalancesQuery): List<DailyBalanceResponse>
+    }
+
+    class AnalyticsCommandServiceImpl {
+      -analyticsRepository: IAnalyticsRepository
+      +Handle(command: GenerateProgressReportCommand): ProgressReportResponse
+      +Handle(command: UpdateStreakCommand): StreakResponse
+    }
+
+    class GenerateProgressReportCommand {
+      +UserId: Guid
+      +ReportType: ReportType
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+    }
+  }
+
+  package "Domain" {
+    class AnalyticsAggregate {
+      +Id: Guid
+      +UserId: Guid
+      -reports: List<ProgressReport>
+      -streaks: List<Streak>
+      -dailyBalances: List<DailyBalance>
+      +GenerateReport(period: DateRange, type: ReportType): ProgressReport
+      +UpdateStreak(streakType: StreakType): void
+      +RecordDailyBalance(balance: DailyBalance): void
+    }
+
+    class ProgressReport {
+      +Id: Guid
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+      +AverageCaloriesKcal: Decimal
+      +WeightDeltaKg: Decimal
+      +GoalAchievementPercent: Decimal
+      +ReportType: ReportType
+    }
+
+    class Streak {
+      +Id: Guid
+      +StreakType: StreakType
+      +CurrentCount: Int32
+      +LongestCount: Int32
+      +LastUpdated: DateTime
+      +Increment(): void
+      +Reset(): void
+    }
+
+    class DailyBalance {
+      +Date: DateOnly
+      +CaloriesConsumedKcal: Decimal
+      +CaloriesBurnedKcal: Decimal
+      +NetCalories(): Decimal
+      +GoalMet: Boolean
+    }
+
+    class DateRange {
+      +Start: DateOnly
+      +End: DateOnly
+      +Contains(date: DateOnly): Boolean
+    }
+
+    enum ReportType {
+      WEEKLY
+      MONTHLY
+      CUSTOM
+    }
+
+    enum StreakType {
+      LOGGING_STREAK
+      GOAL_STREAK
+      ACTIVITY_STREAK
+    }
+
+    class ReportGeneratedEvent {
+      +AggregateId: Guid
+      +UserId: Guid
+      +ReportType: ReportType
+      +OccurredOn: DateTime
+    }
+
+    interface IAnalyticsRepository {
+      +FindByUserId(userId: Guid): AnalyticsAggregate
+      +Save(aggregate: AnalyticsAggregate): void
+      +Update(aggregate: AnalyticsAggregate): void
+    }
+  }
+
+  package "Infrastructure" {
+    class AnalyticsRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): AnalyticsAggregate
+      +Save(aggregate: AnalyticsAggregate): void
+      +Update(aggregate: AnalyticsAggregate): void
+    }
+  }
+}
+
+' Relationships
+AnalyticsController --> IAnalyticsCommandService : uses
+AnalyticsController --> IAnalyticsQueryService : uses
+AnalyticsController --> AnalyticsAssembler : uses
+AnalyticsCommandServiceImpl ..|> IAnalyticsCommandService
+AnalyticsCommandServiceImpl --> IAnalyticsRepository : uses
+AnalyticsRepositoryImpl ..|> IAnalyticsRepository
+AnalyticsAggregate *--> ProgressReport : generates "0..*"
+AnalyticsAggregate *--> Streak : tracks "0..*"
+AnalyticsAggregate *--> DailyBalance : records "0..*"
+ProgressReport --> ReportType : has "1"
+Streak --> StreakType : has "1"
+ProgressReport --> DateRange : spans "1"
+AnalyticsAggregate --> ReportGeneratedEvent : fires "0..*"
+
+@enduml

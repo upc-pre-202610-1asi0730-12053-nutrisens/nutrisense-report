@@ -1,0 +1,165 @@
+@startuml NutriSense - Body & Health Metrics Backend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.BodyHealthMetrics" {
+
+  package "Interfaces.REST" {
+    class BodyMetricsController {
+      -bodyCommandService: IBodyCommandService
+      -bodyQueryService: IBodyQueryService
+      +PostRecordMetrics(request: RecordMetricsRequest): IActionResult
+      +GetLatestMetrics(userId: Guid): IActionResult
+      +GetWeightHistory(userId: Guid): IActionResult
+      +PostSetGoal(request: SetGoalRequest): IActionResult
+      +PostCalculateTDEE(request: TDEERequest): IActionResult
+    }
+
+    class RecordMetricsRequest {
+      +UserId: Guid
+      +WeightKg: Decimal
+      +HeightCm: Decimal
+      +BodyFatPercentage: Decimal
+    }
+
+    class SetGoalRequest {
+      +UserId: Guid
+      +GoalType: String
+      +TargetWeightKg: Decimal
+      +TargetDate: DateOnly
+    }
+
+    class TDEERequest {
+      +WeightKg: Decimal
+      +HeightCm: Decimal
+      +AgeYears: Int32
+      +Sex: String
+      +ActivityLevel: String
+    }
+
+    class BodyMetricsAssembler {
+      +{static} ToResponseFromEntity(metrics: HealthProfile): BodyMetricsResponse
+    }
+  }
+
+  package "Application" {
+    interface IBodyCommandService {
+      +Handle(command: RecordBodyMetricsCommand): BodyMetricsResponse
+      +Handle(command: SetHealthGoalCommand): HealthGoalResponse
+    }
+
+    interface IBodyQueryService {
+      +Handle(query: GetLatestMetricsQuery): BodyMetricsResponse
+      +Handle(query: GetWeightHistoryQuery): List<BodyMetricsResponse>
+      +Handle(query: CalculateTDEEQuery): TDEEResponse
+    }
+
+    class BodyCommandServiceImpl {
+      -healthProfileRepository: IHealthProfileRepository
+      +Handle(command: RecordBodyMetricsCommand): BodyMetricsResponse
+      +Handle(command: SetHealthGoalCommand): HealthGoalResponse
+    }
+
+    class RecordBodyMetricsCommand {
+      +UserId: Guid
+      +Measurements: BodyMeasurements
+    }
+
+    class SetHealthGoalCommand {
+      +UserId: Guid
+      +GoalType: GoalType
+      +TargetWeightKg: Decimal
+      +TargetDate: DateOnly
+    }
+  }
+
+  package "Domain" {
+    class HealthProfile {
+      +Id: Guid
+      +UserId: Guid
+      -measurements: List<BodyMeasurements>
+      -activeGoal: HealthGoal
+      +RecordMeasurements(data: BodyMeasurements): void
+      +SetGoal(goal: HealthGoal): void
+      +CalculateBMI(): Decimal
+      +CalculateTDEE(activityLevel: ActivityLevel): TDEEValue
+    }
+
+    class BodyMeasurements {
+      +WeightKg: Decimal
+      +HeightCm: Decimal
+      +BodyFatPercentage: Decimal
+      +RecordedAt: DateTime
+    }
+
+    class HealthGoal {
+      +Id: Guid
+      +GoalType: GoalType
+      +TargetWeightKg: Decimal
+      +TargetDate: DateOnly
+      +IsActive: Boolean
+    }
+
+    class TDEEValue {
+      +BMR: Decimal
+      +TDEE: Decimal
+      +ProteinTargetG: Decimal
+      +CarbsTargetG: Decimal
+      +FatTargetG: Decimal
+    }
+
+    enum GoalType {
+      LOSE_WEIGHT
+      GAIN_MUSCLE
+      MAINTAIN
+    }
+
+    enum ActivityLevel {
+      SEDENTARY
+      LIGHT
+      MODERATE
+      ACTIVE
+      VERY_ACTIVE
+    }
+
+    class MetricsRecordedEvent {
+      +ProfileId: Guid
+      +WeightKg: Decimal
+      +OccurredOn: DateTime
+    }
+
+    interface IHealthProfileRepository {
+      +FindByUserId(userId: Guid): HealthProfile
+      +Save(profile: HealthProfile): void
+      +Update(profile: HealthProfile): void
+      +FindMeasurementHistory(userId: Guid): List<BodyMeasurements>
+    }
+  }
+
+  package "Infrastructure" {
+    class HealthProfileRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): HealthProfile
+      +Save(profile: HealthProfile): void
+      +Update(profile: HealthProfile): void
+      +FindMeasurementHistory(userId: Guid): List<BodyMeasurements>
+    }
+  }
+}
+
+' Relationships
+BodyMetricsController --> IBodyCommandService : uses
+BodyMetricsController --> IBodyQueryService : uses
+BodyMetricsController --> BodyMetricsAssembler : uses
+BodyCommandServiceImpl ..|> IBodyCommandService
+BodyCommandServiceImpl --> IHealthProfileRepository : uses
+HealthProfileRepositoryImpl ..|> IHealthProfileRepository
+HealthProfile *--> BodyMeasurements : records "0..*"
+HealthProfile *--> HealthGoal : has "0..1"
+HealthProfile --> TDEEValue : computes "0..1"
+HealthGoal --> GoalType : has "1"
+TDEEValue --> ActivityLevel : references
+HealthProfile --> MetricsRecordedEvent : fires "0..*"
+
+@enduml

@@ -1,0 +1,117 @@
+@startuml NutriSense - Activity & Wearable Sync Frontend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "activity" {
+
+  package "domain.model" {
+    class ActivityRecord {
+      +id: String
+      +userId: String
+      +activityType: ActivityType
+      +durationMinutes: Number
+      +caloriesBurned: Number
+      +steps: Number
+      +recordedAt: String
+      +source: SyncSource
+    }
+
+    class CaloricBalance {
+      +date: String
+      +totalConsumed: Number
+      +totalBurned: Number
+      +netCalories(): Number
+      +isDeficit(): Boolean
+    }
+
+    class WearableSyncStatus {
+      +provider: String
+      +lastSyncedAt: String
+      +isConnected: Boolean
+      +pendingRecords: Number
+    }
+
+    enum ActivityType {
+      RUNNING
+      WALKING
+      CYCLING
+      SWIMMING
+      GYM
+      OTHER
+    }
+
+    enum SyncSource {
+      MANUAL
+      GOOGLE_FIT
+      WEARABLE
+    }
+  }
+
+  package "application" {
+    class ActivityStore {
+      -activityHistory: ActivityRecord[]
+      -caloricBalance: CaloricBalance
+      -syncStatus: WearableSyncStatus
+      -loading: Boolean
+      +fetchActivityHistory(userId: String, date: String): Promise<void>
+      +logManualActivity(data: Object): Promise<void>
+      +syncFromGoogleFit(userId: String): Promise<void>
+      +fetchCaloricBalance(userId: String, date: String): Promise<void>
+      +fetchSyncStatus(userId: String): Promise<void>
+    }
+  }
+
+  package "infrastructure" {
+    class ActivityApiService {
+      -httpClient: AxiosInstance
+      +getActivityHistory(userId: String, date: String): Promise<ActivityRecord[]>
+      +postManualActivity(data: Object): Promise<ActivityRecord>
+      +postSyncGoogleFit(userId: String): Promise<WearableSyncStatus>
+      +getCaloricBalance(userId: String, date: String): Promise<CaloricBalance>
+      +getSyncStatus(userId: String): Promise<WearableSyncStatus>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nActivityLogView" as ActivityLogView {
+      -selectedDate: String
+      +changeDate(date: String): void
+      +openAddActivityDialog(): void
+    }
+
+    class "«Component»\nManualActivityForm" as ManualActivityForm {
+      -activityType: ActivityType
+      -durationMinutes: Number
+      -caloriesBurned: Number
+      +submitActivity(): void
+      -- emits --
+      activity-logged(record: Object)
+    }
+
+    class "«Component»\nWearableSyncView" as WearableSyncView {
+      +syncStatus: WearableSyncStatus
+      +triggerSync(): void
+      +showSyncHistory(): void
+    }
+
+    class "«Component»\nCaloricBalanceCard" as CaloricBalanceCard {
+      +balance: CaloricBalance
+      +renderBalanceBar(): void
+    }
+  }
+}
+
+' Relationships
+ActivityStore --> ActivityApiService : uses
+ActivityStore --> ActivityRecord : manages "0..*"
+ActivityStore --> CaloricBalance : manages "0..1"
+ActivityStore --> WearableSyncStatus : manages "0..1"
+ActivityRecord --> ActivityType : has "1"
+ActivityRecord --> SyncSource : has "1"
+ActivityLogView --> ActivityStore : uses
+ManualActivityForm --> ActivityStore : uses
+WearableSyncView --> ActivityStore : uses
+CaloricBalanceCard --> CaloricBalance : displays "1"
+
+@enduml

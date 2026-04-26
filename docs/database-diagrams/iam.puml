@@ -1,0 +1,56 @@
+@startuml NutriSense - IAM Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(users, "users") {
+  PK(id) : UUID NOT NULL
+  --
+  first_name : VARCHAR(100) NOT NULL
+  last_name : VARCHAR(100) NOT NULL
+  avatar_url : VARCHAR(500)
+  role : VARCHAR(20) NOT NULL CHECK (role IN ('USER', 'ADMIN'))
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(user_credentials, "user_credentials") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(user_id) : UUID NOT NULL
+  email : VARCHAR(255) NOT NULL
+  password_hash : VARCHAR(512) NOT NULL
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(refresh_tokens, "refresh_tokens") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(user_id) : UUID NOT NULL
+  token_hash : VARCHAR(512) NOT NULL
+  expires_at : TIMESTAMPTZ NOT NULL
+  revoked : BOOLEAN NOT NULL DEFAULT FALSE
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+' Constraints
+note right of user_credentials
+  UNIQUE (email)
+  UNIQUE (user_id)
+end note
+
+note right of refresh_tokens
+  INDEX (user_id, revoked)
+end note
+
+' Relationships
+users ||--|| user_credentials : "has credentials\n(1 to 1)"
+users ||--o{ refresh_tokens : "owns\n(1 to 0..*)"
+
+@enduml

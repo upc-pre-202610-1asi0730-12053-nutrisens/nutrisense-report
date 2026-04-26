@@ -1,0 +1,125 @@
+@startuml NutriSense - Body & Health Metrics Frontend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "body" {
+
+  package "domain.model" {
+    class BodyMetrics {
+      +id: String
+      +userId: String
+      +weightKg: Number
+      +heightCm: Number
+      +bodyFatPercentage: Number
+      +recordedAt: String
+      +calculateBMI(): Number
+      +getBMICategory(): String
+    }
+
+    class HealthGoal {
+      +id: String
+      +userId: String
+      +goalType: GoalType
+      +targetWeightKg: Number
+      +targetDate: String
+      +isActive: Boolean
+      +calculateProgress(current: Number): Number
+    }
+
+    class TDEEResult {
+      +bmr: Number
+      +tdee: Number
+      +activityLevel: ActivityLevel
+      +proteinTarget: Number
+      +carbsTarget: Number
+      +fatTarget: Number
+    }
+
+    enum GoalType {
+      LOSE_WEIGHT
+      GAIN_MUSCLE
+      MAINTAIN
+    }
+
+    enum ActivityLevel {
+      SEDENTARY
+      LIGHT
+      MODERATE
+      ACTIVE
+      VERY_ACTIVE
+    }
+  }
+
+  package "application" {
+    class BodyMetricsStore {
+      -currentMetrics: BodyMetrics
+      -goalHistory: HealthGoal[]
+      -tdeeResult: TDEEResult
+      -loading: Boolean
+      +fetchLatestMetrics(userId: String): Promise<void>
+      +recordMetrics(data: Object): Promise<void>
+      +fetchGoals(userId: String): Promise<void>
+      +setGoal(goal: Object): Promise<void>
+      +calculateTDEE(metrics: Object): Promise<void>
+      +fetchWeightHistory(userId: String): Promise<BodyMetrics[]>
+    }
+  }
+
+  package "infrastructure" {
+    class BodyApiService {
+      -httpClient: AxiosInstance
+      +getLatestMetrics(userId: String): Promise<BodyMetrics>
+      +postMetrics(data: Object): Promise<BodyMetrics>
+      +getGoals(userId: String): Promise<HealthGoal[]>
+      +postGoal(data: Object): Promise<HealthGoal>
+      +postCalculateTDEE(data: Object): Promise<TDEEResult>
+      +getWeightHistory(userId: String): Promise<BodyMetrics[]>
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nBodyMetricsView" as BodyMetricsView {
+      -showForm: Boolean
+      +openMetricsForm(): void
+      +saveMetrics(): void
+    }
+
+    class "«Component»\nWeightHistoryChart" as WeightHistoryChart {
+      +history: BodyMetrics[]
+      +renderLineChart(): void
+      +filterByRange(range: String): void
+    }
+
+    class "«Component»\nGoalSetupForm" as GoalSetupForm {
+      -goalType: GoalType
+      -targetWeight: Number
+      -targetDate: String
+      +submitGoal(): void
+      +validateForm(): Boolean
+      -- emits --
+      goal-set(goal: Object)
+    }
+
+    class "«Component»\nTDEECalculatorView" as TDEECalculatorView {
+      -activityLevel: ActivityLevel
+      +calculateTDEE(): void
+      +displayResults(result: TDEEResult): void
+    }
+  }
+}
+
+' Relationships
+BodyMetricsStore --> BodyApiService : uses
+BodyMetricsStore --> BodyMetrics : manages "0..1"
+BodyMetricsStore --> HealthGoal : manages "0..*"
+BodyMetricsStore --> TDEEResult : manages "0..1"
+BodyMetrics --> GoalType : references
+HealthGoal --> GoalType : has "1"
+TDEEResult --> ActivityLevel : has "1"
+BodyMetricsView --> BodyMetricsStore : uses
+WeightHistoryChart --> BodyMetrics : displays "0..*"
+GoalSetupForm --> BodyMetricsStore : uses
+TDEECalculatorView --> BodyMetricsStore : uses
+
+@enduml

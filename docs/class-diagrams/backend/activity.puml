@@ -1,0 +1,166 @@
+@startuml NutriSense - Activity & Wearable Sync Backend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.ActivityWearableSync" {
+
+  package "Interfaces.REST" {
+    class ActivityController {
+      -activityCommandService: IActivityCommandService
+      -activityQueryService: IActivityQueryService
+      +PostLogActivity(request: LogActivityRequest): IActionResult
+      +GetActivityHistory(userId: Guid, date: String): IActionResult
+      +PostSyncGoogleFit(userId: Guid): IActionResult
+      +GetCaloricBalance(userId: Guid, date: String): IActionResult
+    }
+
+    class LogActivityRequest {
+      +UserId: Guid
+      +ActivityType: String
+      +DurationMinutes: Int32
+      +CaloriesBurned: Decimal
+      +Steps: Int32
+    }
+
+    class ActivityResponse {
+      +Id: Guid
+      +ActivityType: String
+      +DurationMinutes: Int32
+      +CaloriesBurned: Decimal
+      +Steps: Int32
+      +RecordedAt: DateTime
+      +Source: String
+    }
+
+    class ActivityAssembler {
+      +{static} ToResponseFromEntity(sync: ActivitySync): ActivityResponse
+    }
+  }
+
+  package "Application" {
+    interface IActivityCommandService {
+      +Handle(command: LogManualActivityCommand): ActivityResponse
+      +Handle(command: SyncGoogleFitCommand): SyncStatusResponse
+    }
+
+    interface IActivityQueryService {
+      +Handle(query: GetActivityHistoryQuery): List<ActivityResponse>
+      +Handle(query: GetCaloricBalanceQuery): CaloricBalanceResponse
+    }
+
+    class ActivityCommandServiceImpl {
+      -activityRepository: IActivitySyncRepository
+      -googleFitClient: IGoogleFitClient
+      +Handle(command: LogManualActivityCommand): ActivityResponse
+      +Handle(command: SyncGoogleFitCommand): SyncStatusResponse
+    }
+
+    class LogManualActivityCommand {
+      +UserId: Guid
+      +ActivityType: ActivityType
+      +DurationMinutes: Int32
+      +CaloriesBurned: Decimal
+    }
+
+    class SyncGoogleFitCommand {
+      +UserId: Guid
+      +AccessToken: String
+    }
+  }
+
+  package "Domain" {
+    class ActivitySync {
+      +Id: Guid
+      +UserId: Guid
+      -records: List<ActivityRecord>
+      +LogActivity(record: ActivityRecord): void
+      +SyncFromExternal(records: List<ActivityRecord>): void
+      +CalculateCaloricBalance(nutritionCalories: Decimal): CaloricBalance
+    }
+
+    class ActivityRecord {
+      +Id: Guid
+      +ActivityType: ActivityType
+      +DurationMinutes: Int32
+      +CaloriesBurned: Decimal
+      +Steps: Int32
+      +RecordedAt: DateTime
+      +Source: SyncSource
+    }
+
+    class CaloricBalance {
+      +Date: DateOnly
+      +TotalConsumedKcal: Decimal
+      +TotalBurnedKcal: Decimal
+      +NetCalories(): Decimal
+      +IsDeficit(): Boolean
+    }
+
+    enum ActivityType {
+      RUNNING
+      WALKING
+      CYCLING
+      SWIMMING
+      GYM
+      OTHER
+    }
+
+    enum SyncSource {
+      MANUAL
+      GOOGLE_FIT
+      WEARABLE
+    }
+
+    class ActivityLoggedEvent {
+      +SyncId: Guid
+      +UserId: Guid
+      +CaloriesBurned: Decimal
+      +OccurredOn: DateTime
+    }
+
+    interface IActivitySyncRepository {
+      +FindByUserId(userId: Guid): ActivitySync
+      +Save(sync: ActivitySync): void
+      +Update(sync: ActivitySync): void
+      +FindRecordsByDate(userId: Guid, date: DateOnly): List<ActivityRecord>
+    }
+  }
+
+  package "Infrastructure" {
+    class ActivitySyncRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): ActivitySync
+      +Save(sync: ActivitySync): void
+      +Update(sync: ActivitySync): void
+      +FindRecordsByDate(userId: Guid, date: DateOnly): List<ActivityRecord>
+    }
+
+    interface IGoogleFitClient {
+      +FetchActivities(accessToken: String): List<ActivityRecord>
+    }
+
+    class GoogleFitClientImpl {
+      -httpClient: HttpClient
+      -baseUrl: String
+      +FetchActivities(accessToken: String): List<ActivityRecord>
+    }
+  }
+}
+
+' Relationships
+ActivityController --> IActivityCommandService : uses
+ActivityController --> IActivityQueryService : uses
+ActivityController --> ActivityAssembler : uses
+ActivityCommandServiceImpl ..|> IActivityCommandService
+ActivityCommandServiceImpl --> IActivitySyncRepository : uses
+ActivityCommandServiceImpl --> IGoogleFitClient : uses
+ActivitySyncRepositoryImpl ..|> IActivitySyncRepository
+GoogleFitClientImpl ..|> IGoogleFitClient
+ActivitySync *--> ActivityRecord : contains "0..*"
+ActivitySync --> CaloricBalance : computes "0..1"
+ActivityRecord --> ActivityType : has "1"
+ActivityRecord --> SyncSource : has "1"
+ActivitySync --> ActivityLoggedEvent : fires "0..*"
+
+@enduml

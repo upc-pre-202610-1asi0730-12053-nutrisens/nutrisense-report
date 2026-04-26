@@ -1,0 +1,119 @@
+@startuml NutriSense - IAM Frontend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "iam" {
+
+  package "domain.model" {
+    class UserProfile {
+      +id: String
+      +email: String
+      +firstName: String
+      +lastName: String
+      +role: UserRole
+      +avatarUrl: String
+      +fullName(): String
+    }
+
+    class Credentials {
+      +email: String
+      +passwordHash: String
+    }
+
+    enum UserRole {
+      USER
+      ADMIN
+    }
+  }
+
+  package "application" {
+    class AuthStore {
+      -currentUser: UserProfile
+      -token: String
+      -isAuthenticated: Boolean
+      -loading: Boolean
+      -error: String
+      +login(credentials: Credentials): Promise<void>
+      +register(request: RegisterUserRequest): Promise<void>
+      +logout(): void
+      +fetchProfile(): Promise<void>
+      +updateProfile(data: Object): Promise<void>
+      +clearError(): void
+    }
+  }
+
+  package "infrastructure" {
+    class AuthApiService {
+      -httpClient: AxiosInstance
+      -baseUrl: String
+      +postLogin(credentials: Credentials): Promise<AuthResponse>
+      +postRegister(request: RegisterUserRequest): Promise<AuthResponse>
+      +getProfile(): Promise<UserProfile>
+      +putProfile(data: Object): Promise<UserProfile>
+      +postLogout(): Promise<void>
+    }
+
+    class RegisterUserRequest {
+      +firstName: String
+      +lastName: String
+      +email: String
+      +password: String
+    }
+
+    class AuthResponse {
+      +token: String
+      +refreshToken: String
+      +user: UserProfile
+    }
+  }
+
+  package "presentation.components" {
+    class "«Component»\nLoginView" as LoginView {
+      -email: String
+      -password: String
+      -errorMessage: String
+      +submitLogin(): void
+      +goToRegister(): void
+    }
+
+    class "«Component»\nRegisterView" as RegisterView {
+      -firstName: String
+      -lastName: String
+      -email: String
+      -password: String
+      -confirmPassword: String
+      -errorMessage: String
+      +submitRegister(): void
+      +validatePasswords(): Boolean
+    }
+
+    class "«Component»\nProfileView" as ProfileView {
+      -editMode: Boolean
+      +toggleEdit(): void
+      +saveProfile(): void
+      +cancelEdit(): void
+    }
+
+    class "«Component»\nNavbarComponent" as NavbarComponent {
+      +showUserMenu: Boolean
+      +toggleUserMenu(): void
+      +handleLogout(): void
+    }
+  }
+}
+
+' Relationships
+AuthStore --> AuthApiService : uses
+AuthStore --> UserProfile : manages "1"
+AuthStore --> Credentials : uses
+AuthApiService --> RegisterUserRequest : uses
+AuthApiService --> AuthResponse : returns
+AuthResponse --> UserProfile : contains "1"
+UserProfile --> UserRole : has "1"
+LoginView --> AuthStore : uses
+RegisterView --> AuthStore : uses
+ProfileView --> AuthStore : uses
+NavbarComponent --> AuthStore : reads
+
+@enduml
