@@ -46,6 +46,7 @@ Abril, 2026
 | 0.9.0 | 04/21/2026 | Angel Villarreal | Sprint Planning 1, Sprint Backlog 1 y evidencia de ejecución del Sprint 1 (`feature/chapter5-sprint1`) |
 | 0.10.0 | 04/22/2026 – 04/23/2026 | Todos los integrantes | Cap. 2 (needfinding, personas, journey mapping, EventStorming), cap. 3 (user stories, impact maps, product backlog), cap. 4 (wireframes y mockups), cap. 5 (subcapítulos 5.1–5.2, configuración de entornos) (`feature/chapter2-needfinding`, `feature/chapter3`, `feature/chapter4-ui`, `feature/chapter5-*`) |
 | 0.11.0 | 04/24/2026 | Angel Villarreal / Olenka Del Aguila | Conclusiones, bibliografía y anexos; corrección de wireflows y referencias (`feature/final-sections`, `feature/chapter4-wireframes`) |
+| 1.0.0 | 04/25/2026 | Angel Villarreal | AV1 Report |
 
 <div style="page-break-after: always"></div>
 
