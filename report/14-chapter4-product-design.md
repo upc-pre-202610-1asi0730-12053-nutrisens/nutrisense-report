@@ -48,15 +48,12 @@
 
 ## 4.7. Software Object-Oriented Design
 
-En esta sección, el equipo presenta y explica los diagramas que presentan un mayor detalle sobre la implementación de componentes para cada bounded context. Los diagramas de clases están organizados en dos grupos: **FrontEnd** (Vue 3 + PrimeVue) y **Backend** (ASP.NET Core + C#), con un diagrama por cada uno de los 7 bounded contexts definidos en la arquitectura DDD de NutriSense. Las principales características consideradas en los diagramas son las siguientes.
 
-**Arquitectura en capas DDD.** Cada bounded context sigue la estructura de capas `dofeature/diagrams`, `application`, `interfaces` e `infrastructure`. Las clases del dominio (aggregates, value objects, dofeature/diagrams events, repositories) residen en `dofeature/diagrams.model`; los application services coordinan los casos de uso en la capa `application`; los controllers, assemblers y resources conforman la capa `interfaces.REST` en el backend; y los API services, stores y componentes Vue conforman las capas `application.services`, `infrastructure.stores` y `presentation` en el frontend.
-
-**Estereotipos UML.** Se utilizan los estereotipos `«Aggregate Root»`, `«Value Object»`, `«Dofeature/diagrams Event»`, `«Repository»`, `«Application Service»`, `«Controller»`, `«Assembler»`, `«Component»` y `«Service»` para distinguir el rol DDD de cada elemento.
-
-**Visibilidad explícita.** Todos los miembros de cada clase incluyen su modificador de acceso: `+` (público), `-` (privado) y `#` (protegido).
-
-**Relaciones tipificadas.** Los diagramas emplean composición (`*--`), agregación (`o--`), dependencia (`..>`), realización (`..|>`), herencia (`--|>`) y asociación con nombre, dirección y multiplicidad según corresponda.
+Esta sección presenta los diagramas de clases UML que detallan la implementación de componentes para cada Bounded Context de NutriSense. Los diagramas se elaboraron con PlantUML siguiendo los principios de Domain-Driven Design (DDD) y la arquitectura en capas definida para el proyecto.
+ 
+Para el **frontend** (Vue + PrimeVue) se aplica la estructura de carpetas DDD: `domain/model`, `application` (incluye stores de Pinia), `infrastructure` (clientes HTTP con Axios) y `presentation` (componentes Vue). Cada Bounded Context expone sus modelos de dominio como clases planas de JavaScript, su store en la capa `application`, su servicio HTTP en `infrastructure` y sus componentes en `presentation`.
+ 
+Para el **backend** (ASP.NET Core + C#) se aplica la arquitectura en capas DDD: `Interfaces` (controllers REST), `Application` (command/query services), `Domain` (aggregates, entities, value objects, domain events, repository interfaces) e `Infrastructure` (implementaciones EF Core y clientes de APIs externas). Las interfaces de repositorio pertenecen al `Domain`; las implementaciones concretas, a `Infrastructure`.
 
 ### 4.7.1. Class Diagrams
 
