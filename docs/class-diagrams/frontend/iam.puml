@@ -1,96 +1,119 @@
-@startuml NutriSense - IAM Frontend (Vue)
+@startuml NutriSense - IAM Frontend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
 
 package "iam" {
 
   package "domain.model" {
-    class UserSession {
-      +userId: String
-      +fullName: String
+    class UserProfile {
+      +id: String
       +email: String
-      +role: String
-      +token: String
-      +isAuthenticated(): Boolean
+      +firstName: String
+      +lastName: String
+      +role: UserRole
+      +avatarUrl: String
+      +fullName(): String
+    }
+
+    class Credentials {
+      +email: String
+      +passwordHash: String
+    }
+
+    enum UserRole {
+      USER
+      ADMIN
     }
   }
 
-  package "application.services" {
-    class "«Service»\nAuthApiService" as AuthApiService {
+  package "application" {
+    class AuthStore {
+      -currentUser: UserProfile
+      -token: String
+      -isAuthenticated: Boolean
+      -loading: Boolean
+      -error: String
+      +login(credentials: Credentials): Promise<void>
+      +register(request: RegisterUserRequest): Promise<void>
+      +logout(): void
+      +fetchProfile(): Promise<void>
+      +updateProfile(data: Object): Promise<void>
+      +clearError(): void
+    }
+  }
+
+  package "infrastructure" {
+    class AuthApiService {
+      -httpClient: AxiosInstance
       -baseUrl: String
-      +signUp(request: Object): Promise<UserSession>
-      +signIn(request: Object): Promise<UserSession>
-      +signOut(): Promise<void>
+      +postLogin(credentials: Credentials): Promise<AuthResponse>
+      +postRegister(request: RegisterUserRequest): Promise<AuthResponse>
+      +getProfile(): Promise<UserProfile>
+      +putProfile(data: Object): Promise<UserProfile>
+      +postLogout(): Promise<void>
     }
-  }
 
-  package "infrastructure.stores" {
-    class "«Store»\nUseAuthStore" as UseAuthStore {
-      -session: UserSession
-      -isLoading: Boolean
-      -errorMessage: String
-      +signUp(firstName, lastName, email, password): Promise<void>
-      +signIn(email, password): Promise<void>
-      +signOut(): void
-      +isLoggedIn(): Boolean
-      +getRole(): String
+    class RegisterUserRequest {
+      +firstName: String
+      +lastName: String
+      +email: String
+      +password: String
+    }
+
+    class AuthResponse {
+      +token: String
+      +refreshToken: String
+      +user: UserProfile
     }
   }
 
   package "presentation.components" {
-    class "«Component»\nSignUpForm" as SignUpForm {
+    class "«Component»\nLoginView" as LoginView {
+      -email: String
+      -password: String
+      -errorMessage: String
+      +submitLogin(): void
+      +goToRegister(): void
+    }
+
+    class "«Component»\nRegisterView" as RegisterView {
       -firstName: String
       -lastName: String
       -email: String
       -password: String
+      -confirmPassword: String
       -errorMessage: String
-      -- methods --
-      +submitSignUp(): void
-      +clearForm(): void
-      -- emits --
-      sign-up-completed(session: Object)
+      +submitRegister(): void
+      +validatePasswords(): Boolean
     }
 
-    class "«Component»\nSignInForm" as SignInForm {
-      -email: String
-      -password: String
-      -errorMessage: String
-      -- methods --
-      +submitSignIn(): void
-      -- emits --
-      sign-in-completed(session: Object)
+    class "«Component»\nProfileView" as ProfileView {
+      -editMode: Boolean
+      +toggleEdit(): void
+      +saveProfile(): void
+      +cancelEdit(): void
     }
 
-    class "«Component»\nUserProfileCard" as UserProfileCard {
-      +userId: String
-      +fullName: String
-      +role: String
+    class "«Component»\nNavbarComponent" as NavbarComponent {
+      +showUserMenu: Boolean
+      +toggleUserMenu(): void
+      +handleLogout(): void
     }
   }
-
-  package "presentation.pages" {
-    class "«Component»\nSignUpPage" as SignUpPage {
-      -store: UseAuthStore
-      +handleSignUpCompleted(session: Object): void
-    }
-
-    class "«Component»\nSignInPage" as SignInPage {
-      -store: UseAuthStore
-      +handleSignInCompleted(session: Object): void
-    }
-  }
-
 }
 
 ' Relationships
-UseAuthStore --> AuthApiService : calls >
-UseAuthStore --> UserSession : manages >
-SignUpForm ..> UseAuthStore : uses >
-SignInForm ..> UseAuthStore : uses >
-UserProfileCard --> UserSession : displays >
-SignUpPage *-- SignUpForm : contains >
-SignInPage *-- SignInForm : contains >
-SignUpPage --> UseAuthStore : uses >
-SignInPage --> UseAuthStore : uses >
-SignUpForm -up-> SignUpPage : emits sign-up-completed
-SignInForm -up-> SignInPage : emits sign-in-completed
+AuthStore --> AuthApiService : uses
+AuthStore --> UserProfile : manages "1"
+AuthStore --> Credentials : uses
+AuthApiService --> RegisterUserRequest : uses
+AuthApiService --> AuthResponse : returns
+AuthResponse --> UserProfile : contains "1"
+UserProfile --> UserRole : has "1"
+LoginView --> AuthStore : uses
+RegisterView --> AuthStore : uses
+ProfileView --> AuthStore : uses
+NavbarComponent --> AuthStore : reads
 
 @enduml

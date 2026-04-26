@@ -1,131 +1,164 @@
-@startuml NutriSense - Analytics & Reporting (Backend)
+@startuml NutriSense - Analytics & Reporting Backend Class Diagram
 
-package "NutriSense.Analytics.Domain.Model.Aggregates" {
-  class "«Aggregate Root»\nProgressInsight" as ProgressInsight {
-    -Guid _id
-    -Guid _userId
-    -InsightPeriod _period
-    -WeightTrend _weightTrend
-    -CalorieTrend _calorieTrend
-    -MacroBreakdown _macroBreakdown
-    -GoalAdherenceRate _goalAdherence
-    -DateTime _generatedAt
-    -- methods --
-    +ProgressInsight(Guid userId, InsightPeriod period)
-    +void SetWeightTrend(WeightTrend trend)
-    +void SetCalorieTrend(CalorieTrend trend)
-    +void SetMacroBreakdown(MacroBreakdown breakdown)
-    +void SetGoalAdherence(GoalAdherenceRate rate)
-    +ProgressInsightGeneratedEvent RaiseGeneratedEvent()
-  }
-}
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
 
-package "NutriSense.Analytics.Domain.Model.ValueObjects" {
-  class "«Value Object»\nInsightPeriod" as InsightPeriod {
-    -DateOnly _from
-    -DateOnly _to
-    -PeriodType _type
-    +InsightPeriod(DateOnly from, DateOnly to, PeriodType type)
-    +int GetDays()
-    +PeriodType GetType()
-  }
+package "NutriSense.AnalyticsReporting" {
 
-  class "«Value Object»\nWeightTrend" as WeightTrend {
-    -decimal _startKg
-    -decimal _endKg
-    -decimal _deltaKg
-    +WeightTrend(decimal start, decimal end)
-    +decimal GetDelta()
-    +string GetTrendDirection()
-  }
+  package "Interfaces.REST" {
+    class AnalyticsController {
+      -analyticsCommandService: IAnalyticsCommandService
+      -analyticsQueryService: IAnalyticsQueryService
+      +GetProgressReport(userId: Guid, type: String): IActionResult
+      +PostGenerateReport(request: GenerateReportRequest): IActionResult
+      +GetStreaks(userId: Guid): IActionResult
+      +GetDailyBalances(userId: Guid, from: String, to: String): IActionResult
+    }
 
-  class "«Value Object»\nCalorieTrend" as CalorieTrend {
-    -decimal _averageDailyKcal
-    -decimal _targetKcal
-    -decimal _adherencePercent
-    +CalorieTrend(decimal avg, decimal target)
-    +decimal GetAdherencePercent()
+    class GenerateReportRequest {
+      +UserId: Guid
+      +ReportType: String
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+    }
+
+    class ProgressReportResponse {
+      +Id: Guid
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+      +AverageCalories: Decimal
+      +WeightDeltaKg: Decimal
+      +GoalAchievementPercent: Decimal
+      +ReportType: String
+    }
+
+    class AnalyticsAssembler {
+      +{static} ToProgressReportResponse(aggregate: AnalyticsAggregate): ProgressReportResponse
+      +{static} ToStreakResponse(streak: Streak): StreakResponse
+    }
   }
 
-  class "«Value Object»\nMacroBreakdown" as MacroBreakdown {
-    -decimal _avgProteinPct
-    -decimal _avgCarbsPct
-    -decimal _avgFatPct
-    +MacroBreakdown(decimal protein, decimal carbs, decimal fat)
-    +decimal GetProteinPct()
-    +decimal GetCarbsPct()
-    +decimal GetFatPct()
+  package "Application" {
+    interface IAnalyticsCommandService {
+      +Handle(command: GenerateProgressReportCommand): ProgressReportResponse
+      +Handle(command: UpdateStreakCommand): StreakResponse
+    }
+
+    interface IAnalyticsQueryService {
+      +Handle(query: GetProgressReportQuery): ProgressReportResponse
+      +Handle(query: GetStreaksQuery): List<StreakResponse>
+      +Handle(query: GetDailyBalancesQuery): List<DailyBalanceResponse>
+    }
+
+    class AnalyticsCommandServiceImpl {
+      -analyticsRepository: IAnalyticsRepository
+      +Handle(command: GenerateProgressReportCommand): ProgressReportResponse
+      +Handle(command: UpdateStreakCommand): StreakResponse
+    }
+
+    class GenerateProgressReportCommand {
+      +UserId: Guid
+      +ReportType: ReportType
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+    }
   }
 
-  class "«Value Object»\nGoalAdherenceRate" as GoalAdherenceRate {
-    -decimal _percent
-    +GoalAdherenceRate(decimal percent)
-    +decimal GetPercent()
-    +string GetLabel()
+  package "Domain" {
+    class AnalyticsAggregate {
+      +Id: Guid
+      +UserId: Guid
+      -reports: List<ProgressReport>
+      -streaks: List<Streak>
+      -dailyBalances: List<DailyBalance>
+      +GenerateReport(period: DateRange, type: ReportType): ProgressReport
+      +UpdateStreak(streakType: StreakType): void
+      +RecordDailyBalance(balance: DailyBalance): void
+    }
+
+    class ProgressReport {
+      +Id: Guid
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+      +AverageCaloriesKcal: Decimal
+      +WeightDeltaKg: Decimal
+      +GoalAchievementPercent: Decimal
+      +ReportType: ReportType
+    }
+
+    class Streak {
+      +Id: Guid
+      +StreakType: StreakType
+      +CurrentCount: Int32
+      +LongestCount: Int32
+      +LastUpdated: DateTime
+      +Increment(): void
+      +Reset(): void
+    }
+
+    class DailyBalance {
+      +Date: DateOnly
+      +CaloriesConsumedKcal: Decimal
+      +CaloriesBurnedKcal: Decimal
+      +NetCalories(): Decimal
+      +GoalMet: Boolean
+    }
+
+    class DateRange {
+      +Start: DateOnly
+      +End: DateOnly
+      +Contains(date: DateOnly): Boolean
+    }
+
+    enum ReportType {
+      WEEKLY
+      MONTHLY
+      CUSTOM
+    }
+
+    enum StreakType {
+      LOGGING_STREAK
+      GOAL_STREAK
+      ACTIVITY_STREAK
+    }
+
+    class ReportGeneratedEvent {
+      +AggregateId: Guid
+      +UserId: Guid
+      +ReportType: ReportType
+      +OccurredOn: DateTime
+    }
+
+    interface IAnalyticsRepository {
+      +FindByUserId(userId: Guid): AnalyticsAggregate
+      +Save(aggregate: AnalyticsAggregate): void
+      +Update(aggregate: AnalyticsAggregate): void
+    }
   }
 
-  enum PeriodType {
-    Weekly
-    Monthly
-    Custom
-  }
-}
-
-package "NutriSense.Analytics.Domain.Model.Events" {
-  class "«Domain Event»\nProgressInsightGeneratedEvent" as ProgressInsightGeneratedEvent {
-    +Guid InsightId
-    +Guid UserId
-    +InsightPeriod Period
-    +DateTime OccurredOn
-  }
-}
-
-package "NutriSense.Analytics.Domain.Repositories" {
-  interface "«Repository»\nIProgressInsightRepository" as IProgressInsightRepository {
-    +Task<ProgressInsight?> FindLatestByUserIdAsync(Guid userId)
-    +Task<List<ProgressInsight>> FindByUserInRangeAsync(Guid userId, DateOnly from, DateOnly to)
-    +Task SaveAsync(ProgressInsight insight)
-  }
-}
-
-package "NutriSense.Analytics.Application.Services" {
-  class "«Application Service»\nAnalyticsAppService" as AnalyticsAppService {
-    -IProgressInsightRepository _repository
-    +AnalyticsAppService(IProgressInsightRepository repo)
-    +Task<ProgressInsight> GenerateProgressInsightAsync(GenerateInsightCommand cmd)
-    +Task<ProgressInsight?> GetLatestInsightAsync(Guid userId)
-    +Task<DashboardResponse> GetDashboardDataAsync(Guid userId)
-  }
-}
-
-package "NutriSense.Analytics.Interfaces.REST" {
-  class "«Controller»\nAnalyticsController" as AnalyticsController {
-    -AnalyticsAppService _service
-    +AnalyticsController(AnalyticsAppService service)
-    +Task<IActionResult> GenerateInsight(GenerateInsightRequest request)
-    +Task<IActionResult> GetDashboard(Guid userId)
-    +Task<IActionResult> GetLatestInsight(Guid userId)
-  }
-
-  class "«Assembler»\nProgressInsightAssembler" as ProgressInsightAssembler {
-    +static InsightPeriod ToPeriodFromRequest(GenerateInsightRequest request)
-    +static DashboardResponse ToResponseFromEntity(ProgressInsight insight)
+  package "Infrastructure" {
+    class AnalyticsRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): AnalyticsAggregate
+      +Save(aggregate: AnalyticsAggregate): void
+      +Update(aggregate: AnalyticsAggregate): void
+    }
   }
 }
 
 ' Relationships
-ProgressInsight *-- InsightPeriod : covers >
-ProgressInsight *-- WeightTrend : tracks >
-ProgressInsight *-- CalorieTrend : tracks >
-ProgressInsight *-- MacroBreakdown : analyzes >
-ProgressInsight *-- GoalAdherenceRate : measures >
-ProgressInsight ..> ProgressInsightGeneratedEvent : raises >
-InsightPeriod --> PeriodType : classified as >
-IProgressInsightRepository ..> ProgressInsight : manages >
-AnalyticsAppService --> IProgressInsightRepository : uses >
-AnalyticsAppService ..> ProgressInsightGeneratedEvent : publishes >
-AnalyticsController --> AnalyticsAppService : uses >
-ProgressInsightAssembler ..> InsightPeriod : creates >
-ProgressInsightAssembler ..> ProgressInsight : uses >
+AnalyticsController --> IAnalyticsCommandService : uses
+AnalyticsController --> IAnalyticsQueryService : uses
+AnalyticsController --> AnalyticsAssembler : uses
+AnalyticsCommandServiceImpl ..|> IAnalyticsCommandService
+AnalyticsCommandServiceImpl --> IAnalyticsRepository : uses
+AnalyticsRepositoryImpl ..|> IAnalyticsRepository
+AnalyticsAggregate *--> ProgressReport : generates "0..*"
+AnalyticsAggregate *--> Streak : tracks "0..*"
+AnalyticsAggregate *--> DailyBalance : records "0..*"
+ProgressReport --> ReportType : has "1"
+Streak --> StreakType : has "1"
+ProgressReport --> DateRange : spans "1"
+AnalyticsAggregate --> ReportGeneratedEvent : fires "0..*"
 
 @enduml

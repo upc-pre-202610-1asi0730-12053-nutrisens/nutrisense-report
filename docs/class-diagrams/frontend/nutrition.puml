@@ -1,117 +1,130 @@
-@startuml NutriSense - Nutrition Tracking Frontend (Vue)
+@startuml NutriSense - Nutrition Tracking Frontend Class Diagram
 
-package "nutrition-tracking" {
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "nutrition" {
 
   package "domain.model" {
-    class FoodEntryItem {
-      +entryId: String
-      +foodName: String
-      +amountGrams: Number
+    class NutritionLog {
+      +id: String
+      +userId: String
+      +date: String
+      +meals: Meal[]
+      +totalCalories(): Number
+      +totalMacros(): MacroSummary
+    }
+
+    class Meal {
+      +id: String
+      +name: String
       +calories: Number
       +protein: Number
       +carbs: Number
       +fat: Number
+      +mealType: MealType
+      +loggedAt: String
     }
 
-    class DailyLog {
-      +logId: String
-      +date: String
-      +entries: FoodEntryItem[]
-      +totalCalories: Number
+    class ScanResult {
+      +id: String
+      +imageUrl: String
+      +recognizedItems: FoodItem[]
+      +confidence: Number
+      +scannedAt: String
+    }
+
+    class FoodItem {
+      +fdcId: String
+      +name: String
+      +calories: Number
+      +servingSize: Number
+      +unit: String
+    }
+
+    class MacroSummary {
       +totalProtein: Number
       +totalCarbs: Number
       +totalFat: Number
-      +getCalorieSummary(): Object
+    }
+
+    enum MealType {
+      BREAKFAST
+      LUNCH
+      DINNER
+      SNACK
     }
   }
 
-  package "application.services" {
-    class "«Service»\nNutritionApiService" as NutritionApiService {
-      -baseUrl: String
-      +getDailyLog(userId: String, date: String): Promise<DailyLog>
-      +logFood(request: Object): Promise<FoodEntryItem>
-      +updateEntry(entryId: String, request: Object): Promise<FoodEntryItem>
-      +removeEntry(logId: String, entryId: String): Promise<void>
-      +searchFoods(query: String): Promise<Object[]>
+  package "application" {
+    class NutritionStore {
+      -currentLog: NutritionLog
+      -scanResult: ScanResult
+      -loading: Boolean
+      -error: String
+      +fetchDailyLog(date: String): Promise<void>
+      +addMeal(meal: Meal): Promise<void>
+      +removeMeal(mealId: String): Promise<void>
+      +scanMealImage(image: File): Promise<void>
+      +searchFood(query: String): Promise<FoodItem[]>
+      +clearScan(): void
     }
   }
 
-  package "infrastructure.stores" {
-    class "«Store»\nUseNutritionStore" as UseNutritionStore {
-      -dailyLog: DailyLog
-      -isLoading: Boolean
-      -searchResults: Object[]
-      +loadDailyLog(userId, date): Promise<void>
-      +logFood(request: Object): Promise<void>
-      +updateEntry(entryId, request): Promise<void>
-      +removeEntry(logId, entryId): Promise<void>
-      +searchFoods(query: String): Promise<void>
+  package "infrastructure" {
+    class NutritionApiService {
+      -httpClient: AxiosInstance
+      +getDailyLog(userId: String, date: String): Promise<NutritionLog>
+      +postMeal(logId: String, meal: Object): Promise<Meal>
+      +deleteMeal(mealId: String): Promise<void>
+      +postScanImage(image: File): Promise<ScanResult>
+      +searchFoodItems(query: String): Promise<FoodItem[]>
     }
   }
 
   package "presentation.components" {
-    class "«Component»\nFoodSearchBar" as FoodSearchBar {
-      -query: String
-      -results: Object[]
-      -isSearching: Boolean
-      -- methods --
-      +search(): void
-      +clearSearch(): void
-      -- emits --
-      food-selected(food: Object)
-    }
-
-    class "«Component»\nFoodLogEntry" as FoodLogEntry {
-      +entry: FoodEntryItem
-      -- emits --
-      entry-removed(entryId: String)
-      entry-updated(entryId: String, newAmount: Number)
-    }
-
-    class "«Component»\nDailyMacroSummary" as DailyMacroSummary {
-      +totalCalories: Number
-      +totalProtein: Number
-      +totalCarbs: Number
-      +totalFat: Number
-      +calorieTarget: Number
-    }
-
-    class "«Component»\nAddFoodModal" as AddFoodModal {
-      -selectedFood: Object
-      -amountGrams: Number
-      -errorMessage: String
-      -- methods --
-      +confirmAdd(): void
-      +cancel(): void
-      -- emits --
-      food-logged(entry: Object)
-    }
-  }
-
-  package "presentation.pages" {
-    class "«Component»\nDailyLogPage" as DailyLogPage {
-      -store: UseNutritionStore
+    class "«Component»\nNutritionLogView" as NutritionLogView {
       -selectedDate: String
-      +handleFoodLogged(entry: Object): void
-      +handleEntryRemoved(entryId: String): void
+      +changeDate(date: String): void
+      +openAddMealDialog(): void
+    }
+
+    class "«Component»\nMealEntryForm" as MealEntryForm {
+      -selectedFood: FoodItem
+      -servingSize: Number
+      -mealType: MealType
+      +submitMeal(): void
+      +searchFood(query: String): void
+      -- emits --
+      meal-added(meal: Object)
+    }
+
+    class "«Component»\nScanMealView" as ScanMealView {
+      -imagePreview: String
+      -isScanning: Boolean
+      +uploadImage(file: File): void
+      +confirmScanResult(): void
+      +retakeScan(): void
+    }
+
+    class "«Component»\nMacroSummaryCard" as MacroSummaryCard {
+      +summary: MacroSummary
+      +renderPieChart(): void
     }
   }
-
 }
 
 ' Relationships
-DailyLog *-- "0..*" FoodEntryItem : contains >
-UseNutritionStore --> NutritionApiService : calls >
-UseNutritionStore --> DailyLog : manages >
-DailyLogPage *-- FoodSearchBar : contains >
-DailyLogPage *-- "0..*" FoodLogEntry : contains >
-DailyLogPage *-- DailyMacroSummary : contains >
-DailyLogPage *-- AddFoodModal : contains >
-DailyLogPage --> UseNutritionStore : uses >
-FoodLogEntry --> FoodEntryItem : displays >
-FoodSearchBar -up-> DailyLogPage : emits food-selected
-FoodLogEntry -up-> DailyLogPage : emits entry-removed
-AddFoodModal -up-> DailyLogPage : emits food-logged
-DailyMacroSummary --> DailyLog : reads >
+NutritionStore --> NutritionApiService : uses
+NutritionStore --> NutritionLog : manages "1"
+NutritionStore --> ScanResult : manages "0..1"
+NutritionLog *--> Meal : contains "0..*"
+NutritionLog --> MacroSummary : computes "1"
+ScanResult *--> FoodItem : contains "1..*"
+Meal --> MealType : has "1"
+NutritionLogView --> NutritionStore : uses
+MealEntryForm --> NutritionStore : uses
+ScanMealView --> NutritionStore : uses
+MacroSummaryCard --> MacroSummary : displays
 
 @enduml

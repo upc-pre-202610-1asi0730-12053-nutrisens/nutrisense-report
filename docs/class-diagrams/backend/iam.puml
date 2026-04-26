@@ -1,145 +1,153 @@
-@startuml NutriSense - Identity & Access Management (Backend)
+@startuml NutriSense - IAM Backend Class Diagram
 
-package "NutriSense.IAM.Domain.Model.Aggregates" {
-  class "«Aggregate Root»\nUserAccount" as UserAccount {
-    -Guid _id
-    -Email _email
-    -HashedPassword _password
-    -FullName _fullName
-    -UserRole _role
-    -bool _isActive
-    -DateTime _createdAt
-    -- methods --
-    +UserAccount(Email email, HashedPassword password, FullName fullName, UserRole role)
-    +Guid GetId()
-    +Email GetEmail()
-    +FullName GetFullName()
-    +UserRole GetRole()
-    +bool IsActive()
-    +void Activate()
-    +void Deactivate()
-    +void ChangePassword(HashedPassword newPassword)
-    +UserRegisteredEvent RaiseRegisteredEvent()
-  }
-}
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
 
-package "NutriSense.IAM.Domain.Model.ValueObjects" {
-  class "«Value Object»\nEmail" as Email {
-    -string _value
-    +Email(string value)
-    +string GetValue()
-    +bool IsValid()
-    +bool Equals(Email other)
-  }
+package "NutriSense.IAM" {
 
-  class "«Value Object»\nHashedPassword" as HashedPassword {
-    -string _hash
-    +HashedPassword(string rawPassword)
-    +bool Verify(string rawPassword)
-    +string GetHash()
-  }
+  package "Interfaces.REST" {
+    class AuthController {
+      -authCommandService: IAuthCommandService
+      -authQueryService: IAuthQueryService
+      +PostLogin(request: LoginRequest): IActionResult
+      +PostRegister(request: RegisterUserRequest): IActionResult
+      +GetProfile(userId: Guid): IActionResult
+      +PutProfile(userId: Guid, request: UpdateProfileRequest): IActionResult
+      +PostLogout(): IActionResult
+    }
 
-  class "«Value Object»\nFullName" as FullName {
-    -string _firstName
-    -string _lastName
-    +FullName(string firstName, string lastName)
-    +string GetDisplayName()
-    +bool Equals(FullName other)
-  }
+    class LoginRequest {
+      +Email: String
+      +Password: String
+    }
 
-  enum UserRole {
-    FreeUser
-    PremiumUser
-    Admin
-  }
-}
+    class RegisterUserRequest {
+      +FirstName: String
+      +LastName: String
+      +Email: String
+      +Password: String
+    }
 
-package "NutriSense.IAM.Domain.Model.Events" {
-  class "«Domain Event»\nUserRegisteredEvent" as UserRegisteredEvent {
-    +Guid UserId
-    +string Email
-    +DateTime OccurredOn
-    +UserRegisteredEvent(Guid userId, string email)
+    class UpdateProfileRequest {
+      +FirstName: String
+      +LastName: String
+      +AvatarUrl: String
+    }
+
+    class AuthResponse {
+      +Token: String
+      +RefreshToken: String
+      +UserId: Guid
+      +FullName: String
+      +Role: String
+    }
+
+    class UserProfileAssembler {
+      +{static} ToResponseFromEntity(user: User): UserProfileResponse
+      +{static} ToEntityFromRequest(request: RegisterUserRequest): User
+    }
   }
 
-  class "«Domain Event»\nUserPasswordChangedEvent" as UserPasswordChangedEvent {
-    +Guid UserId
-    +DateTime OccurredOn
-    +UserPasswordChangedEvent(Guid userId)
-  }
-}
+  package "Application" {
+    interface IAuthCommandService {
+      +Handle(command: RegisterUserCommand): AuthResponse
+      +Handle(command: LoginCommand): AuthResponse
+      +Handle(command: UpdateProfileCommand): UserProfileResponse
+    }
 
-package "NutriSense.IAM.Domain.Repositories" {
-  interface "«Repository»\nIUserAccountRepository" as IUserAccountRepository {
-    +Task<UserAccount?> FindByIdAsync(Guid id)
-    +Task<UserAccount?> FindByEmailAsync(Email email)
-    +Task SaveAsync(UserAccount account)
-    +Task<bool> ExistsByEmailAsync(Email email)
-  }
-}
+    interface IAuthQueryService {
+      +Handle(query: GetUserProfileQuery): UserProfileResponse
+    }
 
-package "NutriSense.IAM.Application.Services" {
-  class "«Application Service»\nAuthApplicationService" as AuthApplicationService {
-    -IUserAccountRepository _repository
-    -ITokenService _tokenService
-    +AuthApplicationService(IUserAccountRepository repo, ITokenService tokenService)
-    +Task<AuthResponse> SignUpAsync(SignUpCommand cmd)
-    +Task<AuthResponse> SignInAsync(SignInCommand cmd)
-    +Task SignOutAsync(Guid userId)
-  }
-}
+    class AuthCommandServiceImpl {
+      -userRepository: IUserRepository
+      +Handle(command: RegisterUserCommand): AuthResponse
+      +Handle(command: LoginCommand): AuthResponse
+      +Handle(command: UpdateProfileCommand): UserProfileResponse
+    }
 
-package "NutriSense.IAM.Interfaces.REST" {
-  class "«Controller»\nAuthController" as AuthController {
-    -AuthApplicationService _service
-    +AuthController(AuthApplicationService service)
-    +Task<IActionResult> SignUp(SignUpRequest request)
-    +Task<IActionResult> SignIn(SignInRequest request)
-    +Task<IActionResult> SignOut()
-  }
+    class RegisterUserCommand {
+      +FirstName: String
+      +LastName: String
+      +Email: String
+      +PasswordHash: String
+    }
 
-  class "«Assembler»\nUserAccountAssembler" as UserAccountAssembler {
-    +static UserAccount ToEntityFromRequest(SignUpRequest request)
-    +static AuthResponse ToResponseFromEntity(UserAccount account, string token)
+    class LoginCommand {
+      +Email: String
+      +Password: String
+    }
+
+    class GetUserProfileQuery {
+      +UserId: Guid
+    }
   }
 
-  class SignUpRequest {
-    +string? FirstName
-    +string? LastName
-    +string? Email
-    +string? Password
+  package "Domain" {
+    class User {
+      +Id: Guid
+      +FirstName: String
+      +LastName: String
+      -credentials: Credentials
+      -role: UserRole
+      +GetFullName(): String
+      +IsAdmin(): Boolean
+      +UpdateProfile(firstName: String, lastName: String): void
+    }
+
+    class Credentials {
+      +Email: String
+      -PasswordHash: String
+      +ValidatePassword(raw: String): Boolean
+    }
+
+    enum UserRole {
+      USER
+      ADMIN
+    }
+
+    class UserRegisteredEvent {
+      +UserId: Guid
+      +Email: String
+      +OccurredOn: DateTime
+    }
+
+    interface IUserRepository {
+      +FindById(id: Guid): User
+      +FindByEmail(email: String): User
+      +Save(user: User): void
+      +Update(user: User): void
+    }
   }
 
-  class SignInRequest {
-    +string? Email
-    +string? Password
-  }
+  package "Infrastructure" {
+    class UserRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindById(id: Guid): User
+      +FindByEmail(email: String): User
+      +Save(user: User): void
+      +Update(user: User): void
+    }
 
-  class AuthResponse {
-    +Guid? UserId
-    +string? FullName
-    +string? Token
-    +string? Role
-    +AuthResponse(string message)
+    class JwtTokenService {
+      -secretKey: String
+      -issuer: String
+      +GenerateToken(user: User): String
+      +ValidateToken(token: String): ClaimsPrincipal
+    }
   }
 }
 
 ' Relationships
-UserAccount *-- Email : has >
-UserAccount *-- HashedPassword : has >
-UserAccount *-- FullName : has >
-UserAccount --> UserRole : assigned >
-UserAccount ..> UserRegisteredEvent : raises >
-UserAccount ..> UserPasswordChangedEvent : raises >
-IUserAccountRepository ..> UserAccount : manages >
-AuthApplicationService --> IUserAccountRepository : uses >
-AuthApplicationService ..> UserRegisteredEvent : publishes >
-AuthController --> AuthApplicationService : uses >
-AuthController ..> SignUpRequest : receives >
-AuthController ..> SignInRequest : receives >
-AuthController ..> AuthResponse : returns >
-UserAccountAssembler ..> UserAccount : creates >
-UserAccountAssembler ..> SignUpRequest : uses >
-UserAccountAssembler ..> AuthResponse : creates >
+AuthController --> IAuthCommandService : uses
+AuthController --> IAuthQueryService : uses
+AuthController --> UserProfileAssembler : uses
+AuthCommandServiceImpl ..|> IAuthCommandService
+AuthCommandServiceImpl --> IUserRepository : uses
+UserRepositoryImpl ..|> IUserRepository
+User *--> Credentials : has "1"
+User --> UserRole : has "1"
+User --> UserRegisteredEvent : fires "0..*"
+UserProfileAssembler ..> User : transforms
 
 @enduml

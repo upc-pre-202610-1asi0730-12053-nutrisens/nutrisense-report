@@ -1,127 +1,212 @@
-@startuml NutriSense - Subscriptions & Billing (Backend)
+@startuml NutriSense - Subscriptions & Billing Backend Class Diagram
 
-package "NutriSense.Billing.Domain.Model.Aggregates" {
-  class "«Aggregate Root»\nSubscription" as Subscription {
-    -Guid _id
-    -Guid _userId
-    -PlanType _plan
-    -SubscriptionStatus _status
-    -BillingPeriod _billingPeriod
-    -StripeCustomerId _stripeCustomerId
-    -StripeSubscriptionId _stripeSubscriptionId
-    -DateTime _createdAt
-    -DateTime _renewsAt
-    -- methods --
-    +Subscription(Guid userId, PlanType plan, BillingPeriod period)
-    +void Activate(StripeCustomerId customerId, StripeSubscriptionId subId)
-    +void Cancel()
-    +void Renew(BillingPeriod newPeriod)
-    +bool IsFeatureAvailable(string featureKey)
-    +SubscriptionActivatedEvent RaiseActivatedEvent()
-    +SubscriptionCancelledEvent RaiseCancelledEvent()
-  }
-}
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
 
-package "NutriSense.Billing.Domain.Model.ValueObjects" {
-  class "«Value Object»\nBillingPeriod" as BillingPeriod {
-    -DateOnly _start
-    -DateOnly _end
-    +BillingPeriod(DateOnly start, DateOnly end)
-    +DateOnly GetStart()
-    +DateOnly GetEnd()
-    +bool IsActive()
-  }
+package "NutriSense.SubscriptionsBilling" {
 
-  class "«Value Object»\nStripeCustomerId" as StripeCustomerId {
-    -string _value
-    +StripeCustomerId(string value)
-    +string GetValue()
-  }
+  package "Interfaces.REST" {
+    class BillingController {
+      -billingCommandService: IBillingCommandService
+      -billingQueryService: IBillingQueryService
+      +GetAvailablePlans(): IActionResult
+      +PostSubscribe(request: SubscribeRequest): IActionResult
+      +PostCancelSubscription(subscriptionId: Guid): IActionResult
+      +GetActiveSubscription(userId: Guid): IActionResult
+      +GetPaymentHistory(userId: Guid): IActionResult
+    }
 
-  class "«Value Object»\nStripeSubscriptionId" as StripeSubscriptionId {
-    -string _value
-    +StripeSubscriptionId(string value)
-    +string GetValue()
+    class SubscribeRequest {
+      +UserId: Guid
+      +PlanId: Guid
+      +StripePaymentToken: String
+    }
+
+    class SubscriptionResponse {
+      +Id: Guid
+      +PlanName: String
+      +PlanTier: String
+      +Status: String
+      +StartDate: DateOnly
+      +EndDate: DateOnly
+      +StripeSubscriptionId: String
+    }
+
+    class BillingAssembler {
+      +{static} ToSubscriptionResponse(subscription: Subscription): SubscriptionResponse
+      +{static} ToPaymentResponse(payment: Payment): PaymentResponse
+      +{static} ToPlanResponse(plan: SubscriptionPlan): SubscriptionPlanResponse
+    }
   }
 
-  enum PlanType {
-    Free
-    Premium
-    PremiumAnnual
+  package "Application" {
+    interface IBillingCommandService {
+      +Handle(command: SubscribeCommand): SubscriptionResponse
+      +Handle(command: CancelSubscriptionCommand): void
+    }
+
+    interface IBillingQueryService {
+      +Handle(query: GetAvailablePlansQuery): List<SubscriptionPlanResponse>
+      +Handle(query: GetActiveSubscriptionQuery): SubscriptionResponse
+      +Handle(query: GetPaymentHistoryQuery): List<PaymentResponse>
+    }
+
+    class BillingCommandServiceImpl {
+      -subscriptionRepository: ISubscriptionRepository
+      -stripeClient: IStripeClient
+      +Handle(command: SubscribeCommand): SubscriptionResponse
+      +Handle(command: CancelSubscriptionCommand): void
+    }
+
+    class SubscribeCommand {
+      +UserId: Guid
+      +PlanId: Guid
+      +StripePaymentToken: String
+    }
+
+    class CancelSubscriptionCommand {
+      +SubscriptionId: Guid
+      +UserId: Guid
+    }
   }
 
-  enum SubscriptionStatus {
-    Active
-    Cancelled
-    PastDue
-    Trialing
-  }
-}
+  package "Domain" {
+    class SubscriptionAggregate {
+      +Id: Guid
+      +UserId: Guid
+      -subscription: Subscription
+      -paymentHistory: List<Payment>
+      +Subscribe(plan: SubscriptionPlan, stripeId: String): void
+      +Cancel(): void
+      +RecordPayment(payment: Payment): void
+      +GetActiveSubscription(): Subscription
+    }
 
-package "NutriSense.Billing.Domain.Model.Events" {
-  class "«Domain Event»\nSubscriptionActivatedEvent" as SubscriptionActivatedEvent {
-    +Guid SubscriptionId
-    +Guid UserId
-    +PlanType Plan
-    +DateTime OccurredOn
+    class Subscription {
+      +Id: Guid
+      +Plan: SubscriptionPlan
+      +Status: SubscriptionStatus
+      +StartDate: DateOnly
+      +EndDate: DateOnly
+      +StripeSubscriptionId: String
+      +IsActive(): Boolean
+      +Cancel(): void
+    }
+
+    class SubscriptionPlan {
+      +Id: Guid
+      +Tier: PlanTier
+      +PriceUsd: Money
+      +BillingCycle: BillingCycle
+      +MaxMealScans: Int32
+      +HasAdvancedAnalytics: Boolean
+    }
+
+    class Payment {
+      +Id: Guid
+      +Amount: Money
+      +Status: PaymentStatus
+      +PaidAt: DateTime
+      +StripePaymentIntentId: String
+    }
+
+    class Money {
+      +Amount: Decimal
+      +Currency: String
+      +Add(other: Money): Money
+    }
+
+    enum PlanTier {
+      BASIC
+      PRO
+      PREMIUM
+    }
+
+    enum BillingCycle {
+      MONTHLY
+      ANNUAL
+    }
+
+    enum SubscriptionStatus {
+      ACTIVE
+      CANCELLED
+      EXPIRED
+      PAST_DUE
+    }
+
+    enum PaymentStatus {
+      PENDING
+      SUCCEEDED
+      FAILED
+    }
+
+    class SubscriptionActivatedEvent {
+      +AggregateId: Guid
+      +UserId: Guid
+      +PlanTier: PlanTier
+      +OccurredOn: DateTime
+    }
+
+    class SubscriptionCancelledEvent {
+      +AggregateId: Guid
+      +UserId: Guid
+      +OccurredOn: DateTime
+    }
+
+    interface ISubscriptionRepository {
+      +FindByUserId(userId: Guid): SubscriptionAggregate
+      +FindPlanById(planId: Guid): SubscriptionPlan
+      +FindAllPlans(): List<SubscriptionPlan>
+      +Save(aggregate: SubscriptionAggregate): void
+      +Update(aggregate: SubscriptionAggregate): void
+    }
   }
 
-  class "«Domain Event»\nSubscriptionCancelledEvent" as SubscriptionCancelledEvent {
-    +Guid SubscriptionId
-    +Guid UserId
-    +DateTime OccurredOn
-  }
-}
+  package "Infrastructure" {
+    class SubscriptionRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): SubscriptionAggregate
+      +FindPlanById(planId: Guid): SubscriptionPlan
+      +FindAllPlans(): List<SubscriptionPlan>
+      +Save(aggregate: SubscriptionAggregate): void
+      +Update(aggregate: SubscriptionAggregate): void
+    }
 
-package "NutriSense.Billing.Domain.Repositories" {
-  interface "«Repository»\nISubscriptionRepository" as ISubscriptionRepository {
-    +Task<Subscription?> FindByUserIdAsync(Guid userId)
-    +Task<Subscription?> FindByStripeSubscriptionIdAsync(StripeSubscriptionId stripeId)
-    +Task SaveAsync(Subscription subscription)
-  }
-}
+    interface IStripeClient {
+      +CreateSubscription(customerId: String, priceId: String): String
+      +CancelSubscription(subscriptionId: String): void
+      +CreatePaymentIntent(amount: Decimal, currency: String): String
+    }
 
-package "NutriSense.Billing.Application.Services" {
-  class "«Application Service»\nBillingAppService" as BillingAppService {
-    -ISubscriptionRepository _repository
-    -IStripePaymentService _stripeService
-    +BillingAppService(ISubscriptionRepository repo, IStripePaymentService stripe)
-    +Task<Subscription> CreateSubscriptionAsync(CreateSubscriptionCommand cmd)
-    +Task CancelSubscriptionAsync(CancelSubscriptionCommand cmd)
-    +Task<Subscription?> GetCurrentSubscriptionAsync(Guid userId)
-    +Task HandleStripeWebhookAsync(StripeWebhookPayload payload)
-  }
-}
-
-package "NutriSense.Billing.Interfaces.REST" {
-  class "«Controller»\nSubscriptionController" as SubscriptionController {
-    -BillingAppService _service
-    +SubscriptionController(BillingAppService service)
-    +Task<IActionResult> CreateSubscription(CreateSubscriptionRequest request)
-    +Task<IActionResult> CancelSubscription(Guid subscriptionId)
-    +Task<IActionResult> GetCurrentSubscription(Guid userId)
-    +Task<IActionResult> HandleStripeWebhook(StripeWebhookRequest request)
-  }
-
-  class "«Assembler»\nSubscriptionAssembler" as SubscriptionAssembler {
-    +static CreateSubscriptionCommand ToCommandFromRequest(CreateSubscriptionRequest request)
-    +static SubscriptionResponse ToResponseFromEntity(Subscription subscription)
+    class StripeClientImpl {
+      -apiKey: String
+      -httpClient: HttpClient
+      +CreateSubscription(customerId: String, priceId: String): String
+      +CancelSubscription(subscriptionId: String): void
+      +CreatePaymentIntent(amount: Decimal, currency: String): String
+    }
   }
 }
 
 ' Relationships
-Subscription *-- BillingPeriod : has >
-Subscription *-- StripeCustomerId : linked to >
-Subscription *-- StripeSubscriptionId : linked to >
-Subscription --> PlanType : of type >
-Subscription --> SubscriptionStatus : has >
-Subscription ..> SubscriptionActivatedEvent : raises >
-Subscription ..> SubscriptionCancelledEvent : raises >
-ISubscriptionRepository ..> Subscription : manages >
-BillingAppService --> ISubscriptionRepository : uses >
-BillingAppService ..> SubscriptionActivatedEvent : publishes >
-BillingAppService ..> SubscriptionCancelledEvent : publishes >
-SubscriptionController --> BillingAppService : uses >
-SubscriptionAssembler ..> Subscription : uses >
+BillingController --> IBillingCommandService : uses
+BillingController --> IBillingQueryService : uses
+BillingController --> BillingAssembler : uses
+BillingCommandServiceImpl ..|> IBillingCommandService
+BillingCommandServiceImpl --> ISubscriptionRepository : uses
+BillingCommandServiceImpl --> IStripeClient : uses
+SubscriptionRepositoryImpl ..|> ISubscriptionRepository
+StripeClientImpl ..|> IStripeClient
+SubscriptionAggregate *--> Subscription : manages "0..1"
+SubscriptionAggregate *--> Payment : records "0..*"
+Subscription --> SubscriptionPlan : has "1"
+Subscription --> SubscriptionStatus : has "1"
+Payment --> Money : has "1"
+Payment --> PaymentStatus : has "1"
+SubscriptionPlan --> PlanTier : has "1"
+SubscriptionPlan --> BillingCycle : has "1"
+SubscriptionPlan --> Money : priced by "1"
+SubscriptionAggregate --> SubscriptionActivatedEvent : fires "0..*"
+SubscriptionAggregate --> SubscriptionCancelledEvent : fires "0..*"
 
 @enduml

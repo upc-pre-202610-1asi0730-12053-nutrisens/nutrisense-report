@@ -1,144 +1,172 @@
-@startuml NutriSense - Nutrition Tracking (Backend)
+@startuml NutriSense - Nutrition Tracking Backend Class Diagram
 
-package "NutriSense.NutritionTracking.Domain.Model.Aggregates" {
-  class "«Aggregate Root»\nConsumptionLog" as ConsumptionLog {
-    -Guid _id
-    -Guid _userId
-    -LogDate _logDate
-    -List<FoodEntry> _entries
-    -DateTime _createdAt
-    -DateTime _updatedAt
-    -- methods --
-    +ConsumptionLog(Guid userId, LogDate date)
-    +Guid GetId()
-    +void AddEntry(FoodEntry entry)
-    +void RemoveEntry(Guid entryId)
-    +void UpdateEntry(Guid entryId, Quantity quantity)
-    +MacroSummary CalculateDailyMacros()
-    +ConsumptionUpdatedEvent RaiseUpdatedEvent()
-  }
-}
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
 
-package "NutriSense.NutritionTracking.Domain.Model.Entities" {
-  class FoodEntry {
-    -Guid _id
-    -FoodId _foodId
-    -string _foodName
-    -Quantity _quantity
-    -NutritionalInfo _nutritionalInfo
-    +FoodEntry(FoodId foodId, string name, Quantity qty, NutritionalInfo info)
-    +Guid GetId()
-    +NutritionalInfo GetScaledNutrition()
-  }
-}
+package "NutriSense.NutritionTracking" {
 
-package "NutriSense.NutritionTracking.Domain.Model.ValueObjects" {
-  class "«Value Object»\nLogDate" as LogDate {
-    -DateOnly _value
-    +LogDate(DateOnly date)
-    +DateOnly GetValue()
-    +bool Equals(LogDate other)
-  }
+  package "Interfaces.REST" {
+    class NutritionController {
+      -nutritionCommandService: INutritionCommandService
+      -nutritionQueryService: INutritionQueryService
+      +GetDailyLog(userId: Guid, date: String): IActionResult
+      +PostAddMeal(request: AddMealRequest): IActionResult
+      +DeleteMeal(mealId: Guid): IActionResult
+      +PostScanMeal(image: IFormFile): IActionResult
+    }
 
-  class "«Value Object»\nFoodId" as FoodId {
-    -string _externalId
-    -string _source
-    +FoodId(string externalId, string source)
-    +string GetExternalId()
-    +string GetSource()
+    class AddMealRequest {
+      +UserId: Guid
+      +Name: String
+      +Calories: Decimal
+      +Protein: Decimal
+      +Carbs: Decimal
+      +Fat: Decimal
+      +MealType: String
+    }
+
+    class MealResponse {
+      +Id: Guid
+      +Name: String
+      +Calories: Decimal
+      +Protein: Decimal
+      +Carbs: Decimal
+      +Fat: Decimal
+      +MealType: String
+      +LoggedAt: DateTime
+    }
+
+    class NutritionLogAssembler {
+      +{static} ToResponseFromEntity(log: NutritionLog): NutritionLogResponse
+      +{static} ToMealFromRequest(request: AddMealRequest): Meal
+    }
   }
 
-  class "«Value Object»\nQuantity" as Quantity {
-    -decimal _amount
-    -string _unit
-    +Quantity(decimal amount, string unit)
-    +decimal GetAmount()
-    +string GetUnit()
-    +Quantity ScaleTo(decimal newAmount)
+  package "Application" {
+    interface INutritionCommandService {
+      +Handle(command: AddMealCommand): MealResponse
+      +Handle(command: RemoveMealCommand): void
+      +Handle(command: LogScannedMealCommand): NutritionLogResponse
+    }
+
+    interface INutritionQueryService {
+      +Handle(query: GetDailyLogQuery): NutritionLogResponse
+    }
+
+    class NutritionCommandServiceImpl {
+      -nutritionLogRepository: INutritionLogRepository
+      -visionClient: IGoogleVisionClient
+      +Handle(command: AddMealCommand): MealResponse
+      +Handle(command: RemoveMealCommand): void
+      +Handle(command: LogScannedMealCommand): NutritionLogResponse
+    }
+
+    class AddMealCommand {
+      +UserId: Guid
+      +Name: String
+      +Macros: MacroNutrients
+      +MealType: MealType
+    }
+
+    class GetDailyLogQuery {
+      +UserId: Guid
+      +Date: DateOnly
+    }
   }
 
-  class "«Value Object»\nNutritionalInfo" as NutritionalInfo {
-    -decimal _calories
-    -decimal _proteinGrams
-    -decimal _carbsGrams
-    -decimal _fatGrams
-    +NutritionalInfo(decimal calories, decimal protein, decimal carbs, decimal fat)
-    +decimal GetCalories()
-    +decimal GetProtein()
-    +decimal GetCarbs()
-    +decimal GetFat()
-    +NutritionalInfo Scale(decimal factor)
+  package "Domain" {
+    class NutritionLog {
+      +Id: Guid
+      +UserId: Guid
+      +Date: DateOnly
+      -meals: List<Meal>
+      +AddMeal(meal: Meal): void
+      +RemoveMeal(mealId: Guid): void
+      +GetTotalCalories(): Decimal
+      +GetMacroSummary(): MacroNutrients
+    }
+
+    class Meal {
+      +Id: Guid
+      +Name: String
+      +Macros: MacroNutrients
+      +MealType: MealType
+      +LoggedAt: DateTime
+    }
+
+    class MacroNutrients {
+      +Calories: Decimal
+      +Protein: Decimal
+      +Carbs: Decimal
+      +Fat: Decimal
+    }
+
+    class ScanResult {
+      +Id: Guid
+      +ImageUrl: String
+      +RecognizedItems: List<String>
+      +Confidence: Decimal
+    }
+
+    enum MealType {
+      BREAKFAST
+      LUNCH
+      DINNER
+      SNACK
+    }
+
+    class MealLoggedEvent {
+      +LogId: Guid
+      +UserId: Guid
+      +Calories: Decimal
+      +OccurredOn: DateTime
+    }
+
+    interface INutritionLogRepository {
+      +FindByUserAndDate(userId: Guid, date: DateOnly): NutritionLog
+      +Save(log: NutritionLog): void
+      +Update(log: NutritionLog): void
+    }
   }
 
-  class "«Value Object»\nMacroSummary" as MacroSummary {
-    +decimal TotalCalories
-    +decimal TotalProtein
-    +decimal TotalCarbs
-    +decimal TotalFat
-    +MacroSummary(decimal cal, decimal prot, decimal carb, decimal fat)
-  }
-}
+  package "Infrastructure" {
+    class NutritionLogRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserAndDate(userId: Guid, date: DateOnly): NutritionLog
+      +Save(log: NutritionLog): void
+      +Update(log: NutritionLog): void
+    }
 
-package "NutriSense.NutritionTracking.Domain.Model.Events" {
-  class "«Domain Event»\nConsumptionUpdatedEvent" as ConsumptionUpdatedEvent {
-    +Guid LogId
-    +Guid UserId
-    +LogDate LogDate
-    +MacroSummary DailyMacros
-    +DateTime OccurredOn
-  }
-}
+    interface IGoogleVisionClient {
+      +AnalyzeImage(image: Byte[]): ScanResult
+    }
 
-package "NutriSense.NutritionTracking.Domain.Repositories" {
-  interface "«Repository»\nIConsumptionLogRepository" as IConsumptionLogRepository {
-    +Task<ConsumptionLog?> FindByUserAndDateAsync(Guid userId, LogDate date)
-    +Task<ConsumptionLog?> FindByIdAsync(Guid id)
-    +Task SaveAsync(ConsumptionLog log)
-    +Task<List<ConsumptionLog>> FindByUserInRangeAsync(Guid userId, LogDate from, LogDate to)
-  }
-}
+    class GoogleVisionClientImpl {
+      -apiKey: String
+      -httpClient: HttpClient
+      +AnalyzeImage(image: Byte[]): ScanResult
+    }
 
-package "NutriSense.NutritionTracking.Application.Services" {
-  class "«Application Service»\nNutritionTrackingAppService" as NutritionTrackingAppService {
-    -IConsumptionLogRepository _repository
-    +NutritionTrackingAppService(IConsumptionLogRepository repo)
-    +Task<ConsumptionLog> LogFoodAsync(LogFoodCommand cmd)
-    +Task UpdateEntryAsync(UpdateEntryCommand cmd)
-    +Task RemoveEntryAsync(RemoveEntryCommand cmd)
-    +Task<ConsumptionLog?> GetDailyLogAsync(Guid userId, LogDate date)
-    +Task<List<ConsumptionLog>> GetLogsInRangeAsync(Guid userId, LogDate from, LogDate to)
-  }
-}
-
-package "NutriSense.NutritionTracking.Interfaces.REST" {
-  class "«Controller»\nConsumptionLogController" as ConsumptionLogController {
-    -NutritionTrackingAppService _service
-    +ConsumptionLogController(NutritionTrackingAppService service)
-    +Task<IActionResult> LogFood(LogFoodRequest request)
-    +Task<IActionResult> UpdateEntry(Guid entryId, UpdateEntryRequest request)
-    +Task<IActionResult> RemoveEntry(Guid logId, Guid entryId)
-    +Task<IActionResult> GetDailyLog(Guid userId, DateOnly date)
-  }
-
-  class "«Assembler»\nConsumptionLogAssembler" as ConsumptionLogAssembler {
-    +static FoodEntry ToEntityFromRequest(LogFoodRequest request)
-    +static DailyLogResponse ToResponseFromEntity(ConsumptionLog log)
+    class OpenFoodFactsClient {
+      -httpClient: HttpClient
+      +SearchFood(query: String): List<FoodItem>
+      +GetFoodById(fdcId: String): FoodItem
+    }
   }
 }
 
 ' Relationships
-ConsumptionLog *-- "1..*" FoodEntry : contains >
-ConsumptionLog *-- LogDate : for >
-FoodEntry *-- FoodId : identifies >
-FoodEntry *-- Quantity : has >
-FoodEntry *-- NutritionalInfo : provides >
-ConsumptionLog ..> MacroSummary : computes >
-ConsumptionLog ..> ConsumptionUpdatedEvent : raises >
-IConsumptionLogRepository ..> ConsumptionLog : manages >
-NutritionTrackingAppService --> IConsumptionLogRepository : uses >
-NutritionTrackingAppService ..> ConsumptionUpdatedEvent : publishes >
-ConsumptionLogController --> NutritionTrackingAppService : uses >
-ConsumptionLogAssembler ..> FoodEntry : creates >
-ConsumptionLogAssembler ..> ConsumptionLog : uses >
+NutritionController --> INutritionCommandService : uses
+NutritionController --> INutritionQueryService : uses
+NutritionController --> NutritionLogAssembler : uses
+NutritionCommandServiceImpl ..|> INutritionCommandService
+NutritionCommandServiceImpl --> INutritionLogRepository : uses
+NutritionCommandServiceImpl --> IGoogleVisionClient : uses
+NutritionLogRepositoryImpl ..|> INutritionLogRepository
+GoogleVisionClientImpl ..|> IGoogleVisionClient
+NutritionLog *--> Meal : contains "0..*"
+Meal --> MacroNutrients : has "1"
+Meal --> MealType : has "1"
+NutritionLog --> MealLoggedEvent : fires "0..*"
 
 @enduml

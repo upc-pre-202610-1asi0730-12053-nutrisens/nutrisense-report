@@ -1,125 +1,161 @@
-@startuml NutriSense - Smart Recommendations (Backend)
+@startuml NutriSense - Smart Recommendations Backend Class Diagram
 
-package "NutriSense.SmartRecs.Domain.Model.Aggregates" {
-  class "«Aggregate Root»\nRecommendationSet" as RecommendationSet {
-    -Guid _id
-    -Guid _userId
-    -RecommendationContext _context
-    -List<FoodRecommendation> _items
-    -DateTime _generatedAt
-    -bool _wasApplied
-    -- methods --
-    +RecommendationSet(Guid userId, RecommendationContext context)
-    +void AddRecommendation(FoodRecommendation item)
-    +void MarkAsApplied()
-    +List<FoodRecommendation> GetTopN(int n)
-    +RecommendationGeneratedEvent RaiseGeneratedEvent()
-  }
-}
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
 
-package "NutriSense.SmartRecs.Domain.Model.Entities" {
-  class FoodRecommendation {
-    -Guid _id
-    -string _foodName
-    -NutritionalReason _reason
-    -decimal _matchScore
-    -string _externalFoodId
-    +FoodRecommendation(string foodName, NutritionalReason reason, decimal score, string externalId)
-    +Guid GetId()
-    +decimal GetMatchScore()
-    +NutritionalReason GetReason()
-  }
-}
+package "NutriSense.SmartRecommendations" {
 
-package "NutriSense.SmartRecs.Domain.Model.ValueObjects" {
-  class "«Value Object»\nRecommendationContext" as RecommendationContext {
-    -decimal _calorieBudget
-    -decimal _proteinDeficit
-    -WeatherCondition _weather
-    -TimeOfDay _timeOfDay
-    +RecommendationContext(decimal calorieBudget, decimal proteinDeficit, WeatherCondition weather, TimeOfDay time)
-    +decimal GetCalorieBudget()
-    +WeatherCondition GetWeather()
-    +TimeOfDay GetTimeOfDay()
+  package "Interfaces.REST" {
+    class RecommendationsController {
+      -recsCommandService: IRecsCommandService
+      -recsQueryService: IRecsQueryService
+      +GetRecommendations(userId: Guid, travelMode: Boolean): IActionResult
+      +PostGenerateRecommendation(request: GenerateRecsRequest): IActionResult
+      +GetPantryItems(userId: Guid): IActionResult
+      +PostPantryItem(request: AddPantryItemRequest): IActionResult
+      +DeletePantryItem(itemId: Guid): IActionResult
+    }
+
+    class GenerateRecsRequest {
+      +UserId: Guid
+      +TravelMode: Boolean
+      +Latitude: Decimal
+      +Longitude: Decimal
+    }
+
+    class RecommendationResponse {
+      +Id: Guid
+      +Title: String
+      +Description: String
+      +MealSuggestions: List<MealSuggestionDto>
+      +RecommendationType: String
+      +GeneratedAt: DateTime
+    }
+
+    class RecommendationAssembler {
+      +{static} ToResponseFromEntity(rec: RecommendationEngine): RecommendationResponse
+    }
   }
 
-  class "«Value Object»\nNutritionalReason" as NutritionalReason {
-    -string _code
-    -string _description
-    +NutritionalReason(string code, string description)
-    +string GetCode()
-    +string GetDescription()
+  package "Application" {
+    interface IRecsCommandService {
+      +Handle(command: GenerateRecommendationCommand): RecommendationResponse
+      +Handle(command: AddPantryItemCommand): PantryItemResponse
+      +Handle(command: RemovePantryItemCommand): void
+    }
+
+    interface IRecsQueryService {
+      +Handle(query: GetRecommendationsQuery): List<RecommendationResponse>
+    }
+
+    class RecsCommandServiceImpl {
+      -recsRepository: IRecommendationRepository
+      -weatherClient: IWeatherApiClient
+      -geolocationService: IGeolocationService
+      +Handle(command: GenerateRecommendationCommand): RecommendationResponse
+      +Handle(command: AddPantryItemCommand): PantryItemResponse
+    }
+
+    class GenerateRecommendationCommand {
+      +UserId: Guid
+      +TravelMode: Boolean
+      +Location: GeoCoordinates
+    }
   }
 
-  enum WeatherCondition {
-    Hot
-    Cold
-    Rainy
-    Neutral
+  package "Domain" {
+    class RecommendationEngine {
+      +Id: Guid
+      +UserId: Guid
+      -rules: List<RecommendationRule>
+      -pantryItems: List<PantryItem>
+      +GenerateRecommendation(context: WeatherContext, goal: GoalType): Recommendation
+      +AddPantryItem(item: PantryItem): void
+      +RemovePantryItem(itemId: Guid): void
+    }
+
+    class Recommendation {
+      +Id: Guid
+      +Title: String
+      +Description: String
+      +MealSuggestions: List<MealSuggestion>
+      +Type: RecommendationType
+      +GeneratedAt: DateTime
+    }
+
+    class WeatherContext {
+      +TemperatureCelsius: Decimal
+      +Humidity: Decimal
+      +Condition: String
+      +City: String
+    }
+
+    class GeoCoordinates {
+      +Latitude: Decimal
+      +Longitude: Decimal
+    }
+
+    class PantryItem {
+      +Id: Guid
+      +Name: String
+      +Quantity: Decimal
+      +Unit: String
+      +ExpiresAt: DateOnly
+    }
+
+    enum RecommendationType {
+      WEATHER_BASED
+      GOAL_BASED
+      TRAVEL_MODE
+      PANTRY_BASED
+    }
+
+    class RecommendationGeneratedEvent {
+      +EngineId: Guid
+      +UserId: Guid
+      +Type: RecommendationType
+      +OccurredOn: DateTime
+    }
+
+    interface IRecommendationRepository {
+      +FindByUserId(userId: Guid): RecommendationEngine
+      +Save(engine: RecommendationEngine): void
+      +Update(engine: RecommendationEngine): void
+    }
   }
 
-  enum TimeOfDay {
-    Breakfast
-    Lunch
-    Dinner
-    Snack
-  }
-}
+  package "Infrastructure" {
+    class RecommendationRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): RecommendationEngine
+      +Save(engine: RecommendationEngine): void
+      +Update(engine: RecommendationEngine): void
+    }
 
-package "NutriSense.SmartRecs.Domain.Model.Events" {
-  class "«Domain Event»\nRecommendationGeneratedEvent" as RecommendationGeneratedEvent {
-    +Guid SetId
-    +Guid UserId
-    +int ItemCount
-    +DateTime OccurredOn
-  }
-}
+    interface IWeatherApiClient {
+      +GetWeatherByCoordinates(coords: GeoCoordinates): WeatherContext
+    }
 
-package "NutriSense.SmartRecs.Domain.Repositories" {
-  interface "«Repository»\nIRecommendationSetRepository" as IRecommendationSetRepository {
-    +Task<RecommendationSet?> FindLatestByUserIdAsync(Guid userId)
-    +Task SaveAsync(RecommendationSet set)
-    +Task<List<RecommendationSet>> FindByUserInRangeAsync(Guid userId, DateTime from, DateTime to)
-  }
-}
-
-package "NutriSense.SmartRecs.Application.Services" {
-  class "«Application Service»\nRecommendationAppService" as RecommendationAppService {
-    -IRecommendationSetRepository _repository
-    -IWeatherContextService _weatherService
-    -IFoodDataService _foodDataService
-    +RecommendationAppService(IRecommendationSetRepository repo, IWeatherContextService weather, IFoodDataService food)
-    +Task<RecommendationSet> GenerateRecommendationsAsync(GenerateRecsCommand cmd)
-    +Task<RecommendationSet?> GetLatestRecommendationsAsync(Guid userId)
-  }
-}
-
-package "NutriSense.SmartRecs.Interfaces.REST" {
-  class "«Controller»\nRecommendationController" as RecommendationController {
-    -RecommendationAppService _service
-    +RecommendationController(RecommendationAppService service)
-    +Task<IActionResult> GenerateRecommendations(GenerateRecsRequest request)
-    +Task<IActionResult> GetLatestRecommendations(Guid userId)
-  }
-
-  class "«Assembler»\nRecommendationAssembler" as RecommendationAssembler {
-    +static RecommendationContext ToContextFromRequest(GenerateRecsRequest request)
-    +static RecommendationSetResponse ToResponseFromEntity(RecommendationSet set)
+    class OpenWeatherMapClientImpl {
+      -apiKey: String
+      -httpClient: HttpClient
+      +GetWeatherByCoordinates(coords: GeoCoordinates): WeatherContext
+    }
   }
 }
 
 ' Relationships
-RecommendationSet *-- RecommendationContext : has >
-RecommendationSet *-- "1..*" FoodRecommendation : contains >
-RecommendationSet ..> RecommendationGeneratedEvent : raises >
-FoodRecommendation *-- NutritionalReason : has >
-RecommendationContext --> WeatherCondition : uses >
-RecommendationContext --> TimeOfDay : uses >
-IRecommendationSetRepository ..> RecommendationSet : manages >
-RecommendationAppService --> IRecommendationSetRepository : uses >
-RecommendationAppService ..> RecommendationGeneratedEvent : publishes >
-RecommendationController --> RecommendationAppService : uses >
-RecommendationAssembler ..> RecommendationContext : creates >
-RecommendationAssembler ..> RecommendationSet : uses >
+RecommendationsController --> IRecsCommandService : uses
+RecommendationsController --> IRecsQueryService : uses
+RecommendationsController --> RecommendationAssembler : uses
+RecsCommandServiceImpl ..|> IRecsCommandService
+RecsCommandServiceImpl --> IRecommendationRepository : uses
+RecsCommandServiceImpl --> IWeatherApiClient : uses
+RecommendationRepositoryImpl ..|> IRecommendationRepository
+OpenWeatherMapClientImpl ..|> IWeatherApiClient
+RecommendationEngine *--> PantryItem : contains "0..*"
+RecommendationEngine --> Recommendation : generates "0..*"
+Recommendation --> RecommendationType : has "1"
+RecommendationEngine --> RecommendationGeneratedEvent : fires "0..*"
 
 @enduml

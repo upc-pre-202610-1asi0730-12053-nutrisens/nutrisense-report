@@ -1,116 +1,125 @@
-@startuml NutriSense - Body & Health Metrics Frontend (Vue)
+@startuml NutriSense - Body & Health Metrics Frontend Class Diagram
 
-package "body-metrics" {
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "body" {
 
   package "domain.model" {
-    class HealthProfileData {
-      +userId: String
-      +biologicalSex: String
-      +dateOfBirth: String
-      +heightCm: Number
-      +currentWeightKg: Number
-      +goal: String
-      +activityLevel: String
-      +bmi: Number
-      +bmiCategory: String
-      +tdeeKcal: Number
-      +dailyCalorieTarget: Number
-      +getBmiCategory(): String
-    }
-
-    class WeightEntry {
+    class BodyMetrics {
       +id: String
+      +userId: String
       +weightKg: Number
-      +recordedOn: String
+      +heightCm: Number
+      +bodyFatPercentage: Number
+      +recordedAt: String
+      +calculateBMI(): Number
+      +getBMICategory(): String
+    }
+
+    class HealthGoal {
+      +id: String
+      +userId: String
+      +goalType: GoalType
+      +targetWeightKg: Number
+      +targetDate: String
+      +isActive: Boolean
+      +calculateProgress(current: Number): Number
+    }
+
+    class TDEEResult {
+      +bmr: Number
+      +tdee: Number
+      +activityLevel: ActivityLevel
+      +proteinTarget: Number
+      +carbsTarget: Number
+      +fatTarget: Number
+    }
+
+    enum GoalType {
+      LOSE_WEIGHT
+      GAIN_MUSCLE
+      MAINTAIN
+    }
+
+    enum ActivityLevel {
+      SEDENTARY
+      LIGHT
+      MODERATE
+      ACTIVE
+      VERY_ACTIVE
     }
   }
 
-  package "application.services" {
-    class "«Service»\nBodyMetricsApiService" as BodyMetricsApiService {
-      -baseUrl: String
-      +getHealthProfile(userId: String): Promise<HealthProfileData>
-      +initializeProfile(request: Object): Promise<HealthProfileData>
-      +recordWeight(request: Object): Promise<WeightEntry>
-      +updateGoal(request: Object): Promise<HealthProfileData>
-      +getWeightHistory(userId: String): Promise<WeightEntry[]>
+  package "application" {
+    class BodyMetricsStore {
+      -currentMetrics: BodyMetrics
+      -goalHistory: HealthGoal[]
+      -tdeeResult: TDEEResult
+      -loading: Boolean
+      +fetchLatestMetrics(userId: String): Promise<void>
+      +recordMetrics(data: Object): Promise<void>
+      +fetchGoals(userId: String): Promise<void>
+      +setGoal(goal: Object): Promise<void>
+      +calculateTDEE(metrics: Object): Promise<void>
+      +fetchWeightHistory(userId: String): Promise<BodyMetrics[]>
     }
   }
 
-  package "infrastructure.stores" {
-    class "«Store»\nUseBodyMetricsStore" as UseBodyMetricsStore {
-      -profile: HealthProfileData
-      -weightHistory: WeightEntry[]
-      -isLoading: Boolean
-      +loadProfile(userId): Promise<void>
-      +initializeProfile(request): Promise<void>
-      +recordWeight(weightKg): Promise<void>
-      +updateGoal(goal): Promise<void>
+  package "infrastructure" {
+    class BodyApiService {
+      -httpClient: AxiosInstance
+      +getLatestMetrics(userId: String): Promise<BodyMetrics>
+      +postMetrics(data: Object): Promise<BodyMetrics>
+      +getGoals(userId: String): Promise<HealthGoal[]>
+      +postGoal(data: Object): Promise<HealthGoal>
+      +postCalculateTDEE(data: Object): Promise<TDEEResult>
+      +getWeightHistory(userId: String): Promise<BodyMetrics[]>
     }
   }
 
   package "presentation.components" {
-    class "«Component»\nBmiGauge" as BmiGauge {
-      +bmiValue: Number
-      +bmiCategory: String
+    class "«Component»\nBodyMetricsView" as BodyMetricsView {
+      -showForm: Boolean
+      +openMetricsForm(): void
+      +saveMetrics(): void
     }
 
     class "«Component»\nWeightHistoryChart" as WeightHistoryChart {
-      +history: WeightEntry[]
-      +goalWeightKg: Number
+      +history: BodyMetrics[]
+      +renderLineChart(): void
+      +filterByRange(range: String): void
     }
 
-    class "«Component»\nCalorieTargetCard" as CalorieTargetCard {
-      +dailyTarget: Number
-      +tdee: Number
-      +goal: String
-    }
-
-    class "«Component»\nRecordWeightForm" as RecordWeightForm {
-      -weightKg: Number
-      -errorMessage: String
-      -- methods --
-      +submitWeight(): void
+    class "«Component»\nGoalSetupForm" as GoalSetupForm {
+      -goalType: GoalType
+      -targetWeight: Number
+      -targetDate: String
+      +submitGoal(): void
+      +validateForm(): Boolean
       -- emits --
-      weight-recorded(entry: Object)
+      goal-set(goal: Object)
     }
 
-    class "«Component»\nProfileSetupForm" as ProfileSetupForm {
-      -sex: String
-      -dateOfBirth: String
-      -heightCm: Number
-      -weightKg: Number
-      -goal: String
-      -activityLevel: String
-      -errorMessage: String
-      -- methods --
-      +submitProfile(): void
-      -- emits --
-      profile-initialized(profile: Object)
+    class "«Component»\nTDEECalculatorView" as TDEECalculatorView {
+      -activityLevel: ActivityLevel
+      +calculateTDEE(): void
+      +displayResults(result: TDEEResult): void
     }
   }
-
-  package "presentation.pages" {
-    class "«Component»\nHealthDashboardPage" as HealthDashboardPage {
-      -store: UseBodyMetricsStore
-      +handleWeightRecorded(entry: Object): void
-    }
-  }
-
 }
 
 ' Relationships
-HealthProfileData *-- "0..*" WeightEntry : history >
-UseBodyMetricsStore --> BodyMetricsApiService : calls >
-UseBodyMetricsStore --> HealthProfileData : manages >
-HealthDashboardPage *-- BmiGauge : contains >
-HealthDashboardPage *-- WeightHistoryChart : contains >
-HealthDashboardPage *-- CalorieTargetCard : contains >
-HealthDashboardPage *-- RecordWeightForm : contains >
-HealthDashboardPage --> UseBodyMetricsStore : uses >
-BmiGauge --> HealthProfileData : reads >
-WeightHistoryChart --> WeightEntry : renders >
-CalorieTargetCard --> HealthProfileData : reads >
-RecordWeightForm -up-> HealthDashboardPage : emits weight-recorded
-ProfileSetupForm ..> UseBodyMetricsStore : uses >
+BodyMetricsStore --> BodyApiService : uses
+BodyMetricsStore --> BodyMetrics : manages "0..1"
+BodyMetricsStore --> HealthGoal : manages "0..*"
+BodyMetricsStore --> TDEEResult : manages "0..1"
+BodyMetrics --> GoalType : references
+HealthGoal --> GoalType : has "1"
+TDEEResult --> ActivityLevel : has "1"
+BodyMetricsView --> BodyMetricsStore : uses
+WeightHistoryChart --> BodyMetrics : displays "0..*"
+GoalSetupForm --> BodyMetricsStore : uses
+TDEECalculatorView --> BodyMetricsStore : uses
 
 @enduml

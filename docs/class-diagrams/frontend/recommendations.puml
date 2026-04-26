@@ -1,85 +1,119 @@
-@startuml NutriSense - Smart Recommendations Frontend (Vue)
+@startuml NutriSense - Smart Recommendations Frontend Class Diagram
 
-package "smart-recommendations" {
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "recommendations" {
 
   package "domain.model" {
-    class RecommendationItem {
+    class Recommendation {
       +id: String
-      +foodName: String
-      +reason: String
-      +reasonCode: String
-      +matchScore: Number
-      +externalFoodId: String
-    }
-
-    class RecommendationSetData {
-      +setId: String
+      +userId: String
+      +title: String
+      +description: String
+      +mealSuggestions: MealSuggestion[]
+      +context: WeatherContext
       +generatedAt: String
-      +contextSummary: String
-      +items: RecommendationItem[]
-      +getTopItems(n: Number): RecommendationItem[]
+      +recommendationType: RecommendationType
+    }
+
+    class MealSuggestion {
+      +name: String
+      +calories: Number
+      +ingredients: String[]
+      +preparationTime: Number
+      +isTravelFriendly: Boolean
+    }
+
+    class WeatherContext {
+      +temperature: Number
+      +humidity: Number
+      +condition: String
+      +city: String
+      +feelsLike: Number
+    }
+
+    class PantryItem {
+      +id: String
+      +name: String
+      +quantity: Number
+      +unit: String
+      +expiresAt: String
+    }
+
+    enum RecommendationType {
+      WEATHER_BASED
+      GOAL_BASED
+      TRAVEL_MODE
+      PANTRY_BASED
     }
   }
 
-  package "application.services" {
-    class "«Service»\nRecommendationApiService" as RecommendationApiService {
-      -baseUrl: String
-      +generateRecommendations(userId: String): Promise<RecommendationSetData>
-      +getLatestRecommendations(userId: String): Promise<RecommendationSetData>
+  package "application" {
+    class RecommendationsStore {
+      -recommendations: Recommendation[]
+      -weatherContext: WeatherContext
+      -pantryItems: PantryItem[]
+      -loading: Boolean
+      -travelMode: Boolean
+      +fetchRecommendations(userId: String): Promise<void>
+      +fetchWeatherContext(): Promise<void>
+      +toggleTravelMode(active: Boolean): void
+      +fetchPantryItems(userId: String): Promise<void>
+      +addPantryItem(item: Object): Promise<void>
+      +removePantryItem(itemId: String): Promise<void>
     }
   }
 
-  package "infrastructure.stores" {
-    class "«Store»\nUseRecommendationStore" as UseRecommendationStore {
-      -recommendationSet: RecommendationSetData
-      -isLoading: Boolean
-      -errorMessage: String
-      +loadLatestRecommendations(userId): Promise<void>
-      +refreshRecommendations(userId): Promise<void>
+  package "infrastructure" {
+    class RecommendationsApiService {
+      -httpClient: AxiosInstance
+      +getRecommendations(userId: String, travelMode: Boolean): Promise<Recommendation[]>
+      +getWeatherContext(lat: Number, lon: Number): Promise<WeatherContext>
+      +getPantryItems(userId: String): Promise<PantryItem[]>
+      +postPantryItem(data: Object): Promise<PantryItem>
+      +deletePantryItem(itemId: String): Promise<void>
     }
   }
 
   package "presentation.components" {
+    class "«Component»\nRecommendationsView" as RecommendationsView {
+      -travelModeEnabled: Boolean
+      +loadRecommendations(): void
+      +toggleTravelMode(): void
+    }
+
     class "«Component»\nRecommendationCard" as RecommendationCard {
-      +item: RecommendationItem
-      -- emits --
-      add-to-log(food: Object)
+      +recommendation: Recommendation
+      +expanded: Boolean
+      +toggleExpand(): void
     }
 
-    class "«Component»\nRecommendationContextBanner" as RecommendationContextBanner {
-      +contextSummary: String
-      +generatedAt: String
+    class "«Component»\nWeatherWidgetComponent" as WeatherWidgetComponent {
+      +context: WeatherContext
+      +refreshWeather(): void
     }
 
-    class "«Component»\nRecommendationList" as RecommendationList {
-      +items: RecommendationItem[]
-      +isLoading: Boolean
-      -- emits --
-      add-to-log(food: Object)
-    }
-  }
-
-  package "presentation.pages" {
-    class "«Component»\nRecommendationsPage" as RecommendationsPage {
-      -store: UseRecommendationStore
-      +handleAddToLog(food: Object): void
-      +refreshRecommendations(): void
+    class "«Component»\nPantryManagerView" as PantryManagerView {
+      -newItemName: String
+      -newItemQty: Number
+      +addItem(): void
+      +removeItem(id: String): void
     }
   }
-
 }
 
 ' Relationships
-RecommendationSetData *-- "1..*" RecommendationItem : contains >
-UseRecommendationStore --> RecommendationApiService : calls >
-UseRecommendationStore --> RecommendationSetData : manages >
-RecommendationsPage *-- RecommendationContextBanner : contains >
-RecommendationsPage *-- RecommendationList : contains >
-RecommendationsPage --> UseRecommendationStore : uses >
-RecommendationList *-- "0..*" RecommendationCard : renders >
-RecommendationCard --> RecommendationItem : displays >
-RecommendationContextBanner --> RecommendationSetData : reads >
-RecommendationCard -up-> RecommendationList : emits add-to-log
-RecommendationList -up-> RecommendationsPage : emits add-to-log
+RecommendationsStore --> RecommendationsApiService : uses
+RecommendationsStore --> Recommendation : manages "0..*"
+RecommendationsStore --> WeatherContext : manages "0..1"
+RecommendationsStore --> PantryItem : manages "0..*"
+Recommendation *--> MealSuggestion : contains "0..*"
+Recommendation --> WeatherContext : contextualizes "0..1"
+Recommendation --> RecommendationType : has "1"
+RecommendationsView --> RecommendationsStore : uses
+RecommendationCard --> Recommendation : displays "1"
+WeatherWidgetComponent --> WeatherContext : displays "1"
+PantryManagerView --> RecommendationsStore : uses
 
 @enduml

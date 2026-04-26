@@ -1,95 +1,110 @@
-@startuml NutriSense - Analytics & Reporting Frontend (Vue)
+@startuml NutriSense - Analytics & Reporting Frontend Class Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
 
 package "analytics" {
 
   package "domain.model" {
-    class ProgressInsightData {
-      +insightId: String
-      +periodFrom: String
-      +periodTo: String
-      +periodType: String
-      +weightDeltaKg: Number
-      +weightTrendDirection: String
-      +averageDailyKcal: Number
-      +calorieAdherencePct: Number
-      +avgProteinPct: Number
-      +avgCarbsPct: Number
-      +avgFatPct: Number
-      +goalAdherencePct: Number
-      +goalAdherenceLabel: String
+    class ProgressReport {
+      +id: String
+      +userId: String
+      +periodStart: String
+      +periodEnd: String
+      +averageCalories: Number
+      +weightDelta: Number
+      +goalAchievementPercent: Number
+      +reportType: ReportType
+    }
+
+    class Streak {
+      +id: String
+      +userId: String
+      +streakType: StreakType
+      +currentCount: Number
+      +longestCount: Number
+      +lastUpdated: String
+      +isActive(): Boolean
+    }
+
+    class DailyBalance {
+      +date: String
+      +caloriesConsumed: Number
+      +caloriesBurned: Number
+      +netCalories: Number
+      +goalMet: Boolean
+    }
+
+    enum ReportType {
+      WEEKLY
+      MONTHLY
+      CUSTOM
+    }
+
+    enum StreakType {
+      LOGGING_STREAK
+      GOAL_STREAK
+      ACTIVITY_STREAK
     }
   }
 
-  package "application.services" {
-    class "«Service»\nAnalyticsApiService" as AnalyticsApiService {
-      -baseUrl: String
-      +getDashboard(userId: String): Promise<ProgressInsightData>
-      +getLatestInsight(userId: String): Promise<ProgressInsightData>
-      +generateInsight(userId: String, periodType: String): Promise<ProgressInsightData>
+  package "application" {
+    class AnalyticsStore {
+      -progressReport: ProgressReport
+      -streaks: Streak[]
+      -dailyBalances: DailyBalance[]
+      -loading: Boolean
+      +fetchProgressReport(userId: String, type: ReportType): Promise<void>
+      +fetchStreaks(userId: String): Promise<void>
+      +fetchDailyBalances(userId: String, range: String): Promise<void>
+      +generateWeeklyReport(userId: String): Promise<void>
     }
   }
 
-  package "infrastructure.stores" {
-    class "«Store»\nUseAnalyticsStore" as UseAnalyticsStore {
-      -insight: ProgressInsightData
-      -isLoading: Boolean
-      +loadDashboard(userId): Promise<void>
-      +generateInsight(userId, periodType): Promise<void>
+  package "infrastructure" {
+    class AnalyticsApiService {
+      -httpClient: AxiosInstance
+      +getProgressReport(userId: String, type: String): Promise<ProgressReport>
+      +getStreaks(userId: String): Promise<Streak[]>
+      +getDailyBalances(userId: String, from: String, to: String): Promise<DailyBalance[]>
+      +postGenerateReport(userId: String, type: String): Promise<ProgressReport>
     }
   }
 
   package "presentation.components" {
-    class "«Component»\nWeightProgressChart" as WeightProgressChart {
-      +deltaKg: Number
-      +trendDirection: String
-      +periodLabel: String
+    class "«Component»\nDashboardView" as DashboardView {
+      +loadDashboardData(): void
+      +selectDateRange(range: String): void
     }
 
-    class "«Component»\nMacroDistributionChart" as MacroDistributionChart {
-      +proteinPct: Number
-      +carbsPct: Number
-      +fatPct: Number
+    class "«Component»\nProgressChartsView" as ProgressChartsView {
+      +renderWeightChart(): void
+      +renderCalorieChart(): void
+      +renderMacroChart(): void
     }
 
-    class "«Component»\nCalorieAdherenceMeter" as CalorieAdherenceMeter {
-      +adherencePct: Number
-      +averageDailyKcal: Number
+    class "«Component»\nStreakBadgeComponent" as StreakBadgeComponent {
+      +streak: Streak
+      +getIcon(): String
     }
 
-    class "«Component»\nGoalAdherenceBadge" as GoalAdherenceBadge {
-      +adherencePct: Number
-      +label: String
-    }
-
-    class "«Component»\nPeriodSelector" as PeriodSelector {
-      -selectedPeriod: String
-      -- emits --
-      period-changed(period: String)
+    class "«Component»\nWeeklyReportCard" as WeeklyReportCard {
+      +report: ProgressReport
+      +downloadReport(): void
     }
   }
-
-  package "presentation.pages" {
-    class "«Component»\nAnalyticsDashboardPage" as AnalyticsDashboardPage {
-      -store: UseAnalyticsStore
-      +handlePeriodChanged(period: String): void
-    }
-  }
-
 }
 
 ' Relationships
-UseAnalyticsStore --> AnalyticsApiService : calls >
-UseAnalyticsStore --> ProgressInsightData : manages >
-AnalyticsDashboardPage *-- WeightProgressChart : contains >
-AnalyticsDashboardPage *-- MacroDistributionChart : contains >
-AnalyticsDashboardPage *-- CalorieAdherenceMeter : contains >
-AnalyticsDashboardPage *-- GoalAdherenceBadge : contains >
-AnalyticsDashboardPage *-- PeriodSelector : contains >
-AnalyticsDashboardPage --> UseAnalyticsStore : uses >
-WeightProgressChart --> ProgressInsightData : reads >
-MacroDistributionChart --> ProgressInsightData : reads >
-CalorieAdherenceMeter --> ProgressInsightData : reads >
-GoalAdherenceBadge --> ProgressInsightData : reads >
-PeriodSelector -up-> AnalyticsDashboardPage : emits period-changed
+AnalyticsStore --> AnalyticsApiService : uses
+AnalyticsStore --> ProgressReport : manages "0..1"
+AnalyticsStore --> Streak : manages "0..*"
+AnalyticsStore --> DailyBalance : manages "0..*"
+ProgressReport --> ReportType : has "1"
+Streak --> StreakType : has "1"
+DashboardView --> AnalyticsStore : uses
+ProgressChartsView --> DailyBalance : visualizes "0..*"
+StreakBadgeComponent --> Streak : displays "1"
+WeeklyReportCard --> ProgressReport : displays "1"
 
 @enduml
