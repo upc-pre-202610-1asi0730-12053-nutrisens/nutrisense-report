@@ -35,6 +35,18 @@ Abril, 2026
 
 | Versión | Fecha | Autor | Descripción de modificación |
 | :---: | :---: | :---: | :---: |
+| 0.1.0 | 04/04/2026 | Angel Villarreal | Commit inicial; estructura base del repositorio y esquemas de todos los capítulos (`main`) |
+| 0.2.0 | 04/06/2026 – 04/08/2026 | Rose Vergaray | Reorganización de carpetas, renombre de archivos, logo del proyecto y perfil de Rose Vergaray (`feature/report-restructure`) |
+| 0.3.0 | 04/10/2026 | Angel Villarreal | Adición de subcapítulos 1.1.1, 1.2.1, 1.2.2 y 1.3; perfil de Angel Villarreal (`feature/chapter1-student-profile`) |
+| 0.4.0 | 04/13/2026 | Olenka Del Aguila / Rose Vergaray / Joel Mora | Perfiles de Olenka Del Aguila y Joel Mora; plantilla de tablas de entrevistas (`feature/readme`) |
+| 0.5.0 | 04/14/2026 | Angela Espinoza | Perfil de Angela Espinoza en capítulo 1 (`feature/chapter2-needfinding`) |
+| 0.6.0 | 04/15/2026 | Angel Villarreal / Joel Mora / Rose Vergaray | Cap. 2.1 (competidores, estrategias); cap. 4.6–4.6.2 (C4, EventStorming); entrevistas seg. 2 (`feature/chapter2-competitors`, `feature/chapter4-ddd`) |
+| 0.7.0 | 04/16/2026 – 04/17/2026 | Joel Mora | Subcapítulos 4.6.3, 4.6.4 y 4.7; sincronización README en múltiples ramas; actualización de EventStorming (`feature/student-outcome`, `feature/chapter4-ood`) |
+| 0.8.0 | 04/19/2026 – 04/20/2026 | Angel Villarreal | Style guidelines web (tipografía, colores, SEO/meta tags, etiquetado, navegación) (`feature/chapter4-style-guidelines`, `feature/chapter4-information-architecture`) |
+| 0.9.0 | 04/21/2026 | Angel Villarreal | Sprint Planning 1, Sprint Backlog 1 y evidencia de ejecución del Sprint 1 (`feature/chapter5-sprint1`) |
+| 0.10.0 | 04/22/2026 – 04/23/2026 | Todos los integrantes | Cap. 2 (needfinding, personas, journey mapping, EventStorming), cap. 3 (user stories, impact maps, product backlog), cap. 4 (wireframes y mockups), cap. 5 (subcapítulos 5.1–5.2, configuración de entornos) (`feature/chapter2-needfinding`, `feature/chapter3`, `feature/chapter4-ui`, `feature/chapter5-*`) |
+| 0.11.0 | 04/24/2026 | Angel Villarreal / Olenka Del Aguila | Conclusiones, bibliografía y anexos; corrección de wireflows y referencias (`feature/final-sections`, `feature/chapter4-wireframes`) |
+| 1.0.0 | 04/25/2026 | Angel Villarreal | AV1 Report |
 
 <div style="page-break-after: always"></div>
 
@@ -211,5 +223,11 @@ Repositorio del informe del proyecto en GitHub: [nutrisense-report](https://gith
   - [5.3.3. Evaluaciones según heurísticas](./report/15-chapter5-product-implementation.md#533-evaluaciones-según-heurísticas)
 
 - [5.4. Video About-the-Product](./report/15-chapter5-product-implementation.md#54-video-about-the-product)
+
+[Conclusiones](./report/28-conclusions.md)
+
+[Bibliografía](./report/29-bibliography.md)
+
+[Anexos](./report/30-annexes.md)
 
 <div style="page-break-after: always"></div>
