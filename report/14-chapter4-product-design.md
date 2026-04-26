@@ -1517,28 +1517,28 @@ El diagrama a continuación presenta el modelo entidad-relación físico de Nutr
 
 **Identity & Access Management**
 
-![IAM Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/refs/heads/feature/diagrams/docs/database-diagrams/iam.puml)
+![IAM Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/iam.puml)
 
 **Nutrition**
 
-![Nutrition Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/refs/heads/feature/diagrams/docs/database-diagrams/nutrition.puml)
+![Nutrition Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/nutrition.puml)
 
 **Body-metrics**
 
-![Body-metrics Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/refs/heads/feature/diagrams/docs/database-diagrams/body.puml)
+![Body-metrics Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/body.puml)
 
 **Recommendations**
 
-![Recommendations Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/refs/heads/feature/diagrams/docs/database-diagrams/smart.puml)
+![Recommendations Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/smart.puml)
 
 **Activity**
 
-![Activity Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/refs/heads/feature/diagrams/docs/database-diagrams/activity.puml)
+![Activity Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/activity.puml)
 
 **Analytics**
 
-![Analytics Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/refs/heads/feature/diagrams/docs/database-diagrams/analytics.puml)
+![Analytics Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/analytics.puml)
 
 **Billing**
 
-![Billing Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/refs/heads/feature/diagrams/docs/database-diagrams/billing.puml)
+![Billing Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/billing.puml)
