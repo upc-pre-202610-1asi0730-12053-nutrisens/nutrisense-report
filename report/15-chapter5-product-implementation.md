@@ -219,6 +219,8 @@ Durante este sprint se realizó el despliegue de la landing page de NutriSmart e
 
 Se creó el repositorio público `nutrisense-website` bajo la organización `upc-pre-202610-1asi0730-12053-nutrisens` en GitHub. Este repositorio centraliza todo el código fuente de la landing page y sirve como base para el despliegue continuo.
 
+![Imagen Github Repository](../assets/img/sprint1/repository.png)
+
 ##### Configuración de ramas bajo Gitflow
 
 Se estableció la estructura de ramas siguiendo Gitflow:
