@@ -247,11 +247,17 @@ Para habilitar el despliegue se siguieron los pasos:
 
 GitHub Pages procesó el contenido de la rama `main` y generó automáticamente la URL de despliegue.
 
+![Imagen Github Pages](../assets/img/sprint1/githubpages.png)
+
 ##### URL de despliegue
 
 La landing page quedó disponible públicamente en: [Landing Page](https://upc-pre-202610-1asi0730-12053-nutrisens.github.io/nutrisense-website/index.html)
 
 #### 5.2.1.8. Team Collaboration Insights during Sprint
+
+Durante el Sprint, todos los miembros del equipo participaron activamente en las actividades de implementación, tal como se refleja en los analíticos de colaboración de GitHub. Como se puede observar en la gráfica de contribuciones, los integrantes Nevatrix, xJoelFMRx, olenkisha14, Emy127 y Roseal28 realizaron commits de manera constante. Cada miembro aportó al desarrollo del Sprint.
+
+![Insight](../assets/img/sprint1/insight.png)
 
 ## 5.3. Validation Interviews
 
