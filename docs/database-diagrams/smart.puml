@@ -1,0 +1,85 @@
+@startuml NutriSense - Smart Recommendations Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(recommendation_engines, "recommendation_engines") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(user_id) : UUID NOT NULL
+  travel_mode_active : BOOLEAN NOT NULL DEFAULT FALSE
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(recommendations, "recommendations") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(engine_id) : UUID NOT NULL
+  title : VARCHAR(255) NOT NULL
+  description : TEXT NOT NULL
+  recommendation_type : VARCHAR(20) NOT NULL
+    CHECK (recommendation_type IN
+      ('WEATHER_BASED','GOAL_BASED','TRAVEL_MODE','PANTRY_BASED'))
+  weather_temperature_celsius : NUMERIC(5,2)
+  weather_humidity : NUMERIC(5,2)
+  weather_condition : VARCHAR(100)
+  weather_city : VARCHAR(150)
+  generated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(meal_suggestions, "meal_suggestions") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(recommendation_id) : UUID NOT NULL
+  name : VARCHAR(255) NOT NULL
+  calories_kcal : NUMERIC(8,2) NOT NULL
+  preparation_time_min : INT
+  is_travel_friendly : BOOLEAN NOT NULL DEFAULT FALSE
+}
+
+TABLE(meal_suggestion_ingredients, "meal_suggestion_ingredients") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(meal_suggestion_id) : UUID NOT NULL
+  ingredient_name : VARCHAR(200) NOT NULL
+  sort_order : SMALLINT NOT NULL DEFAULT 0
+}
+
+TABLE(pantry_items, "pantry_items") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(engine_id) : UUID NOT NULL
+  name : VARCHAR(200) NOT NULL
+  quantity : NUMERIC(8,2) NOT NULL CHECK (quantity >= 0)
+  unit : VARCHAR(50) NOT NULL
+  expires_at : DATE
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+' Constraints
+note right of recommendation_engines
+  UNIQUE (user_id)
+end note
+
+note right of recommendations
+  INDEX (engine_id, generated_at DESC)
+  INDEX (recommendation_type)
+end note
+
+note right of pantry_items
+  INDEX (engine_id, expires_at)
+end note
+
+' Relationships
+recommendation_engines ||--o{ recommendations : "generates\n(1 to 0..*)"
+recommendation_engines ||--o{ pantry_items : "stores\n(1 to 0..*)"
+recommendations ||--o{ meal_suggestions : "contains\n(1 to 0..*)"
+meal_suggestions ||--o{ meal_suggestion_ingredients : "has\n(1 to 0..*)"
+
+@enduml
