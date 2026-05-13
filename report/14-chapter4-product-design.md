@@ -1253,14 +1253,25 @@ Diseño Inclusivo
 La arquitectura de NutriSense se basa en Domain-Driven Design (DDD), centrando el diseño en los procesos críticos de salud y nutrición. El sistema se organiza en 7 Bounded Contexts independientes, lo que garantiza una separación clara de responsabilidades y un lenguaje común entre el equipo técnico y el negocio. Este enfoque modular permite que funcionalidades clave, como el análisis de imágenes y el motor de recomendaciones, sean altamente escalables, facilitando un mantenimiento eficiente y una evolución alineada con los requerimientos del dominio.
 
 A continuación, se identifican y describen los contextos delimitados que componen la solución:
+
+### Core Domain
+| Bounded Context | Descripción | Módulos incluidos |
+| :--- | :--- | :--- |
+| **Nutrition Tracking** | Registro y análisis de alimentos mediante logs y Smart Scan. | Nutrition Log, Smart Scan |
+| **Smart Recommendations** | Motor de sugerencias personalizadas según contexto y clima. | Recommendations Engine |
+| **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
+
+### Supporting
+| Bounded Context | Descripción | Módulos incluidos |
+| :--- | :--- | :--- |
+| **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
+| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
+| **Analytics & Reporting** | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
+
+### Generic
 | Bounded Context | Descripción | Módulos incluidos |
 | :--- | :--- | :--- |
 | **Identity & Access** | Gestión de autenticación, autorización y perfiles de usuario. | User & Auth |
-| **Nutrition Tracking** | Registro y análisis de alimentos mediante logs y Smart Scan. | Nutrition Log, Smart Scan |
-| **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
-| **Smart Recommendations** | Motor de sugerencias personalizadas según contexto y clima. | Recommendations Engine |
-| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
-| **Analytics & Reporting** | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
 | **Subscriptions & Billing** | Gestión de planes, facturación y control de features Premium. | Subscriptions |
 
 ### 4.6.1. Design-Level EventStorming
