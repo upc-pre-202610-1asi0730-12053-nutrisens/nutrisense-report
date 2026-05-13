@@ -54,6 +54,12 @@ Abril, 2026
 
 Repositorio del informe del proyecto en GitHub: [nutrisense-report](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report)
 
+Durante el desarrollo del presente Sprint, la elaboración del informe fue llevada a cabo de forma colaborativa por todos los integrantes del equipo. El trabajo se organizó distribuyendo las secciones y capítulos del informe entre los miembros, quienes realizaron sus aportes mediante commits en subramas hacia la rama develop del repositorio. Esto permitió mantener un historial claro de los cambios y garantizar la trazabilidad de cada contribución.
+
+AV1:
+
+TB1:
+
 <div style="page-break-after: always"></div>
 
 ## CONTENIDO
