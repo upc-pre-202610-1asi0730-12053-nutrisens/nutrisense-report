@@ -456,7 +456,7 @@ El Sprint 1 tuvo como único alcance la implementación del sitio web estático 
 #### 5.2.1.7. Software Deployment Evidence for Sprint Review
 
 
-Durante este sprint se realizó el despliegue de la landing page de NutriSmart en GitHub Pages. El proceso abarcó la configuración del repositorio remoto, la integración del flujo Gitflow con la rama `main` como fuente de despliegue, y la habilitación del servicio de hosting estático de GitHub. A continuación se describen los pasos realizados.
+Durante este sprint se realizó el despliegue de la landing page de NutriSense en GitHub Pages. El proceso abarcó la configuración del repositorio remoto, la integración del flujo Gitflow con la rama `main` como fuente de despliegue, y la habilitación del servicio de hosting estático de GitHub. A continuación se describen los pasos realizados.
 
 ##### Creación del repositorio en GitHub
 
