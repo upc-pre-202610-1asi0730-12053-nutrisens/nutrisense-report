@@ -1259,7 +1259,6 @@ A continuación, se identifican y describen los contextos delimitados que compon
 | :--- | :--- | :--- |
 | **Nutrition Tracking** | Registro y análisis de alimentos mediante logs y Smart Scan. | Nutrition Log, Smart Scan |
 | **Smart Recommendations** | Motor de sugerencias personalizadas según contexto y clima. | Recommendations Engine |
-| **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
 
 ### Supporting
 | Bounded Context | Descripción | Módulos incluidos |
