@@ -59,7 +59,7 @@ Repositorio del WebApp del proyecto en GitHub: [nutrisense-webapp](https://githu
 Durante el desarrollo del presente Sprint, la elaboración del informe fue llevada a cabo de forma colaborativa por todos los integrantes del equipo. El trabajo se organizó distribuyendo las secciones y capítulos del informe entre los miembros, quienes realizaron sus aportes mediante commits en subramas hacia la rama develop del repositorio. Esto permitió mantener un historial claro de los cambios y garantizar la trazabilidad de cada contribución.
 
 AV1:<br>
-![Report]()
+![Report](./assets/img/readme/insightsAV1.jpeg)
 
 TB1:<br>
 ![Report]()
