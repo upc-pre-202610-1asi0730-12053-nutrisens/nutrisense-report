@@ -118,15 +118,12 @@ Las etiquetas empleadas en NutriSense priorizan la brevedad y la claridad, evita
 | Etiqueta | Contenido que representa |
 |---|---|
 | Dashboard | Resumen diario de calorías y macros |
-| Nutrition Log | Registro de comidas por momento del día |
-| Smart Scan | Análisis visual de platos y menús |
-| Recommendations | Sugerencias contextuales (clima, viaje) |
-| Pantry | Ingredientes disponibles y recetas |
-| Body Tracking | Registro de peso, talla, BMI y TDEE |
-| Wearable| Conexión con Google Fit |
+| Nutrition Log | Registro de comidas por momento del día y Smart Scan (análisis visual de platos y menús) |
+| Recommendations | Sugerencias contextuales (clima, viaje) y Pantry (Ingredientes disponibles y recetas) |
+| Body Progress | Registro de peso, talla, BMI y TDEE |
+| Activity | Conexión con Google Fit |
 | Analytics | Historial y reportes de progreso |
-| Profile| Datos personales, restricciones, suscripción |
-| Subscriptions | Planes y facturación |
+| Profile & Settings| Datos personales, restricciones, suscripción, planes y facturación |
 
 Las etiquetas de encabezado dentro de cada módulo siguen la misma lógica de concisión: "Today's Summary", "Log a Meal", "Scan a Dish", "My Pantry", "Weekly Report". En todas las vistas se usan atributos `alt` descriptivos en imágenes e íconos para garantizar accesibilidad con lectores de pantalla.
 
