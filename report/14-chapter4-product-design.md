@@ -118,15 +118,12 @@ Las etiquetas empleadas en NutriSense priorizan la brevedad y la claridad, evita
 | Etiqueta | Contenido que representa |
 |---|---|
 | Dashboard | Resumen diario de calorías y macros |
-| Nutrition Log | Registro de comidas por momento del día |
-| Smart Scan | Análisis visual de platos y menús |
-| Recommendations | Sugerencias contextuales (clima, viaje) |
-| Pantry | Ingredientes disponibles y recetas |
-| Body Tracking | Registro de peso, talla, BMI y TDEE |
-| Wearable| Conexión con Google Fit |
+| Nutrition Log | Registro de comidas por momento del día y Smart Scan (análisis visual de platos y menús) |
+| Recommendations | Sugerencias contextuales (clima, viaje) y Pantry (Ingredientes disponibles y recetas) |
+| Body Progress | Registro de peso, talla, BMI y TDEE |
+| Activity | Conexión con Google Fit |
 | Analytics | Historial y reportes de progreso |
-| Profile| Datos personales, restricciones, suscripción |
-| Subscriptions | Planes y facturación |
+| Profile & Settings| Datos personales, restricciones, suscripción, planes y facturación |
 
 Las etiquetas de encabezado dentro de cada módulo siguen la misma lógica de concisión: "Today's Summary", "Log a Meal", "Scan a Dish", "My Pantry", "Weekly Report". En todas las vistas se usan atributos `alt` descriptivos en imágenes e íconos para garantizar accesibilidad con lectores de pantalla.
 
@@ -1253,14 +1250,24 @@ Diseño Inclusivo
 La arquitectura de NutriSense se basa en Domain-Driven Design (DDD), centrando el diseño en los procesos críticos de salud y nutrición. El sistema se organiza en 7 Bounded Contexts independientes, lo que garantiza una separación clara de responsabilidades y un lenguaje común entre el equipo técnico y el negocio. Este enfoque modular permite que funcionalidades clave, como el análisis de imágenes y el motor de recomendaciones, sean altamente escalables, facilitando un mantenimiento eficiente y una evolución alineada con los requerimientos del dominio.
 
 A continuación, se identifican y describen los contextos delimitados que componen la solución:
+
+### Core Domain
+| Bounded Context | Descripción | Módulos incluidos |
+| :--- | :--- | :--- |
+| **Nutrition Tracking** | Registro y análisis de alimentos mediante logs y Smart Scan. | Nutrition Log, Smart Scan |
+| **Smart Recommendations** | Motor de sugerencias personalizadas según contexto y clima. | Recommendations Engine |
+
+### Supporting
+| Bounded Context | Descripción | Módulos incluidos |
+| :--- | :--- | :--- |
+| **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
+| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
+| **Analytics & Reporting** | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
+
+### Generic
 | Bounded Context | Descripción | Módulos incluidos |
 | :--- | :--- | :--- |
 | **Identity & Access** | Gestión de autenticación, autorización y perfiles de usuario. | User & Auth |
-| **Nutrition Tracking** | Registro y análisis de alimentos mediante logs y Smart Scan. | Nutrition Log, Smart Scan |
-| **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
-| **Smart Recommendations** | Motor de sugerencias personalizadas según contexto y clima. | Recommendations Engine |
-| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
-| **Analytics & Reporting** | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
 | **Subscriptions & Billing** | Gestión de planes, facturación y control de features Premium. | Subscriptions |
 
 ### 4.6.1. Design-Level EventStorming
@@ -1284,7 +1291,7 @@ A continuación, se detalla la matriz de interdependencias que asegura la reacti
 ![EventStorming Diagram](../assets/img/artifacts/eventStorming.png)
 
 Para poder apreciar mejor el EventStorming le recomendamos ingresar al siguiente link:
-<br>[Visualizar EventStorming en Miro](https://miro.com/welcomeonboard/bE1hNUhFbkNRbmJkUjBBSzhIckJGUERwMmE4RnA2bitINitpRVRTKzBVN0loby9TL3dCMmwxK05NVUpMRWhmcll4OWd4Y21weVNaQjlhVElBNk9FQ2pqSXhvNThQV28wWnlBTXZDMFE5SXJZaSs5Y1g0UkQxWFVnL0szbFJqbzJ0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=245829839866)
+<br>[Visualizar EventStorming en Miro](https://miro.com/app/live-embed/uXjVGhe0w8o=/?embedMode=view_only_without_ui&moveToViewport=-3505%2C-10094%2C61440%2C33040&embedId=964424783628)
 
 ### 4.6.2. Software Architecture Context Diagram
 
