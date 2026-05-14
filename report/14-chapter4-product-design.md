@@ -1336,97 +1336,103 @@ El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema NutriSen
 
 ### 4.6.4. Software Architecture Components Diagrams
 
-El Diagrama de Componentes (Nivel 3 del modelo C4) describe la estructura interna de los contenedores principales de NutriSense. En esta sección se detallan los módulos lógicos, sus responsabilidades específicas y las tecnologías utilizadas para la implementación de cada componente.
+El Diagrama de Componentes (Nivel 3 del modelo C4) describe la estructura interna de los contenedores principales de NutriSense. En esta sección se detallan las 4 capas DDD de cada contenedor, sus responsabilidades específicas y las tecnologías utilizadas.
 
 **A. Single Page Application Components (Frontend)**
 
-El Single Page Application se organiza en 7 Bounded Contexts, cada uno con 4 capas siguiendo el patrón de arquitectura del Domain-Driven Design. 
+El Single Page Application se organiza en 7 Bounded Contexts, cada uno con 4 capas siguiendo el patrón de arquitectura del Domain-Driven Design. Además, se tiene un Frontend Shared con 2 capas siguiendo también el patrón de arquitectura del Domain-Driven Design.
 
-El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque, dado que Structurizr no soporta la agrupación visual por Bounded Context en las vistas de componentes.
+El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
 
-![Web Component Diagram](../assets/img/artifacts/nutrisense-WebComponentsDiagram.png)
+![Web Component Diagram](../assets/img/artifacts/nutrisense-FrontendBCsDiagram.png)
 
-Cada Bounded Context contiene una capa de Presentation con las vistas Vue, una capa de Application con los servicios JavaScript que orquestan la lógica del cliente, una capa de Domain con los modelos e interfaces, y una capa de Infrastructure con el cliente HTTP Axios que se comunica con el API Application.
+Cada Bounded Context contiene una capa de Presentation con las vistas Vue, una capa de Application con los servicios JavaScript que orquestan la lógica del cliente, una capa de Domain con los modelos e interfaces, y una capa de Infrastructure con el cliente HTTP Axios que se comunica con el API Application. Todos los BCs del frontend utilizan el Frontend Shared, que provee la clase base BaseApi, el contrato BaseEndpoint y los objetos de valor compartidos como goal-type.record y macros.record.
 
-Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context, se presenta a continuación un diagrama de detalle individual por cada uno.
+Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context y del Frontend Shared, se presenta a continuación un diagrama de detalle individual por cada uno.
+
+**Frontend Shared:**
+
+Módulo transversal utilizado por todos los Bounded Contexts del frontend que agrupa las utilidades HTTP base y los objetos de valor compartidos. No contiene lógica de negocio propia.
+
+![Frontend Shared Diagram](../assets/img/artifacts/nutrisense-FrontendSharedDiagram.png)
 
 **Bounded Contexts:**
 
  - **Identity & Access:** Gestiona las vistas de login, registro y perfil del usuario.
 
-    ![IAM Frontend Diagram](../assets/img/artifacts/nutrisense-IAMFrontendDiagram.png)
+  ![IAM Frontend Diagram](../assets/img/artifacts/nutrisense-IAMFrontendDiagram.png)
 
  - **Nutrition Tracking:** Gestiona las vistas de registro de comidas, Smart Scan y escaneo de menús.
-    
-    ![Nutrition Frontend Diagram](../assets/img/artifacts/nutrisense-NutritionFrontendDiagram.png)
+
+  ![Nutrition Frontend Diagram](../assets/img/artifacts/nutrisense-NutritionFrontendDiagram.png)
 
  - **Body & Health Metrics:** Gestiona las vistas de métricas corporales, historial de peso y objetivos de salud.
-    
-    ![Body Frontend Diagram](../assets/img/artifacts/nutrisense-BodyFrontendDiagram.png)
+
+  ![Body Frontend Diagram](../assets/img/artifacts/nutrisense-BodyFrontendDiagram.png)
 
  - **Smart Recommendations:** Gestiona las vistas de recomendaciones personalizadas, Modo Viaje y Despensa.
-    
-    ![Recs Frontend Diagram](../assets/img/artifacts/nutrisense-RecsFrontendDiagram.png)
+
+  ![Recs Frontend Diagram](../assets/img/artifacts/nutrisense-RecsFrontendDiagram.png)
 
  - **Activity & Wearable Sync:** Gestiona las vistas de registro de actividad física y sincronización con wearables.
-    
-    ![Activity Frontend Diagram](../assets/img/artifacts/nutrisense-ActivityFrontendDiagram.png)
+
+  ![Activity Frontend Diagram](../assets/img/artifacts/nutrisense-ActivityFrontendDiagram.png)
 
  - **Analytics & Reporting:** Gestiona las vistas del dashboard, gráficas de progreso y rachas.
-    
-    ![Analytics Frontend Diagram](../assets/img/artifacts/nutrisense-AnalyticsFrontendDiagram.png)
+
+  ![Analytics Frontend Diagram](../assets/img/artifacts/nutrisense-AnalyticsFrontendDiagram.png)
 
  - **Subscriptions & Billing:** Gestiona las vistas de planes de suscripción y pagos.
-    
-    ![Billing Frontend Diagram](../assets/img/artifacts/nutrisense-BillingFrontendDiagram.png)
+
+  ![Billing Frontend Diagram](../assets/img/artifacts/nutrisense-BillingFrontendDiagram.png)
 
 **B. API Application Components (Backend)**
 
-El API Application se organiza en 7 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design.
+El API Application se organiza en 7 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design. Todos los Bounded Contexts comparten una única base de datos PostgreSQL, accedida a través de los repositorios de Entity Framework Core en la capa de Infrastructure de cada uno.
 
-El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque, dado que Structurizr no soporta la agrupación visual por Bounded Context en las vistas de componentes.
+El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
 
-![API Component Diagram](../assets/img/artifacts/nutrisense-APIComponentsDiagram.png)
+![API Component Diagram](../assets/img/artifacts/nutrisense-BackendBCsDiagram.png)
 
-Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. 
+Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. Todos los BCs del backend utilizan el Shared Kernel a través de su capa Application.
 
-Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context, se presenta a continuación un diagrama de detalle individual por cada uno.
+Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context y del Shared Kernel, se presenta a continuación un diagrama de detalle individual por cada uno.
+
+**Shared Kernel:**
+
+Componente transversal utilizado por todos los Bounded Contexts del backend que agrupa clases base, interfaces compartidas y objetos de valor reutilizables. No contiene lógica de negocio propia ni acceso a base de datos.
+
+![Shared Kernel Diagram](../assets/img/artifacts/nutrisense-SharedKernelDiagram.png)
 
 **Bounded Contexts:**
 
  - **Identity & Access:** Maneja la autenticación, autorización y perfiles de usuario.
 
-    ![IAM Backend Diagram](../assets/img/artifacts/nutrisense-IAMBackendDiagram.png)
+  ![IAM Backend Diagram](../assets/img/artifacts/nutrisense-IAMBackendDiagram.png)
 
  - **Nutrition Tracking:** Gestiona el registro de comidas y el procesamiento de Smart Scan. Se integra con Google Cloud Vision y Nutrition Data Providers.
 
-    ![Nutrition Backend Diagram](../assets/img/artifacts/nutrisense-NutritionBackendDiagram.png)
+  ![Nutrition Backend Diagram](../assets/img/artifacts/nutrisense-NutritionBackendDiagram.png)
 
  - **Body & Health Metrics:** Calcula índices de salud como BMI y TDEE y registra el historial de peso.
 
-    ![Body Backend Diagram](../assets/img/artifacts/nutrisense-BodyBackendDiagram.png)
+  ![Body Backend Diagram](../assets/img/artifacts/nutrisense-BodyBackendDiagram.png)
 
  - **Smart Recommendations:** Procesa datos contextuales para generar sugerencias personalizadas. Se integra con OpenWeatherMap y Geolocation API.
 
-    ![Recs Backend Diagram](../assets/img/artifacts/nutrisense-RecsBackendDiagram.png)
+  ![Recs Backend Diagram](../assets/img/artifacts/nutrisense-RecsBackendDiagram.png)
 
  - **Activity & Wearable Sync:** Sincroniza pasos y datos de actividad desde Google Fit.
 
-    ![Activity Backend Diagram](../assets/img/artifacts/nutrisense-ActivityBackendDiagram.png)
+  ![Activity Backend Diagram](../assets/img/artifacts/nutrisense-ActivityBackendDiagram.png)
 
  - **Analytics & Reporting:** Genera gráficas de progreso, rachas y reportes del usuario.
 
-    ![Analytics Backend Diagram](../assets/img/artifacts/nutrisense-AnalyticsBackendDiagram.png)
+  ![Analytics Backend Diagram](../assets/img/artifacts/nutrisense-AnalyticsBackendDiagram.png)
 
- - **Subscriptions & Billing:** Gestiona los niveles de suscripción e integra con Stripe para el procesamiento de pagos.
+ - **Subscriptions & Billing:** Gestiona los niveles de suscripción y se integra con Stripe para el procesamiento de pagos.
 
-    ![Billing Backend Diagram](../assets/img/artifacts/nutrisense-BillingBackendDiagram.png)
-
-**Shared Kernel:**
-
-Componente transversal utilizado por todos los Bounded Contexts que agrupa clases base, interfaces compartidas y objetos de valor reutilizables. No contiene lógica de negocio propia ni acceso a base de datos.
-
-![Shared Kernel Diagram](../assets/img/artifacts/nutrisense-SharedKernelDiagram.png)
+  ![Billing Backend Diagram](../assets/img/artifacts/nutrisense-BillingBackendDiagram.png)
 
 ## 4.7. Software Object-Oriented Design
 
