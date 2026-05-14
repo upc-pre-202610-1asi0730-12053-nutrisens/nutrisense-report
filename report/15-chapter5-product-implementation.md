@@ -596,6 +596,7 @@ El Sprint 2 abarca el desarrollo de la aplicación web (Vue) de NutriSense. Los 
 #### 5.2.2.3. Sprint Backlog 2
 
 El Sprint 2 tiene como objetivo principal entregar la aplicación web Vue de NutriSense con cobertura funcional completa para los flujos de autenticación, onboarding, seguimiento nutricional, métricas corporales, dashboard, smart scan, recomendaciones, actividad física y gestión de suscripciones. El backlog contempla 41 User Stories distribuidas en 8 bounded contexts, con un total de 89 Story Points. A continuación se presenta el board del sprint en Trello y la tabla de work-items correspondiente.
+
 ![Board Sprint 2](../assets/img/sprint2/sprintbacklog.png)
 URL del Board (Trello): [URL del Board Sprint 2]
  
