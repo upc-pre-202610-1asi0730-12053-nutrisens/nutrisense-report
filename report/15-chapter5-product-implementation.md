@@ -508,12 +508,6 @@ Durante el Sprint, todos los miembros del equipo participaron activamente en las
 
 #### 5.2.2.1. Sprint Planning 2
 
-#### 5.2.2.2. Aspect Leaders and Collaborators
-
-### 5.2.2. Sprint 2
-
-#### 5.2.2.1. Sprint Planning 2
-
 <table>
   <tr>
     <th colspan="2">Sprint #</th>
@@ -559,11 +553,11 @@ Durante el Sprint, todos los miembros del equipo participaron activamente en las
   </tr>
   <tr>
     <td colspan="2">Sprint 2 Goal</td>
-    <td colspan="2">Our focus is on delivering a fully functional NutriSense web application (Vue) covering authentication, nutritional profile onboarding, nutrition tracking, body health metrics, dashboard, smart scan &amp; recommendations, activity logging, and subscription management. We believe it delivers end-to-end value to both target segments — adults seeking weight loss and young adults seeking muscle gain — by enabling them to register, configure their profile, log meals and physical activity, monitor their macros and body progress, and manage their subscription plan. This will be confirmed when users can complete the full registration-to-dashboard flow without errors, log at least one meal entry with nutritional breakdown, view their daily and weekly analytics, and subscribe to or manage an existing plan from within the application.</td>
+    <td colspan="2">Our focus is on delivering a fully functional NutriSense web application (Vue) covering authentication, nutritional profile onboarding, nutrition tracking, body health metrics, dashboard, smart scan &amp; recommendations, activity logging, and subscription management. We believe it delivers end-to-end value to both target segments, adults seeking weight loss and young adults seeking muscle gain, by enabling them to register, configure their profile, log meals and physical activity, monitor their macros and body progress, and manage their subscription plan. This will be confirmed when users can complete the full registration-to-dashboard flow without errors, log at least one meal entry with nutritional breakdown, view their daily and weekly analytics, and subscribe to or manage an existing plan from within the application.</td>
   </tr>
   <tr>
     <td colspan="2">Sprint 2 Velocity</td>
-    <td colspan="2">89 Story Points</td>
+    <td colspan="2">90 Story Points</td>
   </tr>
   <tr>
     <td colspan="2">Sum of Story Points</td>
