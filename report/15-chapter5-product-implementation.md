@@ -769,7 +769,6 @@ Durante este sprint, el equipo completó la implementación del frontend complet
 | upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `l6c7d8e` | feat: add BodyProgress view | — | 2026-05-15 |
 
 
-
 #### 5.2.2.5. Execution Evidence for Sprint Review
 
 
