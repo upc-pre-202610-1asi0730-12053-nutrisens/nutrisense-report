@@ -575,11 +575,11 @@ El Sprint 2 abarca el desarrollo de la aplicación web (Vue) de NutriSense. Los 
 
 **Body Health Metrics:** Comprende el registro de peso y talla, el cálculo de BMI/BMR/TDEE, la evolución del peso con gráfico, el monitoreo de grasa corporal y masa magra, y el objetivo de peso.
 
-**Dashboard & Analytics:** Comprende la vista de resumen diario (KPI cards, macro donut chart, streak banner), las vistas de análisis semanal y mensual de déficit calórico y balance de macros, y la exportación de reporte en PDF.
+**Dashboard & Analytics:** Comprende la vista de resumen diario (KPI cards, macro donut chart, streak banner), las vistas de análisis semanal y mensual de déficit calórico y balance de macros.
 
 **Smart Scan & Recommendations:** Comprende el escaneo de foto de plato, las recomendaciones de menú para ambos segmentos, la aplicación de restricciones dietéticas, las recomendaciones basadas en clima y modo viaje, y las sugerencias de recetas de despensa.
 
-**Activity & Wearable:** Comprende el registro manual de actividad física y la integración (scaffolding) con Google Fit.
+**Activity & Wearable:** Comprende el registro manual de actividad física.
 
 **Subscriptions & Billing:** Comprende la suscripción a un plan, la mejora y degradación del plan activo, el historial de pagos y la descarga de recibos.
 
