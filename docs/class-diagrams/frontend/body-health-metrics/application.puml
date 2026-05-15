@@ -1,0 +1,60 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "body-health-metrics/infrastructure [stubs]" {
+  class BodyHealthMetricsApi <<api>>
+  class BodyMeasurementAssembler <<assembler>>
+  class WeightLogAssembler <<assembler>>
+  class UserGoalAssembler <<assembler>>
+}
+
+package "body-health-metrics/domain/services [stubs]" {
+  class BodyMetricsService <<domain service>>
+}
+
+package "body-health-metrics/application" {
+
+  class useBodyHealthMetricsStore <<store>> {
+    -- state --
+    + bodyMeasurement: BodyMeasurement|null
+    + bodyMeasurements: BodyMeasurement[]
+    + weightLogs: WeightLog[]
+    + userGoal: UserGoal|null
+    + measurementLoaded: boolean
+    + weightLogsLoaded: boolean
+    + goalLoaded: boolean
+    + weightSaving: boolean
+    + userHeightCm: number|null
+    + errors: Error[]
+    -- computed --
+    + weightTrend: WeightLog[]
+    + todayWeightLog: WeightLog|null
+    + latestWeightKg: number|null
+    -- actions --
+    + fetchBodyMeasurements(userId): void
+    + fetchBodyMeasurement(id): void
+    + createBodyMeasurement(userId, waistCm): void
+    + updateBodyMeasurement(measurementData): void
+    + fetchWeightLogs(userId): void
+    + logWeight(userId, weightKg, date): Promise
+    + updateTodayWeight(userId, weightKg): void
+    + fetchUserGoal(userId): void
+    + saveUserGoal(userId, goalData): void
+    + getBmi(weightKg, heightCm): BmiResult|null
+    + getBmr(weightKg, heightCm, ageYears, sex): number|null
+    + getTdee(bmr, palMultiplier): number|null
+    + setUserHeight(heightCm): void
+    + clearErrors(): void
+  }
+}
+
+useBodyHealthMetricsStore --> BodyHealthMetricsApi : uses >
+useBodyHealthMetricsStore --> BodyMeasurementAssembler : uses >
+useBodyHealthMetricsStore --> WeightLogAssembler : uses >
+useBodyHealthMetricsStore --> UserGoalAssembler : uses >
+useBodyHealthMetricsStore --> BodyMetricsService : uses >
+
+@enduml

@@ -1,0 +1,103 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/domain/model [stubs]" {
+  class GoalType <<value object>> {
+    + value: GoalTypeValue
+    --
+    + isWeightLoss(): boolean
+    + isMuscleGain(): boolean
+  }
+}
+
+package "body-health-metrics/domain/model" {
+
+  class BodyMeasurement <<entity>> {
+    + id: string
+    + userId: string
+    + waistCm: number
+    + neckCm: number
+    + measuredAt: string
+    --
+    + dateLabel(): string
+    + estimatedBodyFatPercent(heightCm): number
+  }
+
+  class UserGoal <<entity>> {
+    + id: string
+    + userId: string
+    + goal: GoalType
+    + startWeightKg: number
+    + targetWeightKg: number
+    + weeklyRate: WeeklyRate
+    + macroTargets: MacroTargets
+    + caloricAdjustment: number
+    + setAt: string
+    + active: boolean
+    --
+    + isActive(): boolean
+    + estimatedWeeksToGoal(currentWeightKg): number
+    + weightProgress(currentWeightKg): number
+    + isDeficit(): boolean
+    + isSurplus(): boolean
+  }
+
+  class WeightLog <<entity>> {
+    + id: string
+    + userId: string
+    + weightKg: number
+    + loggedAt: string
+    + note: string|null
+    --
+    + dateLabel(): string
+    + isToday(): boolean
+    + hasNote(): boolean
+  }
+
+  class BmiResult <<value object>> {
+    + value: number
+    + category: BmiCategory
+    --
+    + isNormal(): boolean
+    + isUnderweight(): boolean
+    + isOverweight(): boolean
+  }
+
+  class MacroTargets <<value object>> {
+    + dailyCalorieTarget: number
+    + proteinTargetG: number
+    + carbsTargetG: number
+    + fatTargetG: number
+    + fiberTargetG: number
+    --
+    + proteinRatio(): number
+    + carbsRatio(): number
+    + fatRatio(): number
+  }
+
+  class WeeklyRate <<value object>> {
+    + kgPerWeek: number
+    --
+    + isAggressive(): boolean
+    + label(): string
+  }
+}
+
+package "body-health-metrics/domain/services" {
+
+  class BodyMetricsService <<domain service>> {
+    + {static} calculateBmi(weightKg, heightCm): BmiResult
+    + {static} calculateBmr(weightKg, heightCm, ageYears, biologicalSex): number
+    + {static} calculateTdee(bmr, palMultiplier): number
+  }
+}
+
+UserGoal *--> GoalType : goal >
+UserGoal *--> WeeklyRate : weeklyRate >
+UserGoal *--> MacroTargets : macroTargets >
+BodyMetricsService ..> BmiResult : creates >
+
+@enduml

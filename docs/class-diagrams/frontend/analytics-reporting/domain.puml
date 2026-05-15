@@ -1,0 +1,39 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "analytics-reporting/domain/model" {
+
+  class StreakRecord <<entity>> {
+    + currentStreak: number
+    + longestStreak: number
+    + lastLogDate: string|null
+    + weeklyCompletionRate: number
+    + weeklyCompletionDays: boolean[]
+    --
+    + isBroken(): boolean
+    + isAtRisk(): boolean
+    + isActiveToday(): boolean
+    + motivationalMessageKey(): string
+    + weeklyCompletionPercent(): number
+  }
+}
+
+package "analytics-reporting/domain/services" {
+
+  class AdherenceCalculatorService <<domain service>> {
+    + {static} calculateAdherenceRate(logDates, days): number
+    + {static} weeklyAdherenceRate(logDates): number
+    + {static} monthlyAdherenceRate(logDates): number
+  }
+
+  class StreakCalculatorService <<domain service>> {
+    + {static} calculateStreak(logEntries, calorieGoal, proteinGoal): StreakRecord
+  }
+}
+
+StreakCalculatorService ..> StreakRecord : creates >
+
+@enduml

@@ -1,0 +1,37 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "activity-wearable/application [stub]" {
+  class useActivityWearableStore <<store>>
+}
+
+package "activity-wearable/presentation/routes" {
+  class ActivityWearableRoutes <<router>>
+}
+
+package "activity-wearable/presentation/views" {
+  class ActivityView <<view>>
+  class ActivityHistoryView <<view>>
+}
+
+package "activity-wearable/presentation/components" {
+  class ActivityLogFormComponent <<component>>
+  class ActivityLogListComponent <<component>>
+}
+
+ActivityWearableRoutes ..> ActivityView : navigates to >
+ActivityWearableRoutes ..> ActivityHistoryView : navigates to >
+
+ActivityView ..> ActivityLogFormComponent : contains >
+ActivityView ..> ActivityLogListComponent : contains >
+ActivityHistoryView ..> ActivityLogListComponent : contains >
+
+ActivityView o--> useActivityWearableStore : uses >
+ActivityHistoryView o--> useActivityWearableStore : uses >
+ActivityLogFormComponent o--> useActivityWearableStore : uses >
+ActivityLogListComponent o--> useActivityWearableStore : uses >
+
+@enduml

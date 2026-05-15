@@ -1,0 +1,87 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "subscriptions-billing/domain/model" {
+
+  class SubscriptionPlan <<entity>> {
+    + id: string
+    + key: string
+    + priceMonthly: number
+    + features: string[]
+    --
+    + hasFeature(feature): boolean
+    + isFree(): boolean
+    + isUpgradeFrom(lowerPlan): boolean
+    + featuresGainedOver(lowerPlan): string[]
+  }
+
+  class UserSubscription <<entity>> {
+    + id: string
+    + userId: string
+    + planId: string
+    + status: SubscriptionStatus
+    + billingPeriod: BillingPeriod
+    + periodStart: string|null
+    + periodEnd: string|null
+    + cancelAtPeriodEnd: boolean
+    + stripeSubscriptionId: string|null
+    --
+    + isActive(): boolean
+    + willCancel(): boolean
+    + renewalDate(): Date|null
+    + daysUntilRenewal(now?): number|null
+    + isFree(): boolean
+  }
+
+  class PaymentRecord <<entity>> {
+    + id: string
+    + userId: string
+    + planId: string
+    + amountUsd: number
+    + status: string
+    + paidAt: string|null
+    --
+    + isPaid(): boolean
+    + isFailed(): boolean
+    + isRefunded(): boolean
+    + isPending(): boolean
+    + formattedAmount(): string
+  }
+
+  class BillingPeriod <<value object>> {
+    + value: BillingPeriodValue
+    --
+    + isFree(): boolean
+    + isMonthly(): boolean
+    + isAnnual(): boolean
+    + annualSavingsPercent(): number|null
+  }
+
+  class SubscriptionStatus <<value object>> {
+    + value: SubscriptionStatusValue
+    --
+    + isActive(): boolean
+    + isCancelled(): boolean
+    + requiresAttention(): boolean
+  }
+
+  class PlanTier <<value object>> {
+    + value: PlanTierValue
+    --
+    + isAtLeast(minimum): boolean
+    + historyLimitDays(): number
+    + isFree(): boolean
+  }
+
+  class PlanFeature <<value object>> {
+    + value: PlanFeatureValue
+  }
+}
+
+UserSubscription *--> SubscriptionStatus : status >
+UserSubscription *--> BillingPeriod : billingPeriod >
+
+@enduml

@@ -1,0 +1,50 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "iam/infrastructure [stubs]" {
+  class IamApi <<api>>
+  class UserAssembler <<assembler>>
+  class UserSessionAssembler <<assembler>>
+  class DietaryRestrictionAssembler <<assembler>>
+}
+
+package "iam/application" {
+
+  class useIamStore <<store>> {
+    -- state --
+    + currentUser: User|null
+    + sessions: UserSession[]
+    + dietaryRestrictions: DietaryRestriction[]
+    + userLoaded: boolean
+    + sessionsLoaded: boolean
+    + restrictionsLoaded: boolean
+    + errors: Error[]
+    -- computed --
+    + isAuthenticated: boolean
+    + firstName: string
+    + currentPlanTier: PlanTier|null
+    -- actions --
+    + fetchCurrentUser(userId): Promise
+    + updateProfile(profileData): Promise
+    + fetchSessions(): void
+    + revokeSession(sessionId): void
+    + fetchDietaryRestrictions(): void
+    + updateDietaryRestrictions(restrictionsList): void
+    + signIn(email, password): Promise
+    + signOut(): void
+    + signUp(formData): Promise
+    + deleteAccount(): void
+    + hasFeature(minimumPlan): boolean
+    + clearErrors(): void
+  }
+}
+
+useIamStore --> IamApi : uses >
+useIamStore --> UserAssembler : uses >
+useIamStore --> UserSessionAssembler : uses >
+useIamStore --> DietaryRestrictionAssembler : uses >
+
+@enduml

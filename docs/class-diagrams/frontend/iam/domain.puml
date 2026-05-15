@@ -1,0 +1,111 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/domain/model [stubs]" {
+  class GoalType <<value object>> {
+    + value: GoalTypeValue
+    --
+    + isWeightLoss(): boolean
+    + isMuscleGain(): boolean
+  }
+}
+
+package "iam/domain/model" {
+
+  class User <<entity>> {
+    + id: string
+    + email: Email
+    + firstName: string
+    + lastName: string
+    + dateOfBirth: string
+    + biologicalSex: BiologicalSex
+    + heightCm: number
+    + goal: GoalType
+    + activityLevel: ActivityLevel
+    + preferredUnits: PreferredUnits
+    + preferredLanguage: string
+    + plan: PlanTier
+    + homeCityId: string
+    + createdAt: string
+    + dietaryRestrictions: string[]
+    + medicalConditions: string[]
+    --
+    + fullName(): string
+    + age(): number
+    + avatarInitials(): string
+    + isOnAtLeastPlan(minimumPlan): boolean
+  }
+
+  class UserSession <<entity>> {
+    + id: string
+    + userId: string
+    + deviceLabel: string
+    + isCurrent: boolean
+    + createdAt: string
+    + lastActiveAt: string
+    --
+    + isCurrentSession(): boolean
+    + isExpired(maxInactiveMinutes?): boolean
+    + minutesSinceLastActivity(): number
+  }
+
+  class DietaryRestriction <<entity>> {
+    + id: string
+    + userId: string
+    + restriction: RestrictionValue
+    --
+    + conflictsWith(foodTags): boolean
+    + isNone(): boolean
+  }
+
+  class Email <<value object>> {
+    + value: string
+    --
+    + equals(other): boolean
+    + toString(): string
+  }
+
+  class BiologicalSex <<value object>> {
+    + value: BiologicalSexValue
+    --
+    + isMale(): boolean
+    + isFemale(): boolean
+    + isDisclosed(): boolean
+  }
+
+  class ActivityLevel <<value object>> {
+    + value: ActivityLevelValue
+    --
+    + palMultiplier(): number
+    + isSedentary(): boolean
+  }
+
+  class PlanTier <<value object>> {
+    + value: PlanTierValue
+    --
+    + isAtLeast(minimum): boolean
+    + historyLimitDays(): number
+    + isFree(): boolean
+  }
+
+  class PreferredUnits <<value object>> {
+    + value: PreferredUnitsValue
+    --
+    + isMetric(): boolean
+    + isImperial(): boolean
+    + weightUnit(): string
+    + heightUnit(): string
+  }
+}
+
+User *--> Email : email >
+User *--> BiologicalSex : biologicalSex >
+User *--> ActivityLevel : activityLevel >
+User *--> PlanTier : plan >
+User *--> PreferredUnits : preferredUnits >
+User *--> GoalType : goal >
+
+@enduml

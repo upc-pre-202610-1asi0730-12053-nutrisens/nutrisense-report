@@ -1,0 +1,50 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/infrastructure [stubs]" {
+  class BaseApi <<api>>
+  class BaseEndpoint <<api>>
+}
+
+package "subscriptions-billing/infrastructure" {
+
+  class SubscriptionsBillingApi <<api>> {
+    - userSubscriptions: BaseEndpoint
+    - subscriptionPlans: BaseEndpoint
+    - paymentHistory: BaseEndpoint
+    --
+    + getSubscriptions(): Promise
+    + createSubscription(resource): Promise
+    + updateSubscription(id, resource): Promise
+    + getPlans(): Promise
+    + getPlanById(id): Promise
+    + getPaymentHistory(): Promise
+  }
+
+  class UserSubscriptionAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): UserSubscription|null
+    + {static} toEntityFromResponse(response): UserSubscription|null
+    + {static} toEntitiesFromResponse(response): UserSubscription[]
+  }
+
+  class SubscriptionPlanAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): SubscriptionPlan|null
+    + {static} toEntitiesFromResponse(response): SubscriptionPlan[]
+  }
+
+  class PaymentRecordAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): PaymentRecord|null
+    + {static} toEntitiesFromResponse(response): PaymentRecord[]
+  }
+}
+
+SubscriptionsBillingApi --|> BaseApi
+BaseApi *--> BaseEndpoint
+UserSubscriptionAssembler ..> SubscriptionsBillingApi : uses >
+SubscriptionPlanAssembler ..> SubscriptionsBillingApi : uses >
+PaymentRecordAssembler ..> SubscriptionsBillingApi : uses >
+
+@enduml

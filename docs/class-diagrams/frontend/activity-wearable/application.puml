@@ -1,0 +1,46 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "activity-wearable/infrastructure [stubs]" {
+  class ActivityWearableApi <<api>>
+  class ActivityLogAssembler <<assembler>>
+  class WearableConnectionAssembler <<assembler>>
+}
+
+package "activity-wearable/application" {
+
+  class useActivityWearableStore <<store>> {
+    -- state --
+    + activityLogs: ActivityLog[]
+    + wearableConnections: WearableConnection[]
+    + logsLoaded: boolean
+    + connectionsLoaded: boolean
+    + errors: Error[]
+    -- computed --
+    + todayLogs: ActivityLog[]
+    + todayCaloriesBurned: number
+    + todayActiveMinutes: number
+    + googleFitConnection: WearableConnection|null
+    + isGoogleFitConnected: boolean
+    + allLogsSorted: ActivityLog[]
+    + lastStrengthOrHiit: ActivityLog|null
+    + shouldShowPostWorkoutBanner: boolean
+    -- actions --
+    + fetchActivityLogs(userId): void
+    + logActivity(userId, activityData): void
+    + removeActivity(logId): void
+    + fetchConnections(userId): void
+    + connectGoogleFit(userId, authData): void
+    + disconnectWearable(connectionId): void
+    + clearErrors(): void
+  }
+}
+
+useActivityWearableStore --> ActivityWearableApi : uses >
+useActivityWearableStore --> ActivityLogAssembler : uses >
+useActivityWearableStore --> WearableConnectionAssembler : uses >
+
+@enduml
