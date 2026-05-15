@@ -784,13 +784,15 @@ El video de demostración del Sprint 2 ilustra la navegación completa por todos
 
 #### 5.2.2.6. Services Documentation Evidence for Sprint Review
 
-
+El Sprint 2 tuvo como alcance exclusivo la construcción del frontend de la aplicación web autenticada de NutriSense. Todos los datos son servidos mediante una capa mock con `json-server` a partir del archivo `db.json`, sin conexión a endpoints reales de backend. Por esta razón, no se generó documentación OpenAPI ni se desplegaron Web Services durante esta iteración.
+ 
+La especificación completa de los endpoints RESTful que el frontend consumirá en producción se encuentra documentada en las Technical Stories del Product Backlog del Capítulo III. Su implementación está planificada para el Sprint 3 dentro del repositorio `nutrisense-platform`, cubriendo: IAM y sesiones, Nutrition Tracking con validación de restricciones, Analytics & Reporting, Body Health Metrics, Activity & Wearable, Smart Recommendations con pantry, y Smart Scan.
 
 #### 5.2.2.7. Software Deployment Evidence for Sprint Review
 
 ##### Creación del repositorio en GitHub
 
-Se creó el repositorio público `nutrisense-webapp` bajo la organización `upc-pre-202610-1asi0730-12053-nutrisense` en GitHub. 
+Se creó el repositorio público `nutrisense-webapp` bajo la organización `upc-pre-202610-1asi0730-12053-nutrisense` en GitHub. Este repositorio centraliza el código fuente del frontend Vue y sirve como base para el despliegue continuo. 
 
 [Link del repositorio nutrisense-webapp](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp)
 
