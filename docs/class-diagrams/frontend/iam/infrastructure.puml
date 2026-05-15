@@ -1,0 +1,51 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/infrastructure [stubs]" {
+  class BaseApi <<api>>
+  class BaseEndpoint <<api>>
+}
+
+package "iam/infrastructure" {
+
+  class IamApi <<api>> {
+    - users: BaseEndpoint
+    - sessions: BaseEndpoint
+    - signIn: BaseEndpoint
+    - signUp: BaseEndpoint
+    --
+    + getMe(): Promise
+    + updateProfile(id, resource): Promise
+    + getSessions(): Promise
+    + revokeSession(id): Promise
+    + signIn(credentials): Promise
+    + signUp(resource): Promise
+    + deleteAccount(id): Promise
+  }
+
+  class UserAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): User|null
+    + {static} toEntityFromResponse(response): User|null
+    + {static} toEntitiesFromResponse(response): User[]
+  }
+
+  class UserSessionAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): UserSession|null
+    + {static} toEntitiesFromResponse(response): UserSession[]
+  }
+
+  class DietaryRestrictionAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): DietaryRestriction|null
+  }
+}
+
+IamApi --|> BaseApi
+BaseApi *--> BaseEndpoint
+UserAssembler ..> IamApi : uses >
+UserSessionAssembler ..> IamApi : uses >
+DietaryRestrictionAssembler ..> IamApi : uses >
+
+@enduml

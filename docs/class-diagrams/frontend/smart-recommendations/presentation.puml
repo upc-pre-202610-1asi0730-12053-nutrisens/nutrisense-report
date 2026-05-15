@@ -1,0 +1,41 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "smart-recommendations/application [stub]" {
+  class useSmartRecommendationsStore <<store>>
+}
+
+package "smart-recommendations/presentation/routes" {
+  class SmartRecommendationsRoutes <<router>>
+}
+
+package "smart-recommendations/presentation/views" {
+  class RecommendationsView <<view>>
+}
+
+package "smart-recommendations/presentation/components" {
+  class RecommendationCardComponent <<component>>
+  class RecipeCardComponent <<component>>
+  class RecipeDetailDialogComponent <<component>>
+  class LogDishDialogComponent <<component>>
+  class PantryListComponent <<component>>
+}
+
+SmartRecommendationsRoutes ..> RecommendationsView : navigates to >
+
+RecommendationsView ..> RecommendationCardComponent : contains >
+RecommendationsView ..> RecipeCardComponent : contains >
+RecommendationsView ..> PantryListComponent : contains >
+RecipeCardComponent ..> RecipeDetailDialogComponent : opens >
+RecipeDetailDialogComponent ..> LogDishDialogComponent : opens >
+
+RecommendationsView o--> useSmartRecommendationsStore : uses >
+RecommendationCardComponent o--> useSmartRecommendationsStore : uses >
+RecipeCardComponent o--> useSmartRecommendationsStore : uses >
+PantryListComponent o--> useSmartRecommendationsStore : uses >
+LogDishDialogComponent o--> useSmartRecommendationsStore : uses >
+
+@enduml

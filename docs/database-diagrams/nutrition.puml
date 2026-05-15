@@ -1,0 +1,71 @@
+@startuml NutriSense - Nutrition Tracking Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(nutrition_logs, "nutrition_logs") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(user_id) : UUID NOT NULL
+  log_date : DATE NOT NULL
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(meals, "meals") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(nutrition_log_id) : UUID NOT NULL
+  name : VARCHAR(200) NOT NULL
+  meal_type : VARCHAR(20) NOT NULL
+    CHECK (meal_type IN ('BREAKFAST','LUNCH','DINNER','SNACK'))
+  calories_kcal : NUMERIC(8,2) NOT NULL CHECK (calories_kcal >= 0)
+  protein_g : NUMERIC(6,2) NOT NULL DEFAULT 0 CHECK (protein_g >= 0)
+  carbs_g : NUMERIC(6,2) NOT NULL DEFAULT 0 CHECK (carbs_g >= 0)
+  fat_g : NUMERIC(6,2) NOT NULL DEFAULT 0 CHECK (fat_g >= 0)
+  logged_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(scan_results, "scan_results") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(meal_id) : UUID
+  FK(user_id) : UUID NOT NULL
+  image_url : VARCHAR(500) NOT NULL
+  confidence : NUMERIC(5,4) NOT NULL CHECK (confidence BETWEEN 0 AND 1)
+  scanned_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(scan_recognized_items, "scan_recognized_items") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(scan_result_id) : UUID NOT NULL
+  fdc_id : VARCHAR(50)
+  item_name : VARCHAR(200) NOT NULL
+  calories_kcal : NUMERIC(8,2)
+  serving_size_g : NUMERIC(6,2)
+  unit : VARCHAR(20)
+}
+
+' Constraints
+note right of nutrition_logs
+  UNIQUE (user_id, log_date)
+  INDEX (user_id, log_date)
+end note
+
+note right of meals
+  INDEX (nutrition_log_id)
+  INDEX (meal_type)
+end note
+
+' Relationships
+nutrition_logs ||--o{ meals : "contains\n(1 to 0..*)"
+meals }o--o| scan_results : "originated from\n(0..* to 0..1)"
+scan_results ||--o{ scan_recognized_items : "includes\n(1 to 1..*)"
+
+@enduml

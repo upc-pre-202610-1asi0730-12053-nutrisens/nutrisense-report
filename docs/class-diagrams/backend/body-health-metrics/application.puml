@@ -1,0 +1,47 @@
+@startuml NutriSense - Body & Health Metrics - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.BodyHealthMetrics" {
+
+  package "Domain [stubs]" {
+    interface IHealthProfileRepository
+  }
+
+  package "Application" {
+    interface IBodyCommandService {
+      +Handle(command: RecordBodyMetricsCommand): BodyMetricsResponse
+      +Handle(command: SetHealthGoalCommand): HealthGoalResponse
+    }
+
+    interface IBodyQueryService {
+      +Handle(query: GetLatestMetricsQuery): BodyMetricsResponse
+      +Handle(query: GetWeightHistoryQuery): List<BodyMetricsResponse>
+      +Handle(query: CalculateTDEEQuery): TDEEResponse
+    }
+
+    class BodyCommandServiceImpl {
+      -healthProfileRepository: IHealthProfileRepository
+      +Handle(command: RecordBodyMetricsCommand): BodyMetricsResponse
+      +Handle(command: SetHealthGoalCommand): HealthGoalResponse
+    }
+
+    class RecordBodyMetricsCommand {
+      +UserId: Guid
+      +Measurements: BodyMeasurements
+    }
+
+    class SetHealthGoalCommand {
+      +UserId: Guid
+      +GoalType: GoalType
+      +TargetWeightKg: Decimal
+      +TargetDate: DateOnly
+    }
+  }
+}
+
+BodyCommandServiceImpl ..|> IBodyCommandService
+BodyCommandServiceImpl --> IHealthProfileRepository : uses
+
+@enduml

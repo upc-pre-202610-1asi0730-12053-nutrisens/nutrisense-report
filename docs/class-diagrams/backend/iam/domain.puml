@@ -1,0 +1,50 @@
+@startuml NutriSense - IAM - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.IAM" {
+
+  package "Domain" {
+    class User {
+      +Id: Guid
+      +FirstName: String
+      +LastName: String
+      -credentials: Credentials
+      -role: UserRole
+      +GetFullName(): String
+      +IsAdmin(): Boolean
+      +UpdateProfile(firstName: String, lastName: String): void
+    }
+
+    class Credentials {
+      +Email: String
+      -PasswordHash: String
+      +ValidatePassword(raw: String): Boolean
+    }
+
+    enum UserRole {
+      USER
+      ADMIN
+    }
+
+    class UserRegisteredEvent {
+      +UserId: Guid
+      +Email: String
+      +OccurredOn: DateTime
+    }
+
+    interface IUserRepository {
+      +FindById(id: Guid): User
+      +FindByEmail(email: String): User
+      +Save(user: User): void
+      +Update(user: User): void
+    }
+  }
+}
+
+User *--> Credentials : has "1"
+User --> UserRole : has "1"
+User --> UserRegisteredEvent : fires "0..*"
+
+@enduml

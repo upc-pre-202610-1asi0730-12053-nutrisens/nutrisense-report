@@ -1,0 +1,79 @@
+@startuml NutriSense - Body & Health Metrics - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.BodyHealthMetrics" {
+
+  package "Domain" {
+    class HealthProfile {
+      +Id: Guid
+      +UserId: Guid
+      -measurements: List<BodyMeasurements>
+      -activeGoal: HealthGoal
+      +RecordMeasurements(data: BodyMeasurements): void
+      +SetGoal(goal: HealthGoal): void
+      +CalculateBMI(): Decimal
+      +CalculateTDEE(activityLevel: ActivityLevel): TDEEValue
+    }
+
+    class BodyMeasurements {
+      +WeightKg: Decimal
+      +HeightCm: Decimal
+      +BodyFatPercentage: Decimal
+      +RecordedAt: DateTime
+    }
+
+    class HealthGoal {
+      +Id: Guid
+      +GoalType: GoalType
+      +TargetWeightKg: Decimal
+      +TargetDate: DateOnly
+      +IsActive: Boolean
+    }
+
+    class TDEEValue {
+      +BMR: Decimal
+      +TDEE: Decimal
+      +ProteinTargetG: Decimal
+      +CarbsTargetG: Decimal
+      +FatTargetG: Decimal
+    }
+
+    enum GoalType {
+      LOSE_WEIGHT
+      GAIN_MUSCLE
+      MAINTAIN
+    }
+
+    enum ActivityLevel {
+      SEDENTARY
+      LIGHT
+      MODERATE
+      ACTIVE
+      VERY_ACTIVE
+    }
+
+    class MetricsRecordedEvent {
+      +ProfileId: Guid
+      +WeightKg: Decimal
+      +OccurredOn: DateTime
+    }
+
+    interface IHealthProfileRepository {
+      +FindByUserId(userId: Guid): HealthProfile
+      +Save(profile: HealthProfile): void
+      +Update(profile: HealthProfile): void
+      +FindMeasurementHistory(userId: Guid): List<BodyMeasurements>
+    }
+  }
+}
+
+HealthProfile *--> BodyMeasurements : records "0..*"
+HealthProfile *--> HealthGoal : has "0..1"
+HealthProfile --> TDEEValue : computes "0..1"
+HealthGoal --> GoalType : has "1"
+TDEEValue --> ActivityLevel : references
+HealthProfile --> MetricsRecordedEvent : fires "0..*"
+
+@enduml

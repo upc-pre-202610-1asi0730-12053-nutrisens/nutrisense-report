@@ -1,0 +1,46 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/infrastructure [stubs]" {
+  class BaseApi <<api>>
+  class BaseEndpoint <<api>>
+}
+
+package "nutrition-tracking/infrastructure" {
+
+  class NutritionTrackingApi <<api>> {
+    - nutritionLogs: BaseEndpoint
+    - foods: BaseEndpoint
+    --
+    + getLogs(): Promise
+    + getLogById(id): Promise
+    + createLog(resource): Promise
+    + updateLog(id, resource): Promise
+    + deleteLog(id): Promise
+    + getFoods(): Promise
+    + getFoodById(id): Promise
+  }
+
+  class NutritionLogAssembler <<assembler>> {
+    + {static} toResource(userId, food, grams, mealType, source, date): Object
+    + {static} toResourceFromEstimate(userId, foodId, name, macros, mealType, source, date): Object
+    + {static} toResourceFromRecipe(userId, recipe, servings, mealType, date): Object
+    + {static} toEntityFromResponse(response): NutritionLog|null
+    + {static} toEntitiesFromResponse(response): NutritionLog[]
+  }
+
+  class FoodAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): Food|null
+    + {static} toEntitiesFromResponse(response): Food[]
+  }
+}
+
+NutritionTrackingApi --|> BaseApi
+BaseApi *--> BaseEndpoint
+NutritionLogAssembler ..> NutritionTrackingApi : uses >
+FoodAssembler ..> NutritionTrackingApi : uses >
+
+@enduml

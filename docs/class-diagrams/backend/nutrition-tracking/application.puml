@@ -1,0 +1,53 @@
+@startuml NutriSense - Nutrition Tracking - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.NutritionTracking" {
+
+  package "Domain [stubs]" {
+    interface INutritionLogRepository
+  }
+
+  package "Infrastructure [stubs]" {
+    interface IGoogleVisionClient
+  }
+
+  package "Application" {
+    interface INutritionCommandService {
+      +Handle(command: AddMealCommand): MealResponse
+      +Handle(command: RemoveMealCommand): void
+      +Handle(command: LogScannedMealCommand): NutritionLogResponse
+    }
+
+    interface INutritionQueryService {
+      +Handle(query: GetDailyLogQuery): NutritionLogResponse
+    }
+
+    class NutritionCommandServiceImpl {
+      -nutritionLogRepository: INutritionLogRepository
+      -visionClient: IGoogleVisionClient
+      +Handle(command: AddMealCommand): MealResponse
+      +Handle(command: RemoveMealCommand): void
+      +Handle(command: LogScannedMealCommand): NutritionLogResponse
+    }
+
+    class AddMealCommand {
+      +UserId: Guid
+      +Name: String
+      +Macros: MacroNutrients
+      +MealType: MealType
+    }
+
+    class GetDailyLogQuery {
+      +UserId: Guid
+      +Date: DateOnly
+    }
+  }
+}
+
+NutritionCommandServiceImpl ..|> INutritionCommandService
+NutritionCommandServiceImpl --> INutritionLogRepository : uses
+NutritionCommandServiceImpl --> IGoogleVisionClient : uses
+
+@enduml

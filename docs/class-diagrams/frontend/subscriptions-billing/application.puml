@@ -1,0 +1,52 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "subscriptions-billing/infrastructure [stubs]" {
+  class SubscriptionsBillingApi <<api>>
+  class UserSubscriptionAssembler <<assembler>>
+  class SubscriptionPlanAssembler <<assembler>>
+  class PaymentRecordAssembler <<assembler>>
+}
+
+package "subscriptions-billing/application" {
+
+  class useSubscriptionsBillingStore <<store>> {
+    -- state --
+    + subscription: UserSubscription|null
+    + plans: SubscriptionPlan[]
+    + paymentHistory: PaymentRecord[]
+    + subscriptionLoaded: boolean
+    + plansLoaded: boolean
+    + paymentHistoryLoaded: boolean
+    + changingPlanId: string|null
+    + errors: Error[]
+    -- computed --
+    + currentPlan: SubscriptionPlan|null
+    + currentTier: PlanTier|null
+    + isActive: boolean
+    + willCancelAtPeriodEnd: boolean
+    + daysUntilRenewal: number|null
+    + renewalDateLabel: string
+    -- actions --
+    + fetchSubscription(userId): void
+    + checkSubscription(userId): Promise<boolean>
+    + fetchPlans(): void
+    + fetchPaymentHistory(userId): void
+    + selectInitialPlan(userId, planId): Promise
+    + changePlan(planId, billingPeriod): Promise
+    + cancelSubscription(): void
+    + reactivateSubscription(): void
+    + hasAccess(featureName): boolean
+    + clearErrors(): void
+  }
+}
+
+useSubscriptionsBillingStore --> SubscriptionsBillingApi : uses >
+useSubscriptionsBillingStore --> UserSubscriptionAssembler : uses >
+useSubscriptionsBillingStore --> SubscriptionPlanAssembler : uses >
+useSubscriptionsBillingStore --> PaymentRecordAssembler : uses >
+
+@enduml

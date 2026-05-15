@@ -1,0 +1,69 @@
+@startuml NutriSense - Activity & Wearable Sync Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(activity_syncs, "activity_syncs") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(user_id) : UUID NOT NULL
+  google_fit_access_token : VARCHAR(512)
+  last_synced_at : TIMESTAMPTZ
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(activity_records, "activity_records") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(activity_sync_id) : UUID NOT NULL
+  activity_type : VARCHAR(20) NOT NULL
+    CHECK (activity_type IN
+      ('RUNNING','WALKING','CYCLING','SWIMMING','GYM','OTHER'))
+  duration_minutes : INT NOT NULL CHECK (duration_minutes > 0)
+  calories_burned_kcal : NUMERIC(8,2) NOT NULL
+    CHECK (calories_burned_kcal >= 0)
+  steps : INT CHECK (steps >= 0)
+  sync_source : VARCHAR(20) NOT NULL
+    CHECK (sync_source IN ('MANUAL','GOOGLE_FIT','WEARABLE'))
+  recorded_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(caloric_balances, "caloric_balances") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(activity_sync_id) : UUID NOT NULL
+  balance_date : DATE NOT NULL
+  calories_consumed_kcal : NUMERIC(8,2) NOT NULL DEFAULT 0
+  calories_burned_kcal : NUMERIC(8,2) NOT NULL DEFAULT 0
+  net_calories_kcal : NUMERIC(8,2) GENERATED ALWAYS AS
+    (calories_consumed_kcal - calories_burned_kcal) STORED
+  goal_met : BOOLEAN NOT NULL DEFAULT FALSE
+  computed_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+' Constraints
+note right of activity_syncs
+  UNIQUE (user_id)
+end note
+
+note right of activity_records
+  INDEX (activity_sync_id, recorded_at DESC)
+  INDEX (activity_type, sync_source)
+end note
+
+note right of caloric_balances
+  UNIQUE (activity_sync_id, balance_date)
+  INDEX (activity_sync_id, balance_date DESC)
+end note
+
+' Relationships
+activity_syncs ||--o{ activity_records : "aggregates\n(1 to 0..*)"
+activity_syncs ||--o{ caloric_balances : "computes\n(1 to 0..*)"
+
+@enduml

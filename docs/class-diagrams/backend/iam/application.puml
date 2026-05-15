@@ -1,0 +1,51 @@
+@startuml NutriSense - IAM - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.IAM" {
+
+  package "Domain [stubs]" {
+    interface IUserRepository
+  }
+
+  package "Application" {
+    interface IAuthCommandService {
+      +Handle(command: RegisterUserCommand): AuthResponse
+      +Handle(command: LoginCommand): AuthResponse
+      +Handle(command: UpdateProfileCommand): UserProfileResponse
+    }
+
+    interface IAuthQueryService {
+      +Handle(query: GetUserProfileQuery): UserProfileResponse
+    }
+
+    class AuthCommandServiceImpl {
+      -userRepository: IUserRepository
+      +Handle(command: RegisterUserCommand): AuthResponse
+      +Handle(command: LoginCommand): AuthResponse
+      +Handle(command: UpdateProfileCommand): UserProfileResponse
+    }
+
+    class RegisterUserCommand {
+      +FirstName: String
+      +LastName: String
+      +Email: String
+      +PasswordHash: String
+    }
+
+    class LoginCommand {
+      +Email: String
+      +Password: String
+    }
+
+    class GetUserProfileQuery {
+      +UserId: Guid
+    }
+  }
+}
+
+AuthCommandServiceImpl ..|> IAuthCommandService
+AuthCommandServiceImpl --> IUserRepository : uses
+
+@enduml

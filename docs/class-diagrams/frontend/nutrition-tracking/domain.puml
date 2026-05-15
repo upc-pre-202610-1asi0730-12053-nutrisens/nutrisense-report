@@ -1,0 +1,93 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/domain/model [stubs]" {
+  class Macros <<value object>> {
+    + calories: number
+    + proteinG: number
+    + carbsG: number
+    + fatG: number
+    + fiberG: number
+    + sugarG: number
+    --
+    + add(other): Macros
+  }
+}
+
+package "nutrition-tracking/domain/model" {
+
+  class Food <<entity>> {
+    + id: string
+    + key: string
+    + source: string
+    + externalId: string|null
+    + servingSizeG: number
+    + servingUnit: string
+    + restrictions: string[]
+    --
+    + macrosForQuantity(grams): Macros
+    + macrosPerServing(): Macros
+    + hasRestriction(tag): boolean
+    + healthScore(): number
+  }
+
+  class NutritionLog <<entity>> {
+    + id: string
+    + userId: string
+    + foodId: string
+    + foodKey: string
+    + mealType: MealType
+    + date: string
+    + quantityG: number
+    + source: LogSource
+    + loggedAt: string
+    --
+    + macros(): Macros
+    + isToday(): boolean
+    + isOnDate(date): boolean
+    + isFromSmartScan(): boolean
+  }
+
+  class MealType <<value object>> {
+    + value: MealTypeValue
+    --
+    + isBreakfast(): boolean
+    + isMainMeal(): boolean
+  }
+
+  class LogSource <<value object>> {
+    + value: LogSourceValue
+    --
+    + isManual(): boolean
+    + isSmartScan(): boolean
+    + isRecipe(): boolean
+  }
+
+  class FoodSource <<value object>> {
+    + value: FoodSourceValue
+    --
+    + isUsda(): boolean
+    + isOpenFoodFacts(): boolean
+  }
+}
+
+package "nutrition-tracking/domain/services" {
+
+  class FoodRestrictionService <<domain service>> {
+    + {static} conflictingFlags(food, restrictions, conditions): string[]
+  }
+
+  class StreakCriteriaService <<domain service>> {
+    + {static} isStreakDayMet(params): boolean
+  }
+}
+
+NutritionLog *--> MealType : mealType >
+NutritionLog *--> LogSource : source >
+NutritionLog ..> Macros : returns >
+Food ..> Macros : returns >
+
+@enduml

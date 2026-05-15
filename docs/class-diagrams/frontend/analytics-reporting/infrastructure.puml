@@ -1,0 +1,33 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/infrastructure [stubs]" {
+  class BaseApi <<api>>
+  class BaseEndpoint <<api>>
+}
+
+package "analytics-reporting/infrastructure" {
+
+  class AnalyticsReportingApi <<api>> {
+    - streaks: BaseEndpoint
+    --
+    + getStreak(userId): Promise
+    + createStreak(resource): Promise
+    + updateStreak(id, resource): Promise
+  }
+
+  class StreakRecordAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): StreakRecord|null
+    + {static} toEntitiesFromResponse(response): StreakRecord[]
+    + {static} toEntityFromResponse(response): StreakRecord|null
+  }
+}
+
+AnalyticsReportingApi --|> BaseApi
+BaseApi *--> BaseEndpoint
+StreakRecordAssembler ..> AnalyticsReportingApi : uses >
+
+@enduml

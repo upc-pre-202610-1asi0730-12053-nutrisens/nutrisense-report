@@ -1,0 +1,80 @@
+@startuml NutriSense - Body & Health Metrics Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(health_profiles, "health_profiles") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(user_id) : UUID NOT NULL
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(body_measurements, "body_measurements") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(health_profile_id) : UUID NOT NULL
+  weight_kg : NUMERIC(6,2) NOT NULL CHECK (weight_kg > 0)
+  height_cm : NUMERIC(5,2) NOT NULL CHECK (height_cm > 0)
+  body_fat_percentage : NUMERIC(5,2)
+    CHECK (body_fat_percentage BETWEEN 0 AND 100)
+  bmi : NUMERIC(5,2) GENERATED ALWAYS AS
+    (weight_kg / ((height_cm / 100.0) * (height_cm / 100.0))) STORED
+  recorded_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(health_goals, "health_goals") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(health_profile_id) : UUID NOT NULL
+  goal_type : VARCHAR(20) NOT NULL
+    CHECK (goal_type IN ('LOSE_WEIGHT','GAIN_MUSCLE','MAINTAIN'))
+  target_weight_kg : NUMERIC(6,2) CHECK (target_weight_kg > 0)
+  target_date : DATE
+  is_active : BOOLEAN NOT NULL DEFAULT TRUE
+  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+TABLE(tdee_calculations, "tdee_calculations") {
+  PK(id) : UUID NOT NULL
+  --
+  FK(health_profile_id) : UUID NOT NULL
+  FK(measurement_id) : UUID NOT NULL
+  activity_level : VARCHAR(20) NOT NULL
+    CHECK (activity_level IN
+      ('SEDENTARY','LIGHT','MODERATE','ACTIVE','VERY_ACTIVE'))
+  bmr_kcal : NUMERIC(8,2) NOT NULL
+  tdee_kcal : NUMERIC(8,2) NOT NULL
+  protein_target_g : NUMERIC(7,2) NOT NULL
+  carbs_target_g : NUMERIC(7,2) NOT NULL
+  fat_target_g : NUMERIC(7,2) NOT NULL
+  calculated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+}
+
+' Constraints
+note right of health_profiles
+  UNIQUE (user_id)
+end note
+
+note right of health_goals
+  INDEX (health_profile_id, is_active)
+  ' Only one active goal per type per profile recommended at app level
+end note
+
+note right of body_measurements
+  INDEX (health_profile_id, recorded_at DESC)
+end note
+
+' Relationships
+health_profiles ||--o{ body_measurements : "records\n(1 to 0..*)"
+health_profiles ||--o{ health_goals : "sets\n(1 to 0..*)"
+health_profiles ||--o{ tdee_calculations : "calculates\n(1 to 0..*)"
+body_measurements ||--o{ tdee_calculations : "basis for\n(1 to 0..*)"
+
+@enduml

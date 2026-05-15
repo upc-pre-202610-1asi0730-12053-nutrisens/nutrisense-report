@@ -1,0 +1,81 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "smart-recommendations/infrastructure [stubs]" {
+  class SmartRecommendationsApi <<api>>
+  class RecommendationCardAssembler <<assembler>>
+  class RecipeAssembler <<assembler>>
+  class PantryItemAssembler <<assembler>>
+  class CityAssembler <<assembler>>
+  class IngredientCatalogItemAssembler <<assembler>>
+}
+
+package "smart-recommendations/domain/model [stubs]" {
+  class MacroProfile <<entity>>
+}
+
+package "smart-recommendations/application" {
+
+  class useSmartRecommendationsStore <<store>> {
+    -- state --
+    + recommendations: RecommendationCard[]
+    + recipes: Recipe[]
+    + pantryItems: PantryItem[]
+    + cities: City[]
+    + ingredientCatalog: IngredientCatalogItem[]
+    + travelModeActive: boolean
+    + homeCityId: string|null
+    + travelCityId: string|null
+    + userGoal: GoalTypeValue|null
+    + activeFilters: Object
+    + macroProfile: MacroProfile|null
+    + profileFilterActive: boolean
+    + consumedCaloriesToday: number
+    + consumedProteinToday: number
+    + errors: Error[]
+    -- computed --
+    + userForbiddenTags: string[]
+    + activeCityId: string|null
+    + activeCityName: string
+    + activeCity: City|null
+    + homeCity: City|null
+    + filteredRecommendations: RecommendationCard[]
+    + feedRecipes: Recipe[]
+    + pantryIngredientIds: string[]
+    + suggestedRecipes: Recipe[]
+    + partialMatchRecipes: Recipe[]
+    -- actions --
+    + fetchRecommendations(): void
+    + fetchRecipes(): void
+    + fetchPantry(userId): void
+    + addToPantry(userId, ingredientId, name, qty, unit): void
+    + removeFromPantry(itemId): void
+    + updatePantryQuantity(itemId, qty): void
+    + deductRecipeFromPantry(recipe, servings): void
+    + fetchCities(): void
+    + fetchIngredientCatalog(): void
+    + setFilters(filtersPatch): void
+    + clearFilters(): void
+    + setUserGoal(goalValue): void
+    + setMacroProfile(bmiCategory, primaryGoal): void
+    + toggleProfileFilter(): void
+    + setHomeCity(cityId, cityName): void
+    + enableTravelMode(cityId, cityName): void
+    + disableTravelMode(): void
+    + setUserRestrictions(restrictions, conditions): void
+    + clearErrors(): void
+  }
+}
+
+useSmartRecommendationsStore --> SmartRecommendationsApi : uses >
+useSmartRecommendationsStore --> RecommendationCardAssembler : uses >
+useSmartRecommendationsStore --> RecipeAssembler : uses >
+useSmartRecommendationsStore --> PantryItemAssembler : uses >
+useSmartRecommendationsStore --> CityAssembler : uses >
+useSmartRecommendationsStore --> IngredientCatalogItemAssembler : uses >
+useSmartRecommendationsStore --> MacroProfile : uses >
+
+@enduml

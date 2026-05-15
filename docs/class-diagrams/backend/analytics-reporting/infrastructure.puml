@@ -1,0 +1,24 @@
+@startuml NutriSense - Analytics & Reporting - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.AnalyticsReporting" {
+
+  package "Domain [stubs]" {
+    interface IAnalyticsRepository
+  }
+
+  package "Infrastructure" {
+    class AnalyticsRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): AnalyticsAggregate
+      +Save(aggregate: AnalyticsAggregate): void
+      +Update(aggregate: AnalyticsAggregate): void
+    }
+  }
+}
+
+AnalyticsRepositoryImpl ..|> IAnalyticsRepository
+
+@enduml

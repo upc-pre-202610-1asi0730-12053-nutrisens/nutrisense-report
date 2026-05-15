@@ -1,0 +1,47 @@
+@startuml NutriSense - Smart Recommendations - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.SmartRecommendations" {
+
+  package "Domain [stubs]" {
+    interface IRecommendationRepository
+  }
+
+  package "Infrastructure [stubs]" {
+    interface IWeatherApiClient
+  }
+
+  package "Application" {
+    interface IRecsCommandService {
+      +Handle(command: GenerateRecommendationCommand): RecommendationResponse
+      +Handle(command: AddPantryItemCommand): PantryItemResponse
+      +Handle(command: RemovePantryItemCommand): void
+    }
+
+    interface IRecsQueryService {
+      +Handle(query: GetRecommendationsQuery): List<RecommendationResponse>
+    }
+
+    class RecsCommandServiceImpl {
+      -recsRepository: IRecommendationRepository
+      -weatherClient: IWeatherApiClient
+      -geolocationService: IGeolocationService
+      +Handle(command: GenerateRecommendationCommand): RecommendationResponse
+      +Handle(command: AddPantryItemCommand): PantryItemResponse
+    }
+
+    class GenerateRecommendationCommand {
+      +UserId: Guid
+      +TravelMode: Boolean
+      +Location: GeoCoordinates
+    }
+  }
+}
+
+RecsCommandServiceImpl ..|> IRecsCommandService
+RecsCommandServiceImpl --> IRecommendationRepository : uses
+RecsCommandServiceImpl --> IWeatherApiClient : uses
+
+@enduml

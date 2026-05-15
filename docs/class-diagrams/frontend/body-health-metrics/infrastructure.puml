@@ -1,0 +1,54 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/infrastructure [stubs]" {
+  class BaseApi <<api>>
+  class BaseEndpoint <<api>>
+}
+
+package "body-health-metrics/infrastructure" {
+
+  class BodyHealthMetricsApi <<api>> {
+    - bodyMeasurements: BaseEndpoint
+    - weightLogs: BaseEndpoint
+    - userGoals: BaseEndpoint
+    --
+    + getBodyMeasurements(): Promise
+    + getBodyMeasurement(id): Promise
+    + createBodyMeasurement(resource): Promise
+    + updateBodyMeasurement(id, resource): Promise
+    + getWeightLogs(): Promise
+    + createWeightLog(resource): Promise
+    + updateWeightLog(id, resource): Promise
+    + getUserGoals(): Promise
+    + createUserGoal(resource): Promise
+    + updateUserGoal(id, resource): Promise
+  }
+
+  class BodyMeasurementAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): BodyMeasurement|null
+    + {static} toEntityFromResponse(response): BodyMeasurement|null
+    + {static} toEntitiesFromResponse(response): BodyMeasurement[]
+  }
+
+  class WeightLogAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): WeightLog|null
+    + {static} toEntitiesFromResponse(response): WeightLog[]
+  }
+
+  class UserGoalAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): UserGoal|null
+    + {static} toEntitiesFromResponse(response): UserGoal[]
+  }
+}
+
+BodyHealthMetricsApi --|> BaseApi
+BaseApi *--> BaseEndpoint
+BodyMeasurementAssembler ..> BodyHealthMetricsApi : uses >
+WeightLogAssembler ..> BodyHealthMetricsApi : uses >
+UserGoalAssembler ..> BodyHealthMetricsApi : uses >
+
+@enduml

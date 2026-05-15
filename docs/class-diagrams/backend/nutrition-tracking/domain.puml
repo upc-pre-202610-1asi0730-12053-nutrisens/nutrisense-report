@@ -1,0 +1,69 @@
+@startuml NutriSense - Nutrition Tracking - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.NutritionTracking" {
+
+  package "Domain" {
+    class NutritionLog {
+      +Id: Guid
+      +UserId: Guid
+      +Date: DateOnly
+      -meals: List<Meal>
+      +AddMeal(meal: Meal): void
+      +RemoveMeal(mealId: Guid): void
+      +GetTotalCalories(): Decimal
+      +GetMacroSummary(): MacroNutrients
+    }
+
+    class Meal {
+      +Id: Guid
+      +Name: String
+      +Macros: MacroNutrients
+      +MealType: MealType
+      +LoggedAt: DateTime
+    }
+
+    class MacroNutrients {
+      +Calories: Decimal
+      +Protein: Decimal
+      +Carbs: Decimal
+      +Fat: Decimal
+    }
+
+    class ScanResult {
+      +Id: Guid
+      +ImageUrl: String
+      +RecognizedItems: List<String>
+      +Confidence: Decimal
+    }
+
+    enum MealType {
+      BREAKFAST
+      LUNCH
+      DINNER
+      SNACK
+    }
+
+    class MealLoggedEvent {
+      +LogId: Guid
+      +UserId: Guid
+      +Calories: Decimal
+      +OccurredOn: DateTime
+    }
+
+    interface INutritionLogRepository {
+      +FindByUserAndDate(userId: Guid, date: DateOnly): NutritionLog
+      +Save(log: NutritionLog): void
+      +Update(log: NutritionLog): void
+    }
+  }
+}
+
+NutritionLog *--> Meal : contains "0..*"
+Meal --> MacroNutrients : has "1"
+Meal --> MealType : has "1"
+NutritionLog --> MealLoggedEvent : fires "0..*"
+
+@enduml
