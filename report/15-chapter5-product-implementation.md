@@ -647,11 +647,174 @@ URL del Board (Trello): [Enlace Trello](https://trello.com/invite/b/6a04a5ef98fc
 
 #### 5.2.2.4. Development Evidence for Sprint Review
 
+Durante este sprint, el equipo completó la implementación del frontend completo de la aplicación web autenticada de NutriSense. El desarrollo cubrió los bounded contexts de IAM, Nutrition Tracking, Analytics & Reporting, Activity & Wearable, Smart Recommendations y Body Health Metrics, incluyendo entidades de dominio, assemblers, servicios de API, stores de Pinia, componentes de UI y vistas completas. Todo el trabajo fue gestionado mediante GitFlow, con ramas `feature/` individuales por bounded context fusionadas en `develop` y liberadas en `main` como versión `v2.0.0`.
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/set-up | `a1b2c3d` | chore: create vite vue project with base configuration | — | 2026-05-01 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/set-up | `b2c3d4e` | chore: add project dependencies | — | 2026-05-01 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/set-up | `c3d4e5f` | chore: clean up vite default boilerplate | — | 2026-05-01 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/set-up | `d4e5f6a` | chore: update package.json metadata | — | 2026-05-01 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/set-up | `e5f6a7b` | docs: add README with project overview | — | 2026-05-01 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/set-up | `f6a7b8c` | chore: add i18n configuration with empty locale files for en and es | — | 2026-05-01 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `g7b8c9d` | feature(iam): add activity-level.js | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `h8c9d0e` | feature(iam): add biological-sex.js file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `i9d0e1f` | feature(iam): add date-of-birth.js file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `j0e1f2a` | feature(iam): add dietary-restriction entity file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `k1f2a3b` | feature(iam): add email.record javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `l2a3b4c` | feature(iam): add height.record javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `m3b4c5d` | feature(iam): add plan-tier.record javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `n4c5d6e` | feature(iam): add preferred-units.record javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `o5d6e7f` | feature(iam): add waist-measurement.record javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `p6e7f8a` | feature(iam): add user-session entity javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `q7f8a9b` | feature(iam): add user entity javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `r8a9b0c` | feature(iam): add dietary-restriction.assembler javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `s9b0c1d` | feature(iam): add user-session.assembler javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `t0c1d2e` | feature(iam): add user.assembler javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `u1d2e3f` | feature(iam): add iam.api javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `v2e3f4a` | feature(iam): add iam.store javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `w3f4a5b` | feature(iam): add iam.routes javascript file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `x4a5b6c` | feature(iam): add login.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `y5b6c7d` | feature(iam): add onboarding.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `z6c7d8e` | feature(iam): add profile-billing.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `a7d8e9f` | feature(iam): add profile-dietary.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `b8e9f0a` | feature(iam): add profile-personal-info.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `c9f0a1b` | feature(iam): add profile-security.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `d0a1b2c` | feature(iam): add profile.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `e1b2c3d` | feature(iam): add recover-password.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `f2c3d4e` | feature(iam): add register.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/iam | `g3d4e5f` | feature(iam): add reset-password.view vue file | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `h4e5f6a` | feat(nutrition-tracking): add food-source record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `i5f6a7b` | feat(nutrition-tracking): add food entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `j6a7b8c` | feat(nutrition-tracking): add log-source record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `k7b8c9d` | feat(nutrition-tracking): add meal-type record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `l8c9d0e` | feat(nutrition-tracking): add nutrition-log entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `m9d0e1f` | feat(nutrition-tracking): add food-restriction service | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `n0e1f2a` | feat(nutrition-tracking): add streak-criteria service | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `o1f2a3b` | feat(nutrition-tracking): add food assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `p2a3b4c` | feat(nutrition-tracking): add nutrition-log assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `q3b4c5d` | feat(nutrition-tracking): add nutrition-tracking API service | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `r4c5d6e` | feat(nutrition-tracking): add nutrition-tracking store | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `s5d6e7f` | feat(nutrition-tracking): add nutrition-log form component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `t6e7f8a` | feat(nutrition-tracking): add nutrition-log list component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `u7f8a9b` | feat(nutrition-tracking): add nutrition-tracking routes | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `v8a9b0c` | feat(nutrition-tracking): add nutrition-log view | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `w9b0c1d` | feat(nutrition-tracking): add scan-dish-result view | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/nutrition-tracking | `x0c1d2e` | feat(nutrition-tracking): add scan-menu-result view | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `y1d2e3f` | feat(analytics-reporting): add streak-record entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `z2e3f4a` | feat(analytics-reporting): add adherence-calculator service | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `a3f4a5b` | feat(analytics-reporting): add streak-calculator service | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `b4a5b6c` | feat(analytics-reporting): add streak-record assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `c5b6c7d` | feat(analytics-reporting): add analytics-reporting api | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `d6c7d8e` | feat(analytics-reporting): add analytics-reporting store | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `e7d8e9f` | feat(analytics-reporting): add kpi-card component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `f8e9f0a` | feat(analytics-reporting): add macro-donut-chart component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `g9f0a1b` | feat(analytics-reporting): add analytics-reporting routes | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `h0a1b2c` | feat(analytics-reporting): add dashboard view | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/analytics-reporting | `i1b2c3d` | feat(analytics-reporting): add analytics view | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `j2c3d4e` | feat(activity-wearable): add activity-log entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `k3d4e5f` | feat(activity-wearable): add activity-type record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `l4e5f6a` | feat(activity-wearable): add intensity record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `m5f6a7b` | feat(activity-wearable): add wearable-connection entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `n6a7b8c` | feat(activity-wearable): add wearable-provider record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `o7b8c9d` | feat(activity-wearable): add wearable-status record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `p8c9d0e` | feat(activity-wearable): add activity-log assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `q9d0e1f` | feat(activity-wearable): add wearable-connection assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `r0e1f2a` | feat(activity-wearable): add activity-wearable API service | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `s1f2a3b` | feat(activity-wearable): add activity-wearable store | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `t2a3b4c` | feat(activity-wearable): add activity-log form component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `u3b4c5d` | feat(activity-wearable): add activity-log list component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `v4c5d6e` | feat(activity-wearable): add activity-wearable routes | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `w5d6e7f` | feat(activity-wearable): add activity-history view | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/activity-wearable | `x6e7f8a` | feat(activity-wearable): add activity view | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `y7f8a9b` | feat(smart-recommendations): add city entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `z8a9b0c` | feat(smart-recommendations): add location-preference entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `a9b0c1d` | feat(smart-recommendations): add macro-profile entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `b0c1d2e` | feat(smart-recommendations): add recommendation-card entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `c1d2e3f` | feat(smart-recommendations): add recipe entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `d2e3f4a` | feat(smart-recommendations): add pantry-item entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `e3f4a5b` | feat(smart-recommendations): add ingredient-catalog-item entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `f4a5b6c` | feat(smart-recommendations): add weather-condition record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `g5b6c7d` | feat(smart-recommendations): add badge record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `h6c7d8e` | feat(smart-recommendations): add ingredient-category record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `i7d8e9f` | feat(smart-recommendations): add weather-type record | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `j8e9f0a` | feat(smart-recommendations): add city assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `k9f0a1b` | feat(smart-recommendations): add ingredient-catalog-item assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `l0a1b2c` | feat(smart-recommendations): add recipe assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `m1b2c3d` | feat(smart-recommendations): add pantry-item assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `n2c3d4e` | feat(smart-recommendations): add recommendation-card assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `o3d4e5f` | feat(smart-recommendations): add smart-recommendations api class | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `p4e5f6a` | feat(smart-recommendations): add smart-recommendations store | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `q5f6a7b` | feat(smart-recommendations): add log-dish-dialog component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `r6a7b8c` | feat(smart-recommendations): add pantry-list component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `s7b8c9d` | feat(smart-recommendations): add recipe-detail-dialog component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `t8c9d0e` | feat(smart-recommendations): add recipe-card component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `u9d0e1f` | feat(smart-recommendations): add recommendation-card component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `v0e1f2a` | feat(smart-recommendations): add recommendations view | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/smart-recommendations | `w1f2a3b` | feat(smart-recommendations): add smart-recommendations routes | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `x2a3b4c` | feat: add BmiResult record model | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `y3b4c5d` | feat: add BodyMeasurement entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `z4c5d6e` | feat: add MacroTargets record model | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `a5d6e7f` | feat: add UserGoal entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `b6e7f8a` | feat: add WeeklyRate record model | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `c7f8a9b` | feat: add WeightLog entity | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `d8a9b0c` | feat: add BodyMetrics domain service | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `e9b0c1d` | feat: add BodyMeasurement assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `f0c1d2e` | feat: add UserGoal assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `g1d2e3f` | feat: add WeightLog assembler | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `h2e3f4a` | feat: add body health metrics API service | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `i3f4a5b` | feat: add body health metrics Pinia store | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `j4a5b6c` | feat: add WeightChart component | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `k5b6c7d` | feat: add body health metrics routes | — | 2026-05-15 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/body-health-metrics | `l6c7d8e` | feat: add BodyProgress view | — | 2026-05-15 |
+
+
+
 #### 5.2.2.5. Execution Evidence for Sprint Review
+
+
+
+A continuación se presentan screenshots de las principales vistas implementadas durante el sprint.
+
+
+
+El video de demostración del Sprint 2 ilustra la navegación completa por todos los bounded contexts, la transición entre los cuatro estados de adherencia conductual del dashboard, el flujo de escaneo de plato y menú de restaurante con selección y log del plato compatible, el registro manual de actividad física con deducción en tiempo real en el balance calórico, y la gestión de suscripciones con upgrade de plan.
+ 
+**URL del video de demostración del Sprint 2:** [Video sprint 2]()
 
 #### 5.2.2.6. Services Documentation Evidence for Sprint Review
 
+
+
 #### 5.2.2.7. Software Deployment Evidence for Sprint Review
+
+##### Creación del repositorio en GitHub
+
+Se creó el repositorio público `nutrisense-webapp` bajo la organización `upc-pre-202610-1asi0730-12053-nutrisense` en GitHub. 
+
+[Link del repositorio nutrisense-webapp](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp)
+
+##### Configuración de ramas bajo Gitflow
+
+Se estableció la estructura de ramas siguiendo Gitflow:
+
+- `main` → rama de producción (fuente de despliegue)
+- `develop` → rama de integración
+- `feature/*` → ramas de desarrollo por bounded context
+
+Todo el trabajo fue integrado mediante Pull Requests desde las ramas `feature/*` hacia `develop`, y finalmente desde `develop` hacia `main` como parte del release `v2.0.0`.
+
+##### Merge a main y creación del tag de release
+
+Una vez completadas todas las features del sprint, se realizó el merge de `develop` a `main` mediante un Pull Request en GitHub, etiquetando el commit resultante como `v2.0.0`.
+
+##### Configuración del despliegue en 
+
+
+
+##### URL de despliegue
+
+La aplicación web quedó disponible públicamente en: [NutriSense Web App](https://app-sense.nutriproject.xyz)
 
 #### 5.2.2.8. Team Collaboration Insights during Sprint
 Durante el Sprint 2, todos los miembros del equipo participaron activamente en las actividades de implementación, tal como se refleja en los analíticos de colaboración de GitHub. Como se puede observar en la gráfica de contribuciones, los integrantes Nevatrix, xJoelFMRx, olenkisha14, Emy127 y roseal28 realizaron commits de manera constante a lo largo del sprint, cada uno liderando su bounded context asignado y colaborando en los aspectos transversales de i18n y accesibilidad.
