@@ -1,0 +1,41 @@
+@startuml NutriSense - Subscriptions & Billing - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.SubscriptionsBilling" {
+
+  package "Domain [stubs]" {
+    interface ISubscriptionRepository
+  }
+
+  package "Infrastructure" {
+    class SubscriptionRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): SubscriptionAggregate
+      +FindPlanById(planId: Guid): SubscriptionPlan
+      +FindAllPlans(): List<SubscriptionPlan>
+      +Save(aggregate: SubscriptionAggregate): void
+      +Update(aggregate: SubscriptionAggregate): void
+    }
+
+    interface IStripeClient {
+      +CreateSubscription(customerId: String, priceId: String): String
+      +CancelSubscription(subscriptionId: String): void
+      +CreatePaymentIntent(amount: Decimal, currency: String): String
+    }
+
+    class StripeClientImpl {
+      -apiKey: String
+      -httpClient: HttpClient
+      +CreateSubscription(customerId: String, priceId: String): String
+      +CancelSubscription(subscriptionId: String): void
+      +CreatePaymentIntent(amount: Decimal, currency: String): String
+    }
+  }
+}
+
+SubscriptionRepositoryImpl ..|> ISubscriptionRepository
+StripeClientImpl ..|> IStripeClient
+
+@enduml

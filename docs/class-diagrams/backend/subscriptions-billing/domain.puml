@@ -1,0 +1,113 @@
+@startuml NutriSense - Subscriptions & Billing - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.SubscriptionsBilling" {
+
+  package "Domain" {
+    class SubscriptionAggregate {
+      +Id: Guid
+      +UserId: Guid
+      -subscription: Subscription
+      -paymentHistory: List<Payment>
+      +Subscribe(plan: SubscriptionPlan, stripeId: String): void
+      +Cancel(): void
+      +RecordPayment(payment: Payment): void
+      +GetActiveSubscription(): Subscription
+    }
+
+    class Subscription {
+      +Id: Guid
+      +Plan: SubscriptionPlan
+      +Status: SubscriptionStatus
+      +StartDate: DateOnly
+      +EndDate: DateOnly
+      +StripeSubscriptionId: String
+      +IsActive(): Boolean
+      +Cancel(): void
+    }
+
+    class SubscriptionPlan {
+      +Id: Guid
+      +Tier: PlanTier
+      +PriceUsd: Money
+      +BillingCycle: BillingCycle
+      +MaxMealScans: Int32
+      +HasAdvancedAnalytics: Boolean
+    }
+
+    class Payment {
+      +Id: Guid
+      +Amount: Money
+      +Status: PaymentStatus
+      +PaidAt: DateTime
+      +StripePaymentIntentId: String
+    }
+
+    class Money {
+      +Amount: Decimal
+      +Currency: String
+      +Add(other: Money): Money
+    }
+
+    enum PlanTier {
+      BASIC
+      PRO
+      PREMIUM
+    }
+
+    enum BillingCycle {
+      MONTHLY
+      ANNUAL
+    }
+
+    enum SubscriptionStatus {
+      ACTIVE
+      CANCELLED
+      EXPIRED
+      PAST_DUE
+    }
+
+    enum PaymentStatus {
+      PENDING
+      SUCCEEDED
+      FAILED
+    }
+
+    class SubscriptionActivatedEvent {
+      +AggregateId: Guid
+      +UserId: Guid
+      +PlanTier: PlanTier
+      +OccurredOn: DateTime
+    }
+
+    class SubscriptionCancelledEvent {
+      +AggregateId: Guid
+      +UserId: Guid
+      +OccurredOn: DateTime
+    }
+
+    interface ISubscriptionRepository {
+      +FindByUserId(userId: Guid): SubscriptionAggregate
+      +FindPlanById(planId: Guid): SubscriptionPlan
+      +FindAllPlans(): List<SubscriptionPlan>
+      +Save(aggregate: SubscriptionAggregate): void
+      +Update(aggregate: SubscriptionAggregate): void
+    }
+  }
+}
+
+SubscriptionAggregate *--> Subscription : manages "0..1"
+SubscriptionAggregate *--> Payment : records "0..*"
+Subscription --> SubscriptionPlan : has "1"
+Subscription --> SubscriptionStatus : has "1"
+Payment --> Money : has "1"
+Payment --> PaymentStatus : has "1"
+SubscriptionPlan --> PlanTier : has "1"
+SubscriptionPlan --> BillingCycle : has "1"
+SubscriptionPlan --> Money : priced by "1"
+SubscriptionAggregate --> SubscriptionActivatedEvent : fires "0..*"
+SubscriptionAggregate --> SubscriptionCancelledEvent : fires "0..*"
+
+@enduml

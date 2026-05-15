@@ -1,0 +1,28 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "body-health-metrics/application [stub]" {
+  class useBodyHealthMetricsStore <<store>>
+}
+
+package "body-health-metrics/presentation/routes" {
+  class BodyHealthMetricsRoutes <<router>>
+}
+
+package "body-health-metrics/presentation/views" {
+  class BodyProgressView <<view>>
+}
+
+package "body-health-metrics/presentation/components" {
+  class WeightChartComponent <<component>>
+}
+
+BodyHealthMetricsRoutes ..> BodyProgressView : navigates to >
+BodyProgressView ..> WeightChartComponent : contains >
+BodyProgressView o--> useBodyHealthMetricsStore : uses >
+WeightChartComponent o--> useBodyHealthMetricsStore : uses >
+
+@enduml

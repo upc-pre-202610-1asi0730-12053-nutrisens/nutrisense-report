@@ -1,0 +1,39 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "nutrition-tracking/application [stub]" {
+  class useNutritionTrackingStore <<store>>
+}
+
+package "nutrition-tracking/presentation/routes" {
+  class NutritionTrackingRoutes <<router>>
+}
+
+package "nutrition-tracking/presentation/views" {
+  class NutritionLogView <<view>>
+  class ScanDishResultView <<view>>
+  class ScanMenuResultView <<view>>
+}
+
+package "nutrition-tracking/presentation/components" {
+  class NutritionLogFormComponent <<component>>
+  class NutritionLogListComponent <<component>>
+}
+
+NutritionTrackingRoutes ..> NutritionLogView : navigates to >
+NutritionTrackingRoutes ..> ScanDishResultView : navigates to >
+NutritionTrackingRoutes ..> ScanMenuResultView : navigates to >
+
+NutritionLogView ..> NutritionLogFormComponent : contains >
+NutritionLogView ..> NutritionLogListComponent : contains >
+
+NutritionLogView o--> useNutritionTrackingStore : uses >
+ScanDishResultView o--> useNutritionTrackingStore : uses >
+ScanMenuResultView o--> useNutritionTrackingStore : uses >
+NutritionLogFormComponent o--> useNutritionTrackingStore : uses >
+NutritionLogListComponent o--> useNutritionTrackingStore : uses >
+
+@enduml

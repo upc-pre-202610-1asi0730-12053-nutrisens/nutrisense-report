@@ -1,0 +1,68 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "nutrition-tracking/infrastructure [stubs]" {
+  class NutritionTrackingApi <<api>>
+  class NutritionLogAssembler <<assembler>>
+  class FoodAssembler <<assembler>>
+}
+
+package "nutrition-tracking/domain/services [stubs]" {
+  class FoodRestrictionService <<domain service>>
+  class StreakCriteriaService <<domain service>>
+}
+
+package "nutrition-tracking/application" {
+
+  class useNutritionTrackingStore <<store>> {
+    -- state --
+    + logs: NutritionLog[]
+    + foods: Food[]
+    + selectedDate: Date
+    + logsLoaded: boolean
+    + foodsLoaded: boolean
+    + scanDishLoading: boolean
+    + scanMenuLoading: boolean
+    + dishScanResult: Object|null
+    + menuScanResult: Object|null
+    + calorieGoal: number
+    + proteinGoal: number
+    + errors: Error[]
+    -- computed --
+    + logsForSelectedDate: NutritionLog[]
+    + logsByMealType: Record<string, NutritionLog[]>
+    + dailyCaloriesConsumed: number
+    + dailyMacros: Macros
+    + recentFoodIds: string[]
+    + isViewingToday: boolean
+    -- actions --
+    + fetchLogs(userId): void
+    + fetchFoods(): void
+    + addToLog(userId, foodId, grams, mealType, source): void
+    + addEstimatedToLog(userId, foodId, name, macros, mealType, source): void
+    + addRecipeToLog(userId, recipe, servings, mealType): void
+    + updateLogQuantity(logId, newGrams): void
+    + removeFromLog(logId): void
+    + simulateDishScan(imageName): void
+    + simulateMenuScan(imageName, restrictions, conditions): void
+    + resetDishScan(): void
+    + resetMenuScan(): void
+    + setSelectedDate(date): void
+    + navigateDay(offset, minDate?): void
+    + getLogsForDateRange(start, end): NutritionLog[]
+    + evaluateStreakMet(calorieGoal, proteinGoal): boolean
+    + setGoals(cal, prot): void
+    + clearErrors(): void
+  }
+}
+
+useNutritionTrackingStore --> NutritionTrackingApi : uses >
+useNutritionTrackingStore --> NutritionLogAssembler : uses >
+useNutritionTrackingStore --> FoodAssembler : uses >
+useNutritionTrackingStore --> FoodRestrictionService : uses >
+useNutritionTrackingStore --> StreakCriteriaService : uses >
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml NutriSense - Body & Health Metrics - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.BodyHealthMetrics" {
+
+  package "Domain [stubs]" {
+    interface IHealthProfileRepository
+  }
+
+  package "Infrastructure" {
+    class HealthProfileRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): HealthProfile
+      +Save(profile: HealthProfile): void
+      +Update(profile: HealthProfile): void
+      +FindMeasurementHistory(userId: Guid): List<BodyMeasurements>
+    }
+  }
+}
+
+HealthProfileRepositoryImpl ..|> IHealthProfileRepository
+
+@enduml

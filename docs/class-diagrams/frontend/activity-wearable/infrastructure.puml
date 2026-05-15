@@ -1,0 +1,43 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/infrastructure [stubs]" {
+  class BaseApi <<api>>
+  class BaseEndpoint <<api>>
+}
+
+package "activity-wearable/infrastructure" {
+
+  class ActivityWearableApi <<api>> {
+    - activityLogs: BaseEndpoint
+    - wearableConnections: BaseEndpoint
+    --
+    + getLogs(): Promise
+    + createLog(resource): Promise
+    + deleteLog(id): Promise
+    + getConnections(): Promise
+    + createConnection(resource): Promise
+    + updateConnection(id, resource): Promise
+  }
+
+  class ActivityLogAssembler <<assembler>> {
+    + {static} toResource(userId, activityData): Object
+    + {static} toEntityFromResource(resource): ActivityLog|null
+    + {static} toEntitiesFromResponse(response): ActivityLog[]
+  }
+
+  class WearableConnectionAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): WearableConnection|null
+    + {static} toEntitiesFromResponse(response): WearableConnection[]
+  }
+}
+
+ActivityWearableApi --|> BaseApi
+BaseApi *--> BaseEndpoint
+ActivityLogAssembler ..> ActivityWearableApi : uses >
+WearableConnectionAssembler ..> ActivityWearableApi : uses >
+
+@enduml

@@ -1,0 +1,74 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "activity-wearable/domain/model" {
+
+  class ActivityLog <<entity>> {
+    + id: string
+    + userId: string
+    + date: string
+    + activityType: ActivityType
+    + durationMinutes: number
+    + intensity: Intensity
+    + caloriesBurned: number
+    + source: string
+    + loggedAt: string
+    --
+    + isHighIntensity(): boolean
+    + minutesSinceLogged(now?): number
+    + isInPostWorkoutWindow(now?): boolean
+    + isToday(): boolean
+  }
+
+  class WearableConnection <<entity>> {
+    + id: string
+    + userId: string
+    + provider: WearableProvider
+    + status: WearableStatus
+    + lastSyncedAt: string|null
+    + authorizedAt: string
+    --
+    + isConnected(): boolean
+    + needsSync(thresholdMinutes?): boolean
+    + minutesSinceLastSync(): number|null
+  }
+
+  class ActivityType <<value object>> {
+    + value: ActivityTypeValue
+    --
+    + triggersPostWorkoutBanner(): boolean
+    + estimateCalories(intensity, durationMinutes): number
+  }
+
+  class Intensity <<value object>> {
+    + value: IntensityValue
+    --
+    + isHigh(): boolean
+    + isLow(): boolean
+  }
+
+  class WearableProvider <<value object>> {
+    + value: WearableProviderValue
+    --
+    + isGoogleFit(): boolean
+    + isAppleHealth(): boolean
+  }
+
+  class WearableStatus <<value object>> {
+    + value: WearableStatusValue
+    --
+    + isConnected(): boolean
+    + hasError(): boolean
+    + isUsable(): boolean
+  }
+}
+
+ActivityLog *--> ActivityType : activityType >
+ActivityLog *--> Intensity : intensity >
+WearableConnection *--> WearableProvider : provider >
+WearableConnection *--> WearableStatus : status >
+
+@enduml

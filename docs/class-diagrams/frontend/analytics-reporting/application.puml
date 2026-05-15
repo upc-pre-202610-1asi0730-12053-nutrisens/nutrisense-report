@@ -1,0 +1,51 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "analytics-reporting/infrastructure [stubs]" {
+  class AnalyticsReportingApi <<api>>
+  class StreakRecordAssembler <<assembler>>
+}
+
+package "analytics-reporting/domain/services [stubs]" {
+  class StreakCalculatorService <<domain service>>
+  class AdherenceCalculatorService <<domain service>>
+}
+
+package "analytics-reporting/application" {
+
+  class useAnalyticsReportingStore <<store>> {
+    -- state --
+    + streak: StreakRecord|null
+    + streakId: string|null
+    + selectedRange: string
+    + customStartDate: Date|null
+    + customEndDate: Date|null
+    + streakLoaded: boolean
+    + errors: Error[]
+    -- computed --
+    + dateRange: { start: Date, end: Date }
+    + streakAtRisk: boolean
+    + streakBroken: boolean
+    + streakMessage: string
+    + weeklyCompletionPercent: number
+    -- actions --
+    + fetchStreak(userId): void
+    + updateStreakAfterLog(logEntries, calorieGoal, proteinGoal): void
+    + calculateKpis(nutritionEntries, weightEntries): Object
+    + calculateAdherence(logDates): number
+    + setRange(range): void
+    + setCustomRange(startDate, endDate): void
+    + refreshDateRange(): void
+    + clearErrors(): void
+  }
+}
+
+useAnalyticsReportingStore --> AnalyticsReportingApi : uses >
+useAnalyticsReportingStore --> StreakRecordAssembler : uses >
+useAnalyticsReportingStore --> StreakCalculatorService : uses >
+useAnalyticsReportingStore --> AdherenceCalculatorService : uses >
+
+@enduml

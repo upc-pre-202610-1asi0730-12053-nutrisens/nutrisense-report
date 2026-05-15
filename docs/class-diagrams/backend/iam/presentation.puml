@@ -1,0 +1,66 @@
+@startuml NutriSense - IAM - Presentation
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.IAM" {
+
+  package "Domain [stubs]" {
+    class User
+  }
+
+  package "Application [stubs]" {
+    interface IAuthCommandService
+    interface IAuthQueryService
+  }
+
+  package "Interfaces.REST" {
+    class AuthController {
+      -authCommandService: IAuthCommandService
+      -authQueryService: IAuthQueryService
+      +PostLogin(request: LoginRequest): IActionResult
+      +PostRegister(request: RegisterUserRequest): IActionResult
+      +GetProfile(userId: Guid): IActionResult
+      +PutProfile(userId: Guid, request: UpdateProfileRequest): IActionResult
+      +PostLogout(): IActionResult
+    }
+
+    class LoginRequest {
+      +Email: String
+      +Password: String
+    }
+
+    class RegisterUserRequest {
+      +FirstName: String
+      +LastName: String
+      +Email: String
+      +Password: String
+    }
+
+    class UpdateProfileRequest {
+      +FirstName: String
+      +LastName: String
+      +AvatarUrl: String
+    }
+
+    class AuthResponse {
+      +Token: String
+      +RefreshToken: String
+      +UserId: Guid
+      +FullName: String
+      +Role: String
+    }
+
+    class UserProfileAssembler {
+      +{static} ToResponseFromEntity(user: User): UserProfileResponse
+      +{static} ToEntityFromRequest(request: RegisterUserRequest): User
+    }
+  }
+}
+
+AuthController --> IAuthCommandService : uses
+AuthController --> IAuthQueryService : uses
+AuthController --> UserProfileAssembler : uses
+UserProfileAssembler ..> User : transforms
+
+@enduml

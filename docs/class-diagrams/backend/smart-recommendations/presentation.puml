@@ -1,0 +1,50 @@
+@startuml NutriSense - Smart Recommendations - Presentation
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.SmartRecommendations" {
+
+  package "Application [stubs]" {
+    interface IRecsCommandService
+    interface IRecsQueryService
+  }
+
+  package "Interfaces.REST" {
+    class RecommendationsController {
+      -recsCommandService: IRecsCommandService
+      -recsQueryService: IRecsQueryService
+      +GetRecommendations(userId: Guid, travelMode: Boolean): IActionResult
+      +PostGenerateRecommendation(request: GenerateRecsRequest): IActionResult
+      +GetPantryItems(userId: Guid): IActionResult
+      +PostPantryItem(request: AddPantryItemRequest): IActionResult
+      +DeletePantryItem(itemId: Guid): IActionResult
+    }
+
+    class GenerateRecsRequest {
+      +UserId: Guid
+      +TravelMode: Boolean
+      +Latitude: Decimal
+      +Longitude: Decimal
+    }
+
+    class RecommendationResponse {
+      +Id: Guid
+      +Title: String
+      +Description: String
+      +MealSuggestions: List<MealSuggestionDto>
+      +RecommendationType: String
+      +GeneratedAt: DateTime
+    }
+
+    class RecommendationAssembler {
+      +{static} ToResponseFromEntity(rec: RecommendationEngine): RecommendationResponse
+    }
+  }
+}
+
+RecommendationsController --> IRecsCommandService : uses
+RecommendationsController --> IRecsQueryService : uses
+RecommendationsController --> RecommendationAssembler : uses
+
+@enduml

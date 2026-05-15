@@ -1,0 +1,52 @@
+@startuml NutriSense - Activity & Wearable Sync - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.ActivityWearableSync" {
+
+  package "Domain [stubs]" {
+    interface IActivitySyncRepository
+  }
+
+  package "Infrastructure [stubs]" {
+    interface IGoogleFitClient
+  }
+
+  package "Application" {
+    interface IActivityCommandService {
+      +Handle(command: LogManualActivityCommand): ActivityResponse
+      +Handle(command: SyncGoogleFitCommand): SyncStatusResponse
+    }
+
+    interface IActivityQueryService {
+      +Handle(query: GetActivityHistoryQuery): List<ActivityResponse>
+      +Handle(query: GetCaloricBalanceQuery): CaloricBalanceResponse
+    }
+
+    class ActivityCommandServiceImpl {
+      -activityRepository: IActivitySyncRepository
+      -googleFitClient: IGoogleFitClient
+      +Handle(command: LogManualActivityCommand): ActivityResponse
+      +Handle(command: SyncGoogleFitCommand): SyncStatusResponse
+    }
+
+    class LogManualActivityCommand {
+      +UserId: Guid
+      +ActivityType: ActivityType
+      +DurationMinutes: Int32
+      +CaloriesBurned: Decimal
+    }
+
+    class SyncGoogleFitCommand {
+      +UserId: Guid
+      +AccessToken: String
+    }
+  }
+}
+
+ActivityCommandServiceImpl ..|> IActivityCommandService
+ActivityCommandServiceImpl --> IActivitySyncRepository : uses
+ActivityCommandServiceImpl --> IGoogleFitClient : uses
+
+@enduml

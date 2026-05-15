@@ -1,0 +1,48 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "iam/application [stub]" {
+  class useIamStore <<store>>
+}
+
+package "iam/presentation/routes" {
+  class IamRoutes <<router>>
+}
+
+package "iam/presentation/views" {
+  class LoginView <<view>>
+  class RegisterView <<view>>
+  class OnboardingView <<view>>
+  class ProfileView <<view>>
+  class ProfileBillingView <<view>>
+  class ProfileDietaryView <<view>>
+  class ProfilePersonalInfoView <<view>>
+  class ProfileSecurityView <<view>>
+  class RecoverPasswordView <<view>>
+  class ResetPasswordView <<view>>
+}
+
+IamRoutes ..> LoginView : navigates to >
+IamRoutes ..> RegisterView : navigates to >
+IamRoutes ..> OnboardingView : navigates to >
+IamRoutes ..> ProfileView : navigates to >
+IamRoutes ..> ProfileBillingView : navigates to >
+IamRoutes ..> ProfileDietaryView : navigates to >
+IamRoutes ..> ProfilePersonalInfoView : navigates to >
+IamRoutes ..> ProfileSecurityView : navigates to >
+IamRoutes ..> RecoverPasswordView : navigates to >
+IamRoutes ..> ResetPasswordView : navigates to >
+
+LoginView o--> useIamStore : uses >
+RegisterView o--> useIamStore : uses >
+OnboardingView o--> useIamStore : uses >
+ProfileView o--> useIamStore : uses >
+ProfileBillingView o--> useIamStore : uses >
+ProfileDietaryView o--> useIamStore : uses >
+ProfilePersonalInfoView o--> useIamStore : uses >
+ProfileSecurityView o--> useIamStore : uses >
+
+@enduml

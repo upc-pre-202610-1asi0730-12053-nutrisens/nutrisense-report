@@ -1,0 +1,36 @@
+@startuml NutriSense - Activity & Wearable Sync - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.ActivityWearableSync" {
+
+  package "Domain [stubs]" {
+    interface IActivitySyncRepository
+  }
+
+  package "Infrastructure" {
+    class ActivitySyncRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): ActivitySync
+      +Save(sync: ActivitySync): void
+      +Update(sync: ActivitySync): void
+      +FindRecordsByDate(userId: Guid, date: DateOnly): List<ActivityRecord>
+    }
+
+    interface IGoogleFitClient {
+      +FetchActivities(accessToken: String): List<ActivityRecord>
+    }
+
+    class GoogleFitClientImpl {
+      -httpClient: HttpClient
+      -baseUrl: String
+      +FetchActivities(accessToken: String): List<ActivityRecord>
+    }
+  }
+}
+
+ActivitySyncRepositoryImpl ..|> IActivitySyncRepository
+GoogleFitClientImpl ..|> IGoogleFitClient
+
+@enduml

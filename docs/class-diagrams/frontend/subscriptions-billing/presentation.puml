@@ -1,0 +1,41 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "subscriptions-billing/application [stub]" {
+  class useSubscriptionsBillingStore <<store>>
+}
+
+package "subscriptions-billing/presentation/routes" {
+  class SubscriptionsBillingRoutes <<router>>
+}
+
+package "subscriptions-billing/presentation/views" {
+  class SubscriptionView <<view>>
+  class PlanSelectionView <<view>>
+  class PaymentHistoryView <<view>>
+  class ProfileBillingView <<view>>
+}
+
+package "subscriptions-billing/presentation/components" {
+  class FeatureGateComponent <<component>>
+  class PlanCardComponent <<component>>
+}
+
+SubscriptionsBillingRoutes ..> SubscriptionView : navigates to >
+SubscriptionsBillingRoutes ..> PlanSelectionView : navigates to >
+SubscriptionsBillingRoutes ..> PaymentHistoryView : navigates to >
+SubscriptionsBillingRoutes ..> ProfileBillingView : navigates to >
+
+PlanSelectionView ..> PlanCardComponent : contains >
+
+SubscriptionView o--> useSubscriptionsBillingStore : uses >
+PlanSelectionView o--> useSubscriptionsBillingStore : uses >
+PaymentHistoryView o--> useSubscriptionsBillingStore : uses >
+ProfileBillingView o--> useSubscriptionsBillingStore : uses >
+FeatureGateComponent o--> useSubscriptionsBillingStore : uses >
+PlanCardComponent o--> useSubscriptionsBillingStore : uses >
+
+@enduml

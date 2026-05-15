@@ -1,0 +1,42 @@
+@startuml NutriSense - Analytics & Reporting - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.AnalyticsReporting" {
+
+  package "Domain [stubs]" {
+    interface IAnalyticsRepository
+  }
+
+  package "Application" {
+    interface IAnalyticsCommandService {
+      +Handle(command: GenerateProgressReportCommand): ProgressReportResponse
+      +Handle(command: UpdateStreakCommand): StreakResponse
+    }
+
+    interface IAnalyticsQueryService {
+      +Handle(query: GetProgressReportQuery): ProgressReportResponse
+      +Handle(query: GetStreaksQuery): List<StreakResponse>
+      +Handle(query: GetDailyBalancesQuery): List<DailyBalanceResponse>
+    }
+
+    class AnalyticsCommandServiceImpl {
+      -analyticsRepository: IAnalyticsRepository
+      +Handle(command: GenerateProgressReportCommand): ProgressReportResponse
+      +Handle(command: UpdateStreakCommand): StreakResponse
+    }
+
+    class GenerateProgressReportCommand {
+      +UserId: Guid
+      +ReportType: ReportType
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+    }
+  }
+}
+
+AnalyticsCommandServiceImpl ..|> IAnalyticsCommandService
+AnalyticsCommandServiceImpl --> IAnalyticsRepository : uses
+
+@enduml

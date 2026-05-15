@@ -1,0 +1,68 @@
+﻿@startuml
+skinparam monochrome false
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "shared/infrastructure [stubs]" {
+  class BaseApi <<api>>
+  class BaseEndpoint <<api>>
+}
+
+package "smart-recommendations/infrastructure" {
+
+  class SmartRecommendationsApi <<api>> {
+    - recommendationCards: BaseEndpoint
+    - recipes: BaseEndpoint
+    - pantry: BaseEndpoint
+    - cities: BaseEndpoint
+    - ingredientCatalog: BaseEndpoint
+    --
+    + getRecommendations(): Promise
+    + getRecommendationById(id): Promise
+    + getRecipes(): Promise
+    + getRecipeById(id): Promise
+    + getPantryItems(): Promise
+    + createPantryItem(resource): Promise
+    + patchPantryItem(id, patch): Promise
+    + deletePantryItem(id): Promise
+    + getCities(): Promise
+    + getCityById(id): Promise
+    + getIngredientCatalog(): Promise
+  }
+
+  class RecommendationCardAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): RecommendationCard|null
+    + {static} toEntitiesFromResponse(response): RecommendationCard[]
+  }
+
+  class RecipeAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): Recipe|null
+    + {static} toEntitiesFromResponse(response): Recipe[]
+  }
+
+  class PantryItemAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): PantryItem|null
+    + {static} toEntitiesFromResponse(response): PantryItem[]
+  }
+
+  class CityAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): City|null
+    + {static} toEntitiesFromResponse(response): City[]
+  }
+
+  class IngredientCatalogItemAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): IngredientCatalogItem|null
+    + {static} toEntitiesFromResponse(response): IngredientCatalogItem[]
+  }
+}
+
+SmartRecommendationsApi --|> BaseApi
+BaseApi *--> BaseEndpoint
+RecommendationCardAssembler ..> SmartRecommendationsApi : uses >
+RecipeAssembler ..> SmartRecommendationsApi : uses >
+PantryItemAssembler ..> SmartRecommendationsApi : uses >
+CityAssembler ..> SmartRecommendationsApi : uses >
+IngredientCatalogItemAssembler ..> SmartRecommendationsApi : uses >
+
+@enduml

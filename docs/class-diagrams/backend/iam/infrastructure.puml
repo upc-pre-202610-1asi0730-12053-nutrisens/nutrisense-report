@@ -1,0 +1,32 @@
+@startuml NutriSense - IAM - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.IAM" {
+
+  package "Domain [stubs]" {
+    interface IUserRepository
+  }
+
+  package "Infrastructure" {
+    class UserRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindById(id: Guid): User
+      +FindByEmail(email: String): User
+      +Save(user: User): void
+      +Update(user: User): void
+    }
+
+    class JwtTokenService {
+      -secretKey: String
+      -issuer: String
+      +GenerateToken(user: User): String
+      +ValidateToken(token: String): ClaimsPrincipal
+    }
+  }
+}
+
+UserRepositoryImpl ..|> IUserRepository
+
+@enduml

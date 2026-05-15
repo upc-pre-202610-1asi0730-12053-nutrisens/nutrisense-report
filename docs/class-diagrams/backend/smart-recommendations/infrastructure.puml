@@ -1,0 +1,35 @@
+@startuml NutriSense - Smart Recommendations - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.SmartRecommendations" {
+
+  package "Domain [stubs]" {
+    interface IRecommendationRepository
+  }
+
+  package "Infrastructure" {
+    class RecommendationRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserId(userId: Guid): RecommendationEngine
+      +Save(engine: RecommendationEngine): void
+      +Update(engine: RecommendationEngine): void
+    }
+
+    interface IWeatherApiClient {
+      +GetWeatherByCoordinates(coords: GeoCoordinates): WeatherContext
+    }
+
+    class OpenWeatherMapClientImpl {
+      -apiKey: String
+      -httpClient: HttpClient
+      +GetWeatherByCoordinates(coords: GeoCoordinates): WeatherContext
+    }
+  }
+}
+
+RecommendationRepositoryImpl ..|> IRecommendationRepository
+OpenWeatherMapClientImpl ..|> IWeatherApiClient
+
+@enduml
