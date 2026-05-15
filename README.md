@@ -9,7 +9,7 @@
 **Ciclo:** 5  
 **Docente:** Efraín Ricardo Bautista Ubillús
 
-## **"Informe de trabajo: AV1"**
+## **"Informe de trabajo: TB1"**
 
 ### ***Startup:*** NutriSense
 
