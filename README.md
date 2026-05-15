@@ -47,6 +47,12 @@ Abril, 2026
 | 0.10.0 | 04/22/2026 – 04/23/2026 | Todos los integrantes | Cap. 2 (needfinding, personas, journey mapping, EventStorming), cap. 3 (user stories, impact maps, product backlog), cap. 4 (wireframes y mockups), cap. 5 (subcapítulos 5.1–5.2, configuración de entornos) (`feature/chapter2-needfinding`, `feature/chapter3`, `feature/chapter4-ui`, `feature/chapter5-*`) |
 | 0.11.0 | 04/24/2026 | Angel Villarreal / Olenka Del Aguila | Conclusiones, bibliografía y anexos; corrección de wireflows y referencias (`feature/final-sections`, `feature/chapter4-wireframes`) |
 | 1.0.0 | 04/25/2026 | Angel Villarreal | AV1 Report |
+| 1.1.0 | 05/04/2026 | Angel Villarreal | Sprint Backlog 2 inicial (`feature/sprint2`) |
+| 1.2.0 | 05/13/2026 | Angela Espinoza / Olenka Del Aguila / Rose Vergaray | Actualización de estado de US en Sprint Backlog 1 y 2; evidencia de despliegue; conclusiones y anexos con enlaces de video TB1 (`feature/sprint2`, `feature/conclusions-annexes`) |
+| 1.3.0 | 05/13/2026 – 05/14/2026 | Olenka Del Aguila / Joel Mora | Student outcomes actualizados; correcciones en cap. 4 (arquitectura DDD, etiquetado); diagramas C4 renovados (`feature/student-outcome`, `feature/chapter4`) |
+| 1.4.0 | 05/14/2026 – 05/15/2026 | Angel Villarreal / Olenka Del Aguila | Sprint 2: planning, backlog, ejecución, revisión y retrospectiva; información de Coolify; insights de colaboración; URL de revisión (`feature/sprint2`) |
+| 1.5.0 | 05/15/2026 | Angel Villarreal / Joel Mora | Diagramas de clases frontend y backend; imágenes de diagramas C4 actualizadas (`feature/chapter4-class-diagrams`, `feature/chapter4`) |
+| 2.0.0 | 05/15/2026 | Angel Villarreal | TP1 Report |
 
 <div style="page-break-after: always"></div>
 
