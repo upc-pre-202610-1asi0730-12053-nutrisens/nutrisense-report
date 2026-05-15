@@ -810,9 +810,20 @@ Todo el trabajo fue integrado mediante Pull Requests desde las ramas `feature/*`
 
 Una vez completadas todas las features del sprint, se realizó el merge de `develop` a `main` mediante un Pull Request en GitHub, etiquetando el commit resultante como `v2.0.0`.
 
-##### Configuración del despliegue en 
+##### Configuración del despliegue en Coolify
 
-
+Para habilitar el despliegue continuo desde el repositorio se siguieron los pasos:
+ 
+1. Ingresar al panel de administración de Coolify
+2. Crear una nueva aplicación seleccionando **GitHub** como fuente
+3. Conectar el repositorio `nutrisense-webapp` de la organización `upc-pre-202610-1asi0730-12053-nutrisense`
+4. Configurar los parámetros de build:
+   - **Build command:** `npm run build`
+   - **Output directory:** `dist/nutrisense-webapp`
+   - **Branch:** `main`
+5. Asignar el dominio personalizado `app-sense.nutriproject.xyz` en la sección **Domains**
+6. Guardar la configuración y ejecutar el primer despliegue manual
+Coolify procesó el contenido de la rama `main`, ejecutó el build de Vue, y sirvió los artefactos estáticos generados bajo el dominio configurado.
 
 ##### URL de despliegue
 
