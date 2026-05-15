@@ -27,7 +27,7 @@
 | Vergraray Calderon, Rose Almendra | U20241D159 |
 | Villarreal Bazan, Angel Martin | U202417857 |
 
-Abril, 2026
+Mayo, 2026
 
 <div style="page-break-after: always"></div>
 
@@ -52,7 +52,7 @@ Abril, 2026
 | 1.3.0 | 05/13/2026 – 05/14/2026 | Olenka Del Aguila / Joel Mora | Student outcomes actualizados; correcciones en cap. 4 (arquitectura DDD, etiquetado); diagramas C4 renovados (`feature/student-outcome`, `feature/chapter4`) |
 | 1.4.0 | 05/14/2026 – 05/15/2026 | Angel Villarreal / Olenka Del Aguila | Sprint 2: planning, backlog, ejecución, revisión y retrospectiva; información de Coolify; insights de colaboración; URL de revisión (`feature/sprint2`) |
 | 1.5.0 | 05/15/2026 | Angel Villarreal / Joel Mora | Diagramas de clases frontend y backend; imágenes de diagramas C4 actualizadas (`feature/chapter4-class-diagrams`, `feature/chapter4`) |
-| 2.0.0 | 05/15/2026 | Angel Villarreal | TP1 Report |
+| 2.0.0 | 05/15/2026 | Angel Villarreal | TB1 Report |
 
 <div style="page-break-after: always"></div>
 
