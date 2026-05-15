@@ -10,4 +10,4 @@
 | **Landing Page** | [Enlace a la landing page](https://upc-pre-202610-1asi0730-12053-nutrisens.github.io/nutrisense-website/index.html)|
 | **Frontend Web Application** | [Enlace al frontend web application](https://app-sense.nutriproject.xyz)|
 | **Video de exposición de AV1** | [Enlace del video AV1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQDYzAsUnHVKQrGA3GjF4vwpAZybVP6LfXTGzVlqISNDMlk?e=nW4ADD&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)|
-| **Video de exposición de TB1** | [Enlace del video TB1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQA3wP3xV4B3Qa0ZXul0N-GGAaXoHCM_ueQOA2fcXeIhwdw)|
+| **Video de exposición de TB1** | [Enlace del video TB1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQDQFlObvQqCSIhUKUkGMemTAUOuEg2Cq-RR5g9WNj1NnG8?e=LvQhqQ&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)|
