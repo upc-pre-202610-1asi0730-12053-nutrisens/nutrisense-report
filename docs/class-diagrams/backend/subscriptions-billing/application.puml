@@ -1,0 +1,52 @@
+@startuml NutriSense - Subscriptions & Billing - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.SubscriptionsBilling" {
+
+  package "Domain [stubs]" {
+    interface ISubscriptionRepository
+  }
+
+  package "Infrastructure [stubs]" {
+    interface IStripeClient
+  }
+
+  package "Application" {
+    interface IBillingCommandService {
+      +Handle(command: SubscribeCommand): SubscriptionResponse
+      +Handle(command: CancelSubscriptionCommand): void
+    }
+
+    interface IBillingQueryService {
+      +Handle(query: GetAvailablePlansQuery): List<SubscriptionPlanResponse>
+      +Handle(query: GetActiveSubscriptionQuery): SubscriptionResponse
+      +Handle(query: GetPaymentHistoryQuery): List<PaymentResponse>
+    }
+
+    class BillingCommandServiceImpl {
+      -subscriptionRepository: ISubscriptionRepository
+      -stripeClient: IStripeClient
+      +Handle(command: SubscribeCommand): SubscriptionResponse
+      +Handle(command: CancelSubscriptionCommand): void
+    }
+
+    class SubscribeCommand {
+      +UserId: Guid
+      +PlanId: Guid
+      +StripePaymentToken: String
+    }
+
+    class CancelSubscriptionCommand {
+      +SubscriptionId: Guid
+      +UserId: Guid
+    }
+  }
+}
+
+BillingCommandServiceImpl ..|> IBillingCommandService
+BillingCommandServiceImpl --> ISubscriptionRepository : uses
+BillingCommandServiceImpl --> IStripeClient : uses
+
+@enduml

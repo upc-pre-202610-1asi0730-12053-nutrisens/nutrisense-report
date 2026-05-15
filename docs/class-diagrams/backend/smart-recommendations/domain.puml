@@ -1,0 +1,75 @@
+@startuml NutriSense - Smart Recommendations - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.SmartRecommendations" {
+
+  package "Domain" {
+    class RecommendationEngine {
+      +Id: Guid
+      +UserId: Guid
+      -rules: List<RecommendationRule>
+      -pantryItems: List<PantryItem>
+      +GenerateRecommendation(context: WeatherContext, goal: GoalType): Recommendation
+      +AddPantryItem(item: PantryItem): void
+      +RemovePantryItem(itemId: Guid): void
+    }
+
+    class Recommendation {
+      +Id: Guid
+      +Title: String
+      +Description: String
+      +MealSuggestions: List<MealSuggestion>
+      +Type: RecommendationType
+      +GeneratedAt: DateTime
+    }
+
+    class WeatherContext {
+      +TemperatureCelsius: Decimal
+      +Humidity: Decimal
+      +Condition: String
+      +City: String
+    }
+
+    class GeoCoordinates {
+      +Latitude: Decimal
+      +Longitude: Decimal
+    }
+
+    class PantryItem {
+      +Id: Guid
+      +Name: String
+      +Quantity: Decimal
+      +Unit: String
+      +ExpiresAt: DateOnly
+    }
+
+    enum RecommendationType {
+      WEATHER_BASED
+      GOAL_BASED
+      TRAVEL_MODE
+      PANTRY_BASED
+    }
+
+    class RecommendationGeneratedEvent {
+      +EngineId: Guid
+      +UserId: Guid
+      +Type: RecommendationType
+      +OccurredOn: DateTime
+    }
+
+    interface IRecommendationRepository {
+      +FindByUserId(userId: Guid): RecommendationEngine
+      +Save(engine: RecommendationEngine): void
+      +Update(engine: RecommendationEngine): void
+    }
+  }
+}
+
+RecommendationEngine *--> PantryItem : contains "0..*"
+RecommendationEngine --> Recommendation : generates "0..*"
+Recommendation --> RecommendationType : has "1"
+RecommendationEngine --> RecommendationGeneratedEvent : fires "0..*"
+
+@enduml

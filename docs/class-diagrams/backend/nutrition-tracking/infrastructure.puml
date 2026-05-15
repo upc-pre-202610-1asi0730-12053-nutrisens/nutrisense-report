@@ -1,0 +1,41 @@
+@startuml NutriSense - Nutrition Tracking - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.NutritionTracking" {
+
+  package "Domain [stubs]" {
+    interface INutritionLogRepository
+  }
+
+  package "Infrastructure" {
+    class NutritionLogRepositoryImpl {
+      -context: NutriSenseDbContext
+      +FindByUserAndDate(userId: Guid, date: DateOnly): NutritionLog
+      +Save(log: NutritionLog): void
+      +Update(log: NutritionLog): void
+    }
+
+    interface IGoogleVisionClient {
+      +AnalyzeImage(image: Byte[]): ScanResult
+    }
+
+    class GoogleVisionClientImpl {
+      -apiKey: String
+      -httpClient: HttpClient
+      +AnalyzeImage(image: Byte[]): ScanResult
+    }
+
+    class OpenFoodFactsClient {
+      -httpClient: HttpClient
+      +SearchFood(query: String): List<FoodItem>
+      +GetFoodById(fdcId: String): FoodItem
+    }
+  }
+}
+
+NutritionLogRepositoryImpl ..|> INutritionLogRepository
+GoogleVisionClientImpl ..|> IGoogleVisionClient
+
+@enduml

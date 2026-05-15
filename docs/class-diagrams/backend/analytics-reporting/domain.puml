@@ -1,0 +1,89 @@
+@startuml NutriSense - Analytics & Reporting - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.AnalyticsReporting" {
+
+  package "Domain" {
+    class AnalyticsAggregate {
+      +Id: Guid
+      +UserId: Guid
+      -reports: List<ProgressReport>
+      -streaks: List<Streak>
+      -dailyBalances: List<DailyBalance>
+      +GenerateReport(period: DateRange, type: ReportType): ProgressReport
+      +UpdateStreak(streakType: StreakType): void
+      +RecordDailyBalance(balance: DailyBalance): void
+    }
+
+    class ProgressReport {
+      +Id: Guid
+      +PeriodStart: DateOnly
+      +PeriodEnd: DateOnly
+      +AverageCaloriesKcal: Decimal
+      +WeightDeltaKg: Decimal
+      +GoalAchievementPercent: Decimal
+      +ReportType: ReportType
+    }
+
+    class Streak {
+      +Id: Guid
+      +StreakType: StreakType
+      +CurrentCount: Int32
+      +LongestCount: Int32
+      +LastUpdated: DateTime
+      +Increment(): void
+      +Reset(): void
+    }
+
+    class DailyBalance {
+      +Date: DateOnly
+      +CaloriesConsumedKcal: Decimal
+      +CaloriesBurnedKcal: Decimal
+      +NetCalories(): Decimal
+      +GoalMet: Boolean
+    }
+
+    class DateRange {
+      +Start: DateOnly
+      +End: DateOnly
+      +Contains(date: DateOnly): Boolean
+    }
+
+    enum ReportType {
+      WEEKLY
+      MONTHLY
+      CUSTOM
+    }
+
+    enum StreakType {
+      LOGGING_STREAK
+      GOAL_STREAK
+      ACTIVITY_STREAK
+    }
+
+    class ReportGeneratedEvent {
+      +AggregateId: Guid
+      +UserId: Guid
+      +ReportType: ReportType
+      +OccurredOn: DateTime
+    }
+
+    interface IAnalyticsRepository {
+      +FindByUserId(userId: Guid): AnalyticsAggregate
+      +Save(aggregate: AnalyticsAggregate): void
+      +Update(aggregate: AnalyticsAggregate): void
+    }
+  }
+}
+
+AnalyticsAggregate *--> ProgressReport : generates "0..*"
+AnalyticsAggregate *--> Streak : tracks "0..*"
+AnalyticsAggregate *--> DailyBalance : records "0..*"
+ProgressReport --> ReportType : has "1"
+Streak --> StreakType : has "1"
+ProgressReport --> DateRange : spans "1"
+AnalyticsAggregate --> ReportGeneratedEvent : fires "0..*"
+
+@enduml
