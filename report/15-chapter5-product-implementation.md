@@ -771,11 +771,43 @@ Durante este sprint, el equipo completó la implementación del frontend complet
 
 #### 5.2.2.5. Execution Evidence for Sprint Review
 
-
-
 A continuación se presentan screenshots de las principales vistas implementadas durante el sprint.
 
+**Dashboard**
+![Dashboard](../assets/img/sprint2/dashboard.png)
 
+**Nutrition Log**
+![Nutrition Log](../assets/img/sprint2/nutrition-log.png)
+
+**Smart Scan**
+![Smart Scan](../assets/img/sprint2/smartscan.png)
+
+**Scan Dish**
+![Scan Dish](../assets/img/sprint2/scandish.png)
+
+**Scan Menu**
+![Scan Menu](../assets/img/sprint2/scanmenu.png)
+
+**Recommendations**
+![Recommendations](../assets/img/sprint2/recommendations.png)
+
+**Pantry**
+![Pantry](../assets/img/sprint2/pantry.png)
+
+**Body Health**
+![Body Health](../assets/img/sprint2/bodyhealth.png)
+
+**Activity**
+![Activity](../assets/img/sprint2/activity.png)
+
+**Analytics**
+![Analytics](../assets/img/sprint2/analytics.png)
+
+**Settings**
+![Settings](../assets/img/sprint2/settings.png)
+
+**Billing**
+![Billing](../assets/img/sprint2/billing.png)
 
 El video de demostración del Sprint 2 ilustra la navegación completa por todos los bounded contexts, la transición entre los cuatro estados de adherencia conductual del dashboard, el flujo de escaneo de plato y menú de restaurante con selección y log del plato compatible, el registro manual de actividad física con deducción en tiempo real en el balance calórico, y la gestión de suscripciones con upgrade de plan.
  
