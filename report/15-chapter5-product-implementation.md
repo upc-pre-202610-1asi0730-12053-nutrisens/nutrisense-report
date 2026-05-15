@@ -863,7 +863,7 @@ La aplicación web quedó disponible públicamente en: [NutriSense Web App](http
 #### 5.2.2.8. Team Collaboration Insights during Sprint
 Durante el Sprint 2, todos los miembros del equipo participaron activamente en las actividades de implementación, tal como se refleja en los analíticos de colaboración de GitHub. Como se puede observar en la gráfica de contribuciones, los integrantes Nevatrix, xJoelFMRx, olenkisha14, Emy127 y roseal28 realizaron commits de manera constante a lo largo del sprint, cada uno liderando su bounded context asignado y colaborando en los aspectos transversales de i18n y accesibilidad.
 
-![Insight](../assets/img/sprint2/insight2.png)
+![Insight](../assets/img/sprint2/insight.png)
 
 ## 5.3. Validation Interviews
 
