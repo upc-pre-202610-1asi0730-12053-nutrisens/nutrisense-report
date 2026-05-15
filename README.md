@@ -27,7 +27,7 @@
 | Vergraray Calderon, Rose Almendra | U20241D159 |
 | Villarreal Bazan, Angel Martin | U202417857 |
 
-Abril, 2026
+Mayo, 2026
 
 <div style="page-break-after: always"></div>
 
@@ -47,12 +47,28 @@ Abril, 2026
 | 0.10.0 | 04/22/2026 – 04/23/2026 | Todos los integrantes | Cap. 2 (needfinding, personas, journey mapping, EventStorming), cap. 3 (user stories, impact maps, product backlog), cap. 4 (wireframes y mockups), cap. 5 (subcapítulos 5.1–5.2, configuración de entornos) (`feature/chapter2-needfinding`, `feature/chapter3`, `feature/chapter4-ui`, `feature/chapter5-*`) |
 | 0.11.0 | 04/24/2026 | Angel Villarreal / Olenka Del Aguila | Conclusiones, bibliografía y anexos; corrección de wireflows y referencias (`feature/final-sections`, `feature/chapter4-wireframes`) |
 | 1.0.0 | 04/25/2026 | Angel Villarreal | AV1 Report |
+| 1.1.0 | 05/04/2026 | Angel Villarreal | Sprint Backlog 2 inicial (`feature/sprint2`) |
+| 1.2.0 | 05/13/2026 | Angela Espinoza / Olenka Del Aguila / Rose Vergaray | Actualización de estado de US en Sprint Backlog 1 y 2; evidencia de despliegue; conclusiones y anexos con enlaces de video TB1 (`feature/sprint2`, `feature/conclusions-annexes`) |
+| 1.3.0 | 05/13/2026 – 05/14/2026 | Olenka Del Aguila / Joel Mora | Student outcomes actualizados; correcciones en cap. 4 (arquitectura DDD, etiquetado); diagramas C4 renovados (`feature/student-outcome`, `feature/chapter4`) |
+| 1.4.0 | 05/14/2026 – 05/15/2026 | Angel Villarreal / Olenka Del Aguila | Sprint 2: planning, backlog, ejecución, revisión y retrospectiva; información de Coolify; insights de colaboración; URL de revisión (`feature/sprint2`) |
+| 1.5.0 | 05/15/2026 | Angel Villarreal / Joel Mora | Diagramas de clases frontend y backend; imágenes de diagramas C4 actualizadas (`feature/chapter4-class-diagrams`, `feature/chapter4`) |
+| 2.0.0 | 05/15/2026 | Angel Villarreal | TB1 Report |
 
 <div style="page-break-after: always"></div>
 
 ## PROJECT REPORT COLLABORATION INSIGHTS
 
 Repositorio del informe del proyecto en GitHub: [nutrisense-report](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report)
+
+Repositorio del WebApp del proyecto en GitHub: [nutrisense-webapp](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp)
+
+Durante el desarrollo del presente Sprint, la elaboración del informe fue llevada a cabo de forma colaborativa por todos los integrantes del equipo. El trabajo se organizó distribuyendo las secciones y capítulos del informe entre los miembros, quienes realizaron sus aportes mediante commits en subramas hacia la rama develop del repositorio. Esto permitió mantener un historial claro de los cambios y garantizar la trazabilidad de cada contribución.
+
+AV1:<br>
+![Report](./assets/img/readme/insightsAV1.jpeg)
+
+TB1:<br>
+![Report](./assets/img/readme/insightsTB1.png)
 
 <div style="page-break-after: always"></div>
 
@@ -213,6 +229,24 @@ Repositorio del informe del proyecto en GitHub: [nutrisense-report](https://gith
     - [5.2.1.7. Software Deployment Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5217-software-deployment-evidence-for-sprint-review)
 
     - [5.2.1.8. Team Collaboration Insights during Sprint](./report/15-chapter5-product-implementation.md#5218-team-collaboration-insights-during-sprint)
+
+  - [5.2.2. Sprint 2](./report/15-chapter5-product-implementation.md#522-sprint-2)
+
+      - [5.2.2.1. Sprint Planning 2](./report/15-chapter5-product-implementation.md#5221-sprint-planning-2)
+
+      - [5.2.2.2. Aspect Leaders and Collaborators](./report/15-chapter5-product-implementation.md#5222-aspect-leaders-and-collaborators)
+
+      - [5.2.2.3. Sprint Backlog 2](./report/15-chapter5-product-implementation.md#5223-sprint-backlog-2)
+
+      - [5.2.2.4. Development Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5224-development-evidence-for-sprint-review)
+
+      - [5.2.2.5. Execution Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5225-execution-evidence-for-sprint-review)
+
+      - [5.2.2.6. Services Documentation Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5226-services-documentation-evidence-for-sprint-review)
+
+      - [5.2.2.7. Software Deployment Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5227-software-deployment-evidence-for-sprint-review)
+
+      - [5.2.2.8. Team Collaboration Insights during Sprint](./report/15-chapter5-product-implementation.md#5228-team-collaboration-insights-during-sprint)
 
 - [5.3. Validation Interviews](./report/15-chapter5-product-implementation.md#53-validation-interviews)
 
