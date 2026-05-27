@@ -1340,21 +1340,31 @@ El Diagrama de Componentes (Nivel 3 del modelo C4) describe la estructura intern
 
 **A. Single Page Application Components (Frontend)**
 
-El Single Page Application se organiza en 7 Bounded Contexts, cada uno con 4 capas siguiendo el patrón de arquitectura del Domain-Driven Design. Además, se tiene un Frontend Shared con 2 capas siguiendo también el patrón de arquitectura del Domain-Driven Design.
+El Single Page Application se organiza en 7 Bounded Contexts, cada uno con 4 capas siguiendo el patrón de arquitectura del Domain-Driven Design. Además, se tiene un Frontend Shared con 3 capas siguiendo también el patrón de arquitectura del Domain-Driven Design.
 
 El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
 
 ![Web Component Diagram](../assets/img/artifacts/nutrisense-FrontendBCsDiagram.png)
 
-Cada Bounded Context contiene una capa de Presentation con las vistas Vue, una capa de Application con los servicios JavaScript que orquestan la lógica del cliente, una capa de Domain con los modelos e interfaces, y una capa de Infrastructure con el cliente HTTP Axios que se comunica con el API Application. Todos los BCs del frontend utilizan el Frontend Shared, que provee la clase base BaseApi, el contrato BaseEndpoint y los objetos de valor compartidos como goal-type.record y macros.record.
+Cada Bounded Context contiene una capa de Presentation con las vistas y componentes Vue, una capa de Application con los servicios JavaScript que orquestan la lógica del cliente, una capa de Domain con los modelos e interfaces, y una capa de Infrastructure con el cliente HTTP Axios que se comunica con el API Application. Todos los BCs del frontend utilizan el Frontend Shared, que provee la clase base BaseApi, el contrato BaseEndpoint, los objetos de valor compartidos como goal-type.record y macros.record, y los componentes de presentación transversales como app-layout.component, language-switcher.component y ns-tabs.component.
 
 Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context y del Frontend Shared, se presenta a continuación un diagrama de detalle individual por cada uno.
 
 **Frontend Shared:**
 
-Módulo transversal utilizado por todos los Bounded Contexts del frontend que agrupa las utilidades HTTP base y los objetos de valor compartidos. No contiene lógica de negocio propia.
+Módulo transversal utilizado por todos los Bounded Contexts del frontend que agrupa las utilidades HTTP base, los objetos de valor compartidos y los componentes de presentación reutilizables. Se organiza en 3 capas DDD: Presentation, Domain e Infrastructure. No contiene lógica de negocio propia.
 
 ![Frontend Shared Diagram](../assets/img/artifacts/nutrisense-FrontendSharedDiagram.png)
+
+La capa Presentation del Frontend Shared agrupa las vistas y componentes Vue reutilizables a lo largo de toda la aplicación. El detalle de sus vistas y componentes se presenta a continuación:
+
+ - **Views:**
+
+  ![Frontend Shared Views Diagram](../assets/img/artifacts/nutrisense-FrontendSharedViewsDiagram.png)
+
+ - **Components:**
+
+  ![Frontend Shared Components Diagram](../assets/img/artifacts/nutrisense-FrontendSharedComponentsDiagram.png)
 
 **Bounded Contexts:**
 
@@ -1362,29 +1372,95 @@ Módulo transversal utilizado por todos los Bounded Contexts del frontend que ag
 
   ![IAM Frontend Diagram](../assets/img/artifacts/nutrisense-IAMFrontendDiagram.png)
 
+  La capa Presentation contiene únicamente vistas Vue para este Bounded Context. El detalle de sus vistas se presenta a continuación:
+
+  - **Views:**
+
+    ![IAM Presentation Views Diagram](../assets/img/artifacts/nutrisense-IAMPresentationViewsDiagram.png)
+
  - **Nutrition Tracking:** Gestiona las vistas de registro de comidas, Smart Scan y escaneo de menús.
 
   ![Nutrition Frontend Diagram](../assets/img/artifacts/nutrisense-NutritionFrontendDiagram.png)
+
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Nutrition Presentation Views Diagram](../assets/img/artifacts/nutrisense-NutritionPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Nutrition Presentation Components Diagram](../assets/img/artifacts/nutrisense-NutritionPresentationComponentsDiagram.png)
 
  - **Body & Health Metrics:** Gestiona las vistas de métricas corporales, historial de peso y objetivos de salud.
 
   ![Body Frontend Diagram](../assets/img/artifacts/nutrisense-BodyFrontendDiagram.png)
 
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Body Presentation Views Diagram](../assets/img/artifacts/nutrisense-BodyPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Body Presentation Components Diagram](../assets/img/artifacts/nutrisense-BodyPresentationComponentsDiagram.png)
+
  - **Smart Recommendations:** Gestiona las vistas de recomendaciones personalizadas, Modo Viaje y Despensa.
 
   ![Recs Frontend Diagram](../assets/img/artifacts/nutrisense-RecsFrontendDiagram.png)
+
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Recs Presentation Views Diagram](../assets/img/artifacts/nutrisense-RecsPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Recs Presentation Components Diagram](../assets/img/artifacts/nutrisense-RecsPresentationComponentsDiagram.png)
 
  - **Activity & Wearable Sync:** Gestiona las vistas de registro de actividad física y sincronización con wearables.
 
   ![Activity Frontend Diagram](../assets/img/artifacts/nutrisense-ActivityFrontendDiagram.png)
 
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Activity Presentation Views Diagram](../assets/img/artifacts/nutrisense-ActivityPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Activity Presentation Components Diagram](../assets/img/artifacts/nutrisense-ActivityPresentationComponentsDiagram.png)
+
  - **Analytics & Reporting:** Gestiona las vistas del dashboard, gráficas de progreso y rachas.
 
   ![Analytics Frontend Diagram](../assets/img/artifacts/nutrisense-AnalyticsFrontendDiagram.png)
 
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Analytics Presentation Views Diagram](../assets/img/artifacts/nutrisense-AnalyticsPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Analytics Presentation Components Diagram](../assets/img/artifacts/nutrisense-AnalyticsPresentationComponentsDiagram.png)
+
  - **Subscriptions & Billing:** Gestiona las vistas de planes de suscripción y pagos.
 
   ![Billing Frontend Diagram](../assets/img/artifacts/nutrisense-BillingFrontendDiagram.png)
+
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Billing Presentation Views Diagram](../assets/img/artifacts/nutrisense-BillingPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Billing Presentation Components Diagram](../assets/img/artifacts/nutrisense-BillingPresentationComponentsDiagram.png)
 
 **B. API Application Components (Backend)**
 
