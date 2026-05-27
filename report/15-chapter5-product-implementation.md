@@ -304,7 +304,7 @@ La implementación del Landing Page, los servicios web y las aplicaciones repres
   </tr>
   <tr>
     <td colspan="2">Sprint 1 Goal</td>
-    <td colspan="2">Our focus is on delivering a fully functional and publicly accessible NutriSense Landing Page in both English and Spanish. We believe it delivers a clear understanding of the platform's value proposition, subscription plans, and team identity to potential users from both target segments,adults seeking weight loss and young adults seeking muscle gain. This will be confirmed when any visitor can navigate all landing page sections (Hero, Features, Plans, About Us, FAQ, Contact), switch the interface language between English (en_US) and Spanish (es_419), and access the web application entry point from the landing page without any broken links or accessibility violations.</td>
+    <td colspan="2">Nuestro enfoque está en entregar una Landing Page de NutriSense completamente funcional y de acceso público, tanto en inglés como en español. Creemos que transmite con claridad la propuesta de valor de la plataforma, los planes de suscripción y la identidad del equipo a los usuarios potenciales de ambos segmentos objetivo: adultos que buscan perder peso y jóvenes adultos que buscan ganar masa muscular. Esto se confirmará cuando cualquier visitante pueda navegar por todas las secciones de la landing page (Hero, Características, Planes, Sobre Nosotros, Preguntas Frecuentes, Contacto), cambiar el idioma de la interfaz entre inglés (en_US) y español (es_419), y acceder al punto de entrada de la aplicación web desde la landing page sin enlaces rotos ni infracciones de accesibilidad.</td>
   </tr>
   <tr>
     <td colspan="2">Sprint 1 Velocity</td>
