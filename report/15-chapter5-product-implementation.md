@@ -288,17 +288,6 @@ La implementación del Landing Page, los servicios web y las aplicaciones repres
     <td colspan="2">Del Aguila Del Aguila, Olenka Priscilla / Espinoza Cruz, Angela Milagros / Mora Rivera, Joel Fernando / Vergraray Calderon, Rose Almendra / Villarreal Bazan, Angel Martin</td>
   </tr>
   <tr>
-    <th colspan="4">Sprint n – 1 Review Summary</th>
-  </tr>
-  <tr>
-    <td colspan="4">No aplica. El Sprint 1 es el primero de la cadencia del proyecto NutriSense. No existe sprint anterior que revisar.</td>
-  </tr>
-  <tr>
-    <th colspan="4">Sprint n – 1 Retrospective Summary</th>
-  </tr>
-  <tr>
-    <td colspan="4">No aplica. Al ser la primera iteración, no hay retrospectiva previa documentada. El equipo acordó en esta reunión establecer como normas de trabajo el uso de GitFlow con ramas <code>feature/</code>, <code>develop</code> y <code>main</code>, Conventional Commits para todos los mensajes, y revisión de Pull Requests con mínimo un aprobador antes de hacer merge a <code>develop</code>.</td>
-  </tr>
   <tr>
     <th colspan="4">Sprint Goal &amp; User Stories</th>
   </tr>
