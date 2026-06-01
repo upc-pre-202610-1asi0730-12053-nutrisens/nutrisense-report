@@ -288,23 +288,12 @@ La implementación del Landing Page, los servicios web y las aplicaciones repres
     <td colspan="2">Del Aguila Del Aguila, Olenka Priscilla / Espinoza Cruz, Angela Milagros / Mora Rivera, Joel Fernando / Vergraray Calderon, Rose Almendra / Villarreal Bazan, Angel Martin</td>
   </tr>
   <tr>
-    <th colspan="4">Sprint n – 1 Review Summary</th>
-  </tr>
-  <tr>
-    <td colspan="4">No aplica. El Sprint 1 es el primero de la cadencia del proyecto NutriSense. No existe sprint anterior que revisar.</td>
-  </tr>
-  <tr>
-    <th colspan="4">Sprint n – 1 Retrospective Summary</th>
-  </tr>
-  <tr>
-    <td colspan="4">No aplica. Al ser la primera iteración, no hay retrospectiva previa documentada. El equipo acordó en esta reunión establecer como normas de trabajo el uso de GitFlow con ramas <code>feature/</code>, <code>develop</code> y <code>main</code>, Conventional Commits para todos los mensajes, y revisión de Pull Requests con mínimo un aprobador antes de hacer merge a <code>develop</code>.</td>
-  </tr>
   <tr>
     <th colspan="4">Sprint Goal &amp; User Stories</th>
   </tr>
   <tr>
     <td colspan="2">Sprint 1 Goal</td>
-    <td colspan="2">Our focus is on delivering a fully functional and publicly accessible NutriSense Landing Page in both English and Spanish. We believe it delivers a clear understanding of the platform's value proposition, subscription plans, and team identity to potential users from both target segments,adults seeking weight loss and young adults seeking muscle gain. This will be confirmed when any visitor can navigate all landing page sections (Hero, Features, Plans, About Us, FAQ, Contact), switch the interface language between English (en_US) and Spanish (es_419), and access the web application entry point from the landing page without any broken links or accessibility violations.</td>
+    <td colspan="2">Nuestro enfoque está en entregar una Landing Page de NutriSense completamente funcional y de acceso público, tanto en inglés como en español. Creemos que transmite con claridad la propuesta de valor de la plataforma, los planes de suscripción y la identidad del equipo a los usuarios potenciales de ambos segmentos objetivo: adultos que buscan perder peso y jóvenes adultos que buscan ganar masa muscular. Esto se confirmará cuando cualquier visitante pueda navegar por todas las secciones de la landing page (Hero, Características, Planes, Sobre Nosotros, Preguntas Frecuentes, Contacto), cambiar el idioma de la interfaz entre inglés (en_US) y español (es_419), y acceder al punto de entrada de la aplicación web desde la landing page sin enlaces rotos ni infracciones de accesibilidad.</td>
   </tr>
   <tr>
     <td colspan="2">Sprint 1 Velocity</td>
@@ -553,7 +542,7 @@ Durante el Sprint, todos los miembros del equipo participaron activamente en las
   </tr>
   <tr>
     <td colspan="2">Sprint 2 Goal</td>
-    <td colspan="2">Our focus is on delivering a fully functional NutriSense web application (Vue) covering authentication, nutritional profile onboarding, nutrition tracking, body health metrics, dashboard, smart scan &amp; recommendations, activity logging, and subscription management. We believe it delivers end-to-end value to both target segments, adults seeking weight loss and young adults seeking muscle gain, by enabling them to register, configure their profile, log meals and physical activity, monitor their macros and body progress, and manage their subscription plan. This will be confirmed when users can complete the full registration-to-dashboard flow without errors, log at least one meal entry with nutritional breakdown, view their daily and weekly analytics, and subscribe to or manage an existing plan from within the application.</td>
+    <td colspan="2">Nuestro enfoque está en entregar una aplicación web de NutriSense (Vue) completamente funcional que cubra autenticación, incorporación del perfil nutricional, seguimiento nutricional, métricas de salud corporal, panel principal, escaneo inteligente y recomendaciones, registro de actividad física y gestión de suscripciones. Creemos que entrega valor integral a ambos segmentos objetivo (adultos que buscan perder peso y jóvenes adultos que buscan ganar masa muscular) al permitirles registrarse, configurar su perfil, registrar comidas y actividad física, monitorear sus macros y progreso corporal, y gestionar su plan de suscripción. Esto se confirmará cuando los usuarios puedan completar el flujo completo desde el registro hasta el panel principal sin errores, registrar al menos una entrada de comida con su desglose nutricional, visualizar sus analíticas diarias y semanales, y suscribirse a un plan o gestionar uno existente desde dentro de la aplicación.</td>
   </tr>
   <tr>
     <td colspan="2">Sprint 2 Velocity</td>
