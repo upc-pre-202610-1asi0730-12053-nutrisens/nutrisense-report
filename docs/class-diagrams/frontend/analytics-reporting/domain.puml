@@ -35,5 +35,6 @@ package "analytics-reporting/domain/services" {
 }
 
 StreakCalculatorService ..> StreakRecord : creates >
+AdherenceCalculatorService ..> StreakRecord : evaluates adherence for >
 
 @enduml

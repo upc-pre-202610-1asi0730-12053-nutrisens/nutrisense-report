@@ -159,5 +159,8 @@ IngredientCatalogItem *--> IngredientCategory : category >
 RecommendationCard *--> WeatherType : weatherType >
 RecommendationCard *--> Badge : badge >
 Recipe *--> Macros : totalMacros >
+LocationPreference --> City : references >
+PantryItem --> IngredientCatalogItem : references >
+MacroProfile ..> Recipe : scores >
 
 @enduml

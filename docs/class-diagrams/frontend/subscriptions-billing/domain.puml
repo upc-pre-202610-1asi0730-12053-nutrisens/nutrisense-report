@@ -6,6 +6,21 @@ skinparam linetype ortho
 
 package "subscriptions-billing/domain/model" {
 
+  class PaymentMethod <<entity>> {
+    + id: string
+    + userId: string
+    + lastFour: string
+    + brand: CardBrand
+    + expiryMonth: number
+    + expiryYear: number
+    + cardholderName: string
+    + createdAt: string
+    --
+    + maskedNumber(): string
+    + expiryLabel(): string
+    + {static} detectBrand(cardNumber): CardBrand
+  }
+
   class SubscriptionPlan <<entity>> {
     + id: string
     + key: string
@@ -83,5 +98,9 @@ package "subscriptions-billing/domain/model" {
 
 UserSubscription *--> SubscriptionStatus : status >
 UserSubscription *--> BillingPeriod : billingPeriod >
+UserSubscription --> SubscriptionPlan : subscribes to >
+SubscriptionPlan *--> PlanTier : tier >
+SubscriptionPlan *--> PlanFeature : features >
+PaymentRecord --> SubscriptionPlan : references >
 
 @enduml

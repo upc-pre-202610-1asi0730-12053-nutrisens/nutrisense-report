@@ -99,5 +99,7 @@ UserGoal *--> GoalType : goal >
 UserGoal *--> WeeklyRate : weeklyRate >
 UserGoal *--> MacroTargets : macroTargets >
 BodyMetricsService ..> BmiResult : creates >
+BodyMetricsService ..> WeightLog : uses >
+BodyMetricsService ..> BodyMeasurement : uses >
 
 @enduml
