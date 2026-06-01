@@ -102,5 +102,6 @@ UserSubscription --> SubscriptionPlan : subscribes to >
 SubscriptionPlan *--> PlanTier : tier >
 SubscriptionPlan *--> PlanFeature : features >
 PaymentRecord --> SubscriptionPlan : references >
+PaymentRecord --> PaymentMethod : paid with >
 
 @enduml
