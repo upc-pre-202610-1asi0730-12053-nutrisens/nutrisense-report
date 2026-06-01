@@ -15,6 +15,26 @@ package "shared/domain/model [stubs]" {
 
 package "iam/domain/model" {
 
+  class DateOfBirth <<value object>> {
+    + isoString: string
+    --
+    + age(): number
+    + {static} validate(value): string|null
+  }
+
+  class Height <<value object>> {
+    + cm: number
+    --
+    + {static} isValid(cm): boolean
+  }
+
+  class WaistMeasurement <<value object>> {
+    + {static} pantsSizes: number[]
+    + {static} visualKeys: string[]
+    --
+    + WaistMeasurement(method, value): number
+  }
+
   class User <<entity>> {
     + id: string
     + email: Email
@@ -107,5 +127,10 @@ User *--> ActivityLevel : activityLevel >
 User *--> PlanTier : plan >
 User *--> PreferredUnits : preferredUnits >
 User *--> GoalType : goal >
+User "1" o--> "*" UserSession : has sessions >
+User "1" o--> "*" DietaryRestriction : has restrictions >
+User ..> DateOfBirth : validates dateOfBirth >
+User ..> Height : validates heightCm >
+User ..> WaistMeasurement : resolves waist >
 
 @enduml

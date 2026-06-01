@@ -89,5 +89,8 @@ NutritionLog *--> MealType : mealType >
 NutritionLog *--> LogSource : source >
 NutritionLog ..> Macros : returns >
 Food ..> Macros : returns >
+Food ..> FoodSource : source type >
+FoodRestrictionService ..> Food : evaluates >
+StreakCriteriaService ..> NutritionLog : evaluates >
 
 @enduml

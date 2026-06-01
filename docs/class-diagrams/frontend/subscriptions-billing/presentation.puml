@@ -15,6 +15,8 @@ package "subscriptions-billing/presentation/routes" {
 package "subscriptions-billing/presentation/views" {
   class SubscriptionView <<view>>
   class PlanSelectionView <<view>>
+  class CheckoutView <<view>>
+  class PaymentConfirmationView <<view>>
   class PaymentHistoryView <<view>>
   class ProfileBillingView <<view>>
 }
@@ -26,6 +28,8 @@ package "subscriptions-billing/presentation/components" {
 
 SubscriptionsBillingRoutes ..> SubscriptionView : navigates to >
 SubscriptionsBillingRoutes ..> PlanSelectionView : navigates to >
+SubscriptionsBillingRoutes ..> CheckoutView : navigates to >
+SubscriptionsBillingRoutes ..> PaymentConfirmationView : navigates to >
 SubscriptionsBillingRoutes ..> PaymentHistoryView : navigates to >
 SubscriptionsBillingRoutes ..> ProfileBillingView : navigates to >
 
@@ -33,6 +37,8 @@ PlanSelectionView ..> PlanCardComponent : contains >
 
 SubscriptionView o--> useSubscriptionsBillingStore : uses >
 PlanSelectionView o--> useSubscriptionsBillingStore : uses >
+CheckoutView o--> useSubscriptionsBillingStore : uses >
+PaymentConfirmationView o--> useSubscriptionsBillingStore : uses >
 PaymentHistoryView o--> useSubscriptionsBillingStore : uses >
 ProfileBillingView o--> useSubscriptionsBillingStore : uses >
 FeatureGateComponent o--> useSubscriptionsBillingStore : uses >

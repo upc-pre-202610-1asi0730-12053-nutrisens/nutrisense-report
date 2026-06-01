@@ -9,6 +9,7 @@ package "subscriptions-billing/infrastructure [stubs]" {
   class UserSubscriptionAssembler <<assembler>>
   class SubscriptionPlanAssembler <<assembler>>
   class PaymentRecordAssembler <<assembler>>
+  class PaymentMethodAssembler <<assembler>>
 }
 
 package "subscriptions-billing/application" {
@@ -22,6 +23,8 @@ package "subscriptions-billing/application" {
     + plansLoaded: boolean
     + paymentHistoryLoaded: boolean
     + changingPlanId: string|null
+    + paymentProcessing: boolean
+    + lastPaymentMethod: PaymentMethod|null
     + errors: Error[]
     -- computed --
     + currentPlan: SubscriptionPlan|null
@@ -39,6 +42,7 @@ package "subscriptions-billing/application" {
     + changePlan(planId, billingPeriod): Promise
     + cancelSubscription(): void
     + reactivateSubscription(): void
+    + processPayment(userId, planId, cardData): Promise
     + hasAccess(featureName): boolean
     + clearErrors(): void
   }
@@ -48,5 +52,6 @@ useSubscriptionsBillingStore --> SubscriptionsBillingApi : uses >
 useSubscriptionsBillingStore --> UserSubscriptionAssembler : uses >
 useSubscriptionsBillingStore --> SubscriptionPlanAssembler : uses >
 useSubscriptionsBillingStore --> PaymentRecordAssembler : uses >
+useSubscriptionsBillingStore --> PaymentMethodAssembler : uses >
 
 @enduml
