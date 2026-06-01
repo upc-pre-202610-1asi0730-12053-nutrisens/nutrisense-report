@@ -7,6 +7,7 @@
 **Curso:** 1ASI0730 | Aplicaciones Web  
 **NRC:** 12053  
 **Ciclo:** 5  
+**Período académico:** 2026-01  
 **Docente:** Efraín Ricardo Bautista Ubillús
 
 ## **"Informe de trabajo: TB1"**
