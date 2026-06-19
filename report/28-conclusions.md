@@ -105,7 +105,7 @@ Lideró el diseño de la arquitectura de software orientada a dominio, elaborand
 **Olenka Priscila Del Aguila Del Aguila:**
 Lideró el diseño UX/UI de la Landing Page y la Web Application, incluyendo Wireframes, Mockups, Wireflow Diagrams y User Flow Diagrams. En el frontend lideró el Bounded Context de Analytics and Report, implementando resúmenes diarios, gráficas semanales y mensuales, seguimiento de déficit calórico y análisis de macros. En el backend desarrolló el módulo de Analytics and Report.
 
-***Angel Martin Villarreal Bazan:**
+**Angel Martin Villarreal Bazan:**
 Asumió el liderazgo del Product Management del informe, redefiniendo el proyecto de startup, el proceso de UX y los segmentos objetivo. En el frontend lideró el Bounded Context de AI y Subscription and Billing, implementando el proyecto base en Vue, el flujo de onboarding en cuatro pasos, el dashboard principal y la pantalla de suscripción. En el backend se encargó del módulo de Smart Recommendations.
 
 **Rose Almendra Vergaray Calderon:**
