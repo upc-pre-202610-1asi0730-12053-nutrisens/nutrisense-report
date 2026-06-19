@@ -1064,6 +1064,76 @@ Durante el Sprint 2, todos los miembros del equipo participaron activamente en l
 
 ### 5.3.2. Registro de Entrevistas
 
+#### Segmento 1: Pérdida de peso
+
+##### Entrevista 1:
+
+- Nombres y Apellidos: Larisa Ramírez Del Aguila
+- Edad: 19 
+- Ocupación: Estudiante de Administración y Marketing
+- Tiempo: 0:01 - 5:07
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=psFq3e&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6Mi41M319)
+- Resumen: 
+
+![E1S1 - Capture](../assets/img/chapter5-interviews/Entrevista1-S1.png)
+
+##### Entrevista 2:
+
+- Nombres y Apellidos: Jorge Del Aguila Vacalla
+- Edad: 49 
+- Ocupación: Administrador de empresas y jefe de garantías y taller
+- Tiempo: 5:08 - 10:05
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=hnaWgz&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MzA4LjgyfX0%3D)
+- Resumen: 
+
+![E2S1 - Capture](../assets/img/chapter5-interviews/Entrevista2-S1.png)
+
+##### Entrevista 3:
+
+- Nombres y Apellidos: Tatiana Mozombite Miranda
+- Edad: 25 
+- Ocupación: Estudiante de idiomas
+- Tiempo: 10:06 - 14:44
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=6f2Ocj&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6NjA2LjM2fX0%3D)
+- Resumen: 
+
+![E3S1 - Capture](../assets/img/chapter5-interviews/Entrevista3-S1.png)
+
+#### Segmento 2: Ganancia de masa muscular
+
+##### Entrevista 1:
+
+- Nombres y Apellidos: 
+- Edad: 20
+- Ocupación: Estudiante de ingeniería de software
+- Tiempo: 14:45 - 19:47 
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=r2xlYo&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6ODg1LjQ5fX0%3D)
+- Resumen: 
+
+![E1S2 - Capture](../assets/img/chapter5-interviews/Entrevista1-S2.png)
+
+##### Entrevista 2:
+
+- Nombres y Apellidos: 
+- Edad: 
+- Ocupación: Estudiante universitario
+- Tiempo: 19:48 - 24:47
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=btmsmD&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTE4OC4wNX19)
+- Resumen: 
+
+![E2S2 - Capture](../assets/img/chapter5-interviews/Entrevista2-S2.png)
+
+##### Entrevista 3:
+
+- Nombres y Apellidos: Daphne Faustor
+- Edad: 25
+- Ocupación: Community Manager en el área de marketing (rubro gastronómico aeroportuario)
+- Tiempo: 24:48 - 30:53
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=8doez4&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTQ4OC44Nn19)
+- Resumen: 
+
+![E3S2 - Capture](../assets/img/chapter5-interviews/Entrevista3-S2.png)
+
 ### 5.3.3. Evaluaciones según heurísticas
 
 ## 5.4. Video About-the-Product
