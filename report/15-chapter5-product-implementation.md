@@ -1062,8 +1062,170 @@ Durante el Sprint 2, todos los miembros del equipo participaron activamente en l
 
 ### 5.3.1. Diseño de Entrevistas
 
+**Objetivo de la entrevista:**
+Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense, asimismo de asegurar que los flujos de usuario sean intuitivos, prácticos y funcionales para los usuarios y su correcta interacción con la plataforma.
+
+#### Segmento 1: Usuarios que buscan perder peso
+
+**Preguntas de introducción:**
+
+1. ¿Cuál es su nombre?
+2. ¿Cuántos años tiene?
+
+**Preguntas de validación del Landing Page:**
+1. ¿La información presentada al seleccionar la opción "Quiero perder peso" y la redirección al registro le resulta clara y le facilita tomar la decisión correcta como usuario nuevo?
+2. ¿Las funciones destacadas relacionadas con el control calórico y el seguimiento de progreso (Smart Scan, historial, métricas de salud) le parecen relevantes para su objetivo de pérdida de peso?
+3. ¿La tabla de planes le permite identificar con claridad qué nivel (Basic, Pro, Premium) ofrece las herramientas que usted necesitaría para alcanzar su meta?
+
+**Preguntas de validación del Web Application:**
+1. ¿La configuración inicial (objetivo, datos corporales, restricciones alimentarias) le resulta clara para establecer correctamente una meta de pérdida de peso?
+2. ¿El anillo de calorías y el gráfico de macronutrientes en el panel principal le permiten identificar de forma sencilla si va encaminado hacia su objetivo del día?
+3. ¿El registro de comidas (nutrition log) y el uso del Smart Scan le resultan prácticos para llevar un control constante de lo que consume?
+4. ¿El gráfico de progreso corporal (peso, IMC) y la racha semanal le motivan y le permiten visualizar con claridad su evolución a lo largo del tiempo?
+5. ¿Las recomendaciones contextuales (recetas según clima, ciudad o despensa) le parecen útiles y alineadas con su objetivo de bajar de peso?
+
+---
+
+#### Segmento 2: Usuarios que buscan ganar masa muscular
+
+**Preguntas de introducción:**
+
+1. ¿Cuál es su nombre?
+2. ¿Cuántos años tiene?
+
+**Preguntas de validación del Landing Page:**
+1. ¿La información presentada al seleccionar la opción "Quiero ganar masa muscular" y la redirección al registro le resulta clara y le facilita tomar la decisión correcta como usuario nuevo?
+2. ¿Las funciones destacadas relacionadas con el seguimiento de proteínas, actividad física y sincronización con wearables le parecen relevantes para su objetivo de aumento de masa muscular?
+3. ¿La comparación entre planes le permite identificar con claridad en qué nivel obtendría las herramientas (por ejemplo, sincronización con Google Fit o reportes en PDF) que necesitaría para entrenar y alimentarse de forma controlada?
+
+**Preguntas de validación del Web Application:**
+1. ¿La configuración inicial (objetivo, datos corporales, requerimientos calóricos y de proteína) le resulta clara para establecer correctamente una meta de ganancia muscular?
+2. ¿El gráfico de macronutrientes y los indicadores de calorías (TDEE/BMR) en el panel principal le permiten identificar con facilidad si está alcanzando su meta de proteína e ingesta calórica diaria?
+3. ¿El registro y la sincronización de actividad física (manual o vía Google Fit) le resultan sencillos de operar y le ayudan a relacionar su entrenamiento con su consumo nutricional?
+4. ¿El gráfico de progreso corporal (peso, evolución de métricas) le permite visualizar con claridad su avance hacia el aumento de masa muscular?
+5. ¿Las recomendaciones de recetas y la gestión de despensa le parecen útiles para planear comidas altas en proteína acordes a su objetivo?
+
 ### 5.3.2. Registro de Entrevistas
+
+#### Segmento 1: Pérdida de peso
+
+##### Entrevista 1:
+
+- Nombres y Apellidos: Larisa Ramírez Del Aguila
+- Edad: 19 
+- Ocupación: Estudiante de Administración y Marketing
+- Tiempo: 0:01 - 5:07
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=psFq3e&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6Mi41M319)
+- Resumen: Larisa valoró positivamente la claridad del landing page y la propuesta de valor desde el inicio. Destacó el SmartScan como la funcionalidad más innovadora y práctica. Consideró que el Nutrition Log y el gráfico de macronutrientes facilitan el seguimiento diario. Le agradó que la configuración inicial solicite datos corporales y restricciones alimentarias, ya que genera sensación de personalización. Calificó la experiencia general como "10 de 10".
+
+![E1S1 - Capture](../assets/img/chapter5-interviews/Entrevista1-S1.png)
+
+##### Entrevista 2:
+
+- Nombres y Apellidos: Jorge Del Aguila Vacalla
+- Edad: 49 
+- Ocupación: Administrador de empresas y jefe de garantías y taller
+- Tiempo: 5:08 - 10:05
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=hnaWgz&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MzA4LjgyfX0%3D)
+- Resumen: Jorge encontró la plataforma práctica y didáctica, accesible para cualquier tipo de público. Resaltó que el anillo de calorías y el gráfico de macronutrientes le ayudan a controlar su ingesta diaria. Valoró las recomendaciones contextuales según clima y ciudad, especialmente útiles dado que su trabajo implica viajar constantemente. Como sugerencia, propuso agregar videos testimoniales de usuarios que lograron bajar de peso para mayor motivación.
+
+![E2S1 - Capture](../assets/img/chapter5-interviews/Entrevista2-S1.png)
+
+##### Entrevista 3:
+
+- Nombres y Apellidos: Tatiana Mozombite Miranda
+- Edad: 25 
+- Ocupación: Estudiante de idiomas
+- Tiempo: 10:06 - 14:44
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=6f2Ocj&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6NjA2LjM2fX0%3D)
+- Resumen: Tatiana consideró que el landing page es claro y que las funcionalidades destacadas como Smart Scan y Nutrición Global son relevantes para su objetivo de pérdida de peso. Encontró útil la tabla de planes para comparar niveles. Dentro de la aplicación, valoró el gráfico de macronutrientes y el Smart Scan por indicarle el porcentaje de calorías y proteínas que consume. Indicó que el gráfico de progreso corporal y las recomendaciones por ubicación y despensa son funcionalidades muy útiles, y que usaría la app si estuviera disponible.
+
+![E3S1 - Capture](../assets/img/chapter5-interviews/Entrevista3-S1.png)
+
+#### Segmento 2: Ganancia de masa muscular
+
+##### Entrevista 1:
+
+- Nombres y Apellidos: Brandon Wildersato Palacios
+- Edad: 20
+- Ocupación: Estudiante de ingeniería de software
+- Tiempo: 14:45 - 19:47 
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=r2xlYo&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6ODg1LjQ5fX0%3D)
+- Resumen: Brandon destacó que la plataforma presenta las opciones de forma clara e intuitiva desde el landing. Consideró muy relevante la sincronización con smartwatch, el seguimiento de proteínas y la actividad física, ya que le evita tener que gestionar esos datos manualmente. Valoró el gráfico circular de macronutrientes y los indicadores TDEE/BMR por ser visualmente atractivos y fáciles de interpretar. Resaltó que el registro de actividad física es sencillo e intuitivo, y que las recomendaciones de recetas según la despensa son muy útiles para cumplir su meta de proteína diaria.
+
+![E1S2 - Capture](../assets/img/chapter5-interviews/Entrevista1-S2.png)
+
+##### Entrevista 2:
+
+- Nombres y Apellidos: David Miguel Ramos Paribón
+- Edad: 19
+- Ocupación: Estudiante universitario
+- Tiempo: 19:48 - 24:47
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=btmsmD&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTE4OC4wNX19)
+- Resumen: David encontró que el landing page orienta bien al usuario hacia su objetivo de ganancia muscular. Valoró positivamente la comparación entre planes, ya que permite identificar claramente las herramientas disponibles como la sincronización con Google Fit. Consideró que la configuración inicial es clara e importante para adaptar los requerimientos calóricos y de proteínas. Destacó que los gráficos de progreso corporal y los indicadores de macronutrientes son motivadores y fáciles de entender. Las recomendaciones de recetas según la despensa y ubicación le parecieron muy útiles para planificar comidas acordes a su meta.
+
+![E2S2 - Capture](../assets/img/chapter5-interviews/Entrevista2-S2.png)
+
+##### Entrevista 3:
+
+- Nombres y Apellidos: Daphne Faustor
+- Edad: 25
+- Ocupación: Community Manager en el área de marketing (rubro gastronómico aeroportuario)
+- Tiempo: 24:48 - 30:53
+- Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=8doez4&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTQ4OC44Nn19)
+- Resumen: Daphne resaltó que el landing page ayuda a los usuarios a identificar claramente los distintos objetivos de entrenamiento. Valoró especialmente el Travel Mode y la sincronización con wearables por ser funcionalidades muy prácticas para personas activas que viajan con frecuencia. Destacó la personalización del registro inicial, mencionando que pudo indicar su intolerancia a la lactosa y preferencias alimentarias. Consideró útiles los indicadores de macronutrientes para quienes no controlan su ingesta diaria por sus actividades laborales, y elogió la sincronización con Google Fit por agilizar el registro de actividad física.
+
+![E3S2 - Capture](../assets/img/chapter5-interviews/Entrevista3-S2.png)
 
 ### 5.3.3. Evaluaciones según heurísticas
 
 ## 5.4. Video About-the-Product
+
+### Descripción General
+
+Esta sección presenta el Video About-the-Product, una herramienta de comunicación estratégica diseñada para dos públicos objetivo principales. En primer lugar, se dirige a los visitantes del Landing Page que desean conocer sobre el modelo de negocio y las características principales de la solución de software NutriSense. En segundo lugar, se enfoca en los usuarios de la aplicación web que buscan comprender cómo realizar tareas específicas relacionadas con los procesos soportados por la plataforma.
+
+El tono de comunicación utilizado es consistente con la identidad del producto: motivacional, directo y cercano, buscando transmitir confianza y facilidad de uso.
+
+---
+
+### Video
+
+**Captura del Video:**
+
+![Video About-the-Product - NutriSense](../assets/img/chapter5-video/about-the-product.png)
+
+---
+
+### Información del Video
+
+| Atributo | Contenido |
+|----------|-----------|
+| **Duración** | 1:45 |
+|**Link**|[Link de about the product](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQC99Ix3H4DyTLnbPWeVDs3sAXy-3Knv6vpS8sydz-4hWSg?e=Fuc5sK&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)|
+
+---
+
+### Resumen del Video
+
+El video abre con una pregunta relatable para la audiencia: la dificultad de mantener una alimentación saludable sin saber por dónde empezar. Inmediatamente presenta a NutriSense como la plataforma inteligente que convierte la alimentación en un hábito sostenible, no en un esfuerzo diario.
+
+La propuesta de valor se desarrolla de forma progresiva, mostrando cómo el usuario puede configurar su perfil en minutos, definiendo su objetivo (perder peso o ganar músculo), sus restricciones alimentarias y sus metas calóricas. Se destaca que NutriSense aprende del usuario para personalizarse desde el primer día.
+
+Se presenta el dashboard como el centro de control del usuario, donde puede visualizar de un solo vistazo sus calorías del día, macronutrientes, calorías quemadas y racha de consistencia. El registro de alimentos se muestra como un proceso simple, ya sea mediante búsqueda manual o a través del Smart Scan, que identifica automáticamente los nutrientes apuntando la cámara al plato o a la carta del restaurante.
+
+Un elemento diferenciador es el motor de recomendaciones inteligente, que sugiere qué comer según el clima de la ciudad del usuario, los ingredientes disponibles en su despensa y sus macronutrientes del día. Además, se presenta el modo viaje como una funcionalidad que adapta las sugerencias a la ubicación actual del usuario.
+
+---
+
+### Testimonios de Usuarios
+
+El video incluye dos testimonios de usuarios reales que participaron en las entrevistas de validación, proporcionando credibilidad y validación del impacto real del producto:
+
+> "Llevé dos meses intentando bajar de peso sin resultados claros, pero desde que uso NutriSense puedo ver qué como y cómo evoluciono semana a semana. En dos meses bajé 4 kilos y por primera vez siento que tengo control."
+>
+> **Brando S., usuario NutriSense, segmento pérdida de peso**
+
+> "Vi NutriSense en redes y no creí que algo así pudiera funcionar para mí, pero el onboarding fue tan sencillo que en 10 minutos ya tenía mi plan. Lo que más me sorprendió fueron las recomendaciones: realmente considera lo que tengo en casa."
+>
+> **David R., usuario NutriSense, segmento ganancia muscular**
