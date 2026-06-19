@@ -1116,7 +1116,7 @@ Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense
 - Ocupación: Estudiante de Administración y Marketing
 - Tiempo: 0:01 - 5:07
 - Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=psFq3e&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6Mi41M319)
-- Resumen: 
+- Resumen: Larisa valoró positivamente la claridad del landing page y la propuesta de valor desde el inicio. Destacó el SmartScan como la funcionalidad más innovadora y práctica. Consideró que el Nutrition Log y el gráfico de macronutrientes facilitan el seguimiento diario. Le agradó que la configuración inicial solicite datos corporales y restricciones alimentarias, ya que genera sensación de personalización. Calificó la experiencia general como "10 de 10".
 
 ![E1S1 - Capture](../assets/img/chapter5-interviews/Entrevista1-S1.png)
 
@@ -1127,7 +1127,7 @@ Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense
 - Ocupación: Administrador de empresas y jefe de garantías y taller
 - Tiempo: 5:08 - 10:05
 - Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=hnaWgz&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MzA4LjgyfX0%3D)
-- Resumen: 
+- Resumen: Jorge encontró la plataforma práctica y didáctica, accesible para cualquier tipo de público. Resaltó que el anillo de calorías y el gráfico de macronutrientes le ayudan a controlar su ingesta diaria. Valoró las recomendaciones contextuales según clima y ciudad, especialmente útiles dado que su trabajo implica viajar constantemente. Como sugerencia, propuso agregar videos testimoniales de usuarios que lograron bajar de peso para mayor motivación.
 
 ![E2S1 - Capture](../assets/img/chapter5-interviews/Entrevista2-S1.png)
 
@@ -1138,7 +1138,7 @@ Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense
 - Ocupación: Estudiante de idiomas
 - Tiempo: 10:06 - 14:44
 - Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=6f2Ocj&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6NjA2LjM2fX0%3D)
-- Resumen: 
+- Resumen: Tatiana consideró que el landing page es claro y que las funcionalidades destacadas como Smart Scan y Nutrición Global son relevantes para su objetivo de pérdida de peso. Encontró útil la tabla de planes para comparar niveles. Dentro de la aplicación, valoró el gráfico de macronutrientes y el Smart Scan por indicarle el porcentaje de calorías y proteínas que consume. Indicó que el gráfico de progreso corporal y las recomendaciones por ubicación y despensa son funcionalidades muy útiles, y que usaría la app si estuviera disponible.
 
 ![E3S1 - Capture](../assets/img/chapter5-interviews/Entrevista3-S1.png)
 
@@ -1146,23 +1146,23 @@ Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense
 
 ##### Entrevista 1:
 
-- Nombres y Apellidos: 
+- Nombres y Apellidos: Brandon Wildersato Palacios
 - Edad: 20
 - Ocupación: Estudiante de ingeniería de software
 - Tiempo: 14:45 - 19:47 
 - Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=r2xlYo&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6ODg1LjQ5fX0%3D)
-- Resumen: 
+- Resumen: Brandon destacó que la plataforma presenta las opciones de forma clara e intuitiva desde el landing. Consideró muy relevante la sincronización con smartwatch, el seguimiento de proteínas y la actividad física, ya que le evita tener que gestionar esos datos manualmente. Valoró el gráfico circular de macronutrientes y los indicadores TDD/BMR por ser visualmente atractivos y fáciles de interpretar. Resaltó que el registro de actividad física es sencillo e intuitivo, y que las recomendaciones de recetas según la despensa son muy útiles para cumplir su meta de proteína diaria.
 
 ![E1S2 - Capture](../assets/img/chapter5-interviews/Entrevista1-S2.png)
 
 ##### Entrevista 2:
 
-- Nombres y Apellidos: 
-- Edad: 
+- Nombres y Apellidos: David Miguel Ramos Paribón
+- Edad: 19
 - Ocupación: Estudiante universitario
 - Tiempo: 19:48 - 24:47
 - Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=btmsmD&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTE4OC4wNX19)
-- Resumen: 
+- Resumen: David encontró que el landing page orienta bien al usuario hacia su objetivo de ganancia muscular. Valoró positivamente la comparación entre planes, ya que permite identificar claramente las herramientas disponibles como la sincronización con Google Fit. Consideró que la configuración inicial es clara e importante para adaptar los requerimientos calóricos y de proteínas. Destacó que los gráficos de progreso corporal y los indicadores de macronutrientes son motivadores y fáciles de entender. Las recomendaciones de recetas según la despensa y ubicación le parecieron muy útiles para planificar comidas acordes a su meta.
 
 ![E2S2 - Capture](../assets/img/chapter5-interviews/Entrevista2-S2.png)
 
@@ -1173,7 +1173,7 @@ Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense
 - Ocupación: Community Manager en el área de marketing (rubro gastronómico aeroportuario)
 - Tiempo: 24:48 - 30:53
 - Link: [Link de las entrevistas](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQBU36clcWpyQI1G_5_Zchm6Aa71cKA1hiBRHnKmB93f-TA?e=8doez4&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTQ4OC44Nn19)
-- Resumen: 
+- Resumen: Daphne resaltó que el landing page ayuda a los usuarios a identificar claramente los distintos objetivos de entrenamiento. Valoró especialmente el Travel Mode y la sincronización con wearables por ser funcionalidades muy prácticas para personas activas que viajan con frecuencia. Destacó la personalización del registro inicial, mencionando que pudo indicar su intolerancia a la lactosa y preferencias alimentarias. Consideró útiles los indicadores de macronutrientes para quienes no controlan su ingesta diaria por sus actividades laborales, y elogió la sincronización con Google Fit por agilizar el registro de actividad física.
 
 ![E3S2 - Capture](../assets/img/chapter5-interviews/Entrevista3-S2.png)
 
