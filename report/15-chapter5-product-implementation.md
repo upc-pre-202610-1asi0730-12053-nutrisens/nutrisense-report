@@ -1180,3 +1180,52 @@ Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense
 ### 5.3.3. Evaluaciones según heurísticas
 
 ## 5.4. Video About-the-Product
+
+### Descripción General
+
+Esta sección presenta el Video About-the-Product, una herramienta de comunicación estratégica diseñada para dos públicos objetivo principales. En primer lugar, se dirige a los visitantes del Landing Page que desean conocer sobre el modelo de negocio y las características principales de la solución de software NutriSense. En segundo lugar, se enfoca en los usuarios de la aplicación web que buscan comprender cómo realizar tareas específicas relacionadas con los procesos soportados por la plataforma.
+
+El tono de comunicación utilizado es consistente con la identidad del producto: motivacional, directo y cercano, buscando transmitir confianza y facilidad de uso.
+
+---
+
+### Video
+
+**Captura del Video:**
+
+![Video About-the-Product - NutriSense](../assets/img/chapter5-video)
+
+---
+
+### Información del Video
+
+| Atributo | Contenido |
+|----------|-----------|
+| **Duración** | 1:45 |
+|**Link**|[Link de about the product](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQC99Ix3H4DyTLnbPWeVDs3sAXy-3Knv6vpS8sydz-4hWSg?e=Fuc5sK&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)|
+
+---
+
+### Resumen del Video
+
+El video abre con una pregunta relatable para la audiencia: la dificultad de mantener una alimentación saludable sin saber por dónde empezar. Inmediatamente presenta a NutriSense como la plataforma inteligente que convierte la alimentación en un hábito sostenible, no en un esfuerzo diario.
+
+La propuesta de valor se desarrolla de forma progresiva, mostrando cómo el usuario puede configurar su perfil en minutos, definiendo su objetivo (perder peso o ganar músculo), sus restricciones alimentarias y sus metas calóricas. Se destaca que NutriSense aprende del usuario para personalizarse desde el primer día.
+
+Se presenta el dashboard como el centro de control del usuario, donde puede visualizar de un solo vistazo sus calorías del día, macronutrientes, calorías quemadas y racha de consistencia. El registro de alimentos se muestra como un proceso simple, ya sea mediante búsqueda manual o a través del Smart Scan, que identifica automáticamente los nutrientes apuntando la cámara al plato o a la carta del restaurante.
+
+Un elemento diferenciador es el motor de recomendaciones inteligente, que sugiere qué comer según el clima de la ciudad del usuario, los ingredientes disponibles en su despensa y sus macronutrientes del día. Además, se presenta el modo viaje como una funcionalidad que adapta las sugerencias a la ubicación actual del usuario.
+
+---
+
+### Testimonios de Usuarios
+
+El video incluye dos testimonios de usuarios reales que participaron en las entrevistas de validación, proporcionando credibilidad y validación del impacto real del producto:
+
+> "Llevé dos meses intentando bajar de peso sin resultados claros, pero desde que uso NutriSense puedo ver qué como y cómo evoluciono semana a semana. En dos meses bajé 4 kilos y por primera vez siento que tengo control."
+>
+> **Brando S., usuario NutriSense, segmento pérdida de peso**
+
+> "Vi NutriSense en redes y no creí que algo así pudiera funcionar para mí, pero el onboarding fue tan sencillo que en 10 minutos ya tenía mi plan. Lo que más me sorprendió fueron las recomendaciones: realmente considera lo que tengo en casa."
+>
+> **David R., usuario NutriSense, segmento ganancia muscular**
