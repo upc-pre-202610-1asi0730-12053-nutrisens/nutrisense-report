@@ -1062,6 +1062,49 @@ Durante el Sprint 2, todos los miembros del equipo participaron activamente en l
 
 ### 5.3.1. Diseño de Entrevistas
 
+**Objetivo de la entrevista:**
+Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense, asimismo de asegurar que los flujos de usuario sean intuitivos, prácticos y funcionales para los usuarios y su correcta interacción con la plataforma.
+
+#### Segmento 1: Usuarios que buscan perder peso
+
+**Preguntas de introducción:**
+
+1. ¿Cuál es su nombre?
+2. ¿Cuántos años tiene?
+
+**Preguntas de validación del Landing Page:**
+1. ¿La información presentada al seleccionar la opción "Quiero perder peso" y la redirección al registro le resulta clara y le facilita tomar la decisión correcta como usuario nuevo?
+2. ¿Las funciones destacadas relacionadas con el control calórico y el seguimiento de progreso (Smart Scan, historial, métricas de salud) le parecen relevantes para su objetivo de pérdida de peso?
+3. ¿La tabla de planes le permite identificar con claridad qué nivel (Basic, Pro, Premium) ofrece las herramientas que usted necesitaría para alcanzar su meta?
+
+**Preguntas de validación del Web Application:**
+1. ¿La configuración inicial (objetivo, datos corporales, restricciones alimentarias) le resulta clara para establecer correctamente una meta de pérdida de peso?
+2. ¿El anillo de calorías y el gráfico de macronutrientes en el panel principal le permiten identificar de forma sencilla si va encaminado hacia su objetivo del día?
+3. ¿El registro de comidas (nutrition log) y el uso del Smart Scan le resultan prácticos para llevar un control constante de lo que consume?
+4. ¿El gráfico de progreso corporal (peso, IMC) y la racha semanal le motivan y le permiten visualizar con claridad su evolución a lo largo del tiempo?
+5. ¿Las recomendaciones contextuales (recetas según clima, ciudad o despensa) le parecen útiles y alineadas con su objetivo de bajar de peso?
+
+---
+
+#### Segmento 2: Usuarios que buscan ganar masa muscular
+
+**Preguntas de introducción:**
+
+1. ¿Cuál es su nombre?
+2. ¿Cuántos años tiene?
+
+**Preguntas de validación del Landing Page:**
+1. ¿La información presentada al seleccionar la opción "Quiero ganar masa muscular" y la redirección al registro le resulta clara y le facilita tomar la decisión correcta como usuario nuevo?
+2. ¿Las funciones destacadas relacionadas con el seguimiento de proteínas, actividad física y sincronización con wearables le parecen relevantes para su objetivo de aumento de masa muscular?
+3. ¿La comparación entre planes le permite identificar con claridad en qué nivel obtendría las herramientas (por ejemplo, sincronización con Google Fit o reportes en PDF) que necesitaría para entrenar y alimentarse de forma controlada?
+
+**Preguntas de validación del Web Application:**
+1. ¿La configuración inicial (objetivo, datos corporales, requerimientos calóricos y de proteína) le resulta clara para establecer correctamente una meta de ganancia muscular?
+2. ¿El gráfico de macronutrientes y los indicadores de calorías (TDEE/BMR) en el panel principal le permiten identificar con facilidad si está alcanzando su meta de proteína e ingesta calórica diaria?
+3. ¿El registro y la sincronización de actividad física (manual o vía Google Fit) le resultan sencillos de operar y le ayudan a relacionar su entrenamiento con su consumo nutricional?
+4. ¿El gráfico de progreso corporal (peso, evolución de métricas) le permite visualizar con claridad su avance hacia el aumento de masa muscular?
+5. ¿Las recomendaciones de recetas y la gestión de despensa le parecen útiles para planear comidas altas en proteína acordes a su objetivo?
+
 ### 5.3.2. Registro de Entrevistas
 
 #### Segmento 1: Pérdida de peso
