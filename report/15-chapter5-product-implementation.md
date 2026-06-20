@@ -1179,6 +1179,91 @@ Los objetivos son de validar la usabilidad, efectividad y claridad de NutriSense
 
 ### 5.3.3. Evaluaciones según heurísticas
 
+### UX Heuristics & Principles Evaluation
+**Usability – Inclusive Design – Information Architecture**
+
+| Campo | Detalle |
+|-------|---------|
+| CARRERA | Ingeniería de Software |
+| CURSO | 1ASI0730 Aplicaciones Web |
+| SECCIÓN | NRC 12053 |
+| PROFESORES | Todos |
+| AUDITOR | GoldMetrics |
+| CLIENTE(S) | NutriSense Team |
+| SITE A EVALUAR | Landing Page: https://landing-sense.nutriproject.xyz / Web Application: https://app-sense.nutriproject.xyz |
+
+---
+
+### TAREAS A EVALUAR
+
+El alcance de esta evaluación incluye la revisión de la usabilidad de las siguientes tareas:
+
+1. Navegación general del Landing Page (Home, About Us, Features, Pricing, Contact)
+2. Selección de un objetivo desde el Hero y seguimiento del call-to-action correspondiente
+3. Selección de un plan de suscripción (Basic, Pro, Premium) y seguimiento del botón "Subscribe Now"
+4. Cambio de idioma entre inglés y español
+5. Envío del formulario de contacto
+6. Consulta de la sección de preguntas frecuentes (FAQ)
+7. Registrarse como nuevo usuario y completar el onboarding
+8. Flujo de pago y confirmación de suscripción
+9. Registrar alimentos en el diario nutricional
+10. Registrar actividad física
+11. Revisar métricas corporales (IMC, TMB, TDEE)
+12. Gestionar perfil, seguridad y eliminación de cuenta
+13. Acceder a recomendaciones inteligentes y gestionar la despensa (Plan Pro)
+14. Escanear un plato con la cámara (Plan Pro)
+15. Escanear un menú de restaurante (Plan Premium)
+
+No están incluidas en esta versión de la evaluación las siguientes tareas:
+
+1. Integración con Google Fit (Wearable Sync)
+2. Travel Mode fuera de Lima
+3. Exportación de reportes en PDF
+4. Analítica avanzada y reportes del plan Premium
+
+---
+
+### ESCALA DE SEVERIDAD
+
+| Nivel | Descripción |
+|-------|-------------|
+| 1 | Problema superficial: puede ser fácilmente superado por el usuario u ocurre con muy poca frecuencia. No necesita ser corregido a menos que exista disponibilidad de tiempo. |
+| 2 | Problema menor: puede ocurrir con más frecuencia o es algo más difícil de superar para el usuario. Se le debería asignar una prioridad baja resolverlo de cara al siguiente release. |
+| 3 | Problema mayor: ocurre frecuentemente o los usuarios no son capaces de resolverlo. Es importante que sea corregido y se le debe asignar una prioridad alta. |
+| 4 | Problema muy grave: un error de gran impacto que impide al usuario continuar con el uso de la herramienta. Es imperativo que sea corregido antes del lanzamiento. |
+
+---
+
+### TABLA RESUMEN
+
+| # | Problema | Severidad | Heurística / Principio violado | Plan afectado |
+|---|----------|-----------|-------------------------------|---------------|
+| 1 | Todos los CTA del Landing Page redirigen a la misma URL genérica sin transferir el objetivo o plan seleccionado | 3 | Usability: Consistencia y estándares / Coherencia Landing ↔ App | Todos |
+| 2 | La sección Features no indica qué plan incluye cada característica | 2 | Usability: Reconocimiento antes que recuerdo | Todos |
+| 3 | Los textos de los planes en la sección Pricing no están traducidos al español | 3 | Usability: Consistencia y estándares / i18n | Todos |
+| 4 | El bloque de FAQ se repite de forma idéntica en Home, Features y About Us | 2 | Information Architecture: Organization Systems | Todos |
+| 5 | La página About Us no incluye información del equipo | 2 | Information Architecture: Is it useful? | Todos |
+| 6 | No existe botón de "volver arriba" en páginas de contenido largo | 1 | Usability: Control y libertad del usuario | Todos |
+| 7 | La etiqueta canonical de Features apunta a una URL mal formada | 1 | Information Architecture: SEO Tags and Meta Tags | Todos |
+| 8 | El campo de vencimiento muestra "MM/YY" en interfaz en español | 2 | Usability: Coincidencia entre el sistema y el mundo real / i18n | Todos |
+| 9 | El formulario de registro no solicita edad ni sexo biológico | 2 | Usability: Prevención de errores | Todos |
+| 10 | Las restricciones alimenticias del onboarding no se persisten en el perfil | 3 | Usability: Visibilidad del estado del sistema / Prevención de errores | Todos |
+| 11 | La confirmación de pago no ofrece comprobante ni confirma envío de correo | 2 | Usability: Visibilidad del estado del sistema | Pro / Premium |
+| 12 | El dashboard muestra kcal disponibles sin contexto ni guía para usuario nuevo | 2 | Usability: Visibilidad del estado del sistema | Todos |
+| 13 | El buscador de alimentos tiene base de datos limitada sin opción de agregar manualmente | 2 | Usability: Flexibilidad y eficiencia de uso | Todos |
+| 14 | Los valores nutricionales usan abreviaciones P, C, G no explicadas | 2 | Usability: Coincidencia entre el sistema y el mundo real | Todos |
+| 15 | Las siglas IMC, TMB y TDEE son inconsistentes en la interfaz en español | 2 | Usability: Consistencia y estándares / i18n | Todos |
+| 16 | El registro de actividad física se duplica al confirmar | 3 | Usability: Prevención de errores | Todos |
+| 17 | El mensaje de error al eliminar actividad no describe qué ocurrió ni cómo resolverlo | 3 | Usability: Ayuda al usuario a reconocer, diagnosticar y recuperarse de errores | Todos |
+| 18 | El modal de eliminación de cuenta solicita escribir "DELETE" en inglés | 2 | Usability: Consistencia y estándares / i18n | Todos |
+| 19 | Los filtros "Alto en" en Recomendaciones usan abreviaciones P, C, G sin etiquetas | 2 | Usability: Coincidencia entre el sistema y el mundo real | Pro / Premium |
+| 20 | Recomendaciones Inteligentes muestra muy pocas opciones | 2 | Usability: Flexibilidad y eficiencia de uso | Pro / Premium |
+| 21 | La despensa tiene lista de ingredientes limitada y muestra "unit" sin traducir | 2 | Usability: Flexibilidad y eficiencia de uso / i18n | Pro / Premium |
+| 22 | El contenido del "Feed" en Recomendaciones no se traduce al español | 2 | Usability: Consistencia y estándares / i18n | Pro / Premium |
+| 23 | El botón "Tomar foto" en Escanear plato abre el explorador de archivos en lugar de la cámara | 3 | Usability: Coincidencia entre el sistema y el mundo real / Prevención de errores | Pro / Premium |
+| 24 | El botón "Tomar foto" en Escanear menú abre el explorador de archivos en lugar de la cámara | 3 | Usability: Coincidencia entre el sistema y el mundo real / Prevención de errores | Premium |
+
+
 ## 5.4. Video About-the-Product
 
 ### Descripción General
