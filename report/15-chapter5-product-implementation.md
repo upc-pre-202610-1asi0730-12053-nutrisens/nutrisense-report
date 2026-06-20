@@ -1263,6 +1263,511 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 | 23 | El botón "Tomar foto" en Escanear plato abre el explorador de archivos en lugar de la cámara | 3 | Usability: Coincidencia entre el sistema y el mundo real / Prevención de errores | Pro / Premium |
 | 24 | El botón "Tomar foto" en Escanear menú abre el explorador de archivos en lugar de la cámara | 3 | Usability: Coincidencia entre el sistema y el mundo real / Prevención de errores | Premium |
 
+---
+
+### DESCRIPCIÓN DE PROBLEMAS
+
+---
+
+## 1. Landing Page
+
+---
+
+**PROBLEMA #1:** Todos los CTA redirigen a la misma URL genérica sin transferir el objetivo o plan seleccionado
+
+- **Severidad:** 3
+- **Heurística violada:** Usability — Consistencia y estándares / Coherencia Landing Page ↔ Web Application
+- **Plan afectado:** Todos
+
+**Problema:**
+En la sección Hero, los dos llamados a la acción dirigidos a cada segmento ("Start
+Losing Weight" y "Start Building Muscle") apuntan exactamente a la misma URL
+(`https://app-sense.nutriproject.xyz/`), igual que las tarjetas "Get Started" y
+los tres botones "Subscribe Now" de Pricing (Basic, Pro, Premium). El visitante
+elige una opción con un contexto distinto en cada caso, pero el sistema no
+transfiere esa elección a la Web Application: todos terminan en el mismo punto
+de entrada genérico. Esto obliga al usuario a repetir su elección de objetivo o
+plan una vez dentro de la aplicación, rompiendo la coherencia entre el Landing
+Page y la App.
+
+**Recomendación:**
+Pasar el objetivo o el plan seleccionado como parámetro en la URL de destino
+(por ejemplo `?goal=weight-loss` o `?plan=pro`) para que la Web Application
+pre-seleccione esa opción en el flujo de registro o checkout, o al menos la
+recuerde durante el proceso.
+
+---
+
+**PROBLEMA #2:** La sección Features no indica qué plan incluye cada característica
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Reconocimiento antes que recuerdo
+- **Plan afectado:** Todos
+
+**Problema:**
+La página `/features.html` lista todas las funcionalidades del producto sin indicar
+a qué plan pertenece cada una (Basic, Pro o Premium). El usuario debe recordar
+o volver a la sección de precios para relacionar cada característica con su plan,
+aumentando la carga cognitiva innecesariamente.
+
+**Recomendación:**
+Agregar un badge junto a cada feature indicando el plan mínimo requerido, por
+ejemplo `[Pro]` o `[Premium]`, o incluir un enlace directo a la sección de precios
+al final de cada ítem.
+
+---
+
+**PROBLEMA #3:** Los textos de los planes en Pricing no están traducidos al español
+
+- **Severidad:** 3
+- **Heurística violada:** Usability — Consistencia y estándares / i18n
+- **Plan afectado:** Todos
+
+**Problema:**
+En la sección de precios del Landing Page, con la interfaz configurada en español,
+aparecen textos en inglés como "Everything included in the Basic Plan" y
+"Everything included in the Pro Plan". Esto rompe la consistencia del idioma
+dentro de la misma pantalla y evidencia una implementación incompleta del
+sistema de internacionalización (i18n).
+
+**Recomendación:**
+Traducir todos los textos de la sección Pricing según el idioma activo. En español:
+"Todo lo incluido en el Plan Básico" y "Todo lo incluido en el Plan Pro".
+
+---
+
+**PROBLEMA #4:** El bloque de FAQ se repite de forma idéntica en Home, Features y About Us
+
+- **Severidad:** 2
+- **Heurística violada:** Information Architecture — Organization Systems
+- **Plan afectado:** Todos
+
+**Problema:**
+El mismo bloque de 5 preguntas frecuentes aparece, palabra por palabra, en tres
+páginas distintas del Landing Page: Home, Features y About Us. Un visitante que
+navegue por las tres páginas se encuentra tres veces con el mismo contenido, lo
+que diluye la utilidad de la sección y sugiere que el FAQ no tiene un lugar
+canónico dentro de la arquitectura de información del sitio.
+
+**Recomendación:**
+Mantener una sola página o sección de referencia para el FAQ y enlazar a ella
+desde las demás páginas, o variar el contenido según el contexto de cada página
+(preguntas técnicas en Features, preguntas de misión/marca en About Us).
+
+---
+
+**PROBLEMA #5:** La página About Us no incluye información del equipo
+
+- **Severidad:** 2
+- **Heurística violada:** Information Architecture — Is it useful?
+- **Plan afectado:** Todos
+
+**Problema:**
+La sección "About Us" describe la misión y visión de NutriSense, pero no presenta
+a los integrantes del equipo (nombres, fotos, roles). Para un producto de salud y
+nutrición, conocer al equipo detrás del producto contribuye significativamente a
+generar confianza en el usuario.
+
+**Recomendación:**
+Agregar una sección "Meet the Team" con foto, nombre, rol y breve descripción
+de cada integrante.
+
+---
+
+**PROBLEMA #6:** No existe botón de "volver arriba" en páginas de contenido largo
+
+- **Severidad:** 1
+- **Heurística violada:** Usability — Control y libertad del usuario
+- **Plan afectado:** Todos
+
+**Problema:**
+Páginas como la principal y Features tienen contenido extenso sin un botón
+flotante de "volver arriba", obligando al usuario a hacer scroll manual hasta
+el inicio de la página.
+
+**Recomendación:**
+Implementar un botón flotante en la esquina inferior derecha que aparezca al
+hacer scroll hacia abajo y permita volver al inicio con un solo clic.
+
+---
+
+**PROBLEMA #7:** La etiqueta canonical de Features apunta a una URL mal formada
+
+- **Severidad:** 1
+- **Heurística violada:** Information Architecture — SEO Tags and Meta Tags
+- **Plan afectado:** Todos
+
+**Problema:**
+La metaetiqueta `canonical` de la página `features.html` apunta a una URL
+incorrecta (falta el segmento `.io/` del dominio de GitHub Pages). Las páginas
+Home y Contact sí tienen la metaetiqueta `canonical` correctamente formada,
+por lo que el error parece puntual a esta página. Aunque no es visible para
+el usuario final, afecta el posicionamiento SEO del sitio.
+
+**Recomendación:**
+Corregir la URL canónica de `features.html` y verificar que todas las páginas
+del sitio sigan el mismo formato antes de la entrega final.
+
+---
+
+## 2. Registro y Onboarding
+
+---
+
+**PROBLEMA #8:** El campo de vencimiento muestra "MM/YY" en interfaz en español
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Coincidencia entre el sistema y el mundo real / i18n
+- **Plan afectado:** Todos
+
+**Problema:**
+El label del campo dice correctamente "Vencimiento (MM/AA)" pero el placeholder
+dentro del campo muestra "MM/YY" (Year en inglés), generando inconsistencia
+dentro de la misma pantalla con el idioma activo.
+
+**Recomendación:**
+Unificar el placeholder con el idioma activo. Si el idioma es español, mostrar
+"MM/AA" tanto en el label como en el placeholder, manejándolo dinámicamente
+junto con el resto del sistema i18n.
+
+---
+
+**PROBLEMA #9:** El formulario de registro no solicita edad ni sexo biológico
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Prevención de errores
+- **Plan afectado:** Todos
+
+**Problema:**
+Durante el onboarding, el sistema solicita peso, altura y cintura para calcular
+el TDEE, pero no solicita edad ni sexo biológico, datos necesarios en las
+fórmulas estándar de cálculo de BMR (Harris-Benedict, Mifflin-St Jeor), lo que
+puede resultar en cálculos calóricos imprecisos.
+
+**Recomendación:**
+Incluir campos de edad y sexo biológico en el flujo de configuración del perfil
+de salud e indicar al usuario cómo estos datos influyen en el cálculo de sus
+métricas.
+
+---
+
+**PROBLEMA #10:** Las restricciones alimenticias del onboarding no se persisten en el perfil
+
+- **Severidad:** 3
+- **Heurística violada:** Usability — Visibilidad del estado del sistema / Prevención de errores
+- **Plan afectado:** Todos
+
+**Problema:**
+Durante el onboarding (Paso 4 de 4), la usuaria seleccionó "Sin lactosa" y "Sin
+gluten". Sin embargo, al acceder a "Perfil y Ajustes → Dieta y Salud", ninguna
+restricción aparece seleccionada. Los datos del registro no se están guardando
+correctamente, lo que puede resultar en recomendaciones con alimentos que el
+usuario no puede consumir, siendo crítico en una aplicación de salud y nutrición.
+
+**Recomendación:**
+Corregir la lógica de persistencia del onboarding para que las selecciones se
+guarden correctamente. Mostrar un resumen de preferencias al finalizar el
+registro para que el usuario confirme que sus datos fueron guardados.
+
+---
+
+## 3. Flujo de Pago
+
+---
+
+**PROBLEMA #11:** La confirmación de pago no ofrece comprobante ni confirma envío de correo
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Visibilidad del estado del sistema
+- **Plan afectado:** Pro / Premium
+
+**Problema:**
+La pantalla "¡Todo listo!" confirma la suscripción y muestra los últimos 4 dígitos
+de la tarjeta cobrada, pero no ofrece opción de descargar un comprobante ni
+menciona si se enviará una confirmación por correo electrónico, lo que puede
+generar desconfianza en el usuario tras completar el pago.
+
+**Recomendación:**
+Agregar una línea informativa como "Te enviamos un comprobante a tu correo
+registrado" y/o un botón secundario "Descargar comprobante".
+
+---
+
+## 4. App — Todos los planes
+
+---
+
+**PROBLEMA #12:** El dashboard muestra kcal disponibles sin contexto ni guía para usuario nuevo
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Visibilidad del estado del sistema
+- **Plan afectado:** Todos
+
+**Problema:**
+Al ingresar por primera vez, el dashboard muestra las kcal restantes del día sin
+explicar de dónde proviene ese valor ni guiar al usuario nuevo sobre qué hacer
+a continuación. El botón "¡Registra tu primera comida!" pasa desapercibido en
+la esquina superior derecha.
+
+**Recomendación:**
+Agregar un tooltip explicando el origen del valor calculado e implementar un
+banner de onboarding que guíe al usuario nuevo paso a paso hacia su primera
+acción.
+
+---
+
+**PROBLEMA #13:** El buscador de alimentos tiene base de datos limitada sin opción de agregar manualmente
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Flexibilidad y eficiencia de uso
+- **Plan afectado:** Todos
+
+**Problema:**
+El buscador no encuentra términos comunes de la dieta latinoamericana como
+"huevo revuelto", mostrando "No se encontraron alimentos. Intenta otro término."
+Dado que el segmento objetivo principal son usuarios de América Latina, la
+ausencia de alimentos típicos de la región representa una limitación funcional
+importante que impide el registro correcto de comidas diarias.
+
+**Recomendación:**
+Ampliar la base de datos con alimentos típicos de la dieta latinoamericana y
+agregar la opción de registrar alimentos personalizados con valores nutricionales
+propios cuando no se encuentre el alimento buscado.
+
+---
+
+**PROBLEMA #14:** Los valores nutricionales usan abreviaciones P, C, G no explicadas
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Coincidencia entre el sistema y el mundo real
+- **Plan afectado:** Todos
+
+**Problema:**
+En el modal "Agregar al registro diario", la información nutricional base se muestra
+como "P 13g · C 1.1g · G 11g" usando abreviaciones para Proteína, Carbohidratos
+y Grasa. Esto es inconsistente con los bloques inferiores del mismo modal que sí
+usan los nombres completos, y puede confundir a usuarios sin experiencia en
+aplicaciones de nutrición (por ejemplo, "G" podría interpretarse como "gramos").
+
+**Recomendación:**
+Reemplazar las abreviaciones por los nombres completos o agregar una leyenda
+explicativa, usando las mismas etiquetas que ya aparecen en los bloques inferiores
+del modal para mantener consistencia interna.
+
+---
+
+**PROBLEMA #15:** Las siglas IMC, TMB y TDEE son inconsistentes en la interfaz en español
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Consistencia y estándares / i18n
+- **Plan afectado:** Todos
+
+**Problema:**
+En la pantalla "Progreso Corporal" con interfaz en español, IMC y TMB aparecen
+correctamente en español pero TDEE permanece en inglés. Además el tooltip
+mezcla ambos idiomas: "Gasto Energético Total Diario — TMB ajustada por tu
+nivel de actividad", usando la sigla en español (TMB) junto a la etiqueta en
+inglés (TDEE).
+
+**Recomendación:**
+Unificar todas las siglas según el idioma activo. En español, TDEE debería
+mostrarse como "GET" (Gasto Energético Total) o con su nombre completo,
+de forma dinámica según el idioma seleccionado.
+
+---
+
+**PROBLEMA #16:** El registro de actividad física se duplica al confirmar
+
+- **Severidad:** 3
+- **Heurística violada:** Usability — Prevención de errores
+- **Plan afectado:** Todos
+
+**Problema:**
+Al registrar una actividad (Caminar · 30 min · 120 kcal), el sistema la guarda
+dos veces, mostrando la misma entrada duplicada en "Actividad de hoy". Esto
+genera datos incorrectos: muestra 240 kcal quemadas y 60 minutos activos en
+lugar de 120 kcal y 30 minutos, afectando directamente la precisión del balance
+nutricional diario del usuario.
+
+**Recomendación:**
+Corregir el manejador del evento de confirmación para que el registro se ejecute
+una sola vez. Agregar validación que detecte entradas duplicadas consecutivas
+y alerte al usuario antes de guardar.
+
+---
+
+**PROBLEMA #17:** El mensaje de error al eliminar actividad no describe qué ocurrió ni cómo resolverlo
+
+- **Severidad:** 3
+- **Heurística violada:** Usability — Ayuda al usuario a reconocer, diagnosticar y recuperarse de errores
+- **Plan afectado:** Todos
+
+**Problema:**
+Al intentar eliminar un registro de actividad física, el sistema muestra el mensaje
+genérico "Ocurrió un error. Por favor intenta de nuevo." sin especificar qué
+falló, si es un problema temporal o si hay que recargar la página. Como
+consecuencia del bug de duplicación (#16), el usuario queda con registros
+incorrectos que no puede eliminar, resultando en métricas permanentemente
+erróneas.
+
+**Recomendación:**
+Reemplazar el mensaje genérico por uno descriptivo: "No se pudo eliminar el
+registro. Verifica tu conexión e intenta de nuevo." Agregar además un botón
+"Reintentar" dentro del mismo mensaje de error para facilitar la recuperación
+sin necesidad de recargar la página.
+
+---
+
+**PROBLEMA #18:** El modal de eliminación de cuenta solicita escribir "DELETE" en inglés
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Consistencia y estándares / i18n
+- **Plan afectado:** Todos
+
+**Problema:**
+El modal de confirmación de eliminación de cuenta muestra la instrucción
+"Escribe 'DELETE' para confirmar" en una interfaz configurada en español.
+Aunque el resto del modal está correctamente traducido, la palabra clave de
+confirmación permanece en inglés.
+
+**Recomendación:**
+Traducir la palabra clave de confirmación al idioma activo. En español debería
+solicitarse escribir "ELIMINAR" en lugar de "DELETE", manejándolo
+dinámicamente según el idioma seleccionado.
+
+---
+
+## 5. App — Plan Pro
+
+---
+
+**PROBLEMA #19:** Los filtros "Alto en" en Recomendaciones usan abreviaciones P, C, G sin etiquetas
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Coincidencia entre el sistema y el mundo real
+- **Plan afectado:** Pro / Premium
+
+**Problema:**
+En el panel de filtros de "Recomendaciones Inteligentes", los botones del filtro
+"Alto en" muestran únicamente "P", "C" y "G" sin etiqueta explicativa. Un
+usuario nuevo no puede saber con certeza si "C" significa Carbohidratos o
+Calorías, y si "G" significa Grasa o Gramos.
+
+**Recomendación:**
+Reemplazar las abreviaciones por etiquetas completas o agregar un tooltip al
+pasar el cursor sobre cada letra: "P → Proteína", "C → Carbohidratos",
+"G → Grasa".
+
+---
+
+**PROBLEMA #20:** Recomendaciones Inteligentes muestra muy pocas opciones
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Flexibilidad y eficiencia de uso
+- **Plan afectado:** Pro / Premium
+
+**Problema:**
+La pantalla "Recomendaciones Inteligentes" muestra únicamente 2 platos
+recomendados, cantidad insuficiente para una funcionalidad que es la principal
+característica diferenciadora del plan Pro. Esto reduce la percepción de valor
+del plan y comparte causa raíz con el problema #13 (base de datos de alimentos
+limitada).
+
+**Recomendación:**
+Ampliar la base de datos de platos y recetas recomendadas asegurando variedad
+según el objetivo del usuario, sus preferencias e historial. Complementar con
+paginación o botón "Ver más recomendaciones".
+
+---
+
+**PROBLEMA #21:** La despensa tiene lista de ingredientes limitada y muestra "unit" sin traducir
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Flexibilidad y eficiencia de uso / i18n
+- **Plan afectado:** Pro / Premium
+
+**Problema:**
+El modal "Agregar ingrediente" de la Despensa muestra una lista predefinida
+muy reducida de ingredientes, insuficiente para representar la variedad de
+alimentos que un usuario latinoamericano típicamente tiene en casa.
+Adicionalmente, la unidad de medida de varios ingredientes se muestra como
+"unit" en inglés en lugar de "unidad".
+
+**Recomendación:**
+Ampliar el catálogo de ingredientes con alimentos comunes de la dieta
+latinoamericana. Traducir "unit" a "unidad" dinámicamente según el idioma
+activo del sistema.
+
+---
+
+**PROBLEMA #22:** El contenido del "Feed" en Recomendaciones no se traduce al español
+
+- **Severidad:** 2
+- **Heurística violada:** Usability — Consistencia y estándares / i18n
+- **Plan afectado:** Pro / Premium
+
+**Problema:**
+En la pantalla "Recomendaciones Inteligentes", la pestaña "Feed" muestra su
+contenido en inglés aunque la interfaz esté configurada en español, siendo
+otro caso más del patrón de i18n incompleto identificado a lo largo de toda
+la aplicación.
+
+**Recomendación:**
+Aplicar las traducciones correspondientes al contenido del Feed según el idioma
+activo. Realizar una revisión integral del sistema i18n para corregir todos los
+textos pendientes de traducción de forma sistémica.
+
+---
+
+**PROBLEMA #23:** El botón "Tomar foto" en Escanear plato abre el explorador de archivos
+
+- **Severidad:** 3
+- **Heurística violada:** Usability — Coincidencia entre el sistema y el mundo real / Prevención de errores
+- **Plan afectado:** Pro / Premium
+
+**Problema:**
+En la sección "Escanear un plato" del Registro Nutricional, al hacer clic en
+"Tomar foto", el sistema abre directamente el explorador de archivos del sistema
+operativo en lugar de activar la cámara del dispositivo. Esto contradice
+completamente la etiqueta del botón y la expectativa del usuario. La
+funcionalidad "Subir archivo" ya cumple el rol de seleccionar una imagen
+existente, por lo que ambos botones terminan haciendo lo mismo.
+
+**Recomendación:**
+Corregir el comportamiento del botón "Tomar foto" para que utilice el atributo
+`capture="environment"` en el input de tipo file, activando la cámara trasera
+en dispositivos móviles. En escritorio, mostrar un mensaje informativo:
+"Esta función está disponible desde dispositivos móviles con cámara."
+
+---
+
+## 6. App — Plan Premium
+
+---
+
+**PROBLEMA #24:** El botón "Tomar foto" en Escanear menú abre el explorador de archivos
+
+- **Severidad:** 3
+- **Heurística violada:** Usability — Coincidencia entre el sistema y el mundo real / Prevención de errores
+- **Plan afectado:** Premium
+
+**Problema:**
+El plan Premium incorpora una funcionalidad exclusiva: "Escanear un menú"
+de restaurante para identificar las mejores opciones según el objetivo del
+usuario. Sin embargo, el botón "Tomar foto" en este panel abre el explorador
+de archivos en lugar de activar la cámara, repitiendo el mismo bug del
+problema #23. Esto inutiliza la principal característica diferenciadora del
+plan Premium, ya que la función depende de fotografiar el menú en tiempo
+real.
+
+**Recomendación:**
+Aplicar la misma corrección que en el problema #23: usar `capture="environment"`
+para activar la cámara en móvil. Este bug debe resolverse de forma global
+para todos los botones "Tomar foto" de la aplicación, tanto en el plan Pro
+como en el Premium.
+
+---
+
 
 ## 5.4. Video About-the-Product
 
