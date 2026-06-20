@@ -56,7 +56,6 @@ Junio, 2026
 <div style="page-break-after: always"></div>
 
 ## REGISTRO DE VERSIONES DEL INFORME
-
 | Versión | Fecha | Autor | Descripción de modificación |
 | :---: | :---: | :---: | :---: |
 | 0.1.0 | 04/04/2026 | Angel Villarreal | Commit inicial; estructura base del repositorio y esquemas de todos los capítulos (`main`) |
@@ -77,6 +76,12 @@ Junio, 2026
 | 1.4.0 | 05/14/2026 – 05/15/2026 | Angel Villarreal / Olenka Del Aguila | Sprint 2: planning, backlog, ejecución, revisión y retrospectiva; información de Coolify; insights de colaboración; URL de revisión (`feature/sprint2`) |
 | 1.5.0 | 05/15/2026 | Angel Villarreal / Joel Mora | Diagramas de clases frontend y backend; imágenes de diagramas C4 actualizadas (`feature/chapter4-class-diagrams`, `feature/chapter4`) |
 | 2.0.0 | 05/15/2026 | Angel Villarreal | TB1 Report |
+| 2.1.0 | 06/19/2026 | Angela Espinoza | Configuración de evaluación heurística, escala de severidad y descripción de issues (`feature/heuristics-validation`) |
+| 2.2.0 | 06/20/2026 | Rose Vergaray | Sprint Backlog 3: adición y actualización de tareas; URL del tablero Trello (`feature/sprint-3`) |
+| 2.3.0 | 06/20/2026 | Joel Mora | Actualización de EventStorming, diagramas de contexto y contenedor; documentación de backend en cap. 4 (`feature/chapter4-ddd`) |
+| 2.4.0 | 06/20/2026 | Angel Villarreal | About-the-product, Sprint 3 Web Services |
+| 2.5.0 | 06/20/2026 | Olenka Del Aguila | About-the-team, Validation Interviews |
+| 3.0.0 | 06/20/2026 | Angel Villarreal | AV2 Report |
 
 <div style="page-break-after: always"></div>
 
