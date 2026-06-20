@@ -1470,7 +1470,7 @@ El diagrama a continuación muestra todos los componentes de la arquitectura en 
 
 ![API Component Diagram](../assets/img/artifacts/nutrisense-BackendBCsDiagram.png)
 
-Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. Todos los BCs del backend utilizan el Shared Kernel a través de su capa Application.
+Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP y las fachadas ACL que exponen contratos a otros Bounded Contexts, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. Todos los BCs del backend utilizan el Shared Kernel a través de su capa Application.
 
 Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context y del Shared Kernel, se presenta a continuación un diagrama de detalle individual por cada uno.
 
@@ -1486,29 +1486,91 @@ Componente transversal utilizado por todos los Bounded Contexts del backend que 
 
   ![IAM Backend Diagram](../assets/img/artifacts/nutrisense-IAMBackendDiagram.png)
 
- - **Nutrition Tracking:** Gestiona el registro de comidas y el procesamiento de Smart Scan. Se integra con Google Cloud Vision y Nutrition Data Providers.
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![IAM ACL Diagram](../assets/img/artifacts/nutrisense-IAMAclDiagram.png)
+
+  - **REST:**
+
+    ![IAM REST Diagram](../assets/img/artifacts/nutrisense-IAMRestDiagram.png)
+
+ - **Nutrition Tracking:** Gestiona el registro de comidas y el procesamiento de Smart Scan. Se integra con Google Gemini Vision, USDA Food Data Central y DeepSeek API.
 
   ![Nutrition Backend Diagram](../assets/img/artifacts/nutrisense-NutritionBackendDiagram.png)
+
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Nutrition ACL Diagram](../assets/img/artifacts/nutrisense-NutritionAclDiagram.png)
+
+  - **REST:**
+
+    ![Nutrition REST Diagram](../assets/img/artifacts/nutrisense-NutritionRestDiagram.png)
 
  - **Body & Health Metrics:** Calcula índices de salud como BMI y TDEE y registra el historial de peso.
 
   ![Body Backend Diagram](../assets/img/artifacts/nutrisense-BodyBackendDiagram.png)
 
- - **Smart Recommendations:** Procesa datos contextuales para generar sugerencias personalizadas. Se integra con OpenWeatherMap y Geolocation API.
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Body ACL Diagram](../assets/img/artifacts/nutrisense-BodyAclDiagram.png)
+
+  - **REST:**
+
+    ![Body REST Diagram](../assets/img/artifacts/nutrisense-BodyRestDiagram.png)
+
+ - **Smart Recommendations:** Procesa datos contextuales para generar sugerencias personalizadas. Se integra con OpenWeatherMap y DeepSeek API.
 
   ![Recs Backend Diagram](../assets/img/artifacts/nutrisense-RecsBackendDiagram.png)
 
- - **Activity & Wearable Sync:** Sincroniza pasos y datos de actividad desde Google Fit.
+  La capa Interfaces contiene únicamente endpoints REST para este Bounded Context, ya que no expone contrato ACL hacia otros BCs. El detalle se presenta a continuación:
+
+  - **REST:**
+
+    ![Recs REST Diagram](../assets/img/artifacts/nutrisense-RecsRestDiagram.png)
+
+ - **Activity & Wearable Sync:** Sincroniza pasos y datos de actividad desde Health API.
 
   ![Activity Backend Diagram](../assets/img/artifacts/nutrisense-ActivityBackendDiagram.png)
+
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Activity ACL Diagram](../assets/img/artifacts/nutrisense-ActivityAclDiagram.png)
+
+  - **REST:**
+
+    ![Activity REST Diagram](../assets/img/artifacts/nutrisense-ActivityRestDiagram.png)
 
  - **Analytics & Reporting:** Genera gráficas de progreso, rachas y reportes del usuario.
 
   ![Analytics Backend Diagram](../assets/img/artifacts/nutrisense-AnalyticsBackendDiagram.png)
 
+  La capa Interfaces contiene únicamente endpoints REST para este Bounded Context, ya que no expone contrato ACL hacia otros BCs. El detalle se presenta a continuación:
+
+  - **REST:**
+
+    ![Analytics REST Diagram](../assets/img/artifacts/nutrisense-AnalyticsRestDiagram.png)
+
  - **Subscriptions & Billing:** Gestiona los niveles de suscripción y se integra con Stripe para el procesamiento de pagos.
 
   ![Billing Backend Diagram](../assets/img/artifacts/nutrisense-BillingBackendDiagram.png)
+
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Billing ACL Diagram](../assets/img/artifacts/nutrisense-BillingAclDiagram.png)
+
+  - **REST:**
+
+    ![Billing REST Diagram](../assets/img/artifacts/nutrisense-BillingRestDiagram.png)
 
 ## 4.7. Software Object-Oriented Design
 
