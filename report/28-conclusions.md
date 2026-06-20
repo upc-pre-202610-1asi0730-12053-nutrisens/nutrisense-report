@@ -61,3 +61,71 @@ Finalmente, se recomienda ampliar la cobertura geográfica del Travel Mode más 
 ---
  
 ## Video About-the-Team
+
+### Descripción General
+
+Esta sección presenta el Video About-the-Team, donde el equipo de NutriSense comparte los aspectos más relevantes del proceso de desarrollo del proyecto: desde la organización del trabajo y la toma de decisiones técnicas, hasta el crecimiento personal y profesional de cada integrante a lo largo de los sprints. El video refleja cómo un equipo pequeño, con roles bien definidos y una cultura de colaboración real, fue capaz de construir un producto con valor genuino.
+
+---
+
+### Video
+
+**Captura del Video:**
+
+![Video About-the-Team - NutriSense](../assets/img/video-abaout-the-team/about-the-team.png)
+
+---
+
+### Información del Video
+
+| Atributo | Contenido |
+|----------|-----------|
+| **Duración** | 9:41 |
+| **Microsoft Stream** | [Link de about the product](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQC4vXzQ6x3VSoASXKgDM-pjAcjpvxzbcAB0YCmJpnws9SE?e=RyNWWi&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)|
+
+---
+
+### Pauta de Secuencias de Contenido
+
+| Sección | Inicio (hh:mm:ss) |
+|---|---|
+| Introducción | 00:00:00 |
+| Contexto del proyecto | 00:00:58 |
+| Proceso de trabajo | 00:01:58 |
+| Testimonio – Joel Mora | 00:04:49 |
+| Testimonio – Olenka Del Aguila | 00:05:44 |
+| Testimonio – Ángel Villarreal | 00:06:52 |
+| Testimonio – Rose Vergaray | 00:07:47 |
+| Testimonio – Ángela Espinoza | 00:08:49 |
+| Cierre | 00:09:34 |
+
+---
+
+### Resumen del Video
+
+El video inicia con una reflexión sobre el origen del proyecto: la idea de ayudar a las personas a entender mejor su alimentación y su salud. El equipo explica cómo desde el primer sprint se trabajó de forma intencional, distribuyendo el liderazgo de manera que cada integrante tuviera un área de responsabilidad clara, convirtiéndose en referente de su dominio.
+
+Se describe el proceso de las etapas tempranas del proyecto, donde el foco estuvo en comprender el problema antes de escribir código: entrevistas con usuarios, mapeo de journeys, definición de user personas y construcción de un lenguaje ubicuo compartido por todo el equipo. Este trabajo previo, aunque no siempre visible en el producto final, es lo que le brinda solidez a la solución.
+
+Luego se presenta la etapa de diseño y desarrollo frontend, donde cada integrante lideró su propio Bounded Context, llevándolo desde cero hasta una vista funcional, navegable y visualmente coherente. El equipo reconoce los momentos de bloqueo y decisiones difíciles, pero también destaca cómo la responsabilidad compartida sobre la calidad del producto fue el verdadero diferenciador del equipo.
+
+Finalmente, se aborda el desarrollo backend en C#, donde el equipo alcanzó un nuevo nivel de madurez técnica, diseñando la lógica de dominio, la persistencia y la exposición de servicios. El video cierra con una reflexión sobre lo aprendido: no solo conocimientos técnicos en Vue, C# y Domain-Driven Design, sino también habilidades blandas como saber ceder, liderar cuando se requiere y mantener el compromiso incluso sin supervisión.
+
+---
+
+### Presentación de Integrantes
+
+**Joel Fernando Mora Rivera:**
+Lideró el diseño de la arquitectura de software orientada a dominio, elaborando los diagramas de contexto, contenedores y componentes, así como el Design Level Event Storming. En el frontend condujo el Bounded Context de Nutrition Tracking, definiendo entidades del dominio, integración con APIs de alimentos, vistas de registro de comidas, Smart Scan con análisis de fotos de platos y filtro de restricciones dietéticas. En el backend desarrolló el módulo de Nutrition Tracking.
+
+**Olenka Priscila Del Aguila Del Aguila:**
+Lideró el diseño UX/UI de la Landing Page y la Web Application, incluyendo Wireframes, Mockups, Wireflow Diagrams y User Flow Diagrams. En el frontend lideró el Bounded Context de Analytics and Report, implementando resúmenes diarios, gráficas semanales y mensuales, seguimiento de déficit calórico y análisis de macros. En el backend desarrolló el módulo de Analytics and Report.
+
+**Angel Martin Villarreal Bazan:**
+Asumió el liderazgo del Product Management del informe, redefiniendo el proyecto de startup, el proceso de UX y los segmentos objetivo. En el frontend lideró el Bounded Context de AI y Subscription and Billing, implementando el proyecto base en Vue, el flujo de onboarding en cuatro pasos, el dashboard principal y la pantalla de suscripción. En el backend se encargó del módulo de Smart Recommendations.
+
+**Rose Almendra Vergaray Calderon:**
+Lideró la especificación de requisitos del proyecto, elaborando las User Stories, el Impact Mapping y el Product Backlog, además del diseño de la arquitectura de información y la base de datos. En el frontend condujo el Bounded Context de Smart Recommendations, implementando las secciones de recomendaciones basadas en clima, el panel de modo viaje con detección de ubicación y las Pantry Lists con Recipe Cards. En el backend se encargó del módulo de Body Health Metrics.
+
+**Angela Milagros Espinoza Cruz:**
+Lideró el Needfinding del proyecto, elaborando User Personas, User Journey Mappings y Empathy Maps. También guió el Big Picture Event Storming y el Ubiquitous Language del dominio. En el frontend lideró el Bounded Context de Body Health Metrics, implementando el registro de peso, los cálculos automáticos de IMC, TMB y TDEE, la gráfica de evolución de peso y la composición corporal. En el backend trabajó el módulo de Activity and Wearable.

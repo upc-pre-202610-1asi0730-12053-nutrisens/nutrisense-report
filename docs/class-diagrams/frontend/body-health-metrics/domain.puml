@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -13,6 +13,12 @@ package "shared/domain/model [stubs]" {
   }
 }
 
+package "shared/infrastructure [stubs]" {
+  class DateUtils <<util>> {
+    + {static} toLocalDateString(date): string
+  }
+}
+
 package "body-health-metrics/domain/model" {
 
   class BodyMeasurement <<entity>> {
@@ -24,6 +30,18 @@ package "body-health-metrics/domain/model" {
     --
     + dateLabel(): string
     + estimatedBodyFatPercent(heightCm): number
+  }
+
+  class WeightLog <<entity>> {
+    + id: string
+    + userId: string
+    + weightKg: number
+    + loggedAt: string
+    + note: string|null
+    --
+    + dateLabel(): string
+    + isToday(): boolean
+    + hasNote(): boolean
   }
 
   class UserGoal <<entity>> {
@@ -43,18 +61,6 @@ package "body-health-metrics/domain/model" {
     + weightProgress(currentWeightKg): number
     + isDeficit(): boolean
     + isSurplus(): boolean
-  }
-
-  class WeightLog <<entity>> {
-    + id: string
-    + userId: string
-    + weightKg: number
-    + loggedAt: string
-    + note: string|null
-    --
-    + dateLabel(): string
-    + isToday(): boolean
-    + hasNote(): boolean
   }
 
   class BmiResult <<value object>> {
@@ -79,6 +85,9 @@ package "body-health-metrics/domain/model" {
   }
 
   class WeeklyRate <<value object>> {
+    + {static} CONSERVATIVE_KG: number
+    + {static} MODERATE_KG: number
+    + {static} AGGRESSIVE_KG: number
     + kgPerWeek: number
     --
     + isAggressive(): boolean
@@ -98,6 +107,9 @@ package "body-health-metrics/domain/services" {
 UserGoal *--> GoalType : goal >
 UserGoal *--> WeeklyRate : weeklyRate >
 UserGoal *--> MacroTargets : macroTargets >
+WeightLog ..> DateUtils : uses >
 BodyMetricsService ..> BmiResult : creates >
+BodyMetricsService ..> WeightLog : evaluates >
+BodyMetricsService ..> BodyMeasurement : evaluates >
 
 @enduml

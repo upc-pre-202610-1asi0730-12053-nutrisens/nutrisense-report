@@ -1,4 +1,4 @@
-# CAPÍTULO IV: PRODUCT DESIGN
+﻿# CAPÍTULO IV: PRODUCT DESIGN
 
 ## 4.1. Style Guidelines
 
@@ -1261,7 +1261,7 @@ A continuación, se identifican y describen los contextos delimitados que compon
 | Bounded Context | Descripción | Módulos incluidos |
 | :--- | :--- | :--- |
 | **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
-| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
+| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos mediante Health API. | Wearable Sync |
 | **Analytics & Reporting** | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
 
 ### Generic
@@ -1279,19 +1279,19 @@ A continuación, se detalla la matriz de interdependencias que asegura la reacti
 | :--- | :--- | :--- |
 | **Identity:** User Registered | **Body Metrics:** Register Body Metrics | Inicializa el perfil de salud y metas al crear la cuenta. |
 | **Nutrition:** Consumption Updated (Created/Updated/Deleted) | **Analytics:** Generate Progress Insights | Sincroniza indicadores y gráficas de consumo diario ante cualquier cambio en el log. |
-| **Nutrition:** Consumption Updated (Created/Updated/Deleted) | **Smart Recs:** Generate Recommendation | Ajusta las sugerencias alimenticias en tiempo real según los macros consumidos y el déficit calórico del día. |
 | **Activity:** Caloric Balance Adjusted | **Analytics:** Generate Progress Insights | Refleja el gasto energético por actividad física o sincronización con wearable en los reportes de progreso. |
 | **Body Metrics:** TDEE Calculated | **Analytics:** Generate Progress Insights | Compara objetivos metabólicos teóricos frente al progreso real registrado. |
 | **Body Metrics:** TDEE Calculated | **Smart Recs:** Generate Recommendation | Personaliza las porciones y sugerencias de comida según el perfil físico y la meta calórica actualizada del usuario. |
 | **Subscriptions:** Benefits Enabled | **Smart Recs:** Unlock Premium Features | Habilita el acceso a algoritmos de recomendación avanzada y análisis detallado por IA. |
 | **Subscriptions:** Benefits Disabled | **Smart Recs:** Lock Premium Features | Restringe el acceso a funcionalidades avanzadas tras la expiración o cancelación del plan. |
+| **Identity:** Goal Defined | **Body Metrics:** Calculate Daily Caloric Goal | Recalcula la meta calórica diaria cuando el usuario actualiza su objetivo de salud. |
 
 **EventStorming**
 
 ![EventStorming Diagram](../assets/img/artifacts/eventStorming.png)
 
 Para poder apreciar mejor el EventStorming le recomendamos ingresar al siguiente link:
-<br>[Visualizar EventStorming en Miro](https://miro.com/app/live-embed/uXjVGhe0w8o=/?embedMode=view_only_without_ui&moveToViewport=-3505%2C-10094%2C61440%2C33040&embedId=964424783628)
+<br>[Visualizar EventStorming en Miro](https://miro.com/welcomeonboard/aytKTWo5cmFZLzZ5QmhqRmRHY3Z6amtFc0l0aVQyMGlpQkZNUHNuaHdReHJmYjN5cGhQeFNSL3dOQ0tham1JM2pZc1VSeG5aWEpMSXh4ZzUrWGV6RGpqSXhvNThQV28wWnlBTXZDMFE5SXFqTHAzUHpKZUw3NDNvbWFuYy9mRCt3VHhHVHd5UWtSM1BidUtUYmxycDRnPT0hdjE=?share_link_id=50406416456)
 
 ### 4.6.2. Software Architecture Context Diagram
 
@@ -1302,12 +1302,12 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a NutriSense como un 
  - **NutriSense:** Sistema central que provee las funcionalidades de seguimiento nutricional, escaneo de comidas y recomendaciones inteligentes.
  - **User:** Persona que utiliza la plataforma para gestionar sus objetivos de salud, registrar sus comidas y monitorear su actividad física.
  - **External Systems:**
-	- `Google Cloud Vision API:` Procesa las imágenes para el análisis de alimentos.
-	- `Nutrition Data Providers:` Fuentes de consulta para información calórica y macronutrientes.
-	- `Google Fit API:` Sincroniza datos de actividad física y gasto energético.
-	- `OpenWeatherMap:` Provee datos climáticos para ajustar las sugerencias de comidas.
+	- `Google Gemini Vision:` Procesa las imágenes para el análisis de alimentos y menús mediante visión artificial.
+	- `USDA Food Data Central:` Fuente de consulta para información calórica y macronutrientes de alimentos.
+	- `Health API:` Sincroniza datos de actividad física y gasto energético desde dispositivos wearable.
+	- `OpenWeatherMap:` Provee datos climáticos y geocoding para ajustar las sugerencias de comidas.
 	- `Stripe:` Gestiona de forma segura los pagos y el estado de las suscripciones.
-	- `Geolocation API:` Provee la ubicación actual del usuario para el Modo Viaje y las recomendaciones contextuales.
+	- `DeepSeek API:` Enriquece datos nutricionales, genera recetas y produce recomendaciones personalizadas mediante IA.
 
 ![Context Diagram](../assets/img/artifacts/nutrisense-SystemContext.png)
 
@@ -1340,21 +1340,31 @@ El Diagrama de Componentes (Nivel 3 del modelo C4) describe la estructura intern
 
 **A. Single Page Application Components (Frontend)**
 
-El Single Page Application se organiza en 7 Bounded Contexts, cada uno con 4 capas siguiendo el patrón de arquitectura del Domain-Driven Design. Además, se tiene un Frontend Shared con 2 capas siguiendo también el patrón de arquitectura del Domain-Driven Design.
+El Single Page Application se organiza en 7 Bounded Contexts, cada uno con 4 capas siguiendo el patrón de arquitectura del Domain-Driven Design. Además, se tiene un Frontend Shared con 3 capas siguiendo también el patrón de arquitectura del Domain-Driven Design.
 
 El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
 
 ![Web Component Diagram](../assets/img/artifacts/nutrisense-FrontendBCsDiagram.png)
 
-Cada Bounded Context contiene una capa de Presentation con las vistas Vue, una capa de Application con los servicios JavaScript que orquestan la lógica del cliente, una capa de Domain con los modelos e interfaces, y una capa de Infrastructure con el cliente HTTP Axios que se comunica con el API Application. Todos los BCs del frontend utilizan el Frontend Shared, que provee la clase base BaseApi, el contrato BaseEndpoint y los objetos de valor compartidos como goal-type.record y macros.record.
+Cada Bounded Context contiene una capa de Presentation con las vistas y componentes Vue, una capa de Application con los servicios JavaScript que orquestan la lógica del cliente, una capa de Domain con los modelos e interfaces, y una capa de Infrastructure con el cliente HTTP Axios que se comunica con el API Application. Todos los BCs del frontend utilizan el Frontend Shared, que provee la clase base BaseApi, el contrato BaseEndpoint, los objetos de valor compartidos como goal-type.record y macros.record, y los componentes de presentación transversales como app-layout.component, language-switcher.component y ns-tabs.component.
 
 Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context y del Frontend Shared, se presenta a continuación un diagrama de detalle individual por cada uno.
 
 **Frontend Shared:**
 
-Módulo transversal utilizado por todos los Bounded Contexts del frontend que agrupa las utilidades HTTP base y los objetos de valor compartidos. No contiene lógica de negocio propia.
+Módulo transversal utilizado por todos los Bounded Contexts del frontend que agrupa las utilidades HTTP base, los objetos de valor compartidos y los componentes de presentación reutilizables. Se organiza en 3 capas DDD: Presentation, Domain e Infrastructure. No contiene lógica de negocio propia.
 
 ![Frontend Shared Diagram](../assets/img/artifacts/nutrisense-FrontendSharedDiagram.png)
+
+La capa Presentation del Frontend Shared agrupa las vistas y componentes Vue reutilizables a lo largo de toda la aplicación. El detalle de sus vistas y componentes se presenta a continuación:
+
+ - **Views:**
+
+  ![Frontend Shared Views Diagram](../assets/img/artifacts/nutrisense-FrontendSharedViewsDiagram.png)
+
+ - **Components:**
+
+  ![Frontend Shared Components Diagram](../assets/img/artifacts/nutrisense-FrontendSharedComponentsDiagram.png)
 
 **Bounded Contexts:**
 
@@ -1362,29 +1372,95 @@ Módulo transversal utilizado por todos los Bounded Contexts del frontend que ag
 
   ![IAM Frontend Diagram](../assets/img/artifacts/nutrisense-IAMFrontendDiagram.png)
 
+  La capa Presentation contiene únicamente vistas Vue para este Bounded Context. El detalle de sus vistas se presenta a continuación:
+
+  - **Views:**
+
+    ![IAM Presentation Views Diagram](../assets/img/artifacts/nutrisense-IAMPresentationViewsDiagram.png)
+
  - **Nutrition Tracking:** Gestiona las vistas de registro de comidas, Smart Scan y escaneo de menús.
 
   ![Nutrition Frontend Diagram](../assets/img/artifacts/nutrisense-NutritionFrontendDiagram.png)
+
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Nutrition Presentation Views Diagram](../assets/img/artifacts/nutrisense-NutritionPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Nutrition Presentation Components Diagram](../assets/img/artifacts/nutrisense-NutritionPresentationComponentsDiagram.png)
 
  - **Body & Health Metrics:** Gestiona las vistas de métricas corporales, historial de peso y objetivos de salud.
 
   ![Body Frontend Diagram](../assets/img/artifacts/nutrisense-BodyFrontendDiagram.png)
 
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Body Presentation Views Diagram](../assets/img/artifacts/nutrisense-BodyPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Body Presentation Components Diagram](../assets/img/artifacts/nutrisense-BodyPresentationComponentsDiagram.png)
+
  - **Smart Recommendations:** Gestiona las vistas de recomendaciones personalizadas, Modo Viaje y Despensa.
 
   ![Recs Frontend Diagram](../assets/img/artifacts/nutrisense-RecsFrontendDiagram.png)
+
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Recs Presentation Views Diagram](../assets/img/artifacts/nutrisense-RecsPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Recs Presentation Components Diagram](../assets/img/artifacts/nutrisense-RecsPresentationComponentsDiagram.png)
 
  - **Activity & Wearable Sync:** Gestiona las vistas de registro de actividad física y sincronización con wearables.
 
   ![Activity Frontend Diagram](../assets/img/artifacts/nutrisense-ActivityFrontendDiagram.png)
 
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Activity Presentation Views Diagram](../assets/img/artifacts/nutrisense-ActivityPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Activity Presentation Components Diagram](../assets/img/artifacts/nutrisense-ActivityPresentationComponentsDiagram.png)
+
  - **Analytics & Reporting:** Gestiona las vistas del dashboard, gráficas de progreso y rachas.
 
   ![Analytics Frontend Diagram](../assets/img/artifacts/nutrisense-AnalyticsFrontendDiagram.png)
 
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Analytics Presentation Views Diagram](../assets/img/artifacts/nutrisense-AnalyticsPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Analytics Presentation Components Diagram](../assets/img/artifacts/nutrisense-AnalyticsPresentationComponentsDiagram.png)
+
  - **Subscriptions & Billing:** Gestiona las vistas de planes de suscripción y pagos.
 
   ![Billing Frontend Diagram](../assets/img/artifacts/nutrisense-BillingFrontendDiagram.png)
+
+  La capa Presentation contiene vistas y componentes Vue para este Bounded Context. El detalle de sus vistas y componentes se presenta a continuación:
+
+  - **Views:**
+
+    ![Billing Presentation Views Diagram](../assets/img/artifacts/nutrisense-BillingPresentationViewsDiagram.png)
+
+  - **Components:**
+
+    ![Billing Presentation Components Diagram](../assets/img/artifacts/nutrisense-BillingPresentationComponentsDiagram.png)
 
 **B. API Application Components (Backend)**
 
@@ -1394,7 +1470,7 @@ El diagrama a continuación muestra todos los componentes de la arquitectura en 
 
 ![API Component Diagram](../assets/img/artifacts/nutrisense-BackendBCsDiagram.png)
 
-Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. Todos los BCs del backend utilizan el Shared Kernel a través de su capa Application.
+Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP y las fachadas ACL que exponen contratos a otros Bounded Contexts, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. Todos los BCs del backend utilizan el Shared Kernel a través de su capa Application.
 
 Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context y del Shared Kernel, se presenta a continuación un diagrama de detalle individual por cada uno.
 
@@ -1410,37 +1486,99 @@ Componente transversal utilizado por todos los Bounded Contexts del backend que 
 
   ![IAM Backend Diagram](../assets/img/artifacts/nutrisense-IAMBackendDiagram.png)
 
- - **Nutrition Tracking:** Gestiona el registro de comidas y el procesamiento de Smart Scan. Se integra con Google Cloud Vision y Nutrition Data Providers.
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![IAM ACL Diagram](../assets/img/artifacts/nutrisense-IAMAclDiagram.png)
+
+  - **REST:**
+
+    ![IAM REST Diagram](../assets/img/artifacts/nutrisense-IAMRestDiagram.png)
+
+ - **Nutrition Tracking:** Gestiona el registro de comidas y el procesamiento de Smart Scan. Se integra con Google Gemini Vision, USDA Food Data Central y DeepSeek API.
 
   ![Nutrition Backend Diagram](../assets/img/artifacts/nutrisense-NutritionBackendDiagram.png)
+
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Nutrition ACL Diagram](../assets/img/artifacts/nutrisense-NutritionAclDiagram.png)
+
+  - **REST:**
+
+    ![Nutrition REST Diagram](../assets/img/artifacts/nutrisense-NutritionRestDiagram.png)
 
  - **Body & Health Metrics:** Calcula índices de salud como BMI y TDEE y registra el historial de peso.
 
   ![Body Backend Diagram](../assets/img/artifacts/nutrisense-BodyBackendDiagram.png)
 
- - **Smart Recommendations:** Procesa datos contextuales para generar sugerencias personalizadas. Se integra con OpenWeatherMap y Geolocation API.
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Body ACL Diagram](../assets/img/artifacts/nutrisense-BodyAclDiagram.png)
+
+  - **REST:**
+
+    ![Body REST Diagram](../assets/img/artifacts/nutrisense-BodyRestDiagram.png)
+
+ - **Smart Recommendations:** Procesa datos contextuales para generar sugerencias personalizadas. Se integra con OpenWeatherMap y DeepSeek API.
 
   ![Recs Backend Diagram](../assets/img/artifacts/nutrisense-RecsBackendDiagram.png)
 
- - **Activity & Wearable Sync:** Sincroniza pasos y datos de actividad desde Google Fit.
+  La capa Interfaces contiene únicamente endpoints REST para este Bounded Context, ya que no expone contrato ACL hacia otros BCs. El detalle se presenta a continuación:
+
+  - **REST:**
+
+    ![Recs REST Diagram](../assets/img/artifacts/nutrisense-RecsRestDiagram.png)
+
+ - **Activity & Wearable Sync:** Sincroniza pasos y datos de actividad desde Health API.
 
   ![Activity Backend Diagram](../assets/img/artifacts/nutrisense-ActivityBackendDiagram.png)
+
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Activity ACL Diagram](../assets/img/artifacts/nutrisense-ActivityAclDiagram.png)
+
+  - **REST:**
+
+    ![Activity REST Diagram](../assets/img/artifacts/nutrisense-ActivityRestDiagram.png)
 
  - **Analytics & Reporting:** Genera gráficas de progreso, rachas y reportes del usuario.
 
   ![Analytics Backend Diagram](../assets/img/artifacts/nutrisense-AnalyticsBackendDiagram.png)
 
+  La capa Interfaces contiene únicamente endpoints REST para este Bounded Context, ya que no expone contrato ACL hacia otros BCs. El detalle se presenta a continuación:
+
+  - **REST:**
+
+    ![Analytics REST Diagram](../assets/img/artifacts/nutrisense-AnalyticsRestDiagram.png)
+
  - **Subscriptions & Billing:** Gestiona los niveles de suscripción y se integra con Stripe para el procesamiento de pagos.
 
   ![Billing Backend Diagram](../assets/img/artifacts/nutrisense-BillingBackendDiagram.png)
 
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Billing ACL Diagram](../assets/img/artifacts/nutrisense-BillingAclDiagram.png)
+
+  - **REST:**
+
+    ![Billing REST Diagram](../assets/img/artifacts/nutrisense-BillingRestDiagram.png)
+
 ## 4.7. Software Object-Oriented Design
 
 Esta sección presenta los diagramas de clases UML que detallan la implementación de componentes para cada Bounded Context de NutriSense. Los diagramas se elaboraron con PlantUML siguiendo los principios de Domain-Driven Design (DDD) y la arquitectura en capas definida para el proyecto.
- 
-Para el **frontend** (Vue + PrimeVue) se aplica la estructura de carpetas DDD: `domain/model`, `application` (incluye stores de Pinia), `infrastructure` (clientes HTTP con Axios) y `presentation` (componentes Vue). Cada Bounded Context expone sus modelos de dominio como clases planas de JavaScript, su store en la capa `application`, su servicio HTTP en `infrastructure` y sus componentes en `presentation`.
- 
-Para el **backend** (ASP.NET Core + C#) se aplica la arquitectura en capas DDD: `Interfaces` (controllers REST), `Application` (command/query services), `Domain` (aggregates, entities, value objects, domain events, repository interfaces) e `Infrastructure` (implementaciones EF Core y clientes de APIs externas). Las interfaces de repositorio pertenecen al `Domain`; las implementaciones concretas, a `Infrastructure`.
+
+Para el **frontend** (Vue 3 + PrimeVue) se aplica la estructura de carpetas DDD: `domain/model`, `application` (stores de Pinia con refs y computed reactivos), `infrastructure` (clientes HTTP basados en Axios) y `presentation` (componentes y vistas Vue). Los modelos de dominio se implementan como entidades y records en JavaScript plano. La clase base `BaseApi` configura una instancia Axios que convierte automáticamente los cuerpos de petición de camelCase a PascalCase y las respuestas de PascalCase a camelCase, alineándose con la convención de nombres del backend ASP.NET Core. El token JWT se persiste en `localStorage` y se adjunta como encabezado `Authorization: Bearer` en cada petición autenticada. La comunicación entre Bounded Contexts dentro del frontend se coordina a través de un event bus compartido en `shared/infrastructure`, permitiendo que stores de distintos contextos reaccionen a eventos sin acoplarse directamente.
+
+Para el **backend** (ASP.NET Core + C#) se aplica la arquitectura en capas DDD: `Interfaces` (controllers REST con rutas en kebab-case), `Application` (command services y query services), `Domain` (aggregates, entities, value objects, domain events, interfaces de repositorios y servicios de dominio) e `Infrastructure` (implementaciones de repositorios con Entity Framework Core sobre MySQL, calculadoras y clientes de APIs externas). Las interfaces de repositorio pertenecen al `Domain`; las implementaciones concretas, a `Infrastructure`. La comunicación entre Bounded Contexts se realiza mediante **Context Facades** (patrón ACL): cada BC expone una interfaz de fachada (`IIamContextFacade`, `IBodyHealthMetricsContextFacade`, `ISubscriptionsContextFacade`, `INutritionTrackingContextFacade`, `IActivityWearableContextFacade`) que encapsula sus datos públicos sin exponer el modelo interno. Los eventos de dominio se despachan mediante **Cortex.Mediator**. Las respuestas de error siguen el estándar **RFC 7807 ProblemDetails**. Las integraciones externas implementadas incluyen: **Google Gemini** (análisis visual de platos y menús), **DeepSeek** (estimación nutricional, enriquecimiento de alimentos y generación de recetas), **USDA FoodData Center** (catálogo base de alimentos, importado en background por `CatalogImportHostedService`), **Stripe** (procesamiento de pagos), **Google Fit** (sincronización de actividad física) y **OpenWeatherMap** (clima y geocodificación para recomendaciones contextuales). El cálculo de TDEE/BMI se implementa con la ecuación de **Mifflin-St Jeor** en `MifflinStJeorBodyMetricsCalculator`.
 
 ### 4.7.1. Class Diagrams
 
@@ -1452,19 +1590,19 @@ Para el **backend** (ASP.NET Core + C#) se aplica la arquitectura en capas DDD: 
 
 Domain:
 
-![Smart Recommendations Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/smart-recommendations/domain.puml)
+![Smart Recommendations Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/smart-recommendations/domain.puml)
 
 Infrastructure:
 
-![Smart Recommendations Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/smart-recommendations/infrastructure.puml)
+![Smart Recommendations Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/smart-recommendations/infrastructure.puml)
 
 Application:
 
-![Smart Recommendations Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/smart-recommendations/application.puml)
+![Smart Recommendations Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/smart-recommendations/application.puml)
 
 Presentation:
 
-![Smart Recommendations Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/smart-recommendations/presentation.puml)
+![Smart Recommendations Presentation](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/smart-recommendations/presentation.puml)
 
 ---
 
@@ -1472,19 +1610,19 @@ Presentation:
 
 Domain:
 
-![Nutrition Tracking Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/nutrition-tracking/domain.puml)
+![Nutrition Tracking Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/nutrition-tracking/domain.puml)
 
 Infrastructure:
 
-![Nutrition Tracking Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/nutrition-tracking/infrastructure.puml)
+![Nutrition Tracking Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/nutrition-tracking/infrastructure.puml)
 
 Application:
 
-![Nutrition Tracking Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/nutrition-tracking/application.puml)
+![Nutrition Tracking Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/nutrition-tracking/application.puml)
 
 Presentation:
 
-![Nutrition Tracking Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/nutrition-tracking/presentation.puml)
+![Nutrition Tracking Presentation](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/nutrition-tracking/presentation.puml)
 
 ---
 
@@ -1494,19 +1632,19 @@ Presentation:
 
 Domain:
 
-![Activity Wearable Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/activity-wearable/domain.puml)
+![Activity Wearable Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/activity-wearable/domain.puml)
 
 Infrastructure:
 
-![Activity Wearable Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/activity-wearable/infrastructure.puml)
+![Activity Wearable Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/activity-wearable/infrastructure.puml)
 
 Application:
 
-![Activity Wearable Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/activity-wearable/application.puml)
+![Activity Wearable Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/activity-wearable/application.puml)
 
 Presentation:
 
-![Activity Wearable Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/activity-wearable/presentation.puml)
+![Activity Wearable Presentation](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/activity-wearable/presentation.puml)
 
 ---
 
@@ -1514,19 +1652,19 @@ Presentation:
 
 Domain:
 
-![Body Health Metrics Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/body-health-metrics/domain.puml)
+![Body Health Metrics Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/body-health-metrics/domain.puml)
 
 Infrastructure:
 
-![Body Health Metrics Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/body-health-metrics/infrastructure.puml)
+![Body Health Metrics Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/body-health-metrics/infrastructure.puml)
 
 Application:
 
-![Body Health Metrics Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/body-health-metrics/application.puml)
+![Body Health Metrics Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/body-health-metrics/application.puml)
 
 Presentation:
 
-![Body Health Metrics Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/body-health-metrics/presentation.puml)
+![Body Health Metrics Presentation](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/body-health-metrics/presentation.puml)
 
 ---
 
@@ -1534,19 +1672,19 @@ Presentation:
 
 Domain:
 
-![Analytics Reporting Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/analytics-reporting/domain.puml)
+![Analytics Reporting Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/analytics-reporting/domain.puml)
 
 Infrastructure:
 
-![Analytics Reporting Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/analytics-reporting/infrastructure.puml)
+![Analytics Reporting Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/analytics-reporting/infrastructure.puml)
 
 Application:
 
-![Analytics Reporting Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/analytics-reporting/application.puml)
+![Analytics Reporting Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/analytics-reporting/application.puml)
 
 Presentation:
 
-![Analytics Reporting Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/analytics-reporting/presentation.puml)
+![Analytics Reporting Presentation](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/analytics-reporting/presentation.puml)
 
 ---
 
@@ -1556,19 +1694,19 @@ Presentation:
 
 Domain:
 
-![IAM Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/iam/domain.puml)
+![IAM Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/iam/domain.puml)
 
 Infrastructure:
 
-![IAM Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/iam/infrastructure.puml)
+![IAM Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/iam/infrastructure.puml)
 
 Application:
 
-![IAM Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/iam/application.puml)
+![IAM Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/iam/application.puml)
 
 Presentation:
 
-![IAM Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/iam/presentation.puml)
+![IAM Presentation](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/iam/presentation.puml)
 
 ---
 
@@ -1576,19 +1714,19 @@ Presentation:
 
 Domain:
 
-![Subscriptions Billing Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/subscriptions-billing/domain.puml)
+![Subscriptions Billing Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/subscriptions-billing/domain.puml)
 
 Infrastructure:
 
-![Subscriptions Billing Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/subscriptions-billing/infrastructure.puml)
+![Subscriptions Billing Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/subscriptions-billing/infrastructure.puml)
 
 Application:
 
-![Subscriptions Billing Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/subscriptions-billing/application.puml)
+![Subscriptions Billing Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/subscriptions-billing/application.puml)
 
 Presentation:
 
-![Subscriptions Billing Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/subscriptions-billing/presentation.puml)
+![Subscriptions Billing Presentation](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/frontend/subscriptions-billing/presentation.puml)
 
 
 #### Backend
@@ -1599,19 +1737,19 @@ Presentation:
 
 Domain:
 
-![Smart Recommendations Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/smart-recommendations/domain.puml)
+![Smart Recommendations Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/smart-recommendations/domain.puml)
 
 Infrastructure:
 
-![Smart Recommendations Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/smart-recommendations/infrastructure.puml)
+![Smart Recommendations Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/smart-recommendations/infrastructure.puml)
 
 Application:
 
-![Smart Recommendations Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/smart-recommendations/application.puml)
+![Smart Recommendations Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/smart-recommendations/application.puml)
 
-Presentation:
+Interfaces:
 
-![Smart Recommendations Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/smart-recommendations/presentation.puml)
+![Smart Recommendations Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/smart-recommendations/interfaces.puml)
 
 ---
 
@@ -1619,19 +1757,19 @@ Presentation:
 
 Domain:
 
-![Nutrition Tracking Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/nutrition-tracking/domain.puml)
+![Nutrition Tracking Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/nutrition-tracking/domain.puml)
 
 Infrastructure:
 
-![Nutrition Tracking Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/nutrition-tracking/infrastructure.puml)
+![Nutrition Tracking Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/nutrition-tracking/infrastructure.puml)
 
 Application:
 
-![Nutrition Tracking Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/nutrition-tracking/application.puml)
+![Nutrition Tracking Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/nutrition-tracking/application.puml)
 
-Presentation:
+Interfaces:
 
-![Nutrition Tracking Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/nutrition-tracking/presentation.puml)
+![Nutrition Tracking Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/nutrition-tracking/interfaces.puml)
 
 ---
 
@@ -1641,19 +1779,19 @@ Presentation:
 
 Domain:
 
-![Activity Wearable Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/activity-wearable/domain.puml)
+![Activity Wearable Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/activity-wearable/domain.puml)
 
 Infrastructure:
 
-![Activity Wearable Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/activity-wearable/infrastructure.puml)
+![Activity Wearable Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/activity-wearable/infrastructure.puml)
 
 Application:
 
-![Activity Wearable Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/activity-wearable/application.puml)
+![Activity Wearable Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/activity-wearable/application.puml)
 
-Presentation:
+Interfaces:
 
-![Activity Wearable Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/activity-wearable/presentation.puml)
+![Activity Wearable Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/activity-wearable/interfaces.puml)
 
 ---
 
@@ -1661,19 +1799,19 @@ Presentation:
 
 Domain:
 
-![Body Health Metrics Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/body-health-metrics/domain.puml)
+![Body Health Metrics Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/body-health-metrics/domain.puml)
 
 Infrastructure:
 
-![Body Health Metrics Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/body-health-metrics/infrastructure.puml)
+![Body Health Metrics Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/body-health-metrics/infrastructure.puml)
 
 Application:
 
-![Body Health Metrics Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/body-health-metrics/application.puml)
+![Body Health Metrics Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/body-health-metrics/application.puml)
 
-Presentation:
+Interfaces:
 
-![Body Health Metrics Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/body-health-metrics/presentation.puml)
+![Body Health Metrics Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/body-health-metrics/interfaces.puml)
 
 ---
 
@@ -1681,19 +1819,19 @@ Presentation:
 
 Domain:
 
-![Analytics Reporting Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/analytics-reporting/domain.puml)
+![Analytics Reporting Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/analytics-reporting/domain.puml)
 
 Infrastructure:
 
-![Analytics Reporting Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/analytics-reporting/infrastructure.puml)
+![Analytics Reporting Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/analytics-reporting/infrastructure.puml)
 
 Application:
 
-![Analytics Reporting Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/analytics-reporting/application.puml)
+![Analytics Reporting Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/analytics-reporting/application.puml)
 
-Presentation:
+Interfaces:
 
-![Analytics Reporting Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/analytics-reporting/presentation.puml)
+![Analytics Reporting Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/analytics-reporting/interfaces.puml)
 
 ---
 
@@ -1703,19 +1841,19 @@ Presentation:
 
 Domain:
 
-![IAM Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/iam/domain.puml)
+![IAM Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/iam/domain.puml)
 
 Infrastructure:
 
-![IAM Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/iam/infrastructure.puml)
+![IAM Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/iam/infrastructure.puml)
 
 Application:
 
-![IAM Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/iam/application.puml)
+![IAM Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/iam/application.puml)
 
-Presentation:
+Interfaces:
 
-![IAM Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/iam/presentation.puml)
+![IAM Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/iam/interfaces.puml)
 
 ---
 
@@ -1723,39 +1861,39 @@ Presentation:
 
 Domain:
 
-![Subscriptions Billing Domain](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/subscriptions-billing/domain.puml)
+![Subscriptions Billing Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/subscriptions-billing/domain.puml)
 
 Infrastructure:
 
-![Subscriptions Billing Infrastructure](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/subscriptions-billing/infrastructure.puml)
+![Subscriptions Billing Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/subscriptions-billing/infrastructure.puml)
 
 Application:
 
-![Subscriptions Billing Application](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/subscriptions-billing/application.puml)
+![Subscriptions Billing Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/subscriptions-billing/application.puml)
 
-Presentation:
+Interfaces:
 
-![Subscriptions Billing Presentation](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/subscriptions-billing/presentation.puml)
+![Subscriptions Billing Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/develop/docs/class-diagrams/backend/subscriptions-billing/interfaces.puml)
 
 ## 4.8. Database Design
 
-Los diagramas de base de datos de NutriSense se presentan a nivel físico, detallando la estructura completa de cada tabla junto con sus columnas, tipos de datos nativos de PostgreSQL, restricciones de integridad referencial y relaciones entre entidades. El diseño está organizado por Bounded Context, de modo que cada contexto delimitado agrupa sus propias tablas con una nomenclatura consistente con el lenguaje ubicuo del dominio.
+Los diagramas de base de datos de NutriSense se presentan a nivel físico, detallando la estructura completa de cada tabla junto con sus columnas, tipos de datos nativos de MySQL, restricciones de integridad referencial y relaciones entre entidades. El diseño está organizado por Bounded Context, de modo que cada contexto delimitado agrupa sus propias tablas con una nomenclatura consistente con el lenguaje ubicuo del dominio.
 
 **Características principales consideradas en los diagramas**
 
-**Primary Keys con UUID.** Todas las tablas utilizan `UUID` como tipo de dato para sus claves primarias. Esta decisión es consistente con los Value Objects de identidad definidos en el modelo de dominio (`UserId`, `ConsumptionLogId`, `HealthProfileId`, etc.) y permite la generación distribuida de identificadores en el application server sin depender de secuencias de base de datos. En el backend ASP.NET Core se emplea `Guid.NewGuid()` para la creación de estos identificadores antes de persistir cada aggregate.
+**Primary Keys con INT AUTO_INCREMENT.** Todas las tablas utilizan `INT AUTO_INCREMENT` como tipo de dato para sus claves primarias. MySQL gestiona la asignación del identificador en el momento del INSERT, por lo que EF Core configura cada PK con `ValueGeneratedOnAdd()`. En el modelo de dominio, estos identificadores se encapsulan en Value Objects tipados (`UserId`, `ActivityLogId`, `HealthProfileId`, etc.) que wrappean un `int` y aplican validación en el constructor, preservando el lenguaje ubicuo sin exponer el tipo primitivo directamente.
 
-**`user_accounts` como tabla central.** La tabla `user_accounts` del bounded context Identity & Access Management actúa como referencia central del sistema. Todos los demás bounded contexts referencian a esta tabla mediante la columna `user_id`, respetando el principio de que la identidad del usuario es gestionada exclusivamente por el contexto IAM. Las demás tablas no exponen ni replican atributos de identidad propios del usuario.
+**`users` como tabla central.** La tabla `users` del bounded context Identity & Access Management actúa como referencia central del sistema. Todos los demás bounded contexts referencian a esta tabla mediante la columna `user_id` (tipo `INT NOT NULL`), respetando el principio de que la identidad del usuario es gestionada exclusivamente por el contexto IAM. Las demás tablas no exponen ni replican atributos de identidad propios del usuario.
 
-**Foreign Keys e integridad referencial.** Las relaciones entre tablas se establecen mediante `FOREIGN KEY`, aplicando `ON DELETE CASCADE` cuando los registros hijos no tienen sentido sin su padre (por ejemplo, `food_entries` respecto a `consumption_logs`). Las relaciones entre bounded contexts distintos referencian únicamente a `user_accounts.id`, evitando el acoplamiento estructural directo entre contextos.
+**Foreign Keys e integridad referencial.** Las relaciones entre tablas se establecen mediante `FOREIGN KEY`, aplicando `ON DELETE CASCADE` cuando los registros hijos no tienen sentido sin su padre (por ejemplo, `food_entries` respecto a `consumption_logs`, o `dietary_restrictions` y `user_sessions` respecto a `users`). Las relaciones entre bounded contexts distintos referencian únicamente a `users.id`, evitando el acoplamiento estructural directo entre contextos.
 
-**Value Objects aplanados como columnas.** Los Value Objects del modelo de dominio (como `Email`, `HashedPassword`, `WeightKg`, `BillingPeriod`, `NutritionalInfo`) se persisten como columnas escalares dentro de la tabla del aggregate al que pertenecen, dado que no tienen identidad propia y su ciclo de vida está ligado al aggregate root. Este patrón es el estándar para la persistencia de aggregates DDD en bases de datos relacionales, implementado en ASP.NET Core mediante Entity Framework Core con el soporte de `OwnsOne` y mapeo de columnas propias.
+**Value Objects aplanados como columnas.** Los Value Objects del modelo de dominio (como `Email`, `PersonName`, `Height`, `WeightKg`, `BillingPeriod`, `NutritionalInfo`) se persisten como columnas escalares dentro de la tabla del aggregate al que pertenecen, dado que no tienen identidad propia y su ciclo de vida está ligado al aggregate root. Este patrón se implementa en ASP.NET Core mediante Entity Framework Core con `OwnsOne` para tipos compuestos y conversores de valor (`HasConversion`) para tipos escalares simples. Las listas de escalares (como `medical_conditions`) se persisten como columna de tipo `JSON`, aprovechando el soporte nativo de MySQL para documentos JSON.
 
-**Tipos de datos PostgreSQL.** Se utilizan tipos nativos: `UUID` para identificadores, `DECIMAL(p,s)` para medidas con precisión decimal (peso, calorías, porcentajes de macros), `VARCHAR(n)` para cadenas con restricción de longitud conocida, `DATE` para fechas sin componente horario, `TIMESTAMP WITH TIME ZONE` para marcas de tiempo completas con zona horaria UTC, `INTEGER` para conteos enteros y `BOOLEAN` para flags binarios.
+**Tipos de datos MySQL.** Se utilizan tipos nativos: `INT AUTO_INCREMENT` para claves primarias y foráneas, `DECIMAL(18,2)` para medidas con precisión decimal (peso, calorías, porcentajes de macros), `VARCHAR(n)` para cadenas con restricción de longitud conocida, `LONGTEXT` para cadenas de longitud variable sin restricción (hashes de contraseña, texto libre), `DATE` para fechas sin componente horario, `DATETIME` para marcas de tiempo completas, `TINYINT(1)` para flags booleanos y `JSON` para colecciones de escalares serializadas dentro del aggregate.
 
-**UNIQUE constraints.** Se define `UNIQUE (user_id, log_date)` en `consumption_logs` para garantizar que el aggregate `ConsumptionLog` sea único por usuario y día. Se define `UNIQUE (user_id)` en `health_profiles` y `subscriptions` para reflejar la cardinalidad 1:1 del dominio: un usuario tiene exactamente un perfil de salud y una suscripción activa.
+**UNIQUE constraints.** Se define `UNIQUE (user_id, log_date)` en `consumption_logs` para garantizar que el aggregate `ConsumptionLog` sea único por usuario y día. Se define `UNIQUE (user_id)` en `health_profiles` y `subscriptions` para reflejar la cardinalidad 1:1 del dominio: un usuario tiene exactamente un perfil de salud y una suscripción activa. Se define `UNIQUE (email)` en `users` (índice `ix_users_email`) para garantizar que no existan dos cuentas con la misma dirección de correo.
 
-**Índices.** Se definen índices sobre las columnas de búsqueda más frecuentes: `user_id` en todas las tablas asociadas a un usuario, `email` en `user_accounts`, y la combinación `(user_id, log_date)` en `consumption_logs`, optimizando las consultas del dashboard diario y los reportes de progreso.
+**Índices.** Se definen índices sobre las columnas de búsqueda más frecuentes: `user_id` en todas las tablas asociadas a un usuario, `email` en `users`, y la combinación `(user_id, log_date)` en `consumption_logs`, optimizando las consultas del dashboard diario y los reportes de progreso. La convención de nomenclatura snake_case se aplica automáticamente a tablas, columnas, claves e índices mediante `UseSnakeCaseNamingConvention` en el `ModelBuilder`.
 
 ## 4.8.1. Database Diagrams
 
@@ -1763,28 +1901,28 @@ El diagrama a continuación presenta el modelo entidad-relación físico de Nutr
 
 **Identity & Access Management**
 
-![IAM Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/iam.puml)
+![IAM Database Diagram](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/iam.puml)
 
 **Nutrition**
 
-![Nutrition Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/nutrition.puml)
+![Nutrition Database Diagram](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/nutrition.puml)
 
 **Body-metrics**
 
-![Body-metrics Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/body.puml)
+![Body-metrics Database Diagram](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/body.puml)
 
 **Recommendations**
 
-![Recommendations Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/smart.puml)
+![Recommendations Database Diagram](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/smart.puml)
 
 **Activity**
 
-![Activity Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/activity.puml)
+![Activity Database Diagram](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/activity.puml)
 
 **Analytics**
 
-![Analytics Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/analytics.puml)
+![Analytics Database Diagram](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/analytics.puml)
 
 **Billing**
 
-![Billing Database Diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/billing.puml)
+![Billing Database Diagram](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report/main/docs/database-diagrams/billing.puml)

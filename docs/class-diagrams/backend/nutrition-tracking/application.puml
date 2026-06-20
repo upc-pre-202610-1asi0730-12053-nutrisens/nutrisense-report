@@ -2,52 +2,197 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.NutritionTracking" {
+package "NutriSense.NutritionTracking.Application" {
 
-  package "Domain [stubs]" {
-    interface INutritionLogRepository
+  package "CommandServices" {
+    interface IFoodCommandService {
+      +Handle(command: RegisterFoodCommand, ct): Task<Result<Food, RegisterFoodError>>
+    }
+    interface IFoodImportCommandService {
+      +Handle(command: ImportFoodsCommand, ct): Task<Result<int, ImportFoodsError>>
+    }
+    interface INutritionLogCommandService {
+      +Handle(command: LogMealToDailyLogCommand, ct): Task<Result<NutritionLog, LogMealError>>
+      +Handle(command: UpdateNutritionLogEntryCommand, ct): Task<Result<NutritionLog, UpdateNutritionLogEntryError>>
+      +Handle(command: DeleteNutritionLogEntryCommand, ct): Task<Result<bool, DeleteNutritionLogEntryError>>
+      +Handle(command: ScanMealPhotoCommand, ct): Task<Result<ScanPreviewResult, ScanMealPhotoError>>
+      +Handle(command: ConfirmScanResultCommand, ct): Task<Result<NutritionLog, ConfirmScanError>>
+      +Handle(command: ScanMenuPhotoCommand, ct): Task<Result<MenuOptionsPreview, ScanMenuPhotoError>>
+      +Handle(command: SelectMenuOptionCommand, ct): Task<Result<NutritionLog, SelectMenuOptionError>>
+    }
+    interface IFoodProvisioningService {
+      +ResolveOrCreateByNamesAsync(namesEn: IReadOnlyList<string>, source: string, ct): Task<IReadOnlyList<ProvisionedFood>>
+    }
+    class ProvisionedFood <<record>>
   }
 
-  package "Infrastructure [stubs]" {
-    interface IGoogleVisionClient
+  package "QueryServices" {
+    interface IFoodQueryService {
+      +Handle(query: SearchFoodQuery, ct): Task<IEnumerable<Food>>
+      +Handle(query: GetFoodByIdQuery, ct): Task<Food?>
+    }
+    interface INutritionLogQueryService {
+      +Handle(query: GetNutritionLogByUserAndDateQuery, ct): Task<IEnumerable<NutritionLog>>
+      +Handle(query: GetDailyMacroSummaryQuery, ct): Task<DailyMacroSummary>
+      +Handle(query: GetNutritionLogsByUserQuery, ct): Task<IEnumerable<NutritionLog>>
+    }
   }
 
-  package "Application" {
-    interface INutritionCommandService {
-      +Handle(command: AddMealCommand): MealResponse
-      +Handle(command: RemoveMealCommand): void
-      +Handle(command: LogScannedMealCommand): NutritionLogResponse
+  package "Errors" {
+    enum RegisterFoodError
+    enum ImportFoodsError
+    enum LogMealError
+    enum UpdateNutritionLogEntryError
+    enum DeleteNutritionLogEntryError
+    enum ScanMealPhotoError
+    enum ConfirmScanError
+    enum ScanMenuPhotoError
+    enum SelectMenuOptionError
+  }
+
+  package "Internal" {
+    class ScannedDishItem <<record>>
+    class ScanPreviewResult <<record>> {
+      +Items: IReadOnlyList<ScannedDishItem>
+    }
+    class ScannedMenuOption <<record>>
+    class MenuOptionsPreview <<record>> {
+      +Options: IReadOnlyList<ScannedMenuOption>
     }
 
-    interface INutritionQueryService {
-      +Handle(query: GetDailyLogQuery): NutritionLogResponse
+    package "Internal.CommandServices" {
+      class FoodCommandService {
+        +Handle(command: RegisterFoodCommand, ct): Task<Result<Food, RegisterFoodError>>
+      }
+      class FoodImportCommandService {
+        +Handle(command: ImportFoodsCommand, ct): Task<Result<int, ImportFoodsError>>
+      }
+      class FoodProvisioningService {
+        +ResolveOrCreateByNamesAsync(namesEn, source, ct): Task<IReadOnlyList<ProvisionedFood>>
+      }
+      class NutritionLogCommandService {
+        +Handle(...): Task<Result<...>>
+        -PublishConsumptionUpdated(userId, date, ct): Task
+      }
     }
 
-    class NutritionCommandServiceImpl {
-      -nutritionLogRepository: INutritionLogRepository
-      -visionClient: IGoogleVisionClient
-      +Handle(command: AddMealCommand): MealResponse
-      +Handle(command: RemoveMealCommand): void
-      +Handle(command: LogScannedMealCommand): NutritionLogResponse
+    package "Internal.QueryServices" {
+      class FoodQueryService
+      class NutritionLogQueryService
     }
+  }
 
-    class AddMealCommand {
-      +UserId: Guid
-      +Name: String
-      +Macros: MacroNutrients
-      +MealType: MealType
-    }
-
-    class GetDailyLogQuery {
-      +UserId: Guid
-      +Date: DateOnly
+  package "Acl" {
+    class NutritionTrackingContextFacade {
+      +GetFoodCatalog(ct): Task<IReadOnlyList<FoodCatalogItem>>
+      +ResolveOrCreateFoodsByNames(namesEn, source, ct): Task<IReadOnlyList<ProvisionedFoodItem>>
+      +GetDailyMacroSummary(userId, date, ct): Task<DailyMacroSummaryItem?>
+      +GetLoggedMealTypes(userId, date, ct): Task<IReadOnlyList<string>>
     }
   }
 }
 
-NutritionCommandServiceImpl ..|> INutritionCommandService
-NutritionCommandServiceImpl --> INutritionLogRepository : uses
-NutritionCommandServiceImpl --> IGoogleVisionClient : uses
+package "NutritionTracking.Domain" <<external>> {
+  class Food
+  class NutritionLog
+  class DailyMacroSummary
+  interface IFoodRepository
+  interface INutritionLogRepository
+  interface IDishVisionService
+  interface IMenuVisionService
+  interface IExternalFoodDataProvider
+  interface IFoodEnrichmentService
+  interface IFoodNutritionEstimationService
+  class ConsumptionUpdated
+  class MealPhotoAnalyzed
+  class MenuAnalyzed
+}
+
+package "NutritionTracking.Interfaces.Acl" <<external>> {
+  interface INutritionTrackingContextFacade
+}
+
+package "Shared / Cortex" <<external>> {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+}
+
+' --- Service interface realizations ---
+FoodCommandService ..|> IFoodCommandService
+FoodImportCommandService ..|> IFoodImportCommandService
+FoodProvisioningService ..|> IFoodProvisioningService
+NutritionLogCommandService ..|> INutritionLogCommandService
+FoodQueryService ..|> IFoodQueryService
+NutritionLogQueryService ..|> INutritionLogQueryService
+NutritionTrackingContextFacade ..|> INutritionTrackingContextFacade
+
+' --- FoodCommandService ---
+FoodCommandService --> IFoodRepository : uses
+FoodCommandService --> IUnitOfWork : uses
+FoodCommandService ..> Food : creates
+FoodCommandService ..> RegisterFoodError : returns
+
+' --- FoodImportCommandService ---
+FoodImportCommandService --> IExternalFoodDataProvider : uses
+FoodImportCommandService --> IFoodEnrichmentService : uses
+FoodImportCommandService --> IFoodCommandService : delegates to
+FoodImportCommandService --> IFoodRepository : uses
+FoodImportCommandService ..> ImportFoodsError : returns
+
+' --- FoodProvisioningService ---
+FoodProvisioningService --> IFoodRepository : uses
+FoodProvisioningService --> IFoodNutritionEstimationService : uses
+FoodProvisioningService --> IFoodCommandService : delegates to
+FoodProvisioningService ..> ProvisionedFood : produces
+
+' --- NutritionLogCommandService ---
+NutritionLogCommandService --> INutritionLogRepository : uses
+NutritionLogCommandService --> IFoodRepository : uses
+NutritionLogCommandService --> IUnitOfWork : uses
+NutritionLogCommandService --> IDishVisionService : uses
+NutritionLogCommandService --> IMenuVisionService : uses
+NutritionLogCommandService --> IFoodNutritionEstimationService : uses
+NutritionLogCommandService --> IFoodCommandService : delegates to
+NutritionLogCommandService --> IMediator : publishes via
+NutritionLogCommandService ..> NutritionLog : creates
+NutritionLogCommandService ..> ScanPreviewResult : produces
+NutritionLogCommandService ..> MenuOptionsPreview : produces
+NutritionLogCommandService ..> ConsumptionUpdated : publishes
+NutritionLogCommandService ..> MealPhotoAnalyzed : publishes
+NutritionLogCommandService ..> MenuAnalyzed : publishes
+
+' --- Query services ---
+FoodQueryService --> IFoodRepository : uses
+NutritionLogQueryService --> INutritionLogRepository : uses
+FoodQueryService ..> Food : returns
+NutritionLogQueryService ..> NutritionLog : returns
+NutritionLogQueryService ..> DailyMacroSummary : returns
+
+' --- ACL facade orchestration ---
+NutritionTrackingContextFacade --> IFoodQueryService : uses
+NutritionTrackingContextFacade --> IFoodProvisioningService : uses
+NutritionTrackingContextFacade --> INutritionLogQueryService : uses
+
+' --- Result wrapper across command services ---
+IFoodCommandService ..> Result
+INutritionLogCommandService ..> Result
+IFoodImportCommandService ..> Result
+
+' --- Internal preview composition ---
+ScanPreviewResult o--> "0..*" ScannedDishItem : contains
+MenuOptionsPreview o--> "0..*" ScannedMenuOption : contains
+
+' --- Remaining error enums surfaced by the log command service ---
+INutritionLogCommandService ..> LogMealError
+INutritionLogCommandService ..> UpdateNutritionLogEntryError
+INutritionLogCommandService ..> DeleteNutritionLogEntryError
+INutritionLogCommandService ..> ScanMealPhotoError
+INutritionLogCommandService ..> ConfirmScanError
+INutritionLogCommandService ..> ScanMenuPhotoError
+INutritionLogCommandService ..> SelectMenuOptionError
 
 @enduml

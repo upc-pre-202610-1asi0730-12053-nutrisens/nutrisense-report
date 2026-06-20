@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -8,41 +8,71 @@ package "iam/application [stub]" {
   class useIamStore <<store>>
 }
 
+package "iam/domain/model [stubs]" {
+  class Height <<value object>>
+  class DateOfBirth <<value object>>
+  class WaistMeasurement <<value object>>
+}
+
+package "subscriptions-billing [stub]" {
+  class subscriptionsBillingProfileChildren <<routes>>
+}
+
 package "iam/presentation/routes" {
-  class IamRoutes <<router>>
+  class onboardingRoute <<route>> {
+    + path: '/onboarding'
+    + name: 'onboarding'
+    + meta: requiresAuth
+  }
+  class iamRoutes <<routes>> {
+    + login
+    + register
+    + recover-password
+    + reset-password
+    + profile (+ children)
+  }
 }
 
 package "iam/presentation/views" {
   class LoginView <<view>>
   class RegisterView <<view>>
-  class OnboardingView <<view>>
-  class ProfileView <<view>>
-  class ProfileBillingView <<view>>
-  class ProfileDietaryView <<view>>
-  class ProfilePersonalInfoView <<view>>
-  class ProfileSecurityView <<view>>
   class RecoverPasswordView <<view>>
   class ResetPasswordView <<view>>
+  class OnboardingView <<view>>
+  class ProfileView <<view>>
+  class ProfilePersonalInfoView <<view>>
+  class ProfileDietaryView <<view>>
+  class ProfileSecurityView <<view>>
 }
 
-IamRoutes ..> LoginView : navigates to >
-IamRoutes ..> RegisterView : navigates to >
-IamRoutes ..> OnboardingView : navigates to >
-IamRoutes ..> ProfileView : navigates to >
-IamRoutes ..> ProfileBillingView : navigates to >
-IamRoutes ..> ProfileDietaryView : navigates to >
-IamRoutes ..> ProfilePersonalInfoView : navigates to >
-IamRoutes ..> ProfileSecurityView : navigates to >
-IamRoutes ..> RecoverPasswordView : navigates to >
-IamRoutes ..> ResetPasswordView : navigates to >
+onboardingRoute ..> OnboardingView : navigates to >
+iamRoutes ..> LoginView : navigates to >
+iamRoutes ..> RegisterView : navigates to >
+iamRoutes ..> RecoverPasswordView : navigates to >
+iamRoutes ..> ResetPasswordView : navigates to >
+iamRoutes ..> ProfileView : navigates to >
+iamRoutes ..> ProfilePersonalInfoView : navigates to >
+iamRoutes ..> ProfileDietaryView : navigates to >
+iamRoutes ..> ProfileSecurityView : navigates to >
+iamRoutes o--> subscriptionsBillingProfileChildren : embeds >
+
+ProfileView *--> ProfilePersonalInfoView : tab >
+ProfileView *--> ProfileDietaryView : tab >
+ProfileView *--> ProfileSecurityView : tab >
 
 LoginView o--> useIamStore : uses >
 RegisterView o--> useIamStore : uses >
 OnboardingView o--> useIamStore : uses >
 ProfileView o--> useIamStore : uses >
-ProfileBillingView o--> useIamStore : uses >
-ProfileDietaryView o--> useIamStore : uses >
 ProfilePersonalInfoView o--> useIamStore : uses >
+ProfileDietaryView o--> useIamStore : uses >
 ProfileSecurityView o--> useIamStore : uses >
+
+OnboardingView ..> Height : validates >
+OnboardingView ..> DateOfBirth : validates >
+OnboardingView ..> WaistMeasurement : resolves >
+
+RecoverPasswordView ..> LoginView : links back >
+ResetPasswordView ..> LoginView : links back >
 
 @enduml

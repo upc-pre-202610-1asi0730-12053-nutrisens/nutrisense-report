@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -11,11 +11,27 @@ package "iam/infrastructure [stubs]" {
   class DietaryRestrictionAssembler <<assembler>>
 }
 
+package "iam/domain/model [stubs]" {
+  class User <<entity>>
+  class UserSession <<entity>>
+  class DietaryRestriction <<entity>>
+  class PlanTier <<value object>>
+}
+
+package "shared [stubs]" {
+  class EventBus <<event-bus>> {
+    + on(type, handler): void
+  }
+  class useSubscriptionsBillingStore <<store>>
+}
+
 package "iam/application" {
 
   class useIamStore <<store>> {
     -- state --
     + currentUser: User|null
+    + token: string|null
+    + sessionId: number|null
     + sessions: UserSession[]
     + dietaryRestrictions: DietaryRestriction[]
     + userLoaded: boolean
@@ -24,27 +40,37 @@ package "iam/application" {
     + errors: Error[]
     -- computed --
     + isAuthenticated: boolean
+    + currentUserId: number|null
     + firstName: string
     + currentPlanTier: PlanTier|null
     -- actions --
+    + hasFeature(minimumPlan): boolean
     + fetchCurrentUser(userId): Promise
     + updateProfile(profileData): Promise
     + fetchSessions(): void
-    + revokeSession(sessionId): void
+    + revokeSession(sid): void
     + fetchDietaryRestrictions(): void
     + updateDietaryRestrictions(restrictionsList): void
     + signIn(email, password): Promise
     + signOut(): void
     + signUp(formData): Promise
-    + deleteAccount(): void
-    + hasFeature(minimumPlan): boolean
+    + deleteAccount(): Promise
     + clearErrors(): void
+    -- private --
+    - _persistAuth(uid, tok, sid): void
+    - _clearAuth(): void
   }
 }
 
 useIamStore --> IamApi : uses >
-useIamStore --> UserAssembler : uses >
-useIamStore --> UserSessionAssembler : uses >
-useIamStore --> DietaryRestrictionAssembler : uses >
+useIamStore ..> UserAssembler : maps via >
+useIamStore ..> UserSessionAssembler : maps via >
+useIamStore ..> DietaryRestrictionAssembler : maps via >
+useIamStore o--> User : holds currentUser >
+useIamStore o--> UserSession : holds sessions >
+useIamStore o--> DietaryRestriction : holds restrictions >
+useIamStore ..> PlanTier : exposes currentPlanTier >
+useIamStore ..> EventBus : subscribes to >
+useIamStore ..> useSubscriptionsBillingStore : resets on auth change >
 
 @enduml

@@ -2,68 +2,250 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.NutritionTracking" {
+package "NutriSense.NutritionTracking.Domain" {
 
-  package "Domain" {
+  package "Model.Aggregates" {
+    ' Food is a partial class: Food.cs + FoodAudit.cs (IAuditableEntity).
+    class Food {
+      +Id: int
+      +Key: string
+      +Source: string
+      +ExternalId: string?
+      +NameEn: string
+      +NameEs: string
+      +Category: string
+      +ServingSizeG: decimal
+      +ServingUnit: string
+      +CaloriesPer100g: decimal
+      +ProteinPer100g: decimal
+      +CarbsPer100g: decimal
+      +FatPer100g: decimal
+      +FiberPer100g: decimal
+      +SugarPer100g: decimal
+      +Restrictions: List<string>
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
+      #Food()
+      +Food(command: RegisterFoodCommand)
+    }
+
+    ' NutritionLog is a partial class: NutritionLog.cs + NutritionLogAudit.cs (IAuditableEntity).
     class NutritionLog {
-      +Id: Guid
-      +UserId: Guid
+      +Id: int
+      +UserId: int
+      +FoodId: int
+      +FoodNameEn: string
+      +FoodNameEs: string
+      +MealType: string
       +Date: DateOnly
-      -meals: List<Meal>
-      +AddMeal(meal: Meal): void
-      +RemoveMeal(mealId: Guid): void
-      +GetTotalCalories(): Decimal
-      +GetMacroSummary(): MacroNutrients
+      +QuantityG: decimal
+      +Calories: decimal
+      +ProteinG: decimal
+      +CarbsG: decimal
+      +FatG: decimal
+      +FiberG: decimal
+      +SugarG: decimal
+      +Source: string
+      +LoggedAt: DateTimeOffset
+      +ScanType: string?
+      +ScanConfidence: decimal?
+      +ScanImageUri: string?
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
+      #NutritionLog()
+      +NutritionLog(command: LogMealToDailyLogCommand, food: Food)
+      +NutritionLog(command: ConfirmScanResultCommand, food: Food, confidence: decimal, imageUri: string)
+      +NutritionLog(command: SelectMenuOptionCommand, food: Food)
+      +UpdateQuantity(food: Food, newQuantityG: decimal): void
+      -ApplyMacros(food: Food, quantityG: decimal): void
     }
+  }
 
-    class Meal {
-      +Id: Guid
-      +Name: String
-      +Macros: MacroNutrients
-      +MealType: MealType
-      +LoggedAt: DateTime
+  package "Model.ValueObjects" {
+    class FoodSource <<record>> {
+      +{static} Valid: HashSet<string>
+      +Value: string
+      +FoodSource(value: string)
     }
-
-    class MacroNutrients {
-      +Calories: Decimal
-      +Protein: Decimal
-      +Carbs: Decimal
-      +Fat: Decimal
+    class LogSource <<record>> {
+      +{static} Valid: HashSet<string>
+      +Value: string
+      +LogSource(value: string)
     }
-
-    class ScanResult {
-      +Id: Guid
-      +ImageUrl: String
-      +RecognizedItems: List<String>
-      +Confidence: Decimal
+    class MealType <<record>> {
+      +{static} Valid: HashSet<string>
+      +Value: string
+      +MealType(value: string)
     }
-
-    enum MealType {
-      BREAKFAST
-      LUNCH
-      DINNER
-      SNACK
+    class ServingUnit <<record>> {
+      +{static} Valid: HashSet<string>
+      +Value: string
+      +ServingUnit(value: string)
     }
-
-    class MealLoggedEvent {
-      +LogId: Guid
-      +UserId: Guid
-      +Calories: Decimal
-      +OccurredOn: DateTime
+    class DailyMacroSummary <<record>> {
+      +Date: DateOnly
+      +TotalCalories: decimal
+      +TotalProteinG: decimal
+      +TotalCarbsG: decimal
+      +TotalFatG: decimal
+      +TotalFiberG: decimal
+      +MealCount: int
     }
+  }
 
+  package "Model.Commands" {
+    class RegisterFoodCommand <<record>>
+    class LogMealToDailyLogCommand <<record>>
+    class UpdateNutritionLogEntryCommand <<record>>
+    class DeleteNutritionLogEntryCommand <<record>>
+    class ImportFoodsCommand <<record>>
+    class ScanMealPhotoCommand <<record>>
+    class ConfirmScanResultCommand <<record>>
+    class ScanMenuPhotoCommand <<record>>
+    class SelectMenuOptionCommand <<record>>
+  }
+
+  package "Model.Queries" {
+    class SearchFoodQuery <<record>>
+    class GetFoodByIdQuery <<record>>
+    class GetNutritionLogByUserAndDateQuery <<record>>
+    class GetNutritionLogsByUserQuery <<record>>
+    class GetDailyMacroSummaryQuery <<record>>
+  }
+
+  package "Model.Events" {
+    class ConsumptionUpdated <<record>>
+    class MealPhotoAnalyzed <<record>>
+    class MenuAnalyzed <<record>>
+  }
+
+  package "Repositories" {
+    interface IFoodRepository {
+      +FindByKeyAsync(key: string, ct): Task<Food?>
+      +SearchByNameAsync(query: string, lang: string, ct): Task<IEnumerable<Food>>
+      +FindByExternalIdAsync(externalId: string, ct): Task<Food?>
+    }
     interface INutritionLogRepository {
-      +FindByUserAndDate(userId: Guid, date: DateOnly): NutritionLog
-      +Save(log: NutritionLog): void
-      +Update(log: NutritionLog): void
+      +FindByUserAndDateAsync(userId: int, date: DateOnly, ct): Task<IEnumerable<NutritionLog>>
+      +FindByUserAsync(userId: int, from: DateOnly?, to: DateOnly?, ct): Task<IEnumerable<NutritionLog>>
+      +GetDailyMacroSummaryAsync(userId: int, date: DateOnly, ct): Task<DailyMacroSummary>
+    }
+  }
+
+  package "Services" {
+    interface IDishVisionService {
+      +RecognizeDishAsync(imageBase64OrUri: string, ct): Task<DishRecognitionResult>
+    }
+    class DetectedDishItem <<record>> {
+      +Name: string
+      +EstimatedQuantityG: decimal
+    }
+    class DishRecognitionResult <<record>> {
+      +Success: bool
+      +Items: IReadOnlyList<DetectedDishItem>
+    }
+
+    interface IMenuVisionService {
+      +AnalyzeMenuAsync(imageUri: string, ct): Task<MenuRecognitionResult>
+    }
+    class MenuOption <<record>> {
+      +DishName: string
+      +EstimatedCalories: decimal?
+    }
+    class MenuRecognitionResult <<record>> {
+      +Success: bool
+      +Options: IEnumerable<MenuOption>
+    }
+
+    interface IExternalFoodDataProvider {
+      +SearchAsync(query: string, maxResults: int, dataType: string, ct): Task<IReadOnlyList<ExternalFoodData>>
+    }
+    class ExternalFoodData <<record>>
+
+    interface IFoodEnrichmentService {
+      +EnrichBatchAsync(namesEn: IReadOnlyList<string>, ct): Task<IReadOnlyList<EnrichedFoodData>>
+    }
+    class EnrichedFoodData <<record>> {
+      +NameEn: string
+      +NameEs: string
+      +Category: string
+      +Restrictions: IReadOnlyList<string>
+    }
+
+    interface IFoodNutritionEstimationService {
+      +EstimateBatchAsync(namesEn: IReadOnlyList<string>, ct): Task<IReadOnlyList<EstimatedFoodData>>
+    }
+    class EstimatedFoodData <<record>>
+
+    interface IFoodSearchService {
+      +SearchAsync(query: string, lang: string, ct): Task<IEnumerable<FoodSearchResult>>
+    }
+    class FoodSearchResult <<record>>
+
+    interface IFoodRestrictionChecker {
+      +HasConflict(food: Food, userRestrictions: IEnumerable<string>): bool
     }
   }
 }
 
-NutritionLog *--> Meal : contains "0..*"
-Meal --> MacroNutrients : has "1"
-Meal --> MealType : has "1"
-NutritionLog --> MealLoggedEvent : fires "0..*"
+package "Shared.Domain" <<external>> {
+  interface IAuditableEntity
+  interface "IBaseRepository<T>" as IBaseRepository
+  abstract DomainEventBase
+}
+
+' --- Aggregate construction & invariants ---
+Food ..|> IAuditableEntity
+NutritionLog ..|> IAuditableEntity
+Food ..> RegisterFoodCommand : built from
+Food ..> FoodSource : validates
+Food ..> ServingUnit : validates
+NutritionLog ..> Food : derives macros from
+NutritionLog ..> LogMealToDailyLogCommand : built from
+NutritionLog ..> ConfirmScanResultCommand : built from
+NutritionLog ..> SelectMenuOptionCommand : built from
+NutritionLog ..> MealType : validates
+NutritionLog ..> LogSource : validates
+
+' --- Repositories ---
+IFoodRepository --|> IBaseRepository
+INutritionLogRepository --|> IBaseRepository
+IFoodRepository ..> Food : manages
+INutritionLogRepository ..> NutritionLog : manages
+INutritionLogRepository ..> DailyMacroSummary : aggregates
+
+' --- Domain services & their result VOs ---
+IDishVisionService ..> DishRecognitionResult : returns
+DishRecognitionResult o--> "0..*" DetectedDishItem : contains
+IMenuVisionService ..> MenuRecognitionResult : returns
+MenuRecognitionResult o--> "0..*" MenuOption : contains
+IExternalFoodDataProvider ..> ExternalFoodData : returns
+IFoodEnrichmentService ..> EnrichedFoodData : returns
+IFoodNutritionEstimationService ..> EstimatedFoodData : returns
+IFoodSearchService ..> FoodSearchResult : returns
+IFoodRestrictionChecker ..> Food : inspects
+
+' --- Queries target their read models ---
+SearchFoodQuery ..> Food : queries
+GetFoodByIdQuery ..> Food : queries
+GetNutritionLogByUserAndDateQuery ..> NutritionLog : queries
+GetNutritionLogsByUserQuery ..> NutritionLog : queries
+GetDailyMacroSummaryQuery ..> DailyMacroSummary : queries
+
+' --- Commands & the events they ultimately raise ---
+UpdateNutritionLogEntryCommand ..> NutritionLog : edits
+DeleteNutritionLogEntryCommand ..> NutritionLog : removes
+ImportFoodsCommand ..> Food : imports
+ScanMealPhotoCommand ..> MealPhotoAnalyzed : raises
+ScanMenuPhotoCommand ..> MenuAnalyzed : raises
+
+' --- Integration events ---
+ConsumptionUpdated --|> DomainEventBase
+MealPhotoAnalyzed --|> DomainEventBase
+MenuAnalyzed --|> DomainEventBase
+NutritionLog ..> ConsumptionUpdated : changes raise
 
 @enduml

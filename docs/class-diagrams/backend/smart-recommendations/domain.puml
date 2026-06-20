@@ -2,74 +2,355 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.SmartRecommendations" {
+package "NutriSense.SmartRecommendations.Domain" {
 
-  package "Domain" {
-    class RecommendationEngine {
-      +Id: Guid
-      +UserId: Guid
-      -rules: List<RecommendationRule>
-      -pantryItems: List<PantryItem>
-      +GenerateRecommendation(context: WeatherContext, goal: GoalType): Recommendation
-      +AddPantryItem(item: PantryItem): void
-      +RemovePantryItem(itemId: Guid): void
+  package "Model.Aggregates" {
+    class City {
+      +Id: int
+      +Key: string
+      +NameEn: string
+      +NameEs: string
+      +Country: string
+      +Lat: decimal
+      +Lng: decimal
+      +Timezone: string
+      #City()
+      +City(key, nameEn, nameEs, country, lat, lng, timezone)
+      +{static} Import(name, nameEn?, nameEs?, country, lat, lng): City
+      +{static} BuildKey(name, country, lat, lng): string
+      -{static} Slugify(value: string): string
     }
 
-    class Recommendation {
-      +Id: Guid
-      +Title: String
-      +Description: String
-      +MealSuggestions: List<MealSuggestion>
-      +Type: RecommendationType
-      +GeneratedAt: DateTime
+    class IngredientCatalogItem {
+      +Id: int
+      +Key: string
+      +NameEn: string
+      +NameEs: string
+      +FoodId: int?
+      +Category: string
+      +DefaultUnit: string
+      +GramsPerUnit: decimal?
+      #IngredientCatalogItem()
+      +IngredientCatalogItem(key, nameEn, nameEs, foodId, category, defaultUnit, gramsPerUnit)
     }
 
-    class WeatherContext {
-      +TemperatureCelsius: Decimal
-      +Humidity: Decimal
-      +Condition: String
-      +City: String
+    ' LocationPreference is a partial class: LocationPreference.cs + LocationPreferenceAudit.cs (IAuditableEntity).
+    class LocationPreference {
+      +Id: int
+      +UserId: int
+      +HomeCityId: int?
+      +CurrentCityId: int?
+      +TravelModeActive: bool
+      +IsManualOverride: bool
+      +LocationPermissionGranted: bool
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
+      #LocationPreference()
+      +LocationPreference(userId: int)
+      +EnableTravelMode(cityId: int): void
+      +DisableTravelMode(): void
+      +DetectLocation(cityId: int): void
+      +SetHomeCity(cityId: int): void
     }
 
-    class GeoCoordinates {
-      +Latitude: Decimal
-      +Longitude: Decimal
+    ' Pantry is a partial class: Pantry.cs + PantryAudit.cs (IAuditableEntity).
+    class Pantry {
+      +Id: int
+      +UserId: int
+      +Items: IReadOnlyCollection<PantryItem>
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
+      #Pantry()
+      +Pantry(userId: int)
+      +AddItems(inputs: IEnumerable<PantryItemInput>): void
+      +RemoveItem(pantryItemId: int): void
+      +UpdateItem(pantryItemId: int, quantity: decimal, unit: string): void
     }
 
+    class Recipe {
+      +Id: int
+      +Key: string
+      +NameEn: string
+      +NameEs: string
+      +GoalType: string
+      +PrepTimeMinutes: int
+      +Servings: int
+      +TotalCalories: decimal
+      +TotalProteinG: decimal
+      +TotalCarbsG: decimal
+      +TotalFatG: decimal
+      +TotalFiberG: decimal
+      +RestrictionsConflict: List<string>
+      +Ingredients: List<RecipeIngredientItem>
+      #Recipe()
+      +Recipe(key, nameEn, nameEs, goalType, prepTimeMinutes, servings, ...)
+      +AddIngredient(ingredientCatalogItemId: int, quantity: decimal, unit: string): void
+    }
+
+    ' RecommendationCard is a partial class: RecommendationCard.cs + RecommendationCardAudit.cs (IAuditableEntity).
+    class RecommendationCard {
+      +Id: int
+      +UserId: int
+      +CityId: int?
+      +WeatherType: string?
+      +GoalType: string?
+      +FoodId: int?
+      +FoodNameEn: string
+      +FoodNameEs: string
+      +EstimatedCalories: decimal
+      +EstimatedProteinG: decimal
+      +EstimatedCarbsG: decimal
+      +EstimatedFatG: decimal
+      +Badge: string
+      +ContextLabelEn: string
+      +ContextLabelEs: string
+      +RestrictionsConflict: List<string>
+      +IsActive: bool
+      +CreatedAt: DateTimeOffset
+      #RecommendationCard()
+      +RecommendationCard(userId, foodNameEn, foodNameEs, calories, ...)
+      +Deactivate(): void
+    }
+  }
+
+  package "Model.Entities" {
     class PantryItem {
-      +Id: Guid
-      +Name: String
-      +Quantity: Decimal
-      +Unit: String
-      +ExpiresAt: DateOnly
+      +Id: int
+      +PantryId: int
+      +IngredientCatalogItemId: int
+      +Quantity: decimal
+      +Unit: string
+      +ExpiresAt: DateTimeOffset?
+      #PantryItem()
+      +PantryItem(pantryId, ingredientCatalogItemId, quantity, unit)
+      +UpdateQuantity(quantity: decimal, unit: string): void
     }
 
-    enum RecommendationType {
-      WEATHER_BASED
-      GOAL_BASED
-      TRAVEL_MODE
-      PANTRY_BASED
+    class RecipeIngredientItem {
+      +Id: int
+      +RecipeId: int
+      +IngredientCatalogItemId: int
+      +Quantity: decimal
+      +Unit: string
+      #RecipeIngredientItem()
+      +RecipeIngredientItem(recipeId, ingredientCatalogItemId, quantity, unit)
+      +RecipeIngredientItem(ingredientCatalogItemId, quantity, unit)
     }
+  }
 
-    class RecommendationGeneratedEvent {
-      +EngineId: Guid
-      +UserId: Guid
-      +Type: RecommendationType
-      +OccurredOn: DateTime
+  package "Model.ValueObjects" {
+    class Badge <<record>> {
+      +{static} Allowed: string[]
+      +Value: string
     }
+    class GeoCoordinate <<record>> {
+      +Lat: decimal
+      +Lng: decimal
+    }
+    class IngredientCategory <<record>> {
+      +{static} Allowed: string[]
+      +Value: string
+    }
+    class WeatherCondition <<record>> {
+      +{static} Allowed: string[]
+      +Value: string
+    }
+    class WeatherType <<record>> {
+      +{static} Allowed: string[]
+      +Value: string
+    }
+  }
 
-    interface IRecommendationRepository {
-      +FindByUserId(userId: Guid): RecommendationEngine
-      +Save(engine: RecommendationEngine): void
-      +Update(engine: RecommendationEngine): void
+  package "Model.Commands" {
+    class CheckWeatherAndProfileCommand <<record>>
+    class DeriveIngredientsFromFoodsCommand <<record>>
+    class DetectLocationCommand <<record>>
+    class DisableTravelModeCommand <<record>>
+    class EnableTravelModeCommand <<record>>
+    class GenerateRecommendationCommand <<record>>
+    class ImportCityCommand <<record>>
+    class ImportRecipeSuggestionsCommand <<record>>
+    class LockPremiumFeaturesCommand <<record>>
+    class PantryItemInput <<record>>
+    class RegisterPantryItemsCommand <<record>>
+    class RemovePantryItemCommand <<record>>
+    class SetHomeCityCommand <<record>>
+    class SuggestRecipeCommand <<record>>
+    class UnlockPremiumFeaturesCommand <<record>>
+    class UpdatePantryItemCommand <<record>>
+  }
+
+  package "Model.Queries" {
+    class GetActiveRecommendationsByUserIdQuery <<record>>
+    class GetAllCitiesQuery <<record>>
+    class GetAllRecommendationsByUserIdQuery <<record>>
+    class GetCityByIdQuery <<record>>
+    class GetCurrentWeatherByCityIdQuery <<record>>
+    class GetIngredientCatalogQuery <<record>>
+    class GetLocationPreferenceByUserIdQuery <<record>>
+    class GetPantryByUserIdQuery <<record>>
+    class GetRecipeByIdQuery <<record>>
+    class GetRecipesByGoalQuery <<record>>
+    class SearchCitiesQuery <<record>>
+  }
+
+  package "Model.Events" {
+    class LocationDetected <<record>>
+    class PantryUpdated <<record>>
+    class PremiumFeaturesLocked <<record>>
+    class PremiumFeaturesUnlocked <<record>>
+    class RecipeSuggested <<record>>
+    class RecommendationGenerated <<record>>
+    class TravelModeActivated <<record>>
+    class TravelModeDeactivated <<record>>
+    class WeatherContextRetrieved <<record>>
+  }
+
+  package "Repositories" {
+    interface ICityRepository {
+      +FindByKeyAsync(key: string, ct): Task<City?>
+      +FindNearestAsync(lat: decimal, lng: decimal, ct): Task<City?>
     }
+    interface IIngredientCatalogRepository {
+      +FindByCategoryAsync(category: string, ct): Task<IEnumerable<IngredientCatalogItem>>
+    }
+    interface ILocationPreferenceRepository {
+      +FindByUserIdAsync(userId: int, ct): Task<LocationPreference?>
+      +FindOrCreateAsync(userId: int, ct): Task<LocationPreference>
+    }
+    interface IPantryRepository {
+      +FindByUserIdAsync(userId: int, ct): Task<Pantry?>
+      +FindOrCreateAsync(userId: int, ct): Task<Pantry>
+    }
+    interface IRecipeRepository {
+      +FindByGoalTypeAsync(goalType: string, ct): Task<IEnumerable<Recipe>>
+    }
+    interface IRecommendationCardRepository {
+      +FindActiveByUserIdAsync(userId: int, ct): Task<RecommendationCard?>
+      +FindActiveListByUserIdAsync(userId: int, ct): Task<IEnumerable<RecommendationCard>>
+      +FindByUserIdAsync(userId: int, ct): Task<IEnumerable<RecommendationCard>>
+      +DeactivateAllByUserIdAsync(userId: int, ct): Task
+    }
+  }
+
+  package "Services" {
+    interface IGeocodingService {
+      +SearchAsync(query: string, limit: int, ct): Task<IReadOnlyList<GeoCityCandidate>>
+      +ReverseAsync(lat: decimal, lng: decimal, ct): Task<GeoCityCandidate?>
+    }
+    class GeoCityCandidate <<record>>
+
+    interface IGeolocationService {
+      +DetectNearestCityAsync(lat: decimal, lng: decimal, ct): Task<GeoResult>
+    }
+    class GeoResult <<record>>
+
+    interface ILocalFoodSuggestionService {
+      +SuggestAsync(cityName, country, weatherCondition, tempC, weatherType, goalType, restrictions, count, ct): Task<IReadOnlyList<LocalFoodSuggestion>>
+    }
+    class LocalFoodSuggestion <<record>>
+
+    interface IRecipeGenerationService {
+      +GenerateAsync(ingredientKeysByCategory, goalType, count, ct): Task<IReadOnlyList<GeneratedRecipeData>>
+    }
+    class GeneratedRecipeData <<record>>
+    class GeneratedRecipeIngredient <<record>>
+
+    interface IWeatherService {
+      +GetCurrentAsync(cityId: int, ct): Task<WeatherSnapshot>
+    }
+    class WeatherSnapshot <<record>>
   }
 }
 
-RecommendationEngine *--> PantryItem : contains "0..*"
-RecommendationEngine --> Recommendation : generates "0..*"
-Recommendation --> RecommendationType : has "1"
-RecommendationEngine --> RecommendationGeneratedEvent : fires "0..*"
+package "Shared.Domain" <<external>> {
+  interface IAuditableEntity
+  interface "IBaseRepository<T>" as IBaseRepository
+  abstract DomainEventBase
+}
+
+' --- Aggregate audit contracts ---
+LocationPreference ..|> IAuditableEntity
+Pantry ..|> IAuditableEntity
+RecommendationCard ..|> IAuditableEntity
+
+' --- Aggregate composition & construction ---
+Pantry o--> "0..*" PantryItem : contains
+Recipe o--> "0..*" RecipeIngredientItem : contains
+Pantry ..> PantryItemInput : adds from
+City ..> GeoCoordinate : locates
+
+' --- Value-object validation (string-backed) ---
+RecommendationCard ..> Badge : validated by
+IngredientCatalogItem ..> IngredientCategory : categorized by
+WeatherSnapshot ..> WeatherCondition : validated by
+WeatherSnapshot ..> WeatherType : classified by
+
+' --- Repositories ---
+ICityRepository --|> IBaseRepository
+IIngredientCatalogRepository --|> IBaseRepository
+ILocationPreferenceRepository --|> IBaseRepository
+IPantryRepository --|> IBaseRepository
+IRecipeRepository --|> IBaseRepository
+IRecommendationCardRepository --|> IBaseRepository
+ICityRepository ..> City : manages
+IIngredientCatalogRepository ..> IngredientCatalogItem : manages
+ILocationPreferenceRepository ..> LocationPreference : manages
+IPantryRepository ..> Pantry : manages
+IRecipeRepository ..> Recipe : manages
+IRecommendationCardRepository ..> RecommendationCard : manages
+
+' --- Domain services & their result records ---
+IGeocodingService ..> GeoCityCandidate : returns
+IGeolocationService ..> GeoResult : returns
+ILocalFoodSuggestionService ..> LocalFoodSuggestion : returns
+IRecipeGenerationService ..> GeneratedRecipeData : returns
+GeneratedRecipeData o--> "0..*" GeneratedRecipeIngredient : contains
+IWeatherService ..> WeatherSnapshot : returns
+
+' --- Integration events ---
+LocationDetected --|> DomainEventBase
+PantryUpdated --|> DomainEventBase
+PremiumFeaturesLocked --|> DomainEventBase
+PremiumFeaturesUnlocked --|> DomainEventBase
+RecipeSuggested --|> DomainEventBase
+RecommendationGenerated --|> DomainEventBase
+TravelModeActivated --|> DomainEventBase
+TravelModeDeactivated --|> DomainEventBase
+WeatherContextRetrieved --|> DomainEventBase
+
+' --- Commands target the aggregates / read models they affect ---
+GenerateRecommendationCommand ..> RecommendationCard : produces
+CheckWeatherAndProfileCommand ..> City : checks weather for
+EnableTravelModeCommand ..> LocationPreference : mutates
+DisableTravelModeCommand ..> LocationPreference : mutates
+DetectLocationCommand ..> LocationPreference : mutates
+SetHomeCityCommand ..> LocationPreference : mutates
+LockPremiumFeaturesCommand ..> LocationPreference : restricts
+UnlockPremiumFeaturesCommand ..> LocationPreference : enables
+RegisterPantryItemsCommand ..> Pantry : mutates
+RegisterPantryItemsCommand o--> "0..*" PantryItemInput : contains
+RemovePantryItemCommand ..> Pantry : mutates
+UpdatePantryItemCommand ..> Pantry : mutates
+SuggestRecipeCommand ..> Recipe : selects
+ImportCityCommand ..> City : imports
+ImportRecipeSuggestionsCommand ..> Recipe : imports
+DeriveIngredientsFromFoodsCommand ..> IngredientCatalogItem : derives
+
+' --- Queries target their read models ---
+GetActiveRecommendationsByUserIdQuery ..> RecommendationCard : queries
+GetAllRecommendationsByUserIdQuery ..> RecommendationCard : queries
+GetAllCitiesQuery ..> City : queries
+GetCityByIdQuery ..> City : queries
+SearchCitiesQuery ..> City : queries
+GetCurrentWeatherByCityIdQuery ..> WeatherSnapshot : queries
+GetIngredientCatalogQuery ..> IngredientCatalogItem : queries
+GetLocationPreferenceByUserIdQuery ..> LocationPreference : queries
+GetPantryByUserIdQuery ..> Pantry : queries
+GetRecipeByIdQuery ..> Recipe : queries
+GetRecipesByGoalQuery ..> Recipe : queries
 
 @enduml

@@ -1,0 +1,193 @@
+@startuml NutriSense - Smart Recommendations - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "NutriSense.SmartRecommendations.Interfaces" {
+
+  package "REST" {
+    class CitiesController {
+      +GetAll(): Task<IActionResult>
+      +Search(q: string, limit: int): Task<IActionResult>
+      +GetById(id: int): Task<IActionResult>
+      +Import(resource: ImportCityResource): Task<IActionResult>
+      +GetWeather(id: int): Task<IActionResult>
+    }
+    class IngredientCatalogController {
+      +GetAll(): Task<IActionResult>
+    }
+    class LocationPreferencesController {
+      +GetByUser(userId: int): Task<IActionResult>
+      +EnableTravelMode(userId: int, resource: EnableTravelModeResource): Task<IActionResult>
+      +DisableTravelMode(userId: int): Task<IActionResult>
+      +DetectLocation(userId: int, resource: DetectLocationResource): Task<IActionResult>
+      +SetHomeCity(userId: int, resource: SetHomeCityResource): Task<IActionResult>
+    }
+    class PantryController {
+      +GetByUser(userId: int): Task<IActionResult>
+      +RegisterItems(userId: int, resource: RegisterPantryItemsResource): Task<IActionResult>
+      +RemoveItem(userId: int, itemId: int): Task<IActionResult>
+      +UpdateItem(userId: int, id: int, resource: UpdatePantryItemResource): Task<IActionResult>
+    }
+    class RecipesController {
+      +GetByGoal(goal: string, maxPrepMinutes: int?): Task<IActionResult>
+      +GetById(id: int): Task<IActionResult>
+      +Suggest(userId: int): Task<IActionResult>
+      +Import(resource: ImportRecipesResource): Task<IActionResult>
+    }
+    class RecommendationsController {
+      +GetActiveByUser(userId: int): Task<IActionResult>
+      +Generate(userId: int, resource: GenerateRecommendationResource): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class CityResource <<record>>
+    class CitySearchResultResource <<record>>
+    class DetectLocationResource <<record>>
+    class EnableTravelModeResource <<record>>
+    class GenerateRecommendationResource <<record>>
+    class ImportCityResource <<record>>
+    class ImportRecipesResource <<record>>
+    class IngredientCatalogItemResource <<record>>
+    class LocationPreferenceResource <<record>>
+    class PantryItemInputResource <<record>>
+    class PantryItemResource <<record>>
+    class PantryResource <<record>>
+    class RecipeIngredientResource <<record>>
+    class RecipeResource <<record>>
+    class RecommendationCardResource <<record>>
+    class RegisterPantryItemsResource <<record>>
+    class SetHomeCityResource <<record>>
+    class UpdatePantryItemResource <<record>>
+    class WeatherResource <<record>>
+  }
+
+  package "REST.Transform" {
+    class CityAssembler <<static>> {
+      +{static} ToResource(city: City): CityResource
+      +{static} ToSearchResource(result: CitySearchResult): CitySearchResultResource
+    }
+    class IngredientCatalogAssembler <<static>> {
+      +{static} ToResource(item: IngredientCatalogItem): IngredientCatalogItemResource
+    }
+    class LocationPreferenceAssembler <<static>> {
+      +{static} ToResource(lp: LocationPreference): LocationPreferenceResource
+    }
+    class PantryAssembler <<static>> {
+      +{static} ToResource(pantry: Pantry): PantryResource
+    }
+    class RecipeAssembler <<static>> {
+      +{static} ToResource(recipe: Recipe): RecipeResource
+    }
+    class RecommendationCardAssembler <<static>> {
+      +{static} ToResource(card: RecommendationCard): RecommendationCardResource
+    }
+    class WeatherAssembler <<static>> {
+      +{static} ToResource(cityId: int, snapshot: WeatherSnapshot): WeatherResource
+    }
+  }
+}
+
+package "SmartRecommendations.Application" <<external>> {
+  interface IRecsEngineCommandService
+  interface IRecsEngineQueryService
+  interface IRecipeImportCommandService
+  class CitySearchResult
+}
+
+package "SmartRecommendations.Domain" <<external>> {
+  class City
+  class IngredientCatalogItem
+  class LocationPreference
+  class Pantry
+  class Recipe
+  class RecommendationCard
+  class WeatherSnapshot
+  class ImportCityCommand
+  class GenerateRecommendationCommand
+  class SearchCitiesQuery
+}
+
+package "Shared / ASP.NET" <<external>> {
+  class ControllerBase
+  class "Result<TValue, TError>" as Result
+}
+
+' --- Controllers ---
+CitiesController --|> ControllerBase
+IngredientCatalogController --|> ControllerBase
+LocationPreferencesController --|> ControllerBase
+PantryController --|> ControllerBase
+RecipesController --|> ControllerBase
+RecommendationsController --|> ControllerBase
+
+' --- Controllers → application services ---
+CitiesController --> IRecsEngineQueryService : uses
+CitiesController --> IRecsEngineCommandService : uses
+IngredientCatalogController --> IRecsEngineQueryService : uses
+LocationPreferencesController --> IRecsEngineCommandService : uses
+LocationPreferencesController --> IRecsEngineQueryService : uses
+PantryController --> IRecsEngineCommandService : uses
+PantryController --> IRecsEngineQueryService : uses
+RecipesController --> IRecsEngineCommandService : uses
+RecipesController --> IRecsEngineQueryService : uses
+RecipesController --> IRecipeImportCommandService : uses
+RecommendationsController --> IRecsEngineCommandService : uses
+RecommendationsController --> IRecsEngineQueryService : uses
+
+' --- Controllers ↔ assemblers ---
+CitiesController ..> CityAssembler : uses
+CitiesController ..> WeatherAssembler : uses
+IngredientCatalogController ..> IngredientCatalogAssembler : uses
+LocationPreferencesController ..> LocationPreferenceAssembler : uses
+PantryController ..> PantryAssembler : uses
+RecipesController ..> RecipeAssembler : uses
+RecommendationsController ..> RecommendationCardAssembler : uses
+
+' --- Controllers ↔ request resources / commands ---
+CitiesController ..> ImportCityResource : reads
+CitiesController ..> ImportCityCommand : builds
+CitiesController ..> SearchCitiesQuery : builds
+LocationPreferencesController ..> EnableTravelModeResource : reads
+LocationPreferencesController ..> DetectLocationResource : reads
+LocationPreferencesController ..> SetHomeCityResource : reads
+PantryController ..> RegisterPantryItemsResource : reads
+PantryController ..> UpdatePantryItemResource : reads
+RecipesController ..> ImportRecipesResource : reads
+RecommendationsController ..> GenerateRecommendationResource : reads
+RecommendationsController ..> GenerateRecommendationCommand : builds
+
+' --- Controllers map Result outcomes ---
+CitiesController ..> Result : maps
+LocationPreferencesController ..> Result : maps
+PantryController ..> Result : maps
+RecipesController ..> Result : maps
+RecommendationsController ..> Result : maps
+
+' --- Entity → response resource assemblers ---
+CityAssembler ..> City : from
+CityAssembler ..> CityResource : to
+CityAssembler ..> CitySearchResult : from
+CityAssembler ..> CitySearchResultResource : to
+IngredientCatalogAssembler ..> IngredientCatalogItem : from
+IngredientCatalogAssembler ..> IngredientCatalogItemResource : to
+LocationPreferenceAssembler ..> LocationPreference : from
+LocationPreferenceAssembler ..> LocationPreferenceResource : to
+PantryAssembler ..> Pantry : from
+PantryAssembler ..> PantryResource : to
+RecipeAssembler ..> Recipe : from
+RecipeAssembler ..> RecipeResource : to
+RecommendationCardAssembler ..> RecommendationCard : from
+RecommendationCardAssembler ..> RecommendationCardResource : to
+WeatherAssembler ..> WeatherSnapshot : from
+WeatherAssembler ..> WeatherResource : to
+
+' --- Response resource composition ---
+PantryResource o--> "0..*" PantryItemResource : contains
+RecipeResource o--> "0..*" RecipeIngredientResource : contains
+RegisterPantryItemsResource o--> "0..*" PantryItemInputResource : contains
+
+@enduml

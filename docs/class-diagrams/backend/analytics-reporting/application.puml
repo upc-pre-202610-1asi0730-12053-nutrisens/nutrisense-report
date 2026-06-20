@@ -5,38 +5,171 @@ skinparam classAttributeIconSize 0
 
 package "NutriSense.AnalyticsReporting" {
 
-  package "Domain [stubs]" {
-    interface IAnalyticsRepository
+  package "Application" {
+
+    package "CommandServices" {
+      interface IAnalyticsCommandService {
+        +Handle(command: GenerateProgressInsightsCommand, ct): Task<Result<bool, GenerateProgressInsightsError>>
+        +Handle(command: ViewDashboardCommand, ct): Task<Result<bool, ViewDashboardError>>
+        +Handle(command: ExportReportPdfCommand, ct): Task<Result<(byte[], string), ExportReportPdfError>>
+      }
+    }
+
+    package "QueryServices" {
+      interface IAnalyticsQueryService {
+        +Handle(query: GetDashboardQuery, ct): Task<DashboardData>
+        +Handle(query: GetProgressChartQuery, ct): Task<ProgressChartData>
+        +Handle(query: GetStreakQuery, ct): Task<StreakData>
+      }
+    }
+
+    package "Errors" {
+      enum GenerateProgressInsightsError {
+        UnexpectedError
+      }
+      enum ViewDashboardError {
+        UnexpectedError
+      }
+      enum ExportReportPdfError {
+        PremiumRequired
+        InvalidDateRange
+        UnexpectedError
+      }
+      enum UpdateUsageStreakError {
+        UnexpectedError
+      }
+    }
+
+    package "Internal.CommandServices" {
+      class AnalyticsCommandService {
+        +Handle(command: GenerateProgressInsightsCommand, ct): Task<Result<bool, GenerateProgressInsightsError>>
+        +Handle(command: ViewDashboardCommand, ct): Task<Result<bool, ViewDashboardError>>
+        +Handle(command: ExportReportPdfCommand, ct): Task<Result<(byte[], string), ExportReportPdfError>>
+        -IsStreakDayMet(actual, goal, mealTypes): bool
+      }
+    }
+
+    package "Internal.QueryServices" {
+      class AnalyticsQueryService {
+        +Handle(query: GetDashboardQuery, ct): Task<DashboardData>
+        +Handle(query: GetProgressChartQuery, ct): Task<ProgressChartData>
+        +Handle(query: GetStreakQuery, ct): Task<StreakData>
+      }
+    }
+
+    package "Internal (Read Models)" {
+      class DashboardData <<record>> {
+        +UserId: int
+        +Date: DateOnly
+        +TotalCalories: decimal
+        +TotalProteinG: decimal
+        +TotalCarbsG: decimal
+        +TotalFatG: decimal
+        +ActiveCaloriesBurned: decimal
+        +AdherenceScore: decimal?
+        +CurrentStreak: int
+        +WeeklyCompletionRate: decimal
+      }
+      class ProgressChartData <<record>> {
+        +UserId: int
+        +From: DateOnly
+        +To: DateOnly
+        +Snapshots: IEnumerable<ProgressSnapshotDto>
+      }
+      class ProgressSnapshotDto <<record>> {
+        +Date: DateOnly
+        +TotalCalories: decimal
+        +AdherenceScore: decimal
+      }
+      class StreakData <<record>> {
+        +UserId: int
+        +CurrentStreak: int
+        +LongestStreak: int
+        +LastLogDate: DateOnly?
+        +WeeklyCompletionRate: decimal
+        +CompletedDates: IReadOnlyList<DateOnly>
+      }
+    }
+
+    package "Internal.EventHandlers" {
+      class OnCaloricBalanceAdjustedHandler {
+        +Handle(notification: CaloricBalanceAdjusted, ct): Task
+      }
+      class OnConsumptionUpdatedAnalyticsHandler {
+        +Handle(notification: ConsumptionUpdated, ct): Task
+      }
+      class OnTdeeCalculatedAnalyticsHandler {
+        +Handle(notification: TdeeCalculated, ct): Task
+      }
+    }
   }
 
-  package "Application" {
-    interface IAnalyticsCommandService {
-      +Handle(command: GenerateProgressReportCommand): ProgressReportResponse
-      +Handle(command: UpdateStreakCommand): StreakResponse
-    }
+  package "Domain [stubs]" {
+    class UserAnalytics
+    class ProgressSnapshot
+    class DateRange
+    class GenerateProgressInsightsCommand
+    class ViewDashboardCommand
+    class ExportReportPdfCommand
+    interface IUserAnalyticsRepository
+    interface IAdherenceCalculator
+    interface IReportPdfGenerator
+  }
 
-    interface IAnalyticsQueryService {
-      +Handle(query: GetProgressReportQuery): ProgressReportResponse
-      +Handle(query: GetStreaksQuery): List<StreakResponse>
-      +Handle(query: GetDailyBalancesQuery): List<DailyBalanceResponse>
-    }
-
-    class AnalyticsCommandServiceImpl {
-      -analyticsRepository: IAnalyticsRepository
-      +Handle(command: GenerateProgressReportCommand): ProgressReportResponse
-      +Handle(command: UpdateStreakCommand): StreakResponse
-    }
-
-    class GenerateProgressReportCommand {
-      +UserId: Guid
-      +ReportType: ReportType
-      +PeriodStart: DateOnly
-      +PeriodEnd: DateOnly
-    }
+  package "ACL & Shared [stubs]" {
+    interface INutritionTrackingContextFacade
+    interface IBodyHealthMetricsContextFacade
+    interface IActivityWearableContextFacade
+    interface ISubscriptionTierLookup
+    interface "IEventHandler<T>" as IEventHandler
   }
 }
 
-AnalyticsCommandServiceImpl ..|> IAnalyticsCommandService
-AnalyticsCommandServiceImpl --> IAnalyticsRepository : uses
+' Service realizations
+AnalyticsCommandService ..|> IAnalyticsCommandService
+AnalyticsQueryService ..|> IAnalyticsQueryService
+
+' Command service collaborators (Application -> Domain)
+AnalyticsCommandService --> IUserAnalyticsRepository : uses
+AnalyticsCommandService --> IAdherenceCalculator : uses
+AnalyticsCommandService --> IReportPdfGenerator : uses
+AnalyticsCommandService ..> UserAnalytics : loads
+AnalyticsCommandService ..> ProgressSnapshot : creates
+AnalyticsCommandService ..> DateRange : builds
+AnalyticsCommandService ..> GenerateProgressInsightsError : returns
+AnalyticsCommandService ..> ViewDashboardError : returns
+AnalyticsCommandService ..> ExportReportPdfError : returns
+AnalyticsCommandService ..> UpdateUsageStreakError : returns
+
+' Command service cross-context dependencies
+AnalyticsCommandService --> INutritionTrackingContextFacade : uses
+AnalyticsCommandService --> IBodyHealthMetricsContextFacade : uses
+AnalyticsCommandService --> IActivityWearableContextFacade : uses
+AnalyticsCommandService --> ISubscriptionTierLookup : uses
+
+' Query service collaborators
+AnalyticsQueryService --> IUserAnalyticsRepository : uses
+AnalyticsQueryService --> INutritionTrackingContextFacade : uses
+AnalyticsQueryService --> IActivityWearableContextFacade : uses
+AnalyticsQueryService ..> DashboardData : builds
+AnalyticsQueryService ..> ProgressChartData : builds
+AnalyticsQueryService ..> StreakData : builds
+
+' Read model composition
+ProgressChartData *--> "0..*" ProgressSnapshotDto : contains
+
+' Event handlers
+OnCaloricBalanceAdjustedHandler ..|> IEventHandler
+OnConsumptionUpdatedAnalyticsHandler ..|> IEventHandler
+OnTdeeCalculatedAnalyticsHandler ..|> IEventHandler
+OnCaloricBalanceAdjustedHandler --> IAnalyticsCommandService : invokes
+OnConsumptionUpdatedAnalyticsHandler --> IAnalyticsCommandService : invokes
+OnTdeeCalculatedAnalyticsHandler --> IAnalyticsCommandService : invokes
+OnCaloricBalanceAdjustedHandler ..> GenerateProgressInsightsCommand : sends
+OnConsumptionUpdatedAnalyticsHandler ..> GenerateProgressInsightsCommand : sends
+OnTdeeCalculatedAnalyticsHandler ..> GenerateProgressInsightsCommand : sends
+
+AnalyticsCommandService ..> ViewDashboardCommand : handles
+AnalyticsCommandService ..> ExportReportPdfCommand : handles
 
 @enduml

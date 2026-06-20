@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -6,45 +6,59 @@ skinparam linetype ortho
 
 package "shared/infrastructure [stubs]" {
   class BaseApi <<api>>
-  class BaseEndpoint <<api>>
+}
+
+package "subscriptions-billing/domain [stubs]" {
+  class UserSubscription <<entity>>
+  class SubscriptionPlan <<entity>>
+  class PaymentRecord <<entity>>
+  class PaymentMethod <<entity>>
 }
 
 package "subscriptions-billing/infrastructure" {
 
   class SubscriptionsBillingApi <<api>> {
-    - userSubscriptions: BaseEndpoint
-    - subscriptionPlans: BaseEndpoint
-    - paymentHistory: BaseEndpoint
-    --
-    + getSubscriptions(): Promise
-    + createSubscription(resource): Promise
-    + updateSubscription(id, resource): Promise
+    + getSubscriptionByUser(userId): Promise
+    + selectPlan(resource): Promise
+    + changePlan(subscriptionId, resource): Promise
+    + cancelSubscription(subscriptionId, resource): Promise
+    + renewSubscription(subscriptionId): Promise
     + getPlans(): Promise
-    + getPlanById(id): Promise
-    + getPaymentHistory(): Promise
+    + getPlanByKey(key): Promise
+    + getPaymentHistory(subscriptionId): Promise
+    + getPaymentMethods(userId): Promise
+    + createPaymentMethod(resource): Promise
+    + deletePaymentMethod(id): Promise
   }
 
   class UserSubscriptionAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): UserSubscription|null
     + {static} toEntityFromResponse(response): UserSubscription|null
-    + {static} toEntitiesFromResponse(response): UserSubscription[]
   }
 
   class SubscriptionPlanAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): SubscriptionPlan|null
     + {static} toEntitiesFromResponse(response): SubscriptionPlan[]
+    + {static} toEntityFromResponse(response): SubscriptionPlan|null
   }
 
   class PaymentRecordAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): PaymentRecord|null
     + {static} toEntitiesFromResponse(response): PaymentRecord[]
   }
+
+  class PaymentMethodAssembler <<assembler>> {
+    + {static} toResource(userId, stripePaymentMethodId, cardMeta): Object
+    + {static} toEntityFromResource(resource): PaymentMethod|null
+    + {static} toEntityFromResponse(response): PaymentMethod|null
+    + {static} toEntitiesFromResponse(response): PaymentMethod[]
+  }
 }
 
 SubscriptionsBillingApi --|> BaseApi
-BaseApi *--> BaseEndpoint
-UserSubscriptionAssembler ..> SubscriptionsBillingApi : uses >
-SubscriptionPlanAssembler ..> SubscriptionsBillingApi : uses >
-PaymentRecordAssembler ..> SubscriptionsBillingApi : uses >
+UserSubscriptionAssembler ..> UserSubscription : builds >
+SubscriptionPlanAssembler ..> SubscriptionPlan : builds >
+PaymentRecordAssembler ..> PaymentRecord : builds >
+PaymentMethodAssembler ..> PaymentMethod : builds >
 
 @enduml

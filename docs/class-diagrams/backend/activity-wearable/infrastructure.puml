@@ -1,36 +1,87 @@
-@startuml NutriSense - Activity & Wearable Sync - Infrastructure
+@startuml NutriSense - ActivityWearable - Infrastructure
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
-package "NutriSense.ActivityWearableSync" {
+package "ActivityWearable.Infrastructure" {
 
   package "Domain [stubs]" {
-    interface IActivitySyncRepository
+    class ActivityLog
+    class WearableConnection
+    interface IActivityLogRepository
+    interface IWearableConnectionRepository
+    interface ICaloricBalanceCalculator
+    interface IWearableSyncProvider
+    class WearableAuthorization
+    class ImportedActivity
   }
 
-  package "Infrastructure" {
-    class ActivitySyncRepositoryImpl {
-      -context: NutriSenseDbContext
-      +FindByUserId(userId: Guid): ActivitySync
-      +Save(sync: ActivitySync): void
-      +Update(sync: ActivitySync): void
-      +FindRecordsByDate(userId: Guid, date: DateOnly): List<ActivityRecord>
-    }
+  package "Shared [stubs]" {
+    class "BaseRepository<T>" as BaseRepository
+    class AppDbContext
+    interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  }
 
-    interface IGoogleFitClient {
-      +FetchActivities(accessToken: String): List<ActivityRecord>
+  package "Calculators" {
+    class CaloricBalanceCalculator {
+      +CalculateDailyActiveCalories(logs: IEnumerable<ActivityLog>, date: DateOnly): decimal
+      +CalculateBalance(tdee: decimal, activeCalories: decimal, consumedCalories: decimal): decimal
     }
+  }
 
-    class GoogleFitClientImpl {
-      -httpClient: HttpClient
-      -baseUrl: String
-      +FetchActivities(accessToken: String): List<ActivityRecord>
+  package "External.GoogleFit" {
+    class GoogleFitSyncProvider {
+      +AuthorizeAsync(oauthCode: string, ct: CancellationToken): Task<WearableAuthorization>
+      +FetchActivitiesAsync(wearableConnectionId: int, from: DateOnly, to: DateOnly, ct: CancellationToken): Task<IEnumerable<ImportedActivity>>
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    class ActivityLogRepository {
+      +ActivityLogRepository(context: AppDbContext)
+      +FindByUserAndDateAsync(userId: int, date: DateOnly, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
+      +FindByUserAsync(userId: int, from: DateOnly?, to: DateOnly?, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
+      +GetDailyCaloriesBurnedAsync(userId: int, date: DateOnly, ct: CancellationToken): Task<decimal>
+    }
+    class WearableConnectionRepository {
+      +WearableConnectionRepository(context: AppDbContext)
+      +FindByUserIdAsync(userId: int, ct: CancellationToken): Task<IEnumerable<WearableConnection>>
+      +FindByUserAndProviderAsync(userId: int, provider: string, ct: CancellationToken): Task<WearableConnection?>
+    }
+  }
+
+  package "Persistence.EFC.Configuration" {
+    class ActivityLogEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<ActivityLog>): void
+    }
+    class WearableConnectionEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<WearableConnection>): void
     }
   }
 }
 
-ActivitySyncRepositoryImpl ..|> IActivitySyncRepository
-GoogleFitClientImpl ..|> IGoogleFitClient
+' --- Domain service implementations ---
+CaloricBalanceCalculator ..|> ICaloricBalanceCalculator
+CaloricBalanceCalculator ..> ActivityLog : sums
+GoogleFitSyncProvider ..|> IWearableSyncProvider
+GoogleFitSyncProvider ..> WearableAuthorization : returns
+GoogleFitSyncProvider ..> ImportedActivity : returns
+
+' --- Repository implementations ---
+ActivityLogRepository ..|> IActivityLogRepository
+ActivityLogRepository --|> BaseRepository
+ActivityLogRepository --> AppDbContext : queries
+ActivityLogRepository ..> ActivityLog : persists
+
+WearableConnectionRepository ..|> IWearableConnectionRepository
+WearableConnectionRepository --|> BaseRepository
+WearableConnectionRepository --> AppDbContext : queries
+WearableConnectionRepository ..> WearableConnection : persists
+
+' --- EF Core mappings ---
+ActivityLogEntityTypeConfiguration ..|> IEntityTypeConfiguration
+WearableConnectionEntityTypeConfiguration ..|> IEntityTypeConfiguration
+ActivityLogEntityTypeConfiguration ..> ActivityLog : maps
+WearableConnectionEntityTypeConfiguration ..> WearableConnection : maps
 
 @enduml

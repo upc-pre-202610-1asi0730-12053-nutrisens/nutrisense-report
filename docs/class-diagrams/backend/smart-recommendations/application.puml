@@ -2,46 +2,230 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.SmartRecommendations" {
+package "NutriSense.SmartRecommendations.Application" {
 
-  package "Domain [stubs]" {
-    interface IRecommendationRepository
+  package "CommandServices" {
+    interface IIngredientCatalogImportCommandService {
+      +Handle(command: DeriveIngredientsFromFoodsCommand, ct): Task<int>
+    }
+    interface IRecipeImportCommandService {
+      +Handle(command: ImportRecipeSuggestionsCommand, ct): Task<Result<int, RecipeImportError>>
+    }
+    interface IRecsEngineCommandService {
+      +Handle(command: GenerateRecommendationCommand, ct): Task<Result<RecommendationCard, GenerateRecommendationError>>
+      +Handle(command: EnableTravelModeCommand, ct): Task<Result<LocationPreference, EnableTravelModeError>>
+      +Handle(command: DisableTravelModeCommand, ct): Task<Result<LocationPreference, DisableTravelModeError>>
+      +Handle(command: RegisterPantryItemsCommand, ct): Task<Result<Pantry, RegisterPantryItemsError>>
+      +Handle(command: RemovePantryItemCommand, ct): Task<Result<Pantry, RemovePantryItemError>>
+      +Handle(command: UpdatePantryItemCommand, ct): Task<Result<Pantry, UpdatePantryItemError>>
+      +Handle(command: SuggestRecipeCommand, ct): Task<Result<Recipe, SuggestRecipeError>>
+      +Handle(command: DetectLocationCommand, ct): Task<Result<LocationPreference, DetectLocationError>>
+      +Handle(command: UnlockPremiumFeaturesCommand, ct): Task
+      +Handle(command: LockPremiumFeaturesCommand, ct): Task
+      +Handle(command: SetHomeCityCommand, ct): Task<Result<LocationPreference, SetHomeCityError>>
+      +Handle(command: ImportCityCommand, ct): Task<Result<City, ImportCityError>>
+    }
   }
 
-  package "Infrastructure [stubs]" {
-    interface IWeatherApiClient
+  package "QueryServices" {
+    interface IRecsEngineQueryService {
+      +Handle(query: GetActiveRecommendationsByUserIdQuery, ct): Task<IEnumerable<RecommendationCard>>
+      +Handle(query: GetAllRecommendationsByUserIdQuery, ct): Task<IEnumerable<RecommendationCard>>
+      +Handle(query: GetPantryByUserIdQuery, ct): Task<Pantry?>
+      +Handle(query: GetLocationPreferenceByUserIdQuery, ct): Task<LocationPreference?>
+      +Handle(query: GetAllCitiesQuery, ct): Task<IEnumerable<City>>
+      +Handle(query: GetCityByIdQuery, ct): Task<City?>
+      +Handle(query: GetCurrentWeatherByCityIdQuery, ct): Task<WeatherSnapshot?>
+      +Handle(query: SearchCitiesQuery, ct): Task<IEnumerable<CitySearchResult>>
+      +Handle(query: GetRecipesByGoalQuery, ct): Task<IEnumerable<Recipe>>
+      +Handle(query: GetRecipeByIdQuery, ct): Task<Recipe?>
+      +Handle(query: GetIngredientCatalogQuery, ct): Task<IEnumerable<IngredientCatalogItem>>
+    }
   }
 
-  package "Application" {
-    interface IRecsCommandService {
-      +Handle(command: GenerateRecommendationCommand): RecommendationResponse
-      +Handle(command: AddPantryItemCommand): PantryItemResponse
-      +Handle(command: RemovePantryItemCommand): void
+  package "Errors" {
+    enum DetectLocationError
+    enum DisableTravelModeError
+    enum EnableTravelModeError
+    enum GenerateRecommendationError
+    enum ImportCityError
+    enum RecipeImportError
+    enum RegisterPantryItemsError
+    enum RemovePantryItemError
+    enum SetHomeCityError
+    enum SuggestRecipeError
+    enum UpdatePantryItemError
+  }
+
+  package "Internal" {
+    class CitySearchResult <<record>>
+
+    package "Internal.CommandServices" {
+      class IngredientCatalogImportCommandService {
+        -{static} CategoryMap: Dictionary<string, string>
+        +Handle(command: DeriveIngredientsFromFoodsCommand, ct): Task<int>
+      }
+      class RecipeImportCommandService {
+        +Handle(command: ImportRecipeSuggestionsCommand, ct): Task<Result<int, RecipeImportError>>
+      }
+      class RecsEngineCommandService {
+        +Handle(...): Task<Result<...>>
+      }
     }
 
-    interface IRecsQueryService {
-      +Handle(query: GetRecommendationsQuery): List<RecommendationResponse>
+    package "Internal.QueryServices" {
+      class RecsEngineQueryService {
+        +Handle(...): Task<...>
+      }
     }
 
-    class RecsCommandServiceImpl {
-      -recsRepository: IRecommendationRepository
-      -weatherClient: IWeatherApiClient
-      -geolocationService: IGeolocationService
-      +Handle(command: GenerateRecommendationCommand): RecommendationResponse
-      +Handle(command: AddPantryItemCommand): PantryItemResponse
-    }
-
-    class GenerateRecommendationCommand {
-      +UserId: Guid
-      +TravelMode: Boolean
-      +Location: GeoCoordinates
+    package "Internal.EventHandlers" {
+      class OnBenefitsEnabledHandler {
+        +Handle(notification: BenefitsEnabled, cancellationToken): Task
+      }
+      class OnBenefitsDisabledHandler {
+        +Handle(notification: BenefitsDisabled, cancellationToken): Task
+      }
+      class OnTdeeCalculatedHandler {
+        +Handle(notification: TdeeCalculated, cancellationToken): Task
+      }
     }
   }
 }
 
-RecsCommandServiceImpl ..|> IRecsCommandService
-RecsCommandServiceImpl --> IRecommendationRepository : uses
-RecsCommandServiceImpl --> IWeatherApiClient : uses
+package "SmartRecommendations.Domain" <<external>> {
+  class City
+  class IngredientCatalogItem
+  class LocationPreference
+  class Pantry
+  class Recipe
+  class RecommendationCard
+  class WeatherSnapshot
+  interface ICityRepository
+  interface IIngredientCatalogRepository
+  interface ILocationPreferenceRepository
+  interface IPantryRepository
+  interface IRecipeRepository
+  interface IRecommendationCardRepository
+  interface IGeocodingService
+  interface IGeolocationService
+  interface ILocalFoodSuggestionService
+  interface IRecipeGenerationService
+  interface IWeatherService
+  class GenerateRecommendationCommand
+  class LockPremiumFeaturesCommand
+  class UnlockPremiumFeaturesCommand
+}
+
+package "Other BC ACL facades" <<external>> {
+  interface IIamContextFacade
+  interface IBodyHealthMetricsContextFacade
+  interface INutritionTrackingContextFacade
+  interface ISubscriptionsContextFacade
+  class BenefitsEnabled
+  class BenefitsDisabled
+  class TdeeCalculated
+}
+
+package "Shared / Cortex" <<external>> {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+  interface "IEventHandler<T>" as IEventHandler
+  interface IMemoryCache
+  interface IConfiguration
+  interface IServiceScopeFactory
+}
+
+' --- Service interface realizations ---
+IngredientCatalogImportCommandService ..|> IIngredientCatalogImportCommandService
+RecipeImportCommandService ..|> IRecipeImportCommandService
+RecsEngineCommandService ..|> IRecsEngineCommandService
+RecsEngineQueryService ..|> IRecsEngineQueryService
+
+' --- IngredientCatalogImportCommandService ---
+IngredientCatalogImportCommandService --> INutritionTrackingContextFacade : uses
+IngredientCatalogImportCommandService --> IIngredientCatalogRepository : uses
+IngredientCatalogImportCommandService --> IUnitOfWork : uses
+IngredientCatalogImportCommandService ..> IngredientCatalogItem : creates
+
+' --- RecipeImportCommandService ---
+RecipeImportCommandService --> IIngredientCatalogRepository : uses
+RecipeImportCommandService --> IRecipeRepository : uses
+RecipeImportCommandService --> IRecipeGenerationService : uses
+RecipeImportCommandService --> IUnitOfWork : uses
+RecipeImportCommandService ..> Recipe : creates
+RecipeImportCommandService ..> RecipeImportError : returns
+
+' --- RecsEngineCommandService (orchestrator) ---
+RecsEngineCommandService --> IRecommendationCardRepository : uses
+RecsEngineCommandService --> ILocationPreferenceRepository : uses
+RecsEngineCommandService --> IPantryRepository : uses
+RecsEngineCommandService --> ICityRepository : uses
+RecsEngineCommandService --> IIngredientCatalogRepository : uses
+RecsEngineCommandService --> IRecipeRepository : uses
+RecsEngineCommandService --> IGeolocationService : uses
+RecsEngineCommandService --> IGeocodingService : uses
+RecsEngineCommandService --> IWeatherService : uses
+RecsEngineCommandService --> ILocalFoodSuggestionService : uses
+RecsEngineCommandService --> IIamContextFacade : uses
+RecsEngineCommandService --> IBodyHealthMetricsContextFacade : uses
+RecsEngineCommandService --> INutritionTrackingContextFacade : uses
+RecsEngineCommandService --> ISubscriptionsContextFacade : uses
+RecsEngineCommandService --> IMemoryCache : uses
+RecsEngineCommandService --> IConfiguration : reads
+RecsEngineCommandService --> IUnitOfWork : uses
+RecsEngineCommandService --> IMediator : publishes via
+RecsEngineCommandService ..> RecommendationCard : creates
+RecsEngineCommandService ..> LocationPreference : mutates
+RecsEngineCommandService ..> Pantry : mutates
+RecsEngineCommandService ..> City : imports
+
+' --- RecsEngineQueryService ---
+RecsEngineQueryService --> IRecommendationCardRepository : uses
+RecsEngineQueryService --> IPantryRepository : uses
+RecsEngineQueryService --> ILocationPreferenceRepository : uses
+RecsEngineQueryService --> ICityRepository : uses
+RecsEngineQueryService --> IRecipeRepository : uses
+RecsEngineQueryService --> IIngredientCatalogRepository : uses
+RecsEngineQueryService --> IWeatherService : uses
+RecsEngineQueryService --> IGeocodingService : uses
+RecsEngineQueryService ..> CitySearchResult : produces
+
+' --- Event handlers ---
+OnBenefitsEnabledHandler ..|> IEventHandler
+OnBenefitsDisabledHandler ..|> IEventHandler
+OnTdeeCalculatedHandler ..|> IEventHandler
+OnBenefitsEnabledHandler ..> BenefitsEnabled : handles
+OnBenefitsDisabledHandler ..> BenefitsDisabled : handles
+OnTdeeCalculatedHandler ..> TdeeCalculated : handles
+OnBenefitsEnabledHandler --> IRecsEngineCommandService : delegates to
+OnBenefitsDisabledHandler --> IRecsEngineCommandService : delegates to
+OnTdeeCalculatedHandler --> IServiceScopeFactory : resolves via
+OnTdeeCalculatedHandler ..> IRecsEngineCommandService : delegates to
+OnBenefitsEnabledHandler ..> UnlockPremiumFeaturesCommand : sends
+OnBenefitsDisabledHandler ..> LockPremiumFeaturesCommand : sends
+OnTdeeCalculatedHandler ..> GenerateRecommendationCommand : sends
+
+' --- Result wrapper & error enums across command services ---
+IRecsEngineCommandService ..> Result
+IRecipeImportCommandService ..> Result
+IRecsEngineCommandService ..> GenerateRecommendationError
+IRecsEngineCommandService ..> EnableTravelModeError
+IRecsEngineCommandService ..> DisableTravelModeError
+IRecsEngineCommandService ..> RegisterPantryItemsError
+IRecsEngineCommandService ..> RemovePantryItemError
+IRecsEngineCommandService ..> UpdatePantryItemError
+IRecsEngineCommandService ..> SuggestRecipeError
+IRecsEngineCommandService ..> DetectLocationError
+IRecsEngineCommandService ..> SetHomeCityError
+IRecsEngineCommandService ..> ImportCityError
+
+' --- Query service contract returns ---
+IRecsEngineQueryService ..> CitySearchResult : returns
+IRecsEngineQueryService ..> WeatherSnapshot : returns
 
 @enduml

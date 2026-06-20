@@ -2,40 +2,157 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.NutritionTracking" {
+package "NutriSense.NutritionTracking.Infrastructure" {
 
-  package "Domain [stubs]" {
-    interface INutritionLogRepository
+  package "External.DeepSeek" {
+    class DeepSeekFoodEnrichmentService {
+      +EnrichBatchAsync(namesEn: IReadOnlyList<string>, ct): Task<IReadOnlyList<EnrichedFoodData>>
+    }
+    class DeepSeekFoodEstimationService {
+      +EstimateBatchAsync(namesEn: IReadOnlyList<string>, ct): Task<IReadOnlyList<EstimatedFoodData>>
+    }
   }
 
-  package "Infrastructure" {
-    class NutritionLogRepositoryImpl {
-      -context: NutriSenseDbContext
-      +FindByUserAndDate(userId: Guid, date: DateOnly): NutritionLog
-      +Save(log: NutritionLog): void
-      +Update(log: NutritionLog): void
+  package "External.Gemini" {
+    class GeminiDishVisionService {
+      +RecognizeDishAsync(imageBase64OrUri: string, ct): Task<DishRecognitionResult>
     }
-
-    interface IGoogleVisionClient {
-      +AnalyzeImage(image: Byte[]): ScanResult
+    class GeminiMenuVisionService {
+      +AnalyzeMenuAsync(imageBase64OrUri: string, ct): Task<MenuRecognitionResult>
     }
+  }
 
-    class GoogleVisionClientImpl {
-      -apiKey: String
-      -httpClient: HttpClient
-      +AnalyzeImage(image: Byte[]): ScanResult
+  package "External.Usda" {
+    class UsdaFoodDataProvider {
+      -NutrientMap: Dictionary<string, string>
+      +SearchAsync(query: string, maxResults: int, dataType: string, ct): Task<IReadOnlyList<ExternalFoodData>>
     }
+    class UsdaSearchResponse <<record>> {
+      +Foods: List<UsdaFoodItem>?
+    }
+    class UsdaFoodItem <<record>> {
+      +FdcId: int?
+      +Description: string?
+      +DataType: string?
+      +FoodNutrients: List<UsdaFoodNutrient>?
+    }
+    class UsdaFoodNutrient <<record>> {
+      +NutrientName: string?
+      +UnitName: string?
+      +Value: double?
+    }
+  }
 
-    class OpenFoodFactsClient {
-      -httpClient: HttpClient
-      +SearchFood(query: String): List<FoodItem>
-      +GetFoodById(fdcId: String): FoodItem
+  package "Persistence.EFC.Configuration" {
+    class FoodEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<Food>): void
+    }
+    class NutritionLogEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<NutritionLog>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    class FoodRepository {
+      +FindByKeyAsync(key: string, ct): Task<Food?>
+      +SearchByNameAsync(query: string, lang: string, ct): Task<IEnumerable<Food>>
+      +FindByExternalIdAsync(externalId: string, ct): Task<Food?>
+    }
+    class NutritionLogRepository {
+      +FindByUserAndDateAsync(userId: int, date: DateOnly, ct): Task<IEnumerable<NutritionLog>>
+      +FindByUserAsync(userId: int, from: DateOnly?, to: DateOnly?, ct): Task<IEnumerable<NutritionLog>>
+      +GetDailyMacroSummaryAsync(userId: int, date: DateOnly, ct): Task<DailyMacroSummary>
+    }
+  }
+
+  package "Persistence.EFC.Seeders" {
+    class FoodSeeder {
+      +SeedAsync(): Task
+    }
+  }
+
+  package "Services" {
+    class DbFoodSearchService {
+      +SearchAsync(query: string, lang: string, ct): Task<IEnumerable<FoodSearchResult>>
+    }
+    class FoodRestrictionChecker {
+      +HasConflict(food: Food, userRestrictions: IEnumerable<string>): bool
     }
   }
 }
 
-NutritionLogRepositoryImpl ..|> INutritionLogRepository
-GoogleVisionClientImpl ..|> IGoogleVisionClient
+package "NutritionTracking.Domain" <<external>> {
+  class Food
+  class NutritionLog
+  class DailyMacroSummary
+  class RegisterFoodCommand
+  interface IFoodRepository
+  interface INutritionLogRepository
+  interface IDishVisionService
+  interface IMenuVisionService
+  interface IExternalFoodDataProvider
+  interface IFoodEnrichmentService
+  interface IFoodNutritionEstimationService
+  interface IFoodSearchService
+  interface IFoodRestrictionChecker
+}
+
+package "Shared / EF Core / Clients" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  class DeepSeekClient
+  class GeminiClient
+  class HttpClient
+  interface IConfiguration
+}
+
+' --- External AI / catalog adapters (ports → adapters) ---
+DeepSeekFoodEnrichmentService ..|> IFoodEnrichmentService
+DeepSeekFoodEstimationService ..|> IFoodNutritionEstimationService
+GeminiDishVisionService ..|> IDishVisionService
+GeminiMenuVisionService ..|> IMenuVisionService
+UsdaFoodDataProvider ..|> IExternalFoodDataProvider
+
+DeepSeekFoodEnrichmentService --> DeepSeekClient : calls
+DeepSeekFoodEstimationService --> DeepSeekClient : calls
+GeminiDishVisionService --> GeminiClient : calls
+GeminiMenuVisionService --> GeminiClient : calls
+UsdaFoodDataProvider --> HttpClient : calls
+UsdaFoodDataProvider --> IConfiguration : reads
+UsdaFoodDataProvider ..> UsdaSearchResponse : deserializes
+UsdaSearchResponse o--> "0..*" UsdaFoodItem : contains
+UsdaFoodItem o--> "0..*" UsdaFoodNutrient : contains
+
+' --- EF Core entity configurations ---
+FoodEntityTypeConfiguration ..|> IEntityTypeConfiguration
+NutritionLogEntityTypeConfiguration ..|> IEntityTypeConfiguration
+FoodEntityTypeConfiguration ..> Food : maps
+NutritionLogEntityTypeConfiguration ..> NutritionLog : maps
+
+' --- Repositories ---
+FoodRepository --|> BaseRepository
+NutritionLogRepository --|> BaseRepository
+FoodRepository ..|> IFoodRepository
+NutritionLogRepository ..|> INutritionLogRepository
+FoodRepository --> AppDbContext : queries
+NutritionLogRepository --> AppDbContext : queries
+FoodRepository ..> Food : persists
+NutritionLogRepository ..> NutritionLog : persists
+NutritionLogRepository ..> DailyMacroSummary : aggregates
+
+' --- Seeder ---
+FoodSeeder --> AppDbContext : writes
+FoodSeeder ..> Food : seeds
+FoodSeeder ..> RegisterFoodCommand : uses
+
+' --- Infrastructure domain-service implementations ---
+DbFoodSearchService ..|> IFoodSearchService
+DbFoodSearchService --> IFoodRepository : queries
+FoodRestrictionChecker ..|> IFoodRestrictionChecker
+FoodRestrictionChecker ..> Food : inspects
 
 @enduml

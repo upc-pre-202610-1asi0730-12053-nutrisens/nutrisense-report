@@ -1,42 +1,49 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 skinparam linetype ortho
 
 package "shared/infrastructure [stubs]" {
-  class BaseApi <<api>>
-  class BaseEndpoint <<api>>
+  class BaseApi <<api>> {
+    # http: HttpClient
+  }
+}
+
+package "body-health-metrics/domain/model [stubs]" {
+  class BodyMeasurement <<entity>>
+  class WeightLog <<entity>>
+  class UserGoal <<entity>>
 }
 
 package "body-health-metrics/infrastructure" {
 
   class BodyHealthMetricsApi <<api>> {
-    - bodyMeasurements: BaseEndpoint
-    - weightLogs: BaseEndpoint
-    - userGoals: BaseEndpoint
+    - base: string
     --
-    + getBodyMeasurements(): Promise
-    + getBodyMeasurement(id): Promise
-    + createBodyMeasurement(resource): Promise
-    + updateBodyMeasurement(id, resource): Promise
-    + getWeightLogs(): Promise
-    + createWeightLog(resource): Promise
-    + updateWeightLog(id, resource): Promise
-    + getUserGoals(): Promise
-    + createUserGoal(resource): Promise
-    + updateUserGoal(id, resource): Promise
+    + getBodyMetrics(userId): Promise
+    + registerBodyMetrics(resource): Promise
+    + registerBodyMeasurement(userId, resource): Promise
+    + updateWeight(userId, resource): Promise
+    + getWeightHistory(userId): Promise
+    + setHealthGoal(userId, resource): Promise
   }
 
   class BodyMeasurementAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): BodyMeasurement|null
-    + {static} toEntityFromResponse(response): BodyMeasurement|null
     + {static} toEntitiesFromResponse(response): BodyMeasurement[]
+    + {static} toEntityFromResponse(response): BodyMeasurement|null
   }
 
   class WeightLogAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): WeightLog|null
+    + {static} toEntityFromHistoryEntry(entry, userId): WeightLog|null
     + {static} toEntitiesFromResponse(response): WeightLog[]
+    + {static} toEntitiesFromHistoryResponse(response, userId): WeightLog[]
+  }
+
+  class BodyMetricsAssembler <<assembler>> {
+    + {static} toUserGoalFromResource(resource): UserGoal|null
   }
 
   class UserGoalAssembler <<assembler>> {
@@ -46,9 +53,9 @@ package "body-health-metrics/infrastructure" {
 }
 
 BodyHealthMetricsApi --|> BaseApi
-BaseApi *--> BaseEndpoint
-BodyMeasurementAssembler ..> BodyHealthMetricsApi : uses >
-WeightLogAssembler ..> BodyHealthMetricsApi : uses >
-UserGoalAssembler ..> BodyHealthMetricsApi : uses >
+BodyMeasurementAssembler ..> BodyMeasurement : creates >
+WeightLogAssembler ..> WeightLog : creates >
+BodyMetricsAssembler ..> UserGoal : creates >
+UserGoalAssembler ..> UserGoal : creates >
 
 @enduml

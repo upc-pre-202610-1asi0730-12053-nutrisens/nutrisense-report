@@ -1,22 +1,28 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 skinparam linetype ortho
 
-package "shared/infrastructure [stubs]" {
+package "analytics-reporting/domain/model [stub]" {
+  class StreakRecord <<entity>>
+}
+
+package "shared/infrastructure [stub]" {
   class BaseApi <<api>>
-  class BaseEndpoint <<api>>
+}
+
+package "external [stubs]" {
+  class jsPDF <<library>>
+  class autoTable <<library>>
 }
 
 package "analytics-reporting/infrastructure" {
 
   class AnalyticsReportingApi <<api>> {
-    - streaks: BaseEndpoint
-    --
     + getStreak(userId): Promise
-    + createStreak(resource): Promise
-    + updateStreak(id, resource): Promise
+    + getDashboard(userId, date): Promise
+    + getProgress(userId, from, to): Promise
   }
 
   class StreakRecordAssembler <<assembler>> {
@@ -24,10 +30,15 @@ package "analytics-reporting/infrastructure" {
     + {static} toEntitiesFromResponse(response): StreakRecord[]
     + {static} toEntityFromResponse(response): StreakRecord|null
   }
+
+  class PdfExportService <<service>> {
+    + generateAnalyticsPdf(params): void
+  }
 }
 
 AnalyticsReportingApi --|> BaseApi
-BaseApi *--> BaseEndpoint
-StreakRecordAssembler ..> AnalyticsReportingApi : uses >
+StreakRecordAssembler ..> StreakRecord : creates >
+PdfExportService ..> jsPDF : uses >
+PdfExportService ..> autoTable : uses >
 
 @enduml

@@ -2,49 +2,218 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.IAM" {
+package "NutriSense.IAM.Domain" {
 
-  package "Domain" {
+  package "Model.Aggregates" {
+    ' User is a partial class: User.cs + UserAudit.cs (IAuditableEntity).
     class User {
-      +Id: Guid
-      +FirstName: String
-      +LastName: String
-      -credentials: Credentials
-      -role: UserRole
-      +GetFullName(): String
-      +IsAdmin(): Boolean
-      +UpdateProfile(firstName: String, lastName: String): void
+      +Id: UserId
+      +Email: Email
+      +PasswordHash: string
+      +Name: PersonName
+      +DateOfBirth: DateOfBirth?
+      +BiologicalSex: BiologicalSex?
+      +Height: Height?
+      +ActivityLevel: ActivityLevel?
+      +PreferredUnits: PreferredUnits
+      +PreferredLanguage: PreferredLanguage
+      +GoalIntent: GoalIntent?
+      +MedicalConditions: List<string>
+      +Sessions: List<UserSession>
+      +DietaryRestrictions: List<DietaryRestriction>
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
+      #User()
+      +User(command: RegisterUserCommand, passwordHash: string)
+      +Apply(command: UpdateProfileCommand): void
+      +Apply(command: SetHealthGoalCommand): void
+      +Apply(command: SetDietaryRestrictionsCommand): void
+      +AddSession(deviceLabel: string?): UserSession
+      +EndSession(sessionId: int): void
     }
+  }
 
-    class Credentials {
-      +Email: String
-      -PasswordHash: String
-      +ValidatePassword(raw: String): Boolean
+  package "Model.Entities" {
+    class UserSession {
+      +Id: int
+      +UserId: UserId
+      +DeviceLabel: string
+      +IsCurrent: bool
+      +CreatedAt: DateTimeOffset
+      +LastActiveAt: DateTimeOffset
+      #UserSession()
+      +UserSession(userId: UserId, deviceLabel: string)
+      +End(): void
     }
-
-    enum UserRole {
-      USER
-      ADMIN
+    class DietaryRestriction {
+      +Id: int
+      +UserId: UserId
+      +Restriction: string
+      #DietaryRestriction()
+      +DietaryRestriction(userId: UserId, restriction: string)
     }
+  }
 
-    class UserRegisteredEvent {
-      +UserId: Guid
-      +Email: String
-      +OccurredOn: DateTime
+  package "Model.ValueObjects" {
+    class UserId <<record>> {
+      +Value: int
+      +UserId(value: int)
+      +{static} FromRaw(value: int): UserId
     }
+    class Email <<record>> {
+      +Value: string
+      +Email(value: string)
+    }
+    class Password <<record>> {
+      +Value: string
+      +Password(value: string)
+    }
+    class PersonName <<record>> {
+      +FirstName: string
+      +LastName: string
+      +FullName: string
+      +PersonName(firstName: string, lastName: string)
+    }
+    class DateOfBirth <<record>> {
+      +Value: DateOnly
+      +DateOfBirth(value: DateOnly)
+    }
+    class Height <<record>> {
+      +Centimeters: decimal
+      +Height(centimeters: decimal)
+    }
+    class BiologicalSex <<record>> {
+      +{static} Allowed: HashSet<string>
+      +Value: string
+      +BiologicalSex(value: string)
+    }
+    class ActivityLevel <<record>> {
+      +{static} Allowed: HashSet<string>
+      +Value: string
+      +ActivityLevel(value: string)
+    }
+    class GoalIntent <<record>> {
+      +{static} Allowed: HashSet<string>
+      +Value: string
+      +GoalIntent(value: string)
+    }
+    class PreferredLanguage <<record>> {
+      +{static} Allowed: HashSet<string>
+      +Value: string
+      +PreferredLanguage(value: string)
+    }
+    class PreferredUnits <<record>> {
+      +Value: string
+      +PreferredUnits(value: string)
+    }
+  }
 
+  package "Model.Commands" {
+    class RegisterUserCommand <<record>>
+    class LoginUserCommand <<record>>
+    class LogoutUserCommand <<record>>
+    class UpdateProfileCommand <<record>>
+    class SetHealthGoalCommand <<record>>
+    class SetDietaryRestrictionsCommand <<record>>
+    class DeleteUserCommand <<record>>
+  }
+
+  package "Model.Queries" {
+    class GetUserByIdQuery <<record>>
+    class GetUserByEmailQuery <<record>>
+    class GetAllSessionsByUserIdQuery <<record>>
+    class GetDietaryRestrictionsByUserIdQuery <<record>>
+  }
+
+  package "Model.Events" {
+    class UserRegistered <<record>>
+    class UserLoggedIn <<record>>
+    class UserLoggedOut <<record>>
+    class UserDeleted <<record>>
+    class ProfileUpdated <<record>>
+    class GoalDefined <<record>>
+    class RestrictionsConfigured <<record>>
+  }
+
+  package "Repositories" {
     interface IUserRepository {
-      +FindById(id: Guid): User
-      +FindByEmail(email: String): User
-      +Save(user: User): void
-      +Update(user: User): void
+      +FindByEmailAsync(email: Email, ct): Task<User?>
+      +ExistsByEmailAsync(email: Email, ct): Task<bool>
+    }
+  }
+
+  package "Services" {
+    interface IHashingService {
+      +Hash(plain: string): string
+      +Verify(plain: string, hash: string): bool
+    }
+    interface ITokenService {
+      +Generate(user: User, sessionId: int): string
+      +ValidateAndGetUserId(token: string): int?
     }
   }
 }
 
-User *--> Credentials : has "1"
-User --> UserRole : has "1"
-User --> UserRegisteredEvent : fires "0..*"
+package "Shared.Domain" <<external>> {
+  interface IAuditableEntity
+  interface "IBaseRepository<T>" as IBaseRepository
+  abstract DomainEventBase
+}
+
+' --- Aggregate composition & invariants ---
+User ..|> IAuditableEntity
+User *--> UserId : identified by
+User *--> Email
+User *--> PersonName
+User *--> PreferredUnits
+User *--> PreferredLanguage
+User o--> DateOfBirth
+User o--> BiologicalSex
+User o--> Height
+User o--> ActivityLevel
+User o--> GoalIntent
+User o--> "0..*" UserSession : owns
+User o--> "0..*" DietaryRestriction : owns
+User ..> Password : credential validated by
+
+' --- Child entities reference the owner identity ---
+UserSession *--> UserId
+DietaryRestriction *--> UserId
+
+' --- Repository ---
+IUserRepository --|> IBaseRepository
+IUserRepository ..> User : manages
+IUserRepository ..> Email : looks up by
+
+' --- Domain services ---
+IHashingService ..> Password : hashes
+ITokenService ..> User : issues token for
+
+' --- Commands build / mutate the aggregate ---
+User ..> RegisterUserCommand : built from
+User ..> UpdateProfileCommand : applies
+User ..> SetHealthGoalCommand : applies
+User ..> SetDietaryRestrictionsCommand : applies
+LoginUserCommand ..> User : authenticates
+LogoutUserCommand ..> UserSession : ends
+DeleteUserCommand ..> User : removes
+
+' --- Queries target their read models ---
+GetUserByIdQuery ..> User : queries
+GetUserByEmailQuery ..> User : queries
+GetAllSessionsByUserIdQuery ..> UserSession : queries
+GetDietaryRestrictionsByUserIdQuery ..> DietaryRestriction : queries
+
+' --- Integration events ---
+UserRegistered --|> DomainEventBase
+UserLoggedIn --|> DomainEventBase
+UserLoggedOut --|> DomainEventBase
+UserDeleted --|> DomainEventBase
+ProfileUpdated --|> DomainEventBase
+GoalDefined --|> DomainEventBase
+RestrictionsConfigured --|> DomainEventBase
 
 @enduml

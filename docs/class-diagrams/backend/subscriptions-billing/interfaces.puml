@@ -1,0 +1,172 @@
+@startuml NutriSense - Subscriptions - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "Nutrisense.Platform.Subscriptions" {
+
+  package "Application [stubs]" {
+    interface IUserSubscriptionCommandService
+    interface IPaymentMethodCommandService
+    interface IUserSubscriptionQueryService
+    interface ISubscriptionPlanQueryService
+    interface IPaymentMethodQueryService
+  }
+
+  package "Domain [stubs]" {
+    class UserSubscription
+    class SubscriptionPlan
+    class PaymentMethod
+    class PaymentRecord
+  }
+
+  package "Interfaces" {
+
+    package "REST" {
+      class UserSubscriptionsController {
+        +SelectPlan(resource: SelectSubscriptionPlanResource): Task<IActionResult>
+        +GetByUser(userId: int): Task<IActionResult>
+        +Cancel(id: int, resource: CancelSubscriptionResource): Task<IActionResult>
+        +Renew(id: int): Task<IActionResult>
+        +ChangePlan(id: int, resource: ChangeSubscriptionPlanResource): Task<IActionResult>
+      }
+      class PaymentMethodsController {
+        +Register(resource: RegisterPaymentMethodResource): Task<IActionResult>
+        +GetByUser(userId: int): Task<IActionResult>
+        +Remove(id: int): Task<IActionResult>
+      }
+      class PaymentsController {
+        +GetBySubscription(subscriptionId: int): Task<IActionResult>
+      }
+      class SubscriptionPlansController {
+        +GetAll(): Task<IActionResult>
+        +GetByKey(key: string): Task<IActionResult>
+      }
+    }
+
+    package "REST.Resources" {
+      class SelectSubscriptionPlanResource <<record>> {
+        +UserId: int
+        +PlanKey: string
+        +PaymentMethodId: int
+        +BillingPeriod: string
+      }
+      class ChangeSubscriptionPlanResource <<record>> {
+        +NewPlanKey: string
+        +BillingPeriod: string
+        +PaymentMethodId: int?
+      }
+      class CancelSubscriptionResource <<record>> {
+        +CancelAtPeriodEnd: bool
+      }
+      class RegisterPaymentMethodResource <<record>> {
+        +UserId: int
+        +LastFour: string
+        +Brand: string
+        +ExpiryMonth: int
+        +ExpiryYear: int
+        +CardholderName: string
+        +StripePaymentMethodId: string
+      }
+      class UserSubscriptionResource <<record>> {
+        +Id: int
+        +UserId: int
+        +PlanId: int
+        +PlanKey: string
+        +Status: string
+        +BillingPeriod: string
+        +PeriodStart: DateTimeOffset
+        +PeriodEnd: DateTimeOffset
+        +CancelAtPeriodEnd: bool
+        +StripeSubscriptionId: string?
+        +LastPlanChangeAt: DateTimeOffset?
+        +PaymentMethodId: int?
+      }
+      class SubscriptionPlanResource <<record>> {
+        +Id: int
+        +Key: string
+        +PriceMonthly: decimal
+        +PriceAnnual: decimal?
+        +Features: List<string>
+        +Currency: string
+      }
+      class PaymentMethodResource <<record>> {
+        +Id: int
+        +UserId: int
+        +LastFour: string
+        +Brand: string
+        +ExpiryMonth: int
+        +ExpiryYear: int
+        +CardholderName: string
+        +CreatedAt: DateTimeOffset?
+      }
+      class PaymentRecordResource <<record>> {
+        +Id: int
+        +UserSubscriptionId: int
+        +Amount: decimal
+        +Currency: string
+        +Status: string
+        +ProcessedAt: DateTimeOffset
+        +StripePaymentIntentId: string?
+      }
+    }
+
+    package "REST.Transform" {
+      class UserSubscriptionResourceAssembler {
+        +{static} ToResource(s: UserSubscription): UserSubscriptionResource
+      }
+      class SubscriptionPlanResourceAssembler {
+        +{static} ToResource(p: SubscriptionPlan): SubscriptionPlanResource
+      }
+      class PaymentMethodResourceAssembler {
+        +{static} ToResource(m: PaymentMethod): PaymentMethodResource
+      }
+      class PaymentRecordResourceAssembler {
+        +{static} ToResource(r: PaymentRecord): PaymentRecordResource
+      }
+    }
+
+    package "Acl" {
+      interface ISubscriptionsContextFacade {
+        +GetPlanKey(userId: int): Task<string>
+        +IsProOrAbove(userId: int): Task<bool>
+        +IsPremium(userId: int): Task<bool>
+      }
+    }
+  }
+}
+
+' --- Controllers -> application services (interfaces -> application) ---
+UserSubscriptionsController ..> IUserSubscriptionCommandService : invokes
+UserSubscriptionsController ..> IUserSubscriptionQueryService : queries
+PaymentMethodsController ..> IPaymentMethodCommandService : invokes
+PaymentMethodsController ..> IPaymentMethodQueryService : queries
+PaymentsController ..> IUserSubscriptionQueryService : queries
+SubscriptionPlansController ..> ISubscriptionPlanQueryService : queries
+
+' --- Controllers -> request resources ---
+UserSubscriptionsController ..> SelectSubscriptionPlanResource : consumes
+UserSubscriptionsController ..> CancelSubscriptionResource : consumes
+UserSubscriptionsController ..> ChangeSubscriptionPlanResource : consumes
+PaymentMethodsController ..> RegisterPaymentMethodResource : consumes
+
+' --- Controllers -> assemblers ---
+UserSubscriptionsController ..> UserSubscriptionResourceAssembler : uses
+PaymentMethodsController ..> PaymentMethodResourceAssembler : uses
+PaymentsController ..> PaymentRecordResourceAssembler : uses
+SubscriptionPlansController ..> SubscriptionPlanResourceAssembler : uses
+
+' --- Assemblers map domain -> response resources ---
+UserSubscriptionResourceAssembler ..> UserSubscription : maps
+UserSubscriptionResourceAssembler ..> UserSubscriptionResource : produces
+SubscriptionPlanResourceAssembler ..> SubscriptionPlan : maps
+SubscriptionPlanResourceAssembler ..> SubscriptionPlanResource : produces
+PaymentMethodResourceAssembler ..> PaymentMethod : maps
+PaymentMethodResourceAssembler ..> PaymentMethodResource : produces
+PaymentRecordResourceAssembler ..> PaymentRecord : maps
+PaymentRecordResourceAssembler ..> PaymentRecordResource : produces
+
+' --- ACL contract exposed to other bounded contexts ---
+ISubscriptionsContextFacade ..> IUserSubscriptionQueryService : exposes
+
+@enduml

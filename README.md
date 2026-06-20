@@ -1,33 +1,57 @@
+<div align="center">
+
 ![Logo UPC](assets/img/logoUPC.png)
 
-# UNIVERSIDAD PERUANA DE CIENCIAS APLICADAS
+# Universidad Peruana de Ciencias Aplicadas
 
-***Ingeniería de Software***
+## Carrera de Ingeniería de Software
 
-**Curso:** 1ASI0730 | Aplicaciones Web  
-**NRC:** 12053  
-**Ciclo:** 5  
-**Docente:** Efraín Ricardo Bautista Ubillús
+### 1ASI0730
 
-## **"Informe de trabajo: TB1"**
+### Aplicaciones Web
 
-### ***Startup:*** NutriSense
+**NRC**
 
-### ***Producto:*** NutriSense
+12053
 
-![Logo NutriSense](assets/img/nutrisense-logo.png)
+**Informe de Trabajo: AV2**
 
-***Relación de integrantes:***
+**Docente**
 
-| INTEGRANTES | CÓDIGO |
-| :---: | :---: |
-| Del Aguila Del Aguila, Olenka Priscilla | U202411669 |
-| Espinoza Cruz, Angela Milagros | U202415495 |
-| Mora Rivera, Joel Fernando | U20241B227 |
-| Vergraray Calderon, Rose Almendra | U20241D159 |
-| Villarreal Bazan, Angel Martin | U202417857 |
+Bautista Ubillús, Efrain Ricardo
 
-Mayo, 2026
+**Startup**
+
+NutriSense
+
+**Producto**
+
+NutriSense
+
+**Integrantes**
+
+<table align="center">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Apellidos y Nombres</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>U202411669</td><td>Del Aguila Del Aguila, Olenka Priscilla</td></tr>
+    <tr><td>U202415495</td><td>Espinoza Cruz, Angela Milagros</td></tr>
+    <tr><td>U20241B227</td><td>Mora Rivera, Joel Fernando</td></tr>
+    <tr><td>U20241D159</td><td>Vergraray Calderon, Rose Almendra</td></tr>
+    <tr><td>U202417857</td><td>Villarreal Bazan, Angel Martin</td></tr>
+  </tbody>
+</table>
+
+
+**Período 202610**
+
+Junio, 2026
+
+</div>
 
 <div style="page-break-after: always"></div>
 
@@ -62,6 +86,8 @@ Repositorio del informe del proyecto en GitHub: [nutrisense-report](https://gith
 
 Repositorio del WebApp del proyecto en GitHub: [nutrisense-webapp](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp)
 
+Repositorio del Platform del proyecto en GitHub: [nutrisense-platform](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform)
+
 Durante el desarrollo del presente Sprint, la elaboración del informe fue llevada a cabo de forma colaborativa por todos los integrantes del equipo. El trabajo se organizó distribuyendo las secciones y capítulos del informe entre los miembros, quienes realizaron sus aportes mediante commits en subramas hacia la rama develop del repositorio. Esto permitió mantener un historial claro de los cambios y garantizar la trazabilidad de cada contribución.
 
 AV1:<br>
@@ -69,6 +95,9 @@ AV1:<br>
 
 TB1:<br>
 ![Report](./assets/img/readme/insightsTB1.png)
+
+AV2:<br>
+![Report](./assets/img/readme/insightsAV2.png)
 
 <div style="page-break-after: always"></div>
 
@@ -247,6 +276,24 @@ TB1:<br>
       - [5.2.2.7. Software Deployment Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5227-software-deployment-evidence-for-sprint-review)
 
       - [5.2.2.8. Team Collaboration Insights during Sprint](./report/15-chapter5-product-implementation.md#5228-team-collaboration-insights-during-sprint)
+
+  - [5.2.3. Sprint 3](./report/15-chapter5-product-implementation.md#523-sprint-3)
+
+      - [5.2.3.1. Sprint Planning 3](./report/15-chapter5-product-implementation.md#5231-sprint-planning-3)
+
+      - [5.2.3.2. Aspect Leaders and Collaborators](./report/15-chapter5-product-implementation.md#5232-aspect-leaders-and-collaborators)
+
+      - [5.2.3.3. Sprint Backlog 3](./report/15-chapter5-product-implementation.md#5233-sprint-backlog-3)
+
+      - [5.2.3.4. Development Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5234-development-evidence-for-sprint-review)
+
+      - [5.2.3.5. Execution Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5235-execution-evidence-for-sprint-review)
+
+      - [5.2.3.6. Services Documentation Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5236-services-documentation-evidence-for-sprint-review)
+
+      - [5.2.3.7. Software Deployment Evidence for Sprint Review](./report/15-chapter5-product-implementation.md#5237-software-deployment-evidence-for-sprint-review)
+
+      - [5.2.3.8. Team Collaboration Insights during Sprint](./report/15-chapter5-product-implementation.md#5238-team-collaboration-insights-during-sprint)
 
 - [5.3. Validation Interviews](./report/15-chapter5-product-implementation.md#53-validation-interviews)
 

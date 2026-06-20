@@ -1,26 +1,29 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 skinparam linetype ortho
 
 package "shared/infrastructure [stubs]" {
-  class BaseApi <<api>>
-  class BaseEndpoint <<api>>
+  class BaseApi <<api>> {
+    + http: AxiosInstance
+  }
+}
+
+package "activity-wearable/domain/model [stubs]" {
+  class ActivityLog <<entity>>
+  class WearableConnection <<entity>>
 }
 
 package "activity-wearable/infrastructure" {
 
   class ActivityWearableApi <<api>> {
-    - activityLogs: BaseEndpoint
-    - wearableConnections: BaseEndpoint
-    --
-    + getLogs(): Promise
+    + getLogsByUser(userId, from?, to?): Promise
     + createLog(resource): Promise
-    + deleteLog(id): Promise
-    + getConnections(): Promise
+    + deleteLog(id, userId): Promise
+    + getConnectionsByUser(userId): Promise
     + createConnection(resource): Promise
-    + updateConnection(id, resource): Promise
+    + deleteConnection(id): Promise
   }
 
   class ActivityLogAssembler <<assembler>> {
@@ -30,14 +33,14 @@ package "activity-wearable/infrastructure" {
   }
 
   class WearableConnectionAssembler <<assembler>> {
+    + {static} toResource(userId, provider, oauthCode): Object
     + {static} toEntityFromResource(resource): WearableConnection|null
     + {static} toEntitiesFromResponse(response): WearableConnection[]
   }
 }
 
 ActivityWearableApi --|> BaseApi
-BaseApi *--> BaseEndpoint
-ActivityLogAssembler ..> ActivityWearableApi : uses >
-WearableConnectionAssembler ..> ActivityWearableApi : uses >
+ActivityLogAssembler ..> ActivityLog : builds >
+WearableConnectionAssembler ..> WearableConnection : builds >
 
 @enduml

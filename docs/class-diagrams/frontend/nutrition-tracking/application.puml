@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -15,6 +15,11 @@ package "nutrition-tracking/domain/services [stubs]" {
   class StreakCriteriaService <<domain service>>
 }
 
+package "shared/domain [stubs]" {
+  class Macros <<value object>>
+  class EventBus <<infrastructure>>
+}
+
 package "nutrition-tracking/application" {
 
   class useNutritionTrackingStore <<store>> {
@@ -23,7 +28,6 @@ package "nutrition-tracking/application" {
     + foods: Food[]
     + selectedDate: Date
     + logsLoaded: boolean
-    + foodsLoaded: boolean
     + scanDishLoading: boolean
     + scanMenuLoading: boolean
     + dishScanResult: Object|null
@@ -39,22 +43,22 @@ package "nutrition-tracking/application" {
     + recentFoodIds: string[]
     + isViewingToday: boolean
     -- actions --
+    + setGoals(cal, prot): void
     + fetchLogs(userId): void
-    + fetchFoods(): void
+    + searchFoods(query, language): Promise<Food[]>
     + addToLog(userId, foodId, grams, mealType, source): void
     + addEstimatedToLog(userId, foodId, name, macros, mealType, source): void
     + addRecipeToLog(userId, recipe, servings, mealType): void
     + updateLogQuantity(logId, newGrams): void
-    + removeFromLog(logId): void
-    + simulateDishScan(imageName): void
-    + simulateMenuScan(imageName, restrictions, conditions): void
+    + removeFromLog(logId): Promise
+    + scanDish(userId, imageName, imageBase64): Promise
+    + scanMenu(userId, imageName, imageBase64, restrictions, conditions): Promise
     + resetDishScan(): void
     + resetMenuScan(): void
     + setSelectedDate(date): void
     + navigateDay(offset, minDate?): void
     + getLogsForDateRange(start, end): NutritionLog[]
     + evaluateStreakMet(calorieGoal, proteinGoal): boolean
-    + setGoals(cal, prot): void
     + clearErrors(): void
   }
 }
@@ -62,7 +66,9 @@ package "nutrition-tracking/application" {
 useNutritionTrackingStore --> NutritionTrackingApi : uses >
 useNutritionTrackingStore --> NutritionLogAssembler : uses >
 useNutritionTrackingStore --> FoodAssembler : uses >
-useNutritionTrackingStore --> FoodRestrictionService : uses >
-useNutritionTrackingStore --> StreakCriteriaService : uses >
+useNutritionTrackingStore ..> FoodRestrictionService : conflictingFlags >
+useNutritionTrackingStore ..> StreakCriteriaService : isStreakDayMet >
+useNutritionTrackingStore ..> Macros : aggregates >
+useNutritionTrackingStore ..> EventBus : emits/on >
 
 @enduml

@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -9,6 +9,11 @@ package "subscriptions-billing/infrastructure [stubs]" {
   class UserSubscriptionAssembler <<assembler>>
   class SubscriptionPlanAssembler <<assembler>>
   class PaymentRecordAssembler <<assembler>>
+  class PaymentMethodAssembler <<assembler>>
+}
+
+package "subscriptions-billing/domain [stubs]" {
+  class PlanTier <<value object>>
 }
 
 package "subscriptions-billing/application" {
@@ -19,9 +24,14 @@ package "subscriptions-billing/application" {
     + plans: SubscriptionPlan[]
     + paymentHistory: PaymentRecord[]
     + subscriptionLoaded: boolean
+    + loadedForUserId: string|null
     + plansLoaded: boolean
     + paymentHistoryLoaded: boolean
     + changingPlanId: string|null
+    + paymentProcessing: boolean
+    + lastPaymentMethod: PaymentMethod|null
+    + paymentMethod: PaymentMethod|null
+    + paymentMethodLoaded: boolean
     + errors: Error[]
     -- computed --
     + currentPlan: SubscriptionPlan|null
@@ -31,16 +41,21 @@ package "subscriptions-billing/application" {
     + daysUntilRenewal: number|null
     + renewalDateLabel: string
     -- actions --
-    + fetchSubscription(userId): void
-    + checkSubscription(userId): Promise<boolean>
-    + fetchPlans(): void
-    + fetchPaymentHistory(userId): void
-    + selectInitialPlan(userId, planId): Promise
-    + changePlan(planId, billingPeriod): Promise
-    + cancelSubscription(): void
-    + reactivateSubscription(): void
     + hasAccess(featureName): boolean
+    + checkSubscription(userId): Promise<boolean>
+    + fetchSubscription(userId): void
+    + fetchPaymentMethod(userId): void
+    + fetchPlans(): void
+    + fetchPaymentHistory(): void
+    + selectInitialPlan(userId, planKey, paymentMethodId, billingPeriod?): Promise
+    + processPayment(userId, planKey, stripePaymentMethodId, cardMeta, billingPeriod?): Promise
+    + changePlan(newPlanKey, billingPeriod): Promise
+    + updatePaymentMethod(userId, stripePaymentMethodId, cardMeta): Promise
+    + deletePaymentMethod(id): Promise
+    + cancelSubscription(): Promise
+    + reactivateSubscription(): Promise
     + clearErrors(): void
+    + reset(): void
   }
 }
 
@@ -48,5 +63,7 @@ useSubscriptionsBillingStore --> SubscriptionsBillingApi : uses >
 useSubscriptionsBillingStore --> UserSubscriptionAssembler : uses >
 useSubscriptionsBillingStore --> SubscriptionPlanAssembler : uses >
 useSubscriptionsBillingStore --> PaymentRecordAssembler : uses >
+useSubscriptionsBillingStore --> PaymentMethodAssembler : uses >
+useSubscriptionsBillingStore --> PlanTier : derives tier >
 
 @enduml

@@ -1,0 +1,162 @@
+@startuml NutriSense - Body & Health Metrics - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "Nutrisense.BodyHealthMetrics.Interfaces" {
+
+  package "REST" {
+    class BodyMetricsController {
+      -commandService: IBodyMetricsCommandService
+      -queryService: IBodyMetricsQueryService
+      +Register(resource: RegisterBodyMetricsResource): Task<IActionResult>
+      +GetByUserId(userId: int): Task<IActionResult>
+      +UpdateWeight(userId: int, resource: UpdateWeightResource): Task<IActionResult>
+      +RegisterBodyMeasurement(userId: int, resource: RegisterBodyMeasurementResource): Task<IActionResult>
+      +SetHealthGoal(userId: int, resource: SetHealthGoalResource): Task<IActionResult>
+      +GetBmi(userId: int): Task<IActionResult>
+      +GetDailyCaloricGoal(userId: int): Task<IActionResult>
+      +GetWeightHistory(userId: int, from, to): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class RegisterBodyMetricsResource <<record>> {
+      +UserId: int
+      +HeightCm: decimal
+      +WeightKg: decimal
+      +DateOfBirth: string
+      +BiologicalSex: string
+      +ActivityLevel: string
+      +Goal: string?
+      +WeeklyRateKg: decimal?
+    }
+    class UpdateWeightResource <<record>> {
+      +WeightKg: decimal
+      +Note: string?
+    }
+    class RegisterBodyMeasurementResource <<record>> {
+      +WaistCm: decimal
+      +NeckCm: decimal
+    }
+    class SetHealthGoalResource <<record>> {
+      +Goal: string
+      +TargetWeightKg: decimal
+      +WeeklyRateKg: decimal
+    }
+    class BodyMetricsResource <<record>> {
+      +UserId: int
+      +HeightCm: decimal
+      +CurrentWeightKg: decimal?
+      +BmiValue: decimal?
+      +BmiCategory: string?
+      +Bmr: decimal?
+      +Tdee: decimal?
+      +ActiveGoal: string?
+      +DailyCalories: int?
+      +ProteinG: decimal?
+      +CarbsG: decimal?
+      +FatG: decimal?
+      +FiberG: decimal?
+    }
+    class BmiResource <<record>> {
+      +Value: decimal
+      +Category: string
+    }
+    class DailyCaloricGoalResource <<record>> {
+      +DailyCalories: int
+      +ProteinG: decimal
+      +CarbsG: decimal
+      +FatG: decimal
+      +FiberG: decimal
+    }
+    class WeightLogResource <<record>> {
+      +WeightKg: decimal
+      +LoggedAt: DateTimeOffset
+      +Note: string?
+    }
+  }
+
+  package "REST.Transform" {
+    class BodyMetricsResourceAssembler {
+      +{static} ToResource(b: BodyMetrics): BodyMetricsResource
+    }
+    class WeightLogResourceAssembler {
+      +{static} ToResource(log: WeightLog): WeightLogResource
+    }
+    class RegisterBodyMetricsCommandAssembler {
+      +{static} ToCommand(resource: RegisterBodyMetricsResource): RegisterBodyMetricsCommand
+    }
+    class RegisterBodyMeasurementCommandAssembler {
+      +{static} ToCommand(userId: int, resource: RegisterBodyMeasurementResource): RegisterBodyMeasurementCommand
+    }
+    class SetHealthGoalCommandAssembler {
+      +{static} ToCommand(userId: int, resource: SetHealthGoalResource): SetHealthGoalCommand
+    }
+    class UpdateWeightCommandAssembler {
+      +{static} ToCommand(userId: int, resource: UpdateWeightResource): UpdateWeightCommand
+    }
+  }
+
+  package "Acl" {
+    interface IBodyHealthMetricsContextFacade {
+      +GetActiveGoalByUserId(userId: int, ct): Task<UserGoalSummaryItem?>
+    }
+    class UserGoalSummaryItem <<record>> {
+      +GoalType: string
+      +DailyCalorieTarget: int
+      +ProteinTargetG: decimal
+      +CarbsTargetG: decimal
+      +FatTargetG: decimal
+    }
+  }
+}
+
+package "Application [stubs]" {
+  interface IBodyMetricsCommandService
+  interface IBodyMetricsQueryService
+}
+
+package "Domain [stubs]" {
+  class BodyMetrics
+  class WeightLog
+  class RegisterBodyMetricsCommand
+  class RegisterBodyMeasurementCommand
+  class SetHealthGoalCommand
+  class UpdateWeightCommand
+}
+
+' --- Controller wiring ---
+BodyMetricsController --> IBodyMetricsCommandService
+BodyMetricsController --> IBodyMetricsQueryService
+BodyMetricsController ..> RegisterBodyMetricsResource
+BodyMetricsController ..> UpdateWeightResource
+BodyMetricsController ..> RegisterBodyMeasurementResource
+BodyMetricsController ..> SetHealthGoalResource
+BodyMetricsController ..> BmiResource
+BodyMetricsController ..> DailyCaloricGoalResource
+BodyMetricsController ..> RegisterBodyMetricsCommandAssembler
+BodyMetricsController ..> RegisterBodyMeasurementCommandAssembler
+BodyMetricsController ..> SetHealthGoalCommandAssembler
+BodyMetricsController ..> UpdateWeightCommandAssembler
+BodyMetricsController ..> BodyMetricsResourceAssembler
+BodyMetricsController ..> WeightLogResourceAssembler
+
+' --- Assemblers map resources <-> domain ---
+BodyMetricsResourceAssembler ..> BodyMetrics
+BodyMetricsResourceAssembler ..> BodyMetricsResource
+WeightLogResourceAssembler ..> WeightLog
+WeightLogResourceAssembler ..> WeightLogResource
+RegisterBodyMetricsCommandAssembler ..> RegisterBodyMetricsResource
+RegisterBodyMetricsCommandAssembler ..> RegisterBodyMetricsCommand
+RegisterBodyMeasurementCommandAssembler ..> RegisterBodyMeasurementResource
+RegisterBodyMeasurementCommandAssembler ..> RegisterBodyMeasurementCommand
+SetHealthGoalCommandAssembler ..> SetHealthGoalResource
+SetHealthGoalCommandAssembler ..> SetHealthGoalCommand
+UpdateWeightCommandAssembler ..> UpdateWeightResource
+UpdateWeightCommandAssembler ..> UpdateWeightCommand
+
+' --- ACL contract ---
+IBodyHealthMetricsContextFacade ..> UserGoalSummaryItem
+
+@enduml
