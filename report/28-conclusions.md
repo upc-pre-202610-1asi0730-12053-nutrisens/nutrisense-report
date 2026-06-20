@@ -85,6 +85,22 @@ Esta sección presenta el Video About-the-Team, donde el equipo de NutriSense co
 
 ---
 
+### Pauta de Secuencias de Contenido
+
+| Sección | Inicio (hh:mm:ss) |
+|---|---|
+| Introducción | 00:00:00 |
+| Contexto del proyecto | 00:00:58 |
+| Proceso de trabajo | 00:01:58 |
+| Testimonio – Joel Mora | 00:04:49 |
+| Testimonio – Olenka Del Aguila | 00:05:44 |
+| Testimonio – Ángel Villarreal | 00:06:52 |
+| Testimonio – Rose Vergaray | 00:07:47 |
+| Testimonio – Ángela Espinoza | 00:08:49 |
+| Cierre | 00:09:34 |
+
+---
+
 ### Resumen del Video
 
 El video inicia con una reflexión sobre el origen del proyecto: la idea de ayudar a las personas a entender mejor su alimentación y su salud. El equipo explica cómo desde el primer sprint se trabajó de forma intencional, distribuyendo el liderazgo de manera que cada integrante tuviera un área de responsabilidad clara, convirtiéndose en referente de su dominio.
