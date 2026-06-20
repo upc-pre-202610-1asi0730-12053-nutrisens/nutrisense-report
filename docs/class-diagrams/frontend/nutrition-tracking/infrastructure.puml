@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -9,38 +9,48 @@ package "shared/infrastructure [stubs]" {
   class BaseEndpoint <<api>>
 }
 
+package "nutrition-tracking/domain/model [stubs]" {
+  class Food <<entity>>
+  class NutritionLog <<entity>>
+}
+
 package "nutrition-tracking/infrastructure" {
 
   class NutritionTrackingApi <<api>> {
     - nutritionLogs: BaseEndpoint
     - foods: BaseEndpoint
     --
-    + getLogs(): Promise
+    + getLogsByUserAndDate(userId, date): Promise
     + getLogById(id): Promise
     + createLog(resource): Promise
     + updateLog(id, resource): Promise
     + deleteLog(id): Promise
-    + getFoods(): Promise
+    + searchFoods(query, language): Promise
     + getFoodById(id): Promise
+    + scanDish(userId, imageBase64): Promise
+    + scanMenu(userId, imageBase64): Promise
   }
 
   class NutritionLogAssembler <<assembler>> {
-    + {static} toResource(userId, food, grams, mealType, source, date): Object
+    + {static} toResource(userId, foodId, grams, mealType, source, date): Object
     + {static} toResourceFromEstimate(userId, foodId, name, macros, mealType, source, date): Object
     + {static} toResourceFromRecipe(userId, recipe, servings, mealType, date): Object
-    + {static} toEntityFromResponse(response): NutritionLog|null
+    + {static} toEntityFromResource(resource): NutritionLog|null
     + {static} toEntitiesFromResponse(response): NutritionLog[]
+    + {static} toEntityFromResponse(response): NutritionLog|null
   }
 
   class FoodAssembler <<assembler>> {
-    + {static} toEntityFromResource(resource): Food|null
-    + {static} toEntitiesFromResponse(response): Food[]
+    + {static} resolveName(resource, locale): string
+    + {static} toEntityFromResource(resource, locale): Food|null
+    + {static} toEntitiesFromResponse(response, locale): Food[]
+    + {static} toEntityFromResponse(response, locale): Food|null
   }
 }
 
 NutritionTrackingApi --|> BaseApi
-BaseApi *--> BaseEndpoint
-NutritionLogAssembler ..> NutritionTrackingApi : uses >
-FoodAssembler ..> NutritionTrackingApi : uses >
+NutritionTrackingApi *--> BaseEndpoint : endpoints >
+NutritionLogAssembler ..> NutritionLog : builds >
+FoodAssembler ..> Food : builds >
 
 @enduml

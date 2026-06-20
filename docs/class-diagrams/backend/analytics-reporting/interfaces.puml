@@ -1,0 +1,109 @@
+@startuml NutriSense - Analytics & Reporting - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "NutriSense.AnalyticsReporting" {
+
+  package "Interfaces.REST" {
+
+    class AnalyticsController <<ApiController>> {
+      +GetDashboard(userId: int, date: string): Task<IActionResult>
+      +GetProgressChart(userId: int, from: string, to: string): Task<IActionResult>
+      +GetStreak(userId: int): Task<IActionResult>
+      +RecordDashboardView(userId: int): Task<IActionResult>
+      +ExportReport(userId: int, from: string, to: string): Task<IActionResult>
+    }
+
+    package "Resources" {
+      class DashboardResource <<record>> {
+        +UserId: int
+        +Date: string
+        +TotalCalories: decimal
+        +TotalProteinG: decimal
+        +TotalCarbsG: decimal
+        +TotalFatG: decimal
+        +ActiveCaloriesBurned: decimal
+        +AdherenceScore: decimal?
+        +CurrentStreak: int
+        +WeeklyCompletionRate: decimal
+      }
+      class ProgressChartResource <<record>> {
+        +UserId: int
+        +From: string
+        +To: string
+        +Snapshots: IEnumerable<ProgressSnapshotResource>
+      }
+      class ProgressSnapshotResource <<record>> {
+        +Date: string
+        +TotalCalories: decimal
+        +AdherenceScore: decimal
+      }
+      class StreakResource <<record>> {
+        +UserId: int
+        +CurrentStreak: int
+        +LongestStreak: int
+        +LastLogDate: string?
+        +WeeklyCompletionRate: decimal
+        +CompletedDates: IEnumerable<string>
+      }
+    }
+
+    package "Transform" {
+      class DashboardResourceAssembler <<static>> {
+        +{static} ToResourceFromData(data: DashboardData): DashboardResource
+      }
+      class ProgressChartResourceAssembler <<static>> {
+        +{static} ToResourceFromData(data: ProgressChartData): ProgressChartResource
+      }
+      class StreakResourceAssembler <<static>> {
+        +{static} ToResourceFromData(data: StreakData): StreakResource
+      }
+    }
+  }
+
+  package "Application [stubs]" {
+    interface IAnalyticsCommandService
+    interface IAnalyticsQueryService
+    class DashboardData
+    class ProgressChartData
+    class StreakData
+  }
+
+  package "Domain [stubs]" {
+    class ViewDashboardCommand
+    class ExportReportPdfCommand
+    class GetDashboardQuery
+    class GetProgressChartQuery
+    class GetStreakQuery
+  }
+}
+
+' Controller -> Application services
+AnalyticsController --> IAnalyticsCommandService : uses
+AnalyticsController --> IAnalyticsQueryService : uses
+
+' Controller -> Application messages (Domain commands & queries)
+AnalyticsController ..> ViewDashboardCommand : sends
+AnalyticsController ..> ExportReportPdfCommand : sends
+AnalyticsController ..> GetDashboardQuery : sends
+AnalyticsController ..> GetProgressChartQuery : sends
+AnalyticsController ..> GetStreakQuery : sends
+
+' Controller -> Assemblers
+AnalyticsController ..> DashboardResourceAssembler : uses
+AnalyticsController ..> ProgressChartResourceAssembler : uses
+AnalyticsController ..> StreakResourceAssembler : uses
+
+' Assemblers map read models -> resources
+DashboardResourceAssembler ..> DashboardData : consumes
+DashboardResourceAssembler ..> DashboardResource : builds
+ProgressChartResourceAssembler ..> ProgressChartData : consumes
+ProgressChartResourceAssembler ..> ProgressChartResource : builds
+StreakResourceAssembler ..> StreakData : consumes
+StreakResourceAssembler ..> StreakResource : builds
+
+' Resource composition
+ProgressChartResource *--> "0..*" ProgressSnapshotResource : contains
+
+@enduml

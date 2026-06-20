@@ -2,34 +2,231 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.SmartRecommendations" {
+package "NutriSense.SmartRecommendations.Infrastructure" {
 
-  package "Domain [stubs]" {
-    interface IRecommendationRepository
+  package "External" {
+    class GeolocationService {
+      -{static} MaxDistanceKm: double
+      +DetectNearestCityAsync(lat: decimal, lng: decimal, ct): Task<GeoResult>
+      -{static} HaversineKm(lat1, lon1, lat2, lon2): double
+      -{static} ToRad(deg: double): double
+    }
+    class OpenWeatherMapGeocodingService {
+      +SearchAsync(query: string, limit: int, ct): Task<IReadOnlyList<GeoCityCandidate>>
+      +ReverseAsync(lat: decimal, lng: decimal, ct): Task<GeoCityCandidate?>
+    }
+    class OpenWeatherMapWeatherService {
+      -{static} Fallback: WeatherSnapshot
+      +GetCurrentAsync(cityId: int, ct): Task<WeatherSnapshot>
+    }
+    class OpenWeatherMapGeoEntry <<record>> {
+      +Name: string
+      +LocalNames: Dictionary<string, string>?
+      +Lat: decimal
+      +Lon: decimal
+      +Country: string
+      +State: string?
+    }
+    class OpenWeatherMapResponse <<record>> {
+      +Weather: List<WeatherEntry>
+      +Main: MainBlock?
+    }
+    class "OpenWeatherMapResponse.WeatherEntry" as WeatherEntry <<record>>
+    class "OpenWeatherMapResponse.MainBlock" as MainBlock <<record>>
   }
 
-  package "Infrastructure" {
-    class RecommendationRepositoryImpl {
-      -context: NutriSenseDbContext
-      +FindByUserId(userId: Guid): RecommendationEngine
-      +Save(engine: RecommendationEngine): void
-      +Update(engine: RecommendationEngine): void
+  package "External.DeepSeek" {
+    class DeepSeekLocalFoodSuggestionService {
+      +SuggestAsync(cityName, country, weatherCondition, tempC, weatherType, goalType, restrictions, count, ct): Task<IReadOnlyList<LocalFoodSuggestion>>
     }
-
-    interface IWeatherApiClient {
-      +GetWeatherByCoordinates(coords: GeoCoordinates): WeatherContext
+    class DeepSeekRecipeGenerationService {
+      +GenerateAsync(ingredientKeysByCategory, goalType, count, ct): Task<IReadOnlyList<GeneratedRecipeData>>
     }
+  }
 
-    class OpenWeatherMapClientImpl {
-      -apiKey: String
-      -httpClient: HttpClient
-      +GetWeatherByCoordinates(coords: GeoCoordinates): WeatherContext
+  package "Persistence.EFC.Configuration" {
+    class CityEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<City>): void
+    }
+    class IngredientCatalogItemEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<IngredientCatalogItem>): void
+    }
+    class LocationPreferenceEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<LocationPreference>): void
+    }
+    class PantryEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<Pantry>): void
+    }
+    class PantryItemEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<PantryItem>): void
+    }
+    class RecipeEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<Recipe>): void
+    }
+    class RecipeIngredientItemEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<RecipeIngredientItem>): void
+    }
+    class RecommendationCardEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<RecommendationCard>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    class CityRepository {
+      +FindByKeyAsync(key: string, ct): Task<City?>
+      +FindNearestAsync(lat: decimal, lng: decimal, ct): Task<City?>
+    }
+    class IngredientCatalogRepository {
+      +FindByCategoryAsync(category: string, ct): Task<IEnumerable<IngredientCatalogItem>>
+    }
+    class LocationPreferenceRepository {
+      +FindByUserIdAsync(userId: int, ct): Task<LocationPreference?>
+      +FindOrCreateAsync(userId: int, ct): Task<LocationPreference>
+    }
+    class PantryRepository {
+      +FindByUserIdAsync(userId: int, ct): Task<Pantry?>
+      +FindOrCreateAsync(userId: int, ct): Task<Pantry>
+    }
+    class RecipeRepository {
+      +FindByGoalTypeAsync(goalType: string, ct): Task<IEnumerable<Recipe>>
+    }
+    class RecommendationCardRepository {
+      +FindActiveByUserIdAsync(userId: int, ct): Task<RecommendationCard?>
+      +FindActiveListByUserIdAsync(userId: int, ct): Task<IEnumerable<RecommendationCard>>
+      +FindByUserIdAsync(userId: int, ct): Task<IEnumerable<RecommendationCard>>
+      +DeactivateAllByUserIdAsync(userId: int, ct): Task
+    }
+  }
+
+  package "Persistence.EFC.Seeders" {
+    class CitiesSeeder {
+      +SeedAsync(): Task
+    }
+    class IngredientCatalogSeeder {
+      +SeedAsync(): Task
+    }
+    class RecipesSeeder {
+      +SeedAsync(): Task
     }
   }
 }
 
-RecommendationRepositoryImpl ..|> IRecommendationRepository
-OpenWeatherMapClientImpl ..|> IWeatherApiClient
+package "SmartRecommendations.Domain" <<external>> {
+  class City
+  class IngredientCatalogItem
+  class LocationPreference
+  class Pantry
+  class PantryItem
+  class Recipe
+  class RecipeIngredientItem
+  class RecommendationCard
+  interface ICityRepository
+  interface IIngredientCatalogRepository
+  interface ILocationPreferenceRepository
+  interface IPantryRepository
+  interface IRecipeRepository
+  interface IRecommendationCardRepository
+  interface IGeocodingService
+  interface IGeolocationService
+  interface ILocalFoodSuggestionService
+  interface IRecipeGenerationService
+  interface IWeatherService
+  class GeoCityCandidate
+  class GeoResult
+  class LocalFoodSuggestion
+  class GeneratedRecipeData
+  class WeatherSnapshot
+}
+
+package "Shared / EF Core / Clients" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  class DeepSeekClient
+  class HttpClient
+  interface IConfiguration
+  interface IMemoryCache
+}
+
+' --- External adapters (ports → adapters) ---
+GeolocationService ..|> IGeolocationService
+OpenWeatherMapGeocodingService ..|> IGeocodingService
+OpenWeatherMapWeatherService ..|> IWeatherService
+DeepSeekLocalFoodSuggestionService ..|> ILocalFoodSuggestionService
+DeepSeekRecipeGenerationService ..|> IRecipeGenerationService
+
+GeolocationService --> ICityRepository : queries
+GeolocationService ..> GeoResult : returns
+OpenWeatherMapGeocodingService --> HttpClient : calls
+OpenWeatherMapGeocodingService --> IConfiguration : reads
+OpenWeatherMapGeocodingService ..> OpenWeatherMapGeoEntry : deserializes
+OpenWeatherMapGeocodingService ..> GeoCityCandidate : produces
+OpenWeatherMapWeatherService --> HttpClient : calls
+OpenWeatherMapWeatherService --> ICityRepository : queries
+OpenWeatherMapWeatherService --> IMemoryCache : caches in
+OpenWeatherMapWeatherService --> IConfiguration : reads
+OpenWeatherMapWeatherService ..> OpenWeatherMapResponse : deserializes
+OpenWeatherMapWeatherService ..> WeatherSnapshot : produces
+OpenWeatherMapResponse o--> "0..*" WeatherEntry : contains
+OpenWeatherMapResponse o--> "0..1" MainBlock : contains
+DeepSeekLocalFoodSuggestionService --> DeepSeekClient : calls
+DeepSeekLocalFoodSuggestionService ..> LocalFoodSuggestion : produces
+DeepSeekRecipeGenerationService --> DeepSeekClient : calls
+DeepSeekRecipeGenerationService ..> GeneratedRecipeData : produces
+
+' --- EF Core entity configurations ---
+CityEntityTypeConfiguration ..|> IEntityTypeConfiguration
+IngredientCatalogItemEntityTypeConfiguration ..|> IEntityTypeConfiguration
+LocationPreferenceEntityTypeConfiguration ..|> IEntityTypeConfiguration
+PantryEntityTypeConfiguration ..|> IEntityTypeConfiguration
+PantryItemEntityTypeConfiguration ..|> IEntityTypeConfiguration
+RecipeEntityTypeConfiguration ..|> IEntityTypeConfiguration
+RecipeIngredientItemEntityTypeConfiguration ..|> IEntityTypeConfiguration
+RecommendationCardEntityTypeConfiguration ..|> IEntityTypeConfiguration
+CityEntityTypeConfiguration ..> City : maps
+IngredientCatalogItemEntityTypeConfiguration ..> IngredientCatalogItem : maps
+LocationPreferenceEntityTypeConfiguration ..> LocationPreference : maps
+PantryEntityTypeConfiguration ..> Pantry : maps
+PantryItemEntityTypeConfiguration ..> PantryItem : maps
+RecipeEntityTypeConfiguration ..> Recipe : maps
+RecipeIngredientItemEntityTypeConfiguration ..> RecipeIngredientItem : maps
+RecommendationCardEntityTypeConfiguration ..> RecommendationCard : maps
+
+' --- Repositories ---
+CityRepository --|> BaseRepository
+IngredientCatalogRepository --|> BaseRepository
+LocationPreferenceRepository --|> BaseRepository
+PantryRepository --|> BaseRepository
+RecipeRepository --|> BaseRepository
+RecommendationCardRepository --|> BaseRepository
+CityRepository ..|> ICityRepository
+IngredientCatalogRepository ..|> IIngredientCatalogRepository
+LocationPreferenceRepository ..|> ILocationPreferenceRepository
+PantryRepository ..|> IPantryRepository
+RecipeRepository ..|> IRecipeRepository
+RecommendationCardRepository ..|> IRecommendationCardRepository
+CityRepository --> AppDbContext : queries
+IngredientCatalogRepository --> AppDbContext : queries
+LocationPreferenceRepository --> AppDbContext : queries
+PantryRepository --> AppDbContext : queries
+RecipeRepository --> AppDbContext : queries
+RecommendationCardRepository --> AppDbContext : queries
+CityRepository ..> City : persists
+IngredientCatalogRepository ..> IngredientCatalogItem : persists
+LocationPreferenceRepository ..> LocationPreference : persists
+PantryRepository ..> Pantry : persists
+RecipeRepository ..> Recipe : persists
+RecommendationCardRepository ..> RecommendationCard : persists
+
+' --- Seeders ---
+CitiesSeeder --> AppDbContext : writes
+IngredientCatalogSeeder --> AppDbContext : writes
+RecipesSeeder --> AppDbContext : writes
+CitiesSeeder ..> City : seeds
+IngredientCatalogSeeder ..> IngredientCatalogItem : seeds
+RecipesSeeder ..> Recipe : seeds
 
 @enduml

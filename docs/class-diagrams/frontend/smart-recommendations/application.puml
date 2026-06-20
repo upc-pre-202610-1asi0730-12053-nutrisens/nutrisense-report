@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -10,11 +10,18 @@ package "smart-recommendations/infrastructure [stubs]" {
   class RecipeAssembler <<assembler>>
   class PantryItemAssembler <<assembler>>
   class CityAssembler <<assembler>>
+  class WeatherAssembler <<assembler>>
   class IngredientCatalogItemAssembler <<assembler>>
 }
 
-package "smart-recommendations/domain/model [stubs]" {
-  class MacroProfile <<entity>>
+package "smart-recommendations/domain/model [stub]" {
+  class MacroProfile <<value object>>
+}
+
+package "shared/infrastructure [stub]" {
+  class EventBus <<event-bus>> {
+    + on(eventType, handler): void
+  }
 }
 
 package "smart-recommendations/application" {
@@ -26,45 +33,61 @@ package "smart-recommendations/application" {
     + pantryItems: PantryItem[]
     + cities: City[]
     + ingredientCatalog: IngredientCatalogItem[]
+    + weatherByCity: Record<number, Weather>
     + travelModeActive: boolean
-    + homeCityId: string|null
-    + travelCityId: string|null
+    + homeCityId: number|string|null
+    + homeCityName: string
+    + travelCityId: number|string|null
+    + travelCityName: string
+    + currentCityId: number|string|null
+    + currentCityName: string
     + userGoal: GoalTypeValue|null
     + activeFilters: Object
+    + recommendationsLoaded: boolean
+    + pantryLoaded: boolean
     + macroProfile: MacroProfile|null
     + profileFilterActive: boolean
     + consumedCaloriesToday: number
     + consumedProteinToday: number
     + errors: Error[]
+    + userRestrictions: string[]
+    + userMedicalConditions: string[]
+    + pantryUserId: string|number|null
     -- computed --
     + userForbiddenTags: string[]
-    + activeCityId: string|null
+    + activeCityId: number|string|null
+    + homeCity: City|null
     + activeCityName: string
     + activeCity: City|null
-    + homeCity: City|null
+    + currentWeather: Weather|null
     + filteredRecommendations: RecommendationCard[]
-    + feedRecipes: Recipe[]
-    + pantryIngredientIds: string[]
+    + pantryIngredientIds: number[]
     + suggestedRecipes: Recipe[]
     + partialMatchRecipes: Recipe[]
+    + feedRecipes: Recipe[]
     -- actions --
-    + fetchRecommendations(): void
-    + fetchRecipes(): void
+    + fetchRecommendations(userId): void
+    + fetchRecipes(goal?): void
     + fetchPantry(userId): void
-    + addToPantry(userId, ingredientId, name, qty, unit): void
+    + addToPantry(userId, ingredientCatalogItemId, quantity, unit): void
     + removeFromPantry(itemId): void
-    + updatePantryQuantity(itemId, qty): void
+    + updatePantryQuantity(itemId, quantity): void
     + deductRecipeFromPantry(recipe, servings): void
     + fetchCities(): void
+    + fetchWeather(cityId, force?): void
+    + searchCities(q, limit?): Promise
+    + importCity(result): Promise
+    + detectLocation(userId, lat, lng): void
     + fetchIngredientCatalog(): void
     + setFilters(filtersPatch): void
     + clearFilters(): void
     + setUserGoal(goalValue): void
     + setMacroProfile(bmiCategory, primaryGoal): void
     + toggleProfileFilter(): void
+    + onConsumptionUpdated(consumed): void
     + setHomeCity(cityId, cityName): void
-    + enableTravelMode(cityId, cityName): void
-    + disableTravelMode(): void
+    + enableTravelMode(userId, cityId, cityName): Promise
+    + disableTravelMode(userId): Promise
     + setUserRestrictions(restrictions, conditions): void
     + clearErrors(): void
   }
@@ -75,7 +98,9 @@ useSmartRecommendationsStore --> RecommendationCardAssembler : uses >
 useSmartRecommendationsStore --> RecipeAssembler : uses >
 useSmartRecommendationsStore --> PantryItemAssembler : uses >
 useSmartRecommendationsStore --> CityAssembler : uses >
+useSmartRecommendationsStore --> WeatherAssembler : uses >
 useSmartRecommendationsStore --> IngredientCatalogItemAssembler : uses >
 useSmartRecommendationsStore --> MacroProfile : uses >
+useSmartRecommendationsStore ..> EventBus : subscribes >
 
 @enduml

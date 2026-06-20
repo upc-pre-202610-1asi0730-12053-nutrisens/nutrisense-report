@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -9,39 +9,59 @@ package "subscriptions-billing/application [stub]" {
 }
 
 package "subscriptions-billing/presentation/routes" {
-  class SubscriptionsBillingRoutes <<router>>
+  class SubscriptionsBillingRoutes <<router>> {
+    + planSelectionRoute: RouteRecordRaw
+    + checkoutRoute: RouteRecordRaw
+    + paymentSuccessRoute: RouteRecordRaw
+    + subscriptionsBillingProfileChildren: RouteRecordRaw[]
+    + subscriptionsBillingRoutes: RouteRecordRaw[]
+  }
 }
 
 package "subscriptions-billing/presentation/views" {
-  class SubscriptionView <<view>>
   class PlanSelectionView <<view>>
   class CheckoutView <<view>>
   class PaymentConfirmationView <<view>>
-  class PaymentHistoryView <<view>>
   class ProfileBillingView <<view>>
+  class SubscriptionView <<view>>
+  class PaymentHistoryView <<view>>
 }
 
 package "subscriptions-billing/presentation/components" {
-  class FeatureGateComponent <<component>>
   class PlanCardComponent <<component>>
+  class UpdatePaymentMethodDialogComponent <<component>>
+  class FeatureGateComponent <<component>>
 }
 
-SubscriptionsBillingRoutes ..> SubscriptionView : navigates to >
+package "subscriptions-billing/presentation" {
+  class FeatureI18n <<helper>> {
+    + FEATURE_I18N: Object
+    + HIDDEN_PLAN_FEATURES: Set
+    + featureLabel(t, featureKey): string
+  }
+}
+
 SubscriptionsBillingRoutes ..> PlanSelectionView : navigates to >
 SubscriptionsBillingRoutes ..> CheckoutView : navigates to >
 SubscriptionsBillingRoutes ..> PaymentConfirmationView : navigates to >
-SubscriptionsBillingRoutes ..> PaymentHistoryView : navigates to >
 SubscriptionsBillingRoutes ..> ProfileBillingView : navigates to >
+SubscriptionsBillingRoutes ..> SubscriptionView : navigates to >
+SubscriptionsBillingRoutes ..> PaymentHistoryView : navigates to >
 
-PlanSelectionView ..> PlanCardComponent : contains >
+ProfileBillingView ..> PlanCardComponent : contains >
+ProfileBillingView ..> UpdatePaymentMethodDialogComponent : contains >
+SubscriptionView ..> PlanCardComponent : contains >
+ProfileBillingView ..> FeatureGateComponent : gates with >
 
-SubscriptionView o--> useSubscriptionsBillingStore : uses >
 PlanSelectionView o--> useSubscriptionsBillingStore : uses >
 CheckoutView o--> useSubscriptionsBillingStore : uses >
 PaymentConfirmationView o--> useSubscriptionsBillingStore : uses >
-PaymentHistoryView o--> useSubscriptionsBillingStore : uses >
 ProfileBillingView o--> useSubscriptionsBillingStore : uses >
-FeatureGateComponent o--> useSubscriptionsBillingStore : uses >
-PlanCardComponent o--> useSubscriptionsBillingStore : uses >
+SubscriptionView o--> useSubscriptionsBillingStore : uses >
+PaymentHistoryView o--> useSubscriptionsBillingStore : uses >
+
+PlanSelectionView ..> FeatureI18n : labels >
+CheckoutView ..> FeatureI18n : labels >
+PlanCardComponent ..> FeatureI18n : labels >
 
 @enduml

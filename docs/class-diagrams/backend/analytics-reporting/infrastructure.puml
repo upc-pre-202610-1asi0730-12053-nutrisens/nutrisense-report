@@ -5,20 +5,75 @@ skinparam classAttributeIconSize 0
 
 package "NutriSense.AnalyticsReporting" {
 
-  package "Domain [stubs]" {
-    interface IAnalyticsRepository
+  package "Infrastructure" {
+
+    package "Calculators" {
+      class AdherenceCalculator {
+        +Calculate(actual: DailyMacroSummaryItem?, goal: UserGoalSummaryItem?): decimal
+      }
+      class StreakCalculator {
+        +Calculate(lastLogDate: DateOnly?, currentStreak: int, longestStreak: int, today: DateOnly): (int, int)
+      }
+    }
+
+    package "External.Pdf" {
+      class PdfReportGenerator {
+        +GenerateAsync(userId: int, range: DateRange, ct): Task<byte[]>
+      }
+    }
+
+    package "Persistence.EFC.Repositories" {
+      class UserAnalyticsRepository {
+        +FindByUserIdAsync(userId: int, ct): Task<UserAnalytics?>
+        +FindOrCreateAsync(userId: int, ct): Task<UserAnalytics>
+        +GetProgressSnapshotsAsync(userId: int, from: DateOnly, to: DateOnly, ct): Task<IEnumerable<ProgressSnapshot>>
+      }
+    }
+
+    package "Persistence.EFC.Configuration" {
+      class UserAnalyticsEntityTypeConfiguration {
+        +Configure(builder: EntityTypeBuilder<UserAnalytics>): void
+      }
+      class ProgressSnapshotEntityTypeConfiguration {
+        +Configure(builder: EntityTypeBuilder<ProgressSnapshot>): void
+      }
+    }
   }
 
-  package "Infrastructure" {
-    class AnalyticsRepositoryImpl {
-      -context: NutriSenseDbContext
-      +FindByUserId(userId: Guid): AnalyticsAggregate
-      +Save(aggregate: AnalyticsAggregate): void
-      +Update(aggregate: AnalyticsAggregate): void
-    }
+  package "Domain [stubs]" {
+    class UserAnalytics
+    class ProgressSnapshot
+    class DateRange
+    interface IUserAnalyticsRepository
+    interface IAdherenceCalculator
+    interface IStreakCalculator
+    interface IReportPdfGenerator
+  }
+
+  package "Shared & EF Core [stubs]" {
+    class "BaseRepository<T>" as BaseRepository
+    class AppDbContext
+    interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
   }
 }
 
-AnalyticsRepositoryImpl ..|> IAnalyticsRepository
+' Domain service implementations (Infrastructure -> Domain)
+AdherenceCalculator ..|> IAdherenceCalculator
+StreakCalculator ..|> IStreakCalculator
+PdfReportGenerator ..|> IReportPdfGenerator
+PdfReportGenerator ..> DateRange : renders
+
+' Repository implementation
+UserAnalyticsRepository ..|> IUserAnalyticsRepository
+UserAnalyticsRepository --|> BaseRepository
+UserAnalyticsRepository --> AppDbContext : queries
+UserAnalyticsRepository ..> UserAnalytics : persists
+UserAnalyticsRepository ..> ProgressSnapshot : reads
+
+' EF Core mappings
+UserAnalyticsEntityTypeConfiguration ..|> IEntityTypeConfiguration
+ProgressSnapshotEntityTypeConfiguration ..|> IEntityTypeConfiguration
+UserAnalyticsEntityTypeConfiguration ..> UserAnalytics : maps
+ProgressSnapshotEntityTypeConfiguration ..> ProgressSnapshot : maps
 
 @enduml

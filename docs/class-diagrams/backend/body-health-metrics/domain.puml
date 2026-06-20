@@ -3,77 +3,269 @@
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
-package "NutriSense.BodyHealthMetrics" {
+package "Nutrisense.BodyHealthMetrics.Domain" {
 
-  package "Domain" {
-    class HealthProfile {
-      +Id: Guid
-      +UserId: Guid
-      -measurements: List<BodyMeasurements>
-      -activeGoal: HealthGoal
-      +RecordMeasurements(data: BodyMeasurements): void
-      +SetGoal(goal: HealthGoal): void
-      +CalculateBMI(): Decimal
-      +CalculateTDEE(activityLevel: ActivityLevel): TDEEValue
+  package "Model.Aggregates" {
+    class BodyMetrics {
+      +Id: int
+      +UserId: int
+      +HeightCm: decimal
+      +DateOfBirth: DateOnly?
+      +BiologicalSex: string?
+      +ActivityLevel: string?
+      +BmiValue: decimal?
+      +BmiCategory: string?
+      +Bmr: decimal?
+      +Tdee: decimal?
+      +MacroCalories: int?
+      +MacroProteinG: decimal?
+      +MacroCarbsG: decimal?
+      +MacroFatG: decimal?
+      +MacroFiberG: decimal?
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
+      +Bmi: BmiResult?
+      +MacroTargets: MacroTargets?
+      +BodyMetrics(command: RegisterBodyMetricsCommand)
+      +LogWeight(weightKg: decimal, note: string?): WeightLog
+      +LogMeasurement(waistCm: decimal, neckCm: decimal): BodyMeasurement
+      +SetHealthGoal(command: SetHealthGoalCommand): void
+      +GetCurrentWeightKg(): decimal?
+      +GetActiveGoal(): UserGoal?
+      +SetBmi(bmi: BmiResult): void
+      +SetBmr(bmr: decimal): void
+      +SetTdee(tdee: decimal): void
+      +SetDailyCaloricGoal(macros: MacroTargets, caloricAdjustment: decimal): void
+    }
+  }
+
+  package "Model.Entities" {
+    class WeightLog {
+      +Id: int
+      +UserId: int
+      +WeightKg: WeightKg
+      +LoggedAt: DateTimeOffset
+      +Note: string?
     }
 
-    class BodyMeasurements {
-      +WeightKg: Decimal
-      +HeightCm: Decimal
-      +BodyFatPercentage: Decimal
-      +RecordedAt: DateTime
+    class BodyMeasurement {
+      +Id: int
+      +UserId: int
+      +WaistCm: WaistMeasurement
+      +NeckCm: NeckMeasurement
+      +MeasuredAt: DateTimeOffset
     }
 
-    class HealthGoal {
-      +Id: Guid
-      +GoalType: GoalType
-      +TargetWeightKg: Decimal
-      +TargetDate: DateOnly
-      +IsActive: Boolean
+    class UserGoal {
+      +Id: int
+      +UserId: int
+      +Goal: GoalType
+      +StartWeightKg: decimal
+      +TargetWeightKg: decimal
+      +WeeklyRateKg: WeeklyRate
+      +DailyCalorieTarget: int
+      +ProteinTargetG: decimal
+      +CarbsTargetG: decimal
+      +FatTargetG: decimal
+      +FiberTargetG: decimal
+      +CaloricAdjustment: decimal
+      +SetAt: DateTimeOffset
+      +Active: bool
+      +Deactivate(): void
+      +SetCalculatedTargets(...): void
+    }
+  }
+
+  package "Model.ValueObjects" {
+    class BmiResult <<record>> {
+      +Value: decimal
+      +Category: string
     }
 
-    class TDEEValue {
-      +BMR: Decimal
-      +TDEE: Decimal
-      +ProteinTargetG: Decimal
-      +CarbsTargetG: Decimal
-      +FatTargetG: Decimal
+    class GoalType <<record>> {
+      +Value: string
     }
 
-    enum GoalType {
-      LOSE_WEIGHT
-      GAIN_MUSCLE
-      MAINTAIN
+    class MacroTargets <<record>> {
+      +Calories: int
+      +ProteinG: decimal
+      +CarbsG: decimal
+      +FatG: decimal
+      +FiberG: decimal
     }
 
-    enum ActivityLevel {
-      SEDENTARY
-      LIGHT
-      MODERATE
-      ACTIVE
-      VERY_ACTIVE
+    class WaistMeasurement <<record>> {
+      +Cm: decimal
     }
 
-    class MetricsRecordedEvent {
-      +ProfileId: Guid
-      +WeightKg: Decimal
-      +OccurredOn: DateTime
+    class NeckMeasurement <<record>> {
+      +Cm: decimal
     }
 
-    interface IHealthProfileRepository {
-      +FindByUserId(userId: Guid): HealthProfile
-      +Save(profile: HealthProfile): void
-      +Update(profile: HealthProfile): void
-      +FindMeasurementHistory(userId: Guid): List<BodyMeasurements>
+    class WeeklyRate <<record>> {
+      +Value: decimal
     }
+
+    class WeightKg <<record>> {
+      +Value: decimal
+    }
+  }
+
+  package "Model.Commands" {
+    class RegisterBodyMetricsCommand <<record>> {
+      +UserId: int
+      +HeightCm: decimal
+      +WeightKg: decimal
+      +DateOfBirth: DateOnly
+      +BiologicalSex: string
+      +ActivityLevel: string
+      +Goal: string?
+      +WeeklyRateKg: decimal?
+    }
+    class UpdateWeightCommand <<record>> {
+      +UserId: int
+      +WeightKg: decimal
+      +Note: string?
+    }
+    class RegisterBodyMeasurementCommand <<record>> {
+      +UserId: int
+      +WaistCm: decimal
+      +NeckCm: decimal
+    }
+    class SetHealthGoalCommand <<record>> {
+      +UserId: int
+      +Goal: string
+      +TargetWeightKg: decimal
+      +WeeklyRateKg: decimal
+    }
+    class CalculateBmiCommand <<record>> {
+      +UserId: int
+    }
+    class CalculateBmrCommand <<record>> {
+      +UserId: int
+    }
+    class CalculateTdeeCommand <<record>> {
+      +UserId: int
+    }
+    class CalculateDailyCaloricGoalCommand <<record>> {
+      +UserId: int
+    }
+  }
+
+  package "Model.Queries" {
+    class GetBodyMetricsByUserIdQuery <<record>> {
+      +UserId: int
+    }
+    class GetWeightHistoryByUserIdQuery <<record>> {
+      +UserId: int
+      +From: DateTimeOffset?
+      +To: DateTimeOffset?
+    }
+  }
+
+  package "Model.Events" {
+    class BodyMetricsRegistered <<record>> {
+      +UserId: int
+    }
+    class WeightUpdated <<record>> {
+      +UserId: int
+      +NewWeightKg: decimal
+    }
+    class BmiCalculated <<record>> {
+      +UserId: int
+      +Bmi: decimal
+    }
+    class BmrCalculated <<record>> {
+      +UserId: int
+      +Bmr: decimal
+    }
+    class TdeeCalculated <<record>> {
+      +UserId: int
+      +Tdee: decimal
+    }
+    class GoalDefinedInMetrics <<record>> {
+      +UserId: int
+      +Goal: string
+    }
+    class DailyCaloricGoalSet <<record>> {
+      +UserId: int
+      +DailyCalories: int
+      +ProteinG: decimal
+      +CarbsG: decimal
+      +FatG: decimal
+      +FiberG: decimal
+    }
+  }
+
+  package "Repositories" {
+    interface IBodyMetricsRepository {
+      +FindByUserIdAsync(userId: int): Task<BodyMetrics?>
+      +FindActiveGoalByUserIdAsync(userId: int): Task<UserGoal?>
+      +FindWeightHistoryByUserIdAsync(userId: int, from, to): Task<IEnumerable<WeightLog>>
+    }
+  }
+
+  package "Services" {
+    interface IBodyMetricsCalculator {
+      +CalculateBmi(weightKg: decimal, heightCm: decimal): BmiResult
+      +CalculateBmr(weightKg, heightCm, dateOfBirth, biologicalSex): decimal
+      +CalculateTdee(bmr: decimal, activityLevel: string): decimal
+      +CalculateCaloricAdjustment(goal: string, weeklyRateKg: decimal): decimal
+      +CalculateDailyCaloricGoal(tdee: decimal, goal: string, weeklyRateKg: decimal): MacroTargets
+    }
+  }
+
+  package "Shared.Domain [stubs]" {
+    interface IAuditableEntity
+    interface IBaseRepository<T>
+    abstract class DomainEventBase
   }
 }
 
-HealthProfile *--> BodyMeasurements : records "0..*"
-HealthProfile *--> HealthGoal : has "0..1"
-HealthProfile --> TDEEValue : computes "0..1"
-HealthGoal --> GoalType : has "1"
-TDEEValue --> ActivityLevel : references
-HealthProfile --> MetricsRecordedEvent : fires "0..*"
+' --- Aggregate composition ---
+BodyMetrics ..|> IAuditableEntity
+BodyMetrics "1" *--> "0..*" WeightLog : weightLogs
+BodyMetrics "1" *--> "0..*" BodyMeasurement : bodyMeasurements
+BodyMetrics "1" *--> "0..*" UserGoal : userGoals
+BodyMetrics --> BmiResult : computes
+BodyMetrics --> MacroTargets : computes
+
+' --- Entities to value objects ---
+WeightLog --> WeightKg
+BodyMeasurement --> WaistMeasurement
+BodyMeasurement --> NeckMeasurement
+UserGoal --> GoalType
+UserGoal --> WeeklyRate
+
+' --- Aggregate consumes commands ---
+BodyMetrics ..> RegisterBodyMetricsCommand
+BodyMetrics ..> SetHealthGoalCommand
+BodyMetrics ..> UpdateWeightCommand
+BodyMetrics ..> RegisterBodyMeasurementCommand
+BodyMetrics ..> CalculateBmiCommand
+BodyMetrics ..> CalculateBmrCommand
+BodyMetrics ..> CalculateTdeeCommand
+BodyMetrics ..> CalculateDailyCaloricGoalCommand
+
+' --- Queries target the aggregate / its children ---
+GetBodyMetricsByUserIdQuery ..> BodyMetrics
+GetWeightHistoryByUserIdQuery ..> WeightLog
+
+' --- Events ---
+BodyMetricsRegistered --|> DomainEventBase
+WeightUpdated --|> DomainEventBase
+BmiCalculated --|> DomainEventBase
+BmrCalculated --|> DomainEventBase
+TdeeCalculated --|> DomainEventBase
+GoalDefinedInMetrics --|> DomainEventBase
+DailyCaloricGoalSet --|> DomainEventBase
+BodyMetrics ..> BodyMetricsRegistered : raises
+
+' --- Repository & calculator contracts ---
+IBodyMetricsRepository --|> IBaseRepository
+IBodyMetricsRepository ..> BodyMetrics
+IBodyMetricsRepository ..> UserGoal
+IBodyMetricsCalculator ..> BmiResult
+IBodyMetricsCalculator ..> MacroTargets
 
 @enduml

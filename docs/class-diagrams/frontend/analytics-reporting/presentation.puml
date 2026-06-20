@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -8,30 +8,50 @@ package "analytics-reporting/application [stub]" {
   class useAnalyticsReportingStore <<store>>
 }
 
+package "analytics-reporting/infrastructure [stub]" {
+  class PdfExportService <<service>>
+}
+
 package "analytics-reporting/presentation/routes" {
-  class AnalyticsReportingRoutes <<router>>
+  class AnalyticsReportingRoutes <<router>> {
+    + analyticsReportingRoutes: RouteRecordRaw[]
+  }
 }
 
 package "analytics-reporting/presentation/views" {
-  class AnalyticsView <<view>>
   class DashboardView <<view>>
+  class AnalyticsView <<view>>
 }
 
 package "analytics-reporting/presentation/components" {
-  class KpiCardComponent <<component>>
-  class MacroDonutChartComponent <<component>>
+  class KpiCardComponent <<component>> {
+    + label: string
+    + value: string|number
+    + unit: string
+    + icon: string
+    + color: string
+    + loading: boolean
+  }
+  class MacroDonutChartComponent <<component>> {
+    + proteinG: number
+    + carbsG: number
+    + fatG: number
+    + proteinLabel: string
+    + carbsLabel: string
+    + fatLabel: string
+  }
 }
 
-AnalyticsReportingRoutes ..> AnalyticsView : navigates to >
-AnalyticsReportingRoutes ..> DashboardView : navigates to >
+AnalyticsReportingRoutes ..> DashboardView : registers >
+AnalyticsReportingRoutes ..> AnalyticsView : registers >
+
+DashboardView o--> useAnalyticsReportingStore : uses >
+AnalyticsView o--> useAnalyticsReportingStore : uses >
+AnalyticsView ..> PdfExportService : exports via >
 
 DashboardView ..> KpiCardComponent : contains >
 DashboardView ..> MacroDonutChartComponent : contains >
 AnalyticsView ..> KpiCardComponent : contains >
 AnalyticsView ..> MacroDonutChartComponent : contains >
-
-DashboardView o--> useAnalyticsReportingStore : uses >
-AnalyticsView o--> useAnalyticsReportingStore : uses >
-KpiCardComponent o--> useAnalyticsReportingStore : uses >
 
 @enduml

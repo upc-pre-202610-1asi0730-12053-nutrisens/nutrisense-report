@@ -1,41 +1,124 @@
-@startuml NutriSense - Subscriptions & Billing - Infrastructure
+@startuml NutriSense - Subscriptions - Infrastructure
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
-package "NutriSense.SubscriptionsBilling" {
+package "Nutrisense.Platform.Subscriptions" {
+
+  package "Shared [stubs]" {
+    class "BaseRepository<TEntity>" as BaseRepository {
+      #Context: AppDbContext
+    }
+    class AppDbContext {
+      +SubscriptionPlans: DbSet<SubscriptionPlan>
+    }
+    interface "IEntityTypeConfiguration<TEntity>" as IEntityTypeConfiguration {
+      +Configure(builder): void
+    }
+    interface ISubscriptionTierLookup {
+      +GetPlanKeyAsync(userId: int): Task<string>
+      +IsProOrAboveAsync(userId: int): Task<bool>
+      +IsPremiumAsync(userId: int): Task<bool>
+    }
+  }
 
   package "Domain [stubs]" {
-    interface ISubscriptionRepository
+    class UserSubscription
+    class SubscriptionPlan
+    class PaymentMethod
+    class PaymentRecord
+    class Money
+    interface IUserSubscriptionRepository
+    interface ISubscriptionPlanRepository
+    interface IPaymentMethodRepository
+    interface IPaymentGateway
   }
 
   package "Infrastructure" {
-    class SubscriptionRepositoryImpl {
-      -context: NutriSenseDbContext
-      +FindByUserId(userId: Guid): SubscriptionAggregate
-      +FindPlanById(planId: Guid): SubscriptionPlan
-      +FindAllPlans(): List<SubscriptionPlan>
-      +Save(aggregate: SubscriptionAggregate): void
-      +Update(aggregate: SubscriptionAggregate): void
+
+    package "External.Stripe" {
+      class StripePaymentGateway {
+        +ChargeAsync(stripeCustomerId: string, stripePaymentMethodId: string, amount: Money): Task<PaymentResult>
+      }
     }
 
-    interface IStripeClient {
-      +CreateSubscription(customerId: String, priceId: String): String
-      +CancelSubscription(subscriptionId: String): void
-      +CreatePaymentIntent(amount: Decimal, currency: String): String
+    package "Persistence.EFC.Repositories" {
+      class UserSubscriptionRepository {
+        -WithRelations(): IQueryable<UserSubscription>
+        +FindByIdAsync(id: int): Task<UserSubscription?>
+        +FindByUserIdAsync(userId: int): Task<UserSubscription?>
+        +FindActiveByUserIdAsync(userId: int): Task<UserSubscription?>
+      }
+      class SubscriptionPlanRepository {
+        +FindByKeyAsync(key: string): Task<SubscriptionPlan?>
+      }
+      class PaymentMethodRepository {
+        +FindByUserIdAsync(userId: int): Task<IEnumerable<PaymentMethod>>
+      }
     }
 
-    class StripeClientImpl {
-      -apiKey: String
-      -httpClient: HttpClient
-      +CreateSubscription(customerId: String, priceId: String): String
-      +CancelSubscription(subscriptionId: String): void
-      +CreatePaymentIntent(amount: Decimal, currency: String): String
+    package "Persistence.EFC.Configuration" {
+      class UserSubscriptionEntityTypeConfiguration {
+        +Configure(builder: EntityTypeBuilder<UserSubscription>): void
+      }
+      class SubscriptionPlanEntityTypeConfiguration {
+        +Configure(builder: EntityTypeBuilder<SubscriptionPlan>): void
+      }
+      class PaymentMethodEntityTypeConfiguration {
+        +Configure(builder: EntityTypeBuilder<PaymentMethod>): void
+      }
+      class PaymentRecordEntityTypeConfiguration {
+        +Configure(builder: EntityTypeBuilder<PaymentRecord>): void
+      }
+    }
+
+    package "Persistence.EFC.Seeders" {
+      class SubscriptionPlanSeeder {
+        +SeedAsync(): Task
+      }
+    }
+
+    package "CrossContext" {
+      class CrossContextSubscriptionTierLookup {
+        +GetPlanKeyAsync(userId: int): Task<string>
+        +IsProOrAboveAsync(userId: int): Task<bool>
+        +IsPremiumAsync(userId: int): Task<bool>
+      }
     }
   }
 }
 
-SubscriptionRepositoryImpl ..|> ISubscriptionRepository
-StripeClientImpl ..|> IStripeClient
+' --- Payment gateway implementation ---
+IPaymentGateway <|.. StripePaymentGateway
+StripePaymentGateway ..> Money : charges
+
+' --- Repository implementations ---
+BaseRepository <|-- UserSubscriptionRepository
+BaseRepository <|-- SubscriptionPlanRepository
+BaseRepository <|-- PaymentMethodRepository
+IUserSubscriptionRepository <|.. UserSubscriptionRepository
+ISubscriptionPlanRepository <|.. SubscriptionPlanRepository
+IPaymentMethodRepository <|.. PaymentMethodRepository
+UserSubscriptionRepository ..> UserSubscription : queries
+SubscriptionPlanRepository ..> SubscriptionPlan : queries
+PaymentMethodRepository ..> PaymentMethod : queries
+
+' --- EF Core entity configurations ---
+IEntityTypeConfiguration <|.. UserSubscriptionEntityTypeConfiguration
+IEntityTypeConfiguration <|.. SubscriptionPlanEntityTypeConfiguration
+IEntityTypeConfiguration <|.. PaymentMethodEntityTypeConfiguration
+IEntityTypeConfiguration <|.. PaymentRecordEntityTypeConfiguration
+UserSubscriptionEntityTypeConfiguration ..> UserSubscription : maps
+SubscriptionPlanEntityTypeConfiguration ..> SubscriptionPlan : maps
+PaymentMethodEntityTypeConfiguration ..> PaymentMethod : maps
+PaymentRecordEntityTypeConfiguration ..> PaymentRecord : maps
+
+' --- Seeder ---
+SubscriptionPlanSeeder ..> AppDbContext : uses
+SubscriptionPlanSeeder ..> SubscriptionPlan : seeds
+
+' --- Cross-context tier lookup ---
+ISubscriptionTierLookup <|.. CrossContextSubscriptionTierLookup
+CrossContextSubscriptionTierLookup ..> IUserSubscriptionRepository : reads
 
 @enduml

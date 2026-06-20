@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -8,34 +8,81 @@ package "smart-recommendations/application [stub]" {
   class useSmartRecommendationsStore <<store>>
 }
 
+package "subscriptions-billing/presentation [stub]" {
+  class FeatureGateComponent <<component>>
+}
+
 package "smart-recommendations/presentation/routes" {
-  class SmartRecommendationsRoutes <<router>>
+  class SmartRecommendationsRoutes <<router>> {
+    + path: 'recommendations'
+    + name: 'recommendations'
+    + component: RecommendationsView
+  }
 }
 
 package "smart-recommendations/presentation/views" {
-  class RecommendationsView <<view>>
+  class RecommendationsView <<view>> {
+    + activeTab: string
+    + unifiedFeed: Array<{type, item, isUnsafe}>
+    + filteredCities: Object[]
+    + filteredIngredients: IngredientCatalogItem[]
+    --
+    + handleLogDish(recommendation): void
+    + handleRecipeDetail(recipe): void
+    + handleLogDishConfirm(payload): void
+    + handleLogRecipeConfirm(payload): void
+    + handleAddToPantry(): void
+    + handleUpdateQuantity(payload): void
+    + handleEnableTravel(): Promise
+    + handleDisableTravel(): void
+    + handleManualConfirm(): void
+    + handleAllowLocation(): void
+  }
 }
 
 package "smart-recommendations/presentation/components" {
-  class RecommendationCardComponent <<component>>
-  class RecipeCardComponent <<component>>
-  class RecipeDetailDialogComponent <<component>>
-  class LogDishDialogComponent <<component>>
-  class PantryListComponent <<component>>
+
+  class RecommendationCardComponent <<component>> {
+    + props: recommendation, projectedPct, bannerLevel, isUnsafe
+    + emits: log
+  }
+
+  class RecipeCardComponent <<component>> {
+    + props: recipe, pantryIngredientIds, missingLabel, projectedPct, bannerLevel, isUnsafe
+    + emits: detail
+  }
+
+  class RecipeDetailDialogComponent <<component>> {
+    + props: recipe, pantryIngredientIds, ingredientCatalog, visible
+    + emits: update:visible, log
+  }
+
+  class LogDishDialogComponent <<component>> {
+    + props: recommendation, food, visible
+    + emits: update:visible, confirm
+  }
+
+  class PantryListComponent <<component>> {
+    + props: pantryItems, ingredientCatalog, loading
+    + emits: remove, update-quantity
+  }
 }
 
 SmartRecommendationsRoutes ..> RecommendationsView : navigates to >
 
-RecommendationsView ..> RecommendationCardComponent : contains >
-RecommendationsView ..> RecipeCardComponent : contains >
-RecommendationsView ..> PantryListComponent : contains >
-RecipeCardComponent ..> RecipeDetailDialogComponent : opens >
-RecipeDetailDialogComponent ..> LogDishDialogComponent : opens >
+RecommendationsView *--> RecommendationCardComponent : renders >
+RecommendationsView *--> RecipeCardComponent : renders >
+RecommendationsView *--> PantryListComponent : renders >
+RecommendationsView *--> LogDishDialogComponent : opens >
+RecommendationsView *--> RecipeDetailDialogComponent : opens >
+RecommendationsView *--> FeatureGateComponent : wraps >
 
 RecommendationsView o--> useSmartRecommendationsStore : uses >
-RecommendationCardComponent o--> useSmartRecommendationsStore : uses >
-RecipeCardComponent o--> useSmartRecommendationsStore : uses >
-PantryListComponent o--> useSmartRecommendationsStore : uses >
-LogDishDialogComponent o--> useSmartRecommendationsStore : uses >
+
+RecommendationCardComponent ..> RecommendationsView : log >
+RecipeCardComponent ..> RecommendationsView : detail >
+LogDishDialogComponent ..> RecommendationsView : confirm >
+RecipeDetailDialogComponent ..> RecommendationsView : log >
+PantryListComponent ..> RecommendationsView : remove / update-quantity >
 
 @enduml

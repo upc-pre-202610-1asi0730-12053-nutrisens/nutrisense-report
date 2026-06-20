@@ -1,10 +1,10 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 skinparam linetype ortho
 
-package "shared/domain/model [stubs]" {
+package "shared/domain/model [stub]" {
   class Macros <<value object>> {
     + calories: number
     + proteinG: number
@@ -17,123 +17,25 @@ package "shared/domain/model [stubs]" {
 package "smart-recommendations/domain/model" {
 
   class City <<entity>> {
-    + id: string
+    + id: number
     + key: string
+    + nameEn: string
+    + nameEs: string
     + country: string
     + lat: number
     + lng: number
     + timezone: string
-    + currentTempC: number
-    + weatherType: WeatherType
-    + weatherCondition: WeatherCondition
-    + weatherUpdatedAt: string
-    --
-    + isHot(): boolean
-    + isCold(): boolean
-    + weatherIsStale(thresholdMinutes?): boolean
   }
 
-  class IngredientCatalogItem <<entity>> {
-    + id: string
-    + key: string
-    + foodId: string|null
-    + category: IngredientCategory
-    + defaultUnit: string
+  class Weather <<value object>> {
+    + cityId: number
+    + tempC: number
+    + condition: WeatherConditionValue
+    + weatherType: WeatherTypeValue
+    + at: string
     --
-    + normalizedGrams(quantity, unit): number
-    + isMeasuredByUnit(): boolean
-    + hasFoodData(): boolean
-  }
-
-  class LocationPreference <<entity>> {
-    + id: string
-    + userId: string
-    + homeCityId: string
-    + currentCityId: string
-    + travelModeActive: boolean
-    + isManualOverride: boolean
-    + locationPermissionGranted: boolean
-    + updatedAt: string
-    --
-    + effectiveCityId(): string
-    + isTraveling(): boolean
-    + hasLocationPermission(): boolean
-  }
-
-  class MacroProfile <<entity>> {
-    + minProteinG: number|null
-    + maxCalories: number|null
-    + prioritizeFiber: boolean
-    + labelKey: string
-    --
-    + {static} fromBmiAndGoal(bmiCategory, primaryGoal): MacroProfile|null
-    + {static} score(calories, proteinG, profile): number
-  }
-
-  class PantryItem <<entity>> {
-    + id: string
-    + userId: string
-    + ingredientId: string
-    + quantity: number
-    + unit: string
-    + addedAt: string
-    --
-    + normalizedQuantity(): number
-    + normalizedUnit(): string
-    + isEmpty(): boolean
-  }
-
-  class Recipe <<entity>> {
-    + id: string
-    + key: string
-    + goalType: string
-    + prepTimeMinutes: number
-    + servings: number
-    + totalMacros: Macros
-    + restrictionsConflict: string[]
-    + ingredients: RecipeIngredient[]
-    --
-    + conflictsWith(userRestrictionTags): boolean
-    + matchesGoal(goal): boolean
-    + matchesPantry(pantryIngredientIds, threshold?): boolean
-    + missingIngredients(pantryIngredientIds): string[]
-  }
-
-  class RecommendationCard <<entity>> {
-    + id: string
-    + cityId: string
-    + weatherType: WeatherType
-    + goalType: string
-    + foodId: string|null
-    + customFoodName: string|null
-    + estimatedCalories: number
-    + estimatedProteinG: number
-    + estimatedCarbsG: number
-    + estimatedFatG: number
-    + badge: BadgeValue
-    + contextLabelKey: string
-    + restrictionsConflict: string[]
-    --
-    + conflictsWith(userRestrictionTags): boolean
-    + matchesGoal(goal): boolean
-    + matchesWeather(currentWeatherType): boolean
-    + matchesCity(cityId): boolean
-    + isLocalDish(): boolean
-  }
-
-  class Badge <<value object>> {
-    + value: BadgeValue
-    --
-    + isLowCalorieFocus(): boolean
-    + isMuscleGainFocus(): boolean
-    + isLocalDish(): boolean
-  }
-
-  class IngredientCategory <<value object>> {
-    + value: IngredientCategoryValue
-    --
-    + isProteinSource(): boolean
-    + isCarbohydrateSource(): boolean
+    + roundedTemp(): number
+    + icon(): string
   }
 
   class WeatherCondition <<value object>> {
@@ -151,16 +53,120 @@ package "smart-recommendations/domain/model" {
     + prefersColdDishes(): boolean
     + prefersHotDishes(): boolean
   }
+
+  class LocationPreference <<entity>> {
+    + id: string
+    + userId: string
+    + homeCityId: string
+    + currentCityId: string
+    + travelModeActive: boolean
+    + isManualOverride: boolean
+    + locationPermissionGranted: boolean
+    + updatedAt: string
+    --
+    + effectiveCityId(): string
+    + isTraveling(): boolean
+    + hasLocationPermission(): boolean
+  }
+
+  class IngredientCatalogItem <<entity>> {
+    + id: number
+    + key: string
+    + nameEn: string
+    + nameEs: string
+    + foodId: number|null
+    + category: IngredientCategory
+    + defaultUnit: string
+    --
+    + normalizedGrams(quantity, unit): number
+    + isMeasuredByUnit(): boolean
+    + hasFoodData(): boolean
+  }
+
+  class IngredientCategory <<value object>> {
+    + value: IngredientCategoryValue
+    --
+    + isProteinSource(): boolean
+    + isCarbohydrateSource(): boolean
+  }
+
+  class PantryItem <<entity>> {
+    + id: string
+    + userId: string
+    + ingredientId: string
+    + quantity: number
+    + unit: string
+    + addedAt: string
+    --
+    + normalizedQuantity(): number
+    + normalizedUnit(): string
+    + isEmpty(): boolean
+  }
+
+  class Recipe <<entity>> {
+    + id: number
+    + key: string
+    + nameEn: string
+    + nameEs: string
+    + goalType: string
+    + prepTimeMinutes: number
+    + servings: number
+    + totalMacros: Macros
+    + restrictionsConflict: string[]
+    + ingredients: RecipeIngredient[]
+    --
+    + conflictsWith(userRestrictionTags): boolean
+    + matchesGoal(goal): boolean
+    + matchesPantry(pantryIngredientIds, threshold?): boolean
+    + missingIngredients(pantryIngredientIds): string[]
+  }
+
+  class RecommendationCard <<entity>> {
+    + id: number
+    + foodId: number|null
+    + foodNameEn: string
+    + foodNameEs: string
+    + estimatedCalories: number
+    + estimatedProteinG: number
+    + estimatedCarbsG: number
+    + estimatedFatG: number
+    + badge: BadgeValue
+    + contextLabelEn: string
+    + contextLabelEs: string
+    + restrictionsConflict: string[]
+    --
+    + conflictsWith(userRestrictionTags): boolean
+    + isLocalDish(): boolean
+  }
+
+  class Badge <<value object>> {
+    + value: BadgeValue
+    --
+    + isLowCalorieFocus(): boolean
+    + isMuscleGainFocus(): boolean
+    + isLocalDish(): boolean
+  }
+
+  class MacroProfile <<value object>> {
+    + minProteinG: number|null
+    + maxCalories: number|null
+    + prioritizeFiber: boolean
+    + labelKey: string
+    --
+    + {static} fromBmiAndGoal(bmiCategory, primaryGoal): MacroProfile|null
+    + {static} score(calories, proteinG, profile): number
+  }
 }
 
-City *--> WeatherType : weatherType >
-City *--> WeatherCondition : weatherCondition >
-IngredientCatalogItem *--> IngredientCategory : category >
-RecommendationCard *--> WeatherType : weatherType >
-RecommendationCard *--> Badge : badge >
-Recipe *--> Macros : totalMacros >
+Weather --> City : cityId >
+Weather --> WeatherType : weatherType >
+Weather --> WeatherCondition : condition >
 LocationPreference --> City : references >
+IngredientCatalogItem *--> IngredientCategory : category >
 PantryItem --> IngredientCatalogItem : references >
+Recipe *--> Macros : totalMacros >
+RecommendationCard *--> Badge : badge >
 MacroProfile ..> Recipe : scores >
+MacroProfile ..> RecommendationCard : scores >
 
 @enduml

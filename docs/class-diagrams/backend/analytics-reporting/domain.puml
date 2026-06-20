@@ -6,84 +6,180 @@ skinparam classAttributeIconSize 0
 package "NutriSense.AnalyticsReporting" {
 
   package "Domain" {
-    class AnalyticsAggregate {
-      +Id: Guid
-      +UserId: Guid
-      -reports: List<ProgressReport>
-      -streaks: List<Streak>
-      -dailyBalances: List<DailyBalance>
-      +GenerateReport(period: DateRange, type: ReportType): ProgressReport
-      +UpdateStreak(streakType: StreakType): void
-      +RecordDailyBalance(balance: DailyBalance): void
+
+    package "Model.Aggregates" {
+      class UserAnalytics <<aggregate root>> {
+        +Id: int
+        +UserId: int
+        +CurrentStreak: int
+        +LongestStreak: int
+        +LastLogDate: DateOnly?
+        +WeeklyCompletionRate: decimal
+        +LastAdherenceScore: decimal?
+        +LastProgressCalculatedAt: DateTimeOffset?
+        +ProgressSnapshots: IReadOnlyCollection<ProgressSnapshot>
+        +CreatedAt: DateTimeOffset?
+        +UpdatedAt: DateTimeOffset?
+        +UpdateStreak(today: DateOnly): void
+        +UpdateAdherence(score: decimal): void
+        +AddProgressSnapshot(snapshot: ProgressSnapshot): void
+        +UpdateWeeklyCompletionRate(rate: decimal): void
+      }
     }
 
-    class ProgressReport {
-      +Id: Guid
-      +PeriodStart: DateOnly
-      +PeriodEnd: DateOnly
-      +AverageCaloriesKcal: Decimal
-      +WeightDeltaKg: Decimal
-      +GoalAchievementPercent: Decimal
-      +ReportType: ReportType
+    package "Model.Entities" {
+      class ProgressSnapshot <<entity>> {
+        +Id: int
+        +UserAnalyticsId: int
+        +Date: DateOnly
+        +TotalCalories: decimal
+        +TotalProteinG: decimal
+        +TotalCarbsG: decimal
+        +TotalFatG: decimal
+        +AdherenceScore: decimal
+        +IsComplete: bool
+        +CreatedAt: DateTimeOffset
+      }
     }
 
-    class Streak {
-      +Id: Guid
-      +StreakType: StreakType
-      +CurrentCount: Int32
-      +LongestCount: Int32
-      +LastUpdated: DateTime
-      +Increment(): void
-      +Reset(): void
+    package "Model.ValueObjects" {
+      class AdherenceScore <<value object>> {
+        +Value: decimal
+      }
+
+      class DateRange <<value object>> {
+        +From: DateOnly
+        +To: DateOnly
+      }
     }
 
-    class DailyBalance {
-      +Date: DateOnly
-      +CaloriesConsumedKcal: Decimal
-      +CaloriesBurnedKcal: Decimal
-      +NetCalories(): Decimal
-      +GoalMet: Boolean
+    package "Model.Commands" {
+      class CalculateProgressCommand <<record>> {
+        +UserId: int
+      }
+      class ExportReportPdfCommand <<record>> {
+        +UserId: int
+        +From: DateOnly
+        +To: DateOnly
+      }
+      class GenerateProgressInsightsCommand <<record>> {
+        +UserId: int
+        +Date: DateOnly?
+      }
+      class GenerateVisualizationCommand <<record>> {
+        +UserId: int
+      }
+      class UpdateUsageStreakCommand <<record>> {
+        +UserId: int
+      }
+      class ViewDashboardCommand <<record>> {
+        +UserId: int
+      }
     }
 
-    class DateRange {
-      +Start: DateOnly
-      +End: DateOnly
-      +Contains(date: DateOnly): Boolean
+    package "Model.Queries" {
+      class GetDashboardQuery <<record>> {
+        +UserId: int
+        +Date: DateOnly
+      }
+      class GetProgressChartQuery <<record>> {
+        +UserId: int
+        +From: DateOnly
+        +To: DateOnly
+      }
+      class GetStreakQuery <<record>> {
+        +UserId: int
+      }
     }
 
-    enum ReportType {
-      WEEKLY
-      MONTHLY
-      CUSTOM
+    package "Model.Events" {
+      class DashboardViewed <<domain event>> {
+        +UserId: int
+      }
+      class ProgressCalculated <<domain event>> {
+        +UserId: int
+        +AdherenceScore: decimal
+      }
+      class ReportExported <<domain event>> {
+        +UserId: int
+        +FileName: string
+      }
+      class UsageStreakUpdated <<domain event>> {
+        +UserId: int
+        +CurrentStreak: int
+      }
+      class UserDataAggregated <<domain event>> {
+        +UserId: int
+        +Date: DateOnly
+      }
+      class VisualizationGenerated <<domain event>> {
+        +UserId: int
+      }
     }
 
-    enum StreakType {
-      LOGGING_STREAK
-      GOAL_STREAK
-      ACTIVITY_STREAK
+    package "Repositories" {
+      interface IUserAnalyticsRepository {
+        +FindByUserIdAsync(userId: int, ct): Task<UserAnalytics?>
+        +FindOrCreateAsync(userId: int, ct): Task<UserAnalytics>
+        +GetProgressSnapshotsAsync(userId: int, from: DateOnly, to: DateOnly, ct): Task<IEnumerable<ProgressSnapshot>>
+      }
     }
 
-    class ReportGeneratedEvent {
-      +AggregateId: Guid
-      +UserId: Guid
-      +ReportType: ReportType
-      +OccurredOn: DateTime
+    package "Services" {
+      interface IAdherenceCalculator {
+        +Calculate(actual: DailyMacroSummaryItem?, goal: UserGoalSummaryItem?): decimal
+      }
+      interface IReportPdfGenerator {
+        +GenerateAsync(userId: int, range: DateRange, ct): Task<byte[]>
+      }
+      interface IStreakCalculator {
+        +Calculate(lastLogDate: DateOnly?, currentStreak: int, longestStreak: int, today: DateOnly): (int, int)
+      }
     }
+  }
 
-    interface IAnalyticsRepository {
-      +FindByUserId(userId: Guid): AnalyticsAggregate
-      +Save(aggregate: AnalyticsAggregate): void
-      +Update(aggregate: AnalyticsAggregate): void
-    }
+  package "Shared.Domain [stubs]" {
+    interface IAuditableEntity
+    abstract class DomainEventBase
+    interface IBaseRepository<T>
   }
 }
 
-AnalyticsAggregate *--> ProgressReport : generates "0..*"
-AnalyticsAggregate *--> Streak : tracks "0..*"
-AnalyticsAggregate *--> DailyBalance : records "0..*"
-ProgressReport --> ReportType : has "1"
-Streak --> StreakType : has "1"
-ProgressReport --> DateRange : spans "1"
-AnalyticsAggregate --> ReportGeneratedEvent : fires "0..*"
+' Aggregate composition
+UserAnalytics *--> "0..*" ProgressSnapshot : owns
+
+' Shared building blocks
+UserAnalytics ..|> IAuditableEntity
+DashboardViewed --|> DomainEventBase
+ProgressCalculated --|> DomainEventBase
+ReportExported --|> DomainEventBase
+UsageStreakUpdated --|> DomainEventBase
+UserDataAggregated --|> DomainEventBase
+VisualizationGenerated --|> DomainEventBase
+
+' Repository contract
+IUserAnalyticsRepository --|> IBaseRepository
+IUserAnalyticsRepository ..> UserAnalytics : manages
+IUserAnalyticsRepository ..> ProgressSnapshot : reads
+
+' Domain services
+IAdherenceCalculator ..> AdherenceScore : produces
+IReportPdfGenerator ..> DateRange : covers
+IStreakCalculator ..> UserAnalytics : computes for
+
+' Commands raise events
+CalculateProgressCommand ..> ProgressCalculated : triggers
+GenerateProgressInsightsCommand ..> ProgressCalculated : triggers
+GenerateProgressInsightsCommand ..> UserDataAggregated : triggers
+GenerateProgressInsightsCommand ..> VisualizationGenerated : triggers
+GenerateVisualizationCommand ..> VisualizationGenerated : triggers
+UpdateUsageStreakCommand ..> UsageStreakUpdated : triggers
+ViewDashboardCommand ..> DashboardViewed : triggers
+ExportReportPdfCommand ..> ReportExported : triggers
+
+' Queries read the aggregate
+GetDashboardQuery ..> UserAnalytics : reads
+GetProgressChartQuery ..> ProgressSnapshot : reads
+GetStreakQuery ..> UserAnalytics : reads
 
 @enduml

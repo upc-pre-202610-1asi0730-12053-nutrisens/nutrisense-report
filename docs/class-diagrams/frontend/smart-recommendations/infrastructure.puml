@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -9,46 +9,65 @@ package "shared/infrastructure [stubs]" {
   class BaseEndpoint <<api>>
 }
 
+package "smart-recommendations/domain/model [stubs]" {
+  class RecommendationCard <<entity>>
+  class Recipe <<entity>>
+  class PantryItem <<entity>>
+  class City <<entity>>
+  class Weather <<value object>>
+  class IngredientCatalogItem <<entity>>
+}
+
 package "smart-recommendations/infrastructure" {
 
   class SmartRecommendationsApi <<api>> {
-    - recommendationCards: BaseEndpoint
     - recipes: BaseEndpoint
-    - pantry: BaseEndpoint
     - cities: BaseEndpoint
     - ingredientCatalog: BaseEndpoint
     --
-    + getRecommendations(): Promise
-    + getRecommendationById(id): Promise
-    + getRecipes(): Promise
+    + getRecommendationsByUser(userId): Promise
+    + getRecipes(goal?): Promise
     + getRecipeById(id): Promise
-    + getPantryItems(): Promise
-    + createPantryItem(resource): Promise
-    + patchPantryItem(id, patch): Promise
-    + deletePantryItem(id): Promise
+    + getPantryByUser(userId): Promise
+    + registerPantryItems(userId, items): Promise
+    + deletePantryItem(userId, itemId): Promise
+    + patchPantryItem(userId, id, patch): Promise
     + getCities(): Promise
-    + getCityById(id): Promise
+    + getWeatherByCity(cityId): Promise
+    + searchCities(q, limit?): Promise
+    + importCity(candidate): Promise
+    + detectLocation(userId, lat, lng): Promise
+    + enableTravelMode(userId, cityId): Promise
+    + disableTravelMode(userId): Promise
     + getIngredientCatalog(): Promise
   }
 
   class RecommendationCardAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): RecommendationCard|null
     + {static} toEntitiesFromResponse(response): RecommendationCard[]
+    + {static} toEntityFromResponse(response): RecommendationCard|null
   }
 
   class RecipeAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): Recipe|null
     + {static} toEntitiesFromResponse(response): Recipe[]
+    + {static} toEntityFromResponse(response): Recipe|null
   }
 
   class PantryItemAssembler <<assembler>> {
-    + {static} toEntityFromResource(resource): PantryItem|null
+    + {static} toEntityFromResource(resource, userId): PantryItem|null
     + {static} toEntitiesFromResponse(response): PantryItem[]
   }
 
   class CityAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): City|null
     + {static} toEntitiesFromResponse(response): City[]
+    + {static} toEntityFromResponse(response): City|null
+  }
+
+  class WeatherAssembler <<assembler>> {
+    + {static} toEntityFromResource(resource): Weather|null
+    + {static} toEntityFromResponse(response): Weather|null
   }
 
   class IngredientCatalogItemAssembler <<assembler>> {
@@ -58,11 +77,13 @@ package "smart-recommendations/infrastructure" {
 }
 
 SmartRecommendationsApi --|> BaseApi
-BaseApi *--> BaseEndpoint
-RecommendationCardAssembler ..> SmartRecommendationsApi : uses >
-RecipeAssembler ..> SmartRecommendationsApi : uses >
-PantryItemAssembler ..> SmartRecommendationsApi : uses >
-CityAssembler ..> SmartRecommendationsApi : uses >
-IngredientCatalogItemAssembler ..> SmartRecommendationsApi : uses >
+SmartRecommendationsApi *--> BaseEndpoint : endpoints >
+
+RecommendationCardAssembler ..> RecommendationCard : builds >
+RecipeAssembler ..> Recipe : builds >
+PantryItemAssembler ..> PantryItem : builds >
+CityAssembler ..> City : builds >
+WeatherAssembler ..> Weather : builds >
+IngredientCatalogItemAssembler ..> IngredientCatalogItem : builds >
 
 @enduml

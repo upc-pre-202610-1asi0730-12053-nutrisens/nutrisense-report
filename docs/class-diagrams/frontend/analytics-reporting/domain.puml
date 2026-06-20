@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -23,18 +23,18 @@ package "analytics-reporting/domain/model" {
 
 package "analytics-reporting/domain/services" {
 
-  class AdherenceCalculatorService <<domain service>> {
-    + {static} calculateAdherenceRate(logDates, days): number
-    + {static} weeklyAdherenceRate(logDates): number
-    + {static} monthlyAdherenceRate(logDates): number
+  class StreakCalculatorService <<domain service>> {
+    + calculateStreak(logEntries, calorieGoal, proteinGoal): StreakRecord
   }
 
-  class StreakCalculatorService <<domain service>> {
-    + {static} calculateStreak(logEntries, calorieGoal, proteinGoal): StreakRecord
+  class AdherenceCalculatorService <<domain service>> {
+    + calculateAdherenceRate(logDates, days): number
+    + weeklyAdherenceRate(logDates): number
+    + monthlyAdherenceRate(logDates): number
   }
 }
 
 StreakCalculatorService ..> StreakRecord : creates >
-AdherenceCalculatorService ..> StreakRecord : evaluates adherence for >
+AdherenceCalculatorService ..> StreakRecord : computes adherence for >
 
 @enduml

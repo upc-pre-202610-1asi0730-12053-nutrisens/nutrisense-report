@@ -3,23 +3,78 @@
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
-package "NutriSense.BodyHealthMetrics" {
+package "Nutrisense.BodyHealthMetrics.Infrastructure" {
 
-  package "Domain [stubs]" {
-    interface IHealthProfileRepository
+  package "Calculators" {
+    class MifflinStJeorBodyMetricsCalculator {
+      +CalculateBmi(weightKg: decimal, heightCm: decimal): BmiResult
+      +CalculateBmr(weightKg, heightCm, dateOfBirth, biologicalSex): decimal
+      +CalculateTdee(bmr: decimal, activityLevel: string): decimal
+      +CalculateCaloricAdjustment(goal: string, weeklyRateKg: decimal): decimal
+      +CalculateDailyCaloricGoal(tdee: decimal, goal: string, weeklyRateKg: decimal): MacroTargets
+    }
   }
 
-  package "Infrastructure" {
-    class HealthProfileRepositoryImpl {
-      -context: NutriSenseDbContext
-      +FindByUserId(userId: Guid): HealthProfile
-      +Save(profile: HealthProfile): void
-      +Update(profile: HealthProfile): void
-      +FindMeasurementHistory(userId: Guid): List<BodyMeasurements>
+  package "Persistence.EFC.Repositories" {
+    class BodyMetricsRepository {
+      -WithRelations(): IQueryable<BodyMetrics>
+      +FindByUserIdAsync(userId: int, ct): Task<BodyMetrics?>
+      +FindActiveGoalByUserIdAsync(userId: int, ct): Task<UserGoal?>
+      +FindWeightHistoryByUserIdAsync(userId, from, to, ct): Task<IEnumerable<WeightLog>>
+    }
+  }
+
+  package "Persistence.EFC.Configuration" {
+    class BodyMetricsEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<BodyMetrics>): void
+    }
+    class WeightLogEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<WeightLog>): void
+    }
+    class BodyMeasurementEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<BodyMeasurement>): void
+    }
+    class UserGoalEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<UserGoal>): void
     }
   }
 }
 
-HealthProfileRepositoryImpl ..|> IHealthProfileRepository
+package "Domain [stubs]" {
+  class BodyMetrics
+  class WeightLog
+  class BodyMeasurement
+  class UserGoal
+  interface IBodyMetricsRepository
+  interface IBodyMetricsCalculator
+}
+
+package "Shared [stubs]" {
+  abstract class "BaseRepository<T>" as BaseRepository
+  class AppDbContext
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+}
+
+' --- Calculator ---
+MifflinStJeorBodyMetricsCalculator ..|> IBodyMetricsCalculator
+
+' --- Repository ---
+BodyMetricsRepository --|> BaseRepository
+BodyMetricsRepository ..|> IBodyMetricsRepository
+BodyMetricsRepository --> AppDbContext
+BodyMetricsRepository ..> BodyMetrics
+BodyMetricsRepository ..> WeightLog
+BodyMetricsRepository ..> UserGoal
+
+' --- EF Core configurations ---
+BodyMetricsEntityTypeConfiguration ..|> IEntityTypeConfiguration
+WeightLogEntityTypeConfiguration ..|> IEntityTypeConfiguration
+BodyMeasurementEntityTypeConfiguration ..|> IEntityTypeConfiguration
+UserGoalEntityTypeConfiguration ..|> IEntityTypeConfiguration
+
+BodyMetricsEntityTypeConfiguration ..> BodyMetrics
+WeightLogEntityTypeConfiguration ..> WeightLog
+BodyMeasurementEntityTypeConfiguration ..> BodyMeasurement
+UserGoalEntityTypeConfiguration ..> UserGoal
 
 @enduml

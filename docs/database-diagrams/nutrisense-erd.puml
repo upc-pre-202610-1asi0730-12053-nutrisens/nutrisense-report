@@ -1,267 +1,416 @@
 @startuml NutriSense ERD
-skinparam monochrome false
+
 skinparam linetype ortho
 skinparam packageStyle rectangle
-skinparam defaultFontSize 12
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
 
 package "IAM" #E8F4FD {
-  entity "iam_users" as users {
-    * id : UUID <<PK>>
+  TABLE(users, "users") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * email : VARCHAR(320) <<UNIQUE>>
-    * password_hash : TEXT
-    * first_name : VARCHAR(100)
-    * last_name : VARCHAR(100)
-    avatar_url : TEXT
-    * role : VARCHAR(20)
-    * created_at : TIMESTAMP WITH TIME ZONE
-    * updated_at : TIMESTAMP WITH TIME ZONE
+    email : VARCHAR(255) NOT NULL  <<UNIQUE>>
+    password_hash : LONGTEXT NOT NULL
+    first_name : VARCHAR(80) NOT NULL
+    last_name : VARCHAR(80) NOT NULL
+    preferred_language : VARCHAR(5) NOT NULL
+    preferred_units : VARCHAR(10) NOT NULL
+    medical_conditions : JSON NOT NULL
+    height_cm : DECIMAL(18,2)
+    date_of_birth : LONGTEXT
+    biological_sex : VARCHAR(25)
+    activity_level : VARCHAR(25)
+    goal_intent : VARCHAR(20)
+    created_at : DATETIME
+    updated_at : DATETIME
   }
-  note right of users
-    role ∈ {free_user,
-    premium_user, admin}
-  end note
+
+  TABLE(dietary_restrictions, "dietary_restrictions") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(user_id) : INT NOT NULL
+    restriction : VARCHAR(100) NOT NULL
+  }
+
+  TABLE(user_sessions, "user_sessions") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(user_id) : INT NOT NULL
+    device_label : VARCHAR(200) NOT NULL
+    is_current : TINYINT(1) NOT NULL
+    last_active_at : DATETIME NOT NULL
+    created_at : DATETIME NOT NULL
+  }
 }
 
 package "Nutrition Tracking" #FEF9E7 {
-  entity "nutrition_food_items" as food_items {
-    * id : UUID <<PK>>
+  TABLE(foods, "foods") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * name : VARCHAR(255)
-    brand : VARCHAR(255)
-    * calories_per_100g : NUMERIC(8,2)
-    * protein_per_100g : NUMERIC(8,2)
-    * carbs_per_100g : NUMERIC(8,2)
-    * fat_per_100g : NUMERIC(8,2)
-    fiber_per_100g : NUMERIC(8,2)
-    * source : VARCHAR(50)
-    * created_at : TIMESTAMP WITH TIME ZONE
+    key : VARCHAR(300) NOT NULL  <<UNIQUE>>
+    name_en : VARCHAR(200) NOT NULL
+    name_es : VARCHAR(200) NOT NULL
+    category : VARCHAR(50) NOT NULL DEFAULT 'Other'
+    source : VARCHAR(50) NOT NULL
+    external_id : VARCHAR(200)
+    serving_size_g : DECIMAL(10,2) NOT NULL
+    serving_unit : VARCHAR(10) NOT NULL
+    calories_per100g : DECIMAL(10,2) NOT NULL
+    protein_per100g : DECIMAL(10,2) NOT NULL
+    carbs_per100g : DECIMAL(10,2) NOT NULL
+    fat_per100g : DECIMAL(10,2) NOT NULL
+    fiber_per100g : DECIMAL(10,2) NOT NULL
+    sugar_per100g : DECIMAL(10,2) NOT NULL
+    restrictions : JSON NOT NULL
+    created_at : DATETIME
+    updated_at : DATETIME
   }
-  note right of food_items
-    source ∈ {open_food_facts, usda}
-  end note
 
-  entity "nutrition_logs" as nutrition_logs {
-    * id : UUID <<PK>>
+  TABLE(nutrition_logs, "nutrition_logs") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * user_id : UUID <<FK>>
-    * log_date : DATE
-    * created_at : TIMESTAMP WITH TIME ZONE
-    * updated_at : TIMESTAMP WITH TIME ZONE
+    FK(user_id) : INT NOT NULL
+    FK(food_id) : INT NOT NULL
+    date : VARCHAR(10) NOT NULL
+    food_name_en : VARCHAR(200) NOT NULL
+    food_name_es : VARCHAR(200) NOT NULL
+    meal_type : VARCHAR(20) NOT NULL
+    source : VARCHAR(20) NOT NULL
+    quantity_g : DECIMAL(10,2) NOT NULL
+    calories : DECIMAL(10,2) NOT NULL
+    protein_g : DECIMAL(10,2) NOT NULL
+    carbs_g : DECIMAL(10,2) NOT NULL
+    fat_g : DECIMAL(10,2) NOT NULL
+    fiber_g : DECIMAL(10,2) NOT NULL
+    sugar_g : DECIMAL(10,2) NOT NULL
+    scan_type : VARCHAR(20)
+    scan_image_uri : VARCHAR(2048)
+    scan_confidence : DECIMAL(5,4)
+    logged_at : DATETIME NOT NULL
+    created_at : DATETIME
+    updated_at : DATETIME
   }
-  note right of nutrition_logs
-    UNIQUE (user_id, log_date)
-  end note
-
-  entity "nutrition_food_entries" as food_entries {
-    * id : UUID <<PK>>
-    --
-    * log_id : UUID <<FK>>
-    * food_item_id : UUID <<FK>>
-    * amount_grams : NUMERIC(8,2)
-    * meal_type : VARCHAR(20)
-    * logged_at : TIMESTAMP WITH TIME ZONE
-  }
-  note right of food_entries
-    meal_type ∈ {breakfast,
-    lunch, dinner, snack}
-  end note
 }
 
 package "Body & Health Metrics" #EAFAF1 {
-  entity "body_profiles" as body_profiles {
-    * id : UUID <<PK>>
+  TABLE(body_metrics, "body_metrics") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * user_id : UUID <<FK>> <<UNIQUE>>
-    * weight_kg : NUMERIC(6,2)
-    * height_cm : NUMERIC(5,2)
-    * birth_date : DATE
-    * biological_sex : VARCHAR(10)
-    * activity_level : VARCHAR(30)
-    * goal_type : VARCHAR(20)
-    target_weight_kg : NUMERIC(6,2)
-    * created_at : TIMESTAMP WITH TIME ZONE
-    * updated_at : TIMESTAMP WITH TIME ZONE
+    user_id : INT NOT NULL  <<AK>>
+    height_cm : DECIMAL(5,2) NOT NULL
+    date_of_birth : LONGTEXT
+    biological_sex : VARCHAR(25)
+    activity_level : VARCHAR(25)
+    bmi_value : DECIMAL(5,2)
+    bmi_category : VARCHAR(20)
+    bmr : DECIMAL(8,2)
+    tdee : DECIMAL(8,2)
+    macro_daily_calories : INT
+    macro_protein_g : DECIMAL(6,1)
+    macro_carbs_g : DECIMAL(6,1)
+    macro_fat_g : DECIMAL(6,1)
+    macro_fiber_g : DECIMAL(6,1)
+    created_at : DATETIME
+    updated_at : DATETIME
   }
-  note right of body_profiles
-    goal_type ∈ {lose_weight,
-    gain_muscle, maintain}
-  end note
 
-  entity "body_weight_records" as weight_records {
-    * id : UUID <<PK>>
+  TABLE(body_measurements, "body_measurements") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * user_id : UUID <<FK>>
-    * weight_kg : NUMERIC(6,2)
-    * recorded_at : DATE
-    note : TEXT
-    * created_at : TIMESTAMP WITH TIME ZONE
+    FK(user_id) : INT NOT NULL
+    neck_cm : DECIMAL(5,2) NOT NULL
+    waist_cm : DECIMAL(5,2) NOT NULL
+    measured_at : DATETIME NOT NULL
   }
-}
 
-package "Smart Recommendations" #FDF2F8 {
-  entity "recs_sets" as recs_sets {
-    * id : UUID <<PK>>
+  TABLE(user_goals, "user_goals") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * user_id : UUID <<FK>>
-    * calorie_budget : NUMERIC(8,2)
-    * protein_deficit : NUMERIC(8,2)
-    * weather_condition : VARCHAR(20)
-    * time_of_day : VARCHAR(15)
-    * was_applied : BOOLEAN
-    * generated_at : TIMESTAMP WITH TIME ZONE
-    * expires_at : TIMESTAMP WITH TIME ZONE
+    FK(user_id) : INT NOT NULL
+    goal : VARCHAR(20) NOT NULL
+    start_weight_kg : DECIMAL(5,2) NOT NULL
+    target_weight_kg : DECIMAL(5,2) NOT NULL
+    weekly_rate_kg : DECIMAL(4,2) NOT NULL
+    daily_calorie_target : INT NOT NULL
+    caloric_adjustment : DECIMAL(8,2) NOT NULL
+    protein_target_g : DECIMAL(6,1) NOT NULL
+    carbs_target_g : DECIMAL(6,1) NOT NULL
+    fat_target_g : DECIMAL(6,1) NOT NULL
+    fiber_target_g : DECIMAL(6,1) NOT NULL
+    active : TINYINT(1) NOT NULL
+    set_at : DATETIME NOT NULL
   }
-  note right of recs_sets
-    weather ∈ {hot, cold,
-    rainy, neutral}
-    time_of_day ∈ {breakfast,
-    lunch, dinner, snack}
-  end note
 
-  entity "recs_items" as recs_items {
-    * id : UUID <<PK>>
+  TABLE(weight_logs, "weight_logs") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * set_id : UUID <<FK>>
-    * food_name : VARCHAR(255)
-    * reason_code : VARCHAR(50)
-    reason_description : VARCHAR(500)
-    * match_score : NUMERIC(5,4)
-    external_food_id : VARCHAR(100)
+    FK(user_id) : INT NOT NULL
+    weight_kg : DECIMAL(5,2) NOT NULL
+    note : VARCHAR(500)
+    logged_at : DATETIME NOT NULL
   }
 }
 
 package "Activity & Wearable Sync" #FEF5E7 {
-  entity "activity_logs" as activity_logs {
-    * id : UUID <<PK>>
+  TABLE(wearable_connections, "wearable_connections") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * user_id : UUID <<FK>>
-    * log_date : DATE
-    * total_calories_burned : NUMERIC(8,2)
-    * total_steps : INTEGER
-    synced_at : TIMESTAMP WITH TIME ZONE
-    * created_at : TIMESTAMP WITH TIME ZONE
-    * updated_at : TIMESTAMP WITH TIME ZONE
+    FK(user_id) : INT NOT NULL
+    provider : VARCHAR(50) NOT NULL
+    status : VARCHAR(20) NOT NULL
+    authorized_at : DATETIME NOT NULL
+    last_synced_at : DATETIME
+    created_at : DATETIME
+    updated_at : DATETIME
   }
-  note right of activity_logs
-    UNIQUE (user_id, log_date)
-  end note
 
-  entity "activity_records" as activity_records {
-    * id : UUID <<PK>>
+  TABLE(activity_logs, "activity_logs") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * log_id : UUID <<FK>>
-    * activity_type : VARCHAR(30)
-    * duration_minutes : INTEGER
-    * calories_burned : NUMERIC(8,2)
-    steps : INTEGER
-    source_device : VARCHAR(100)
-    * recorded_at : TIMESTAMP WITH TIME ZONE
-  }
-  note right of activity_records
-    activity_type ∈ {walking,
-    running, cycling,
-    swimming, strength, other}
-  end note
-
-  entity "activity_wearable_tokens" as wearable_tokens {
-    * id : UUID <<PK>>
-    --
-    * user_id : UUID <<FK>> <<UNIQUE>>
-    * access_token : TEXT
-    * refresh_token : TEXT
-    * expires_at : TIMESTAMP WITH TIME ZONE
-    * created_at : TIMESTAMP WITH TIME ZONE
+    FK(user_id) : INT NOT NULL
+    date : VARCHAR(10) NOT NULL
+    activity_type : VARCHAR(50) NOT NULL
+    duration_minutes : INT NOT NULL
+    calories_burned : DECIMAL(10,2) NOT NULL
+    intensity : VARCHAR(10) NOT NULL
+    source : VARCHAR(20) NOT NULL
+    logged_at : DATETIME NOT NULL
+    created_at : DATETIME
+    updated_at : DATETIME
   }
 }
 
 package "Analytics & Reporting" #F4ECF7 {
-  entity "analytics_progress_reports" as reports {
-    * id : UUID <<PK>>
+  TABLE(user_analytics, "user_analytics") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * user_id : UUID <<FK>>
-    * period_start : DATE
-    * period_end : DATE
-    * period_type : VARCHAR(10)
-    avg_daily_calories : NUMERIC(8,2)
-    avg_protein_g : NUMERIC(8,2)
-    avg_carbs_g : NUMERIC(8,2)
-    avg_fat_g : NUMERIC(8,2)
-    total_calories_burned : NUMERIC(10,2)
-    weight_change_kg : NUMERIC(6,2)
-    adherence_percent : NUMERIC(5,2)
-    days_logged : INTEGER
-    * generated_at : TIMESTAMP WITH TIME ZONE
+    FK(user_id) : INT NOT NULL  <<UNIQUE>>
+    current_streak : INT NOT NULL
+    longest_streak : INT NOT NULL
+    weekly_completion_rate : DECIMAL(5,4) NOT NULL
+    last_adherence_score : DECIMAL(5,4)
+    last_log_date : VARCHAR(10)
+    last_progress_calculated_at : DATETIME
+    created_at : DATETIME
+    updated_at : DATETIME
   }
-  note right of reports
-    period_type ∈ {weekly,
-    monthly, custom}
-  end note
 
-  entity "analytics_weight_snapshots" as weight_snapshots {
-    * id : UUID <<PK>>
+  TABLE(progress_snapshots, "progress_snapshots") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * report_id : UUID <<FK>>
-    * snapshot_date : DATE
-    * weight_kg : NUMERIC(6,2)
+    FK(user_analytics_id) : INT NOT NULL
+    date : VARCHAR(10) NOT NULL
+    total_calories : DECIMAL(10,2) NOT NULL
+    total_protein_g : DECIMAL(10,2) NOT NULL
+    total_carbs_g : DECIMAL(10,2) NOT NULL
+    total_fat_g : DECIMAL(10,2) NOT NULL
+    adherence_score : DECIMAL(5,4) NOT NULL
+    is_complete : TINYINT(1) NOT NULL
+    created_at : DATETIME NOT NULL
+  }
+}
+
+package "Smart Recommendations" #FDF2F8 {
+  TABLE(cities, "cities") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    key : VARCHAR(50) NOT NULL  <<UNIQUE>>
+    name_en : VARCHAR(100) NOT NULL
+    name_es : VARCHAR(100) NOT NULL
+    country : VARCHAR(50) NOT NULL
+    timezone : VARCHAR(50) NOT NULL
+    lat : DECIMAL(9,6) NOT NULL
+    lng : DECIMAL(9,6) NOT NULL
+  }
+
+  TABLE(ingredient_catalog_items, "ingredient_catalog_items") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    key : VARCHAR(100) NOT NULL  <<UNIQUE>>
+    name_en : VARCHAR(200) NOT NULL
+    name_es : VARCHAR(200) NOT NULL
+    category : VARCHAR(50) NOT NULL
+    default_unit : VARCHAR(20) NOT NULL
+    grams_per_unit : DECIMAL(10,3)
+    FK(food_id) : INT
+  }
+
+  TABLE(location_preferences, "location_preferences") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(user_id) : INT NOT NULL  <<UNIQUE>>
+    FK(home_city_id) : INT
+    FK(current_city_id) : INT
+    location_permission_granted : TINYINT(1) NOT NULL
+    is_manual_override : TINYINT(1) NOT NULL
+    travel_mode_active : TINYINT(1) NOT NULL
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  TABLE(recommendation_cards, "recommendation_cards") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(user_id) : INT NOT NULL
+    FK(food_id) : INT
+    FK(city_id) : INT
+    food_name_en : VARCHAR(200) NOT NULL
+    food_name_es : VARCHAR(200) NOT NULL
+    badge : VARCHAR(30) NOT NULL
+    context_label_en : VARCHAR(300) NOT NULL
+    context_label_es : VARCHAR(300) NOT NULL
+    goal_type : VARCHAR(50)
+    weather_type : VARCHAR(20)
+    estimated_calories : DECIMAL(10,2) NOT NULL
+    estimated_protein_g : DECIMAL(10,2) NOT NULL
+    estimated_carbs_g : DECIMAL(10,2) NOT NULL
+    estimated_fat_g : DECIMAL(10,2) NOT NULL
+    restrictions_conflict : JSON NOT NULL
+    is_active : TINYINT(1) NOT NULL
+    created_at : DATETIME NOT NULL
+  }
+
+  TABLE(pantries, "pantries") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(user_id) : INT NOT NULL  <<UNIQUE>>
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  TABLE(pantry_items, "pantry_items") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(pantry_id) : INT NOT NULL
+    FK(ingredient_catalog_item_id) : INT NOT NULL
+    quantity : DECIMAL(10,3) NOT NULL
+    unit : VARCHAR(20) NOT NULL
+    expires_at : DATETIME
+  }
+
+  TABLE(recipes, "recipes") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    key : VARCHAR(100) NOT NULL  <<UNIQUE>>
+    name_en : VARCHAR(200) NOT NULL
+    name_es : VARCHAR(200) NOT NULL
+    goal_type : VARCHAR(50) NOT NULL
+    prep_time_minutes : INT NOT NULL
+    servings : INT NOT NULL
+    total_calories : DECIMAL(10,2) NOT NULL
+    total_protein_g : DECIMAL(10,2) NOT NULL
+    total_carbs_g : DECIMAL(10,2) NOT NULL
+    total_fat_g : DECIMAL(10,2) NOT NULL
+    total_fiber_g : DECIMAL(10,2) NOT NULL
+    restrictions_conflict : JSON NOT NULL
+  }
+
+  TABLE(recipe_ingredient_items, "recipe_ingredient_items") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(recipe_id) : INT NOT NULL
+    FK(ingredient_catalog_item_id) : INT NOT NULL
+    quantity : DECIMAL(10,3) NOT NULL
+    unit : VARCHAR(20) NOT NULL
   }
 }
 
 package "Subscriptions & Billing" #FDEDEC {
-  entity "billing_subscriptions" as subscriptions {
-    * id : UUID <<PK>>
+  TABLE(subscription_plans, "subscription_plans") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * user_id : UUID <<FK>> <<UNIQUE>>
-    * plan_type : VARCHAR(30)
-    * status : VARCHAR(20)
-    stripe_customer_id : TEXT
-    stripe_subscription_id : TEXT
-    * current_period_start : DATE
-    * current_period_end : DATE
-    canceled_at : TIMESTAMP WITH TIME ZONE
-    * created_at : TIMESTAMP WITH TIME ZONE
-    * updated_at : TIMESTAMP WITH TIME ZONE
+    key : VARCHAR(20) NOT NULL  <<UNIQUE>>
+    price_monthly : DECIMAL(10,2) NOT NULL
+    price_annual : DECIMAL(10,2)
+    currency : VARCHAR(3) NOT NULL
+    features : JSON NOT NULL
   }
-  note right of subscriptions
-    plan_type ∈ {free,
-    premium, premium_annual}
-    status ∈ {active, cancelled,
-    past_due, trialing}
-  end note
 
-  entity "billing_invoices" as invoices {
-    * id : UUID <<PK>>
+  TABLE(payment_methods, "payment_methods") {
+    PK(id) : INT AUTO_INCREMENT
     --
-    * subscription_id : UUID <<FK>>
-    * user_id : UUID <<FK>>
-    * amount : NUMERIC(10,2)
-    * currency : VARCHAR(3)
-    * status : VARCHAR(20)
-    stripe_invoice_id : TEXT
-    * created_at : TIMESTAMP WITH TIME ZONE
-    paid_at : TIMESTAMP WITH TIME ZONE
+    FK(user_id) : INT NOT NULL
+    brand : VARCHAR(20) NOT NULL
+    last_four : VARCHAR(4) NOT NULL
+    cardholder_name : VARCHAR(100) NOT NULL
+    expiry_month : INT NOT NULL
+    expiry_year : INT NOT NULL
+    stripe_payment_method_id : LONGTEXT NOT NULL
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  TABLE(user_subscriptions, "user_subscriptions") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(user_id) : INT NOT NULL
+    FK(plan_id) : INT NOT NULL
+    plan_key : VARCHAR(20) NOT NULL
+    FK(payment_method_id) : INT
+    status : VARCHAR(20) NOT NULL
+    billing_period : VARCHAR(20) NOT NULL
+    period_start : DATETIME NOT NULL
+    period_end : DATETIME NOT NULL
+    cancel_at_period_end : TINYINT(1) NOT NULL
+    stripe_subscription_id : LONGTEXT
+    last_plan_change_at : DATETIME
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  TABLE(payment_records, "payment_records") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(user_subscription_id) : INT NOT NULL
+    amount : DECIMAL(10,2) NOT NULL
+    currency : VARCHAR(3) NOT NULL
+    status : VARCHAR(20) NOT NULL
+    stripe_payment_intent_id : LONGTEXT
+    processed_at : DATETIME NOT NULL
   }
 }
 
-users ||--o{ nutrition_logs          : "has"
-users ||--o| body_profiles           : "has"
-users ||--o{ weight_records          : "logs"
-users ||--o{ recs_sets               : "receives"
-users ||--o{ activity_logs           : "has"
-users ||--o| wearable_tokens         : "connects"
-users ||--o{ reports                 : "generates"
-users ||--o| subscriptions           : "holds"
-users ||--o{ invoices                : "billed via"
+' ===== Intra-context relationships =====
+users ||--o{ dietary_restrictions : "declares"
+users ||--o{ user_sessions        : "opens"
 
-nutrition_logs  ||--o{ food_entries      : "contains"
-food_items      ||--o{ food_entries      : "referenced by"
+foods ||--o{ nutrition_logs        : "logged as"
 
-recs_sets       ||--o{ recs_items        : "contains"
+body_metrics ||--o{ body_measurements : "tracks"
+body_metrics ||--o{ user_goals        : "sets"
+body_metrics ||--o{ weight_logs       : "records"
 
-activity_logs   ||--o{ activity_records  : "contains"
+user_analytics ||--o{ progress_snapshots : "records"
 
-reports         ||--o{ weight_snapshots  : "contains"
+pantries ||--o{ pantry_items                            : "stocks"
+recipes  ||--o{ recipe_ingredient_items                 : "composed of"
+ingredient_catalog_items ||--o{ pantry_items            : "stored as"
+ingredient_catalog_items ||--o{ recipe_ingredient_items : "used in"
+cities ||--o{ location_preferences                      : "home/current"
+cities ||--o{ recommendation_cards                      : "contextualizes"
 
-subscriptions   ||--o{ invoices          : "generates"
+subscription_plans ||--o{ user_subscriptions : "defines terms for"
+payment_methods    ||--o{ user_subscriptions : "charged on"
+user_subscriptions ||--o{ payment_records    : "generates"
+
+' ===== Cross-context relationships (by user_id) =====
+users ||--o{ nutrition_logs        : "owns"
+users ||--o{ activity_logs         : "logs"
+users ||--o{ wearable_connections  : "connects"
+users ||--o| body_metrics          : "profiled by"
+users ||--o| user_analytics        : "summarized by"
+users ||--o| location_preferences  : "locates"
+users ||--o| pantries              : "keeps"
+users ||--o{ recommendation_cards  : "receives"
+users ||--o{ payment_methods       : "saves"
+users ||--o{ user_subscriptions    : "holds"
+
+' ===== Cross-context catalog references =====
+foods ||--o{ ingredient_catalog_items : "maps to"
+foods ||--o{ recommendation_cards     : "suggests"
 
 @enduml

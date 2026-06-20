@@ -1,8 +1,12 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 skinparam linetype ortho
+
+package "activity-wearable/domain/model [stub]" {
+  class ActivityType <<value object>>
+}
 
 package "activity-wearable/application [stub]" {
   class useActivityWearableStore <<store>>
@@ -31,7 +35,7 @@ ActivityHistoryView ..> ActivityLogListComponent : contains >
 
 ActivityView o--> useActivityWearableStore : uses >
 ActivityHistoryView o--> useActivityWearableStore : uses >
-ActivityLogFormComponent o--> useActivityWearableStore : uses >
-ActivityLogListComponent o--> useActivityWearableStore : uses >
+
+ActivityLogFormComponent ..> ActivityType : estimates calories >
 
 @enduml

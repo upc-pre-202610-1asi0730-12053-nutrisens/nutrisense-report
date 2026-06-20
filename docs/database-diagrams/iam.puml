@@ -9,48 +9,58 @@ hide methods
 !define FK(x) <i>x</i>
 
 TABLE(users, "users") {
-  PK(id) : UUID NOT NULL
+  PK(id) : INT AUTO_INCREMENT
   --
-  first_name : VARCHAR(100) NOT NULL
-  last_name : VARCHAR(100) NOT NULL
-  avatar_url : VARCHAR(500)
-  role : VARCHAR(20) NOT NULL CHECK (role IN ('USER', 'ADMIN'))
-  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
-}
-
-TABLE(user_credentials, "user_credentials") {
-  PK(id) : UUID NOT NULL
-  --
-  FK(user_id) : UUID NOT NULL
   email : VARCHAR(255) NOT NULL
-  password_hash : VARCHAR(512) NOT NULL
-  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  password_hash : LONGTEXT NOT NULL
+  first_name : VARCHAR(80) NOT NULL
+  last_name : VARCHAR(80) NOT NULL
+  preferred_language : VARCHAR(5) NOT NULL
+  preferred_units : VARCHAR(10) NOT NULL
+  medical_conditions : JSON NOT NULL
+  height_cm : DECIMAL(18,2)
+  date_of_birth : LONGTEXT
+  biological_sex : VARCHAR(25)
+  activity_level : VARCHAR(25)
+  goal_intent : VARCHAR(20)
+  created_at : DATETIME
+  updated_at : DATETIME
 }
 
-TABLE(refresh_tokens, "refresh_tokens") {
-  PK(id) : UUID NOT NULL
+TABLE(dietary_restrictions, "dietary_restrictions") {
+  PK(id) : INT AUTO_INCREMENT
   --
-  FK(user_id) : UUID NOT NULL
-  token_hash : VARCHAR(512) NOT NULL
-  expires_at : TIMESTAMPTZ NOT NULL
-  revoked : BOOLEAN NOT NULL DEFAULT FALSE
-  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  FK(user_id) : INT NOT NULL
+  restriction : VARCHAR(100) NOT NULL
+}
+
+TABLE(user_sessions, "user_sessions") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(user_id) : INT NOT NULL
+  device_label : VARCHAR(200) NOT NULL
+  is_current : TINYINT(1) NOT NULL
+  last_active_at : DATETIME NOT NULL
+  created_at : DATETIME NOT NULL
 }
 
 ' Constraints
-note right of user_credentials
-  UNIQUE (email)
-  UNIQUE (user_id)
+note right of users
+  UNIQUE (email)  [ix_users_email]
+  first_name / last_name persisted
+  from owned PersonName value object
 end note
 
-note right of refresh_tokens
-  INDEX (user_id, revoked)
+note right of dietary_restrictions
+  INDEX (user_id)
+end note
+
+note right of user_sessions
+  INDEX (user_id)
 end note
 
 ' Relationships
-users ||--|| user_credentials : "has credentials\n(1 to 1)"
-users ||--o{ refresh_tokens : "owns\n(1 to 0..*)"
+users ||--o{ dietary_restrictions : "declares\n(1 to 0..*)"
+users ||--o{ user_sessions        : "opens\n(1 to 0..*)"
 
 @enduml

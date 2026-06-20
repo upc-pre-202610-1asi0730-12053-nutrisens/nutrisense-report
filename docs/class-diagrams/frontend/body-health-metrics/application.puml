@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -6,13 +6,22 @@ skinparam linetype ortho
 
 package "body-health-metrics/infrastructure [stubs]" {
   class BodyHealthMetricsApi <<api>>
-  class BodyMeasurementAssembler <<assembler>>
+  class BodyMetricsAssembler <<assembler>>
   class WeightLogAssembler <<assembler>>
-  class UserGoalAssembler <<assembler>>
+}
+
+package "body-health-metrics/domain/model [stubs]" {
+  class BodyMeasurement <<entity>>
 }
 
 package "body-health-metrics/domain/services [stubs]" {
   class BodyMetricsService <<domain service>>
+}
+
+package "shared/infrastructure [stubs]" {
+  class EventBus <<event bus>> {
+    + {static} emit(event): void
+  }
 }
 
 package "body-health-metrics/application" {
@@ -34,27 +43,29 @@ package "body-health-metrics/application" {
     + todayWeightLog: WeightLog|null
     + latestWeightKg: number|null
     -- actions --
-    + fetchBodyMeasurements(userId): void
-    + fetchBodyMeasurement(id): void
-    + createBodyMeasurement(userId, waistCm): void
-    + updateBodyMeasurement(measurementData): void
-    + fetchWeightLogs(userId): void
-    + logWeight(userId, weightKg, date): Promise
-    + updateTodayWeight(userId, weightKg): void
-    + fetchUserGoal(userId): void
-    + saveUserGoal(userId, goalData): void
     + getBmi(weightKg, heightCm): BmiResult|null
     + getBmr(weightKg, heightCm, ageYears, sex): number|null
     + getTdee(bmr, palMultiplier): number|null
     + setUserHeight(heightCm): void
+    + fetchBodyMeasurements(userId): void
+    + fetchBodyMeasurement(id): void
+    + updateBodyMeasurement(userId, measurementData): void
+    + createBodyMeasurement(userId, waistCm, neckCm): void
+    + fetchWeightLogs(userId): void
+    + logWeight(userId, weightKg, date): Promise
+    + updateTodayWeight(userId, weightKg): void
+    + fetchUserGoal(userId): void
+    + registerBodyMetrics(data): Promise
+    + saveUserGoal(userId, goalData): void
     + clearErrors(): void
   }
 }
 
 useBodyHealthMetricsStore --> BodyHealthMetricsApi : uses >
-useBodyHealthMetricsStore --> BodyMeasurementAssembler : uses >
+useBodyHealthMetricsStore --> BodyMetricsAssembler : uses >
 useBodyHealthMetricsStore --> WeightLogAssembler : uses >
-useBodyHealthMetricsStore --> UserGoalAssembler : uses >
 useBodyHealthMetricsStore --> BodyMetricsService : uses >
+useBodyHealthMetricsStore ..> BodyMeasurement : creates >
+useBodyHealthMetricsStore ..> EventBus : emits >
 
 @enduml
