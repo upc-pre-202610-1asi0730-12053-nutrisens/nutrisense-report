@@ -1062,7 +1062,92 @@ Durante el Sprint 2, todos los miembros del equipo participaron activamente en l
 
 #### 5.2.3.1. Sprint Planning 3
 
+<table>
+  <tr>
+    <th colspan="2">Sprint #</th>
+    <th colspan="2">Sprint 3</th>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Planning Background</th>
+  </tr>
+  <tr>
+    <td colspan="2">Date</td>
+    <td colspan="2">2026-06-02</td>
+  </tr>
+  <tr>
+    <td colspan="2">Time</td>
+    <td colspan="2">06:00 PM (GMT-5)</td>
+  </tr>
+  <tr>
+    <td colspan="2">Location</td>
+    <td colspan="2">Reunión presencial</td>
+  </tr>
+  <tr>
+    <td colspan="2">Prepared By</td>
+    <td colspan="2">Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Attendees (to planning meeting)</td>
+    <td colspan="2">Del Aguila Del Aguila, Olenka Priscilla / Espinoza Cruz, Angela Milagros / Mora Rivera, Joel Fernando / Vergraray Calderon, Rose Almendra / Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint 2 Review Summary</th>
+  </tr>
+  <tr>
+    <td colspan="4">Durante el Sprint 2 se entregó la aplicación web Vue de NutriSense con cobertura funcional completa para los flujos de autenticación, onboarding nutricional, seguimiento de comidas, métricas corporales, dashboard, escaneo inteligente con IA, recomendaciones, registro de actividad física y gestión de suscripciones. La aplicación fue desplegada y resultó accesible públicamente. El Sprint Goal se cumplió al 100 %.</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint 2 Retrospective Summary</th>
+  </tr>
+  <tr>
+    <td colspan="4">El equipo destacó positivamente la organización por bounded contexts, que permitió el trabajo paralelo sin conflictos de integración. Como oportunidad de mejora se identificó la necesidad de definir con mayor anticipación los contratos de los endpoints (request/response bodies y códigos de estado) para evitar inconsistencias entre el frontend y el backend al integrarse. Para el Sprint 3 se acordó documentar cada endpoint con OpenAPI antes de iniciar su implementación y validar la integración frontend–backend en cada Pull Request.</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Goal &amp; User Stories</th>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 3 Goal</td>
+    <td colspan="2">Nuestro enfoque está en entregar el backend de NutriSense completamente operativo, con los 76 endpoints REST versionados bajo <code>api/v1/</code>, distribuidos en los 7 bounded contexts (IAM, BodyHealthMetrics, NutritionTracking, ActivityWearable, SmartRecommendations, Subscriptions y AnalyticsReporting), documentados con OpenAPI/Swagger e integrados con los servicios externos (Gemini, DeepSeek, USDA, OpenWeatherMap, Stripe, Google Fit). Creemos que entrega la capa de negocio y persistencia que da soporte real a ambos segmentos objetivo, al calcular automáticamente sus metas calóricas y de macros, propagar eventos de dominio entre contextos y desbloquear funciones premium según el plan de suscripción activo. Esto se confirmará cuando el equipo de frontend pueda consumir todos los endpoints sin errores, el flujo completo de onboarding dispare la saga de cálculo IMC → BMR → TDEE → meta diaria, el escaneo de plato con Gemini persista entradas en el log nutricional, y la activación de una suscripción vía Stripe habilite las funciones premium en SmartRecommendations.</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 3 Velocity</td>
+    <td colspan="2">89 Story Points</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sum of Story Points</td>
+    <td colspan="2">89 Story Points</td>
+  </tr>
+</table>
+
+---
+
 #### 5.2.3.2. Aspect Leaders and Collaborators
+
+El Sprint 3 abarca la implementación completa del backend (`Nutrisense.Nutrisense.Platform`) en **.NET 10 / C#** bajo una arquitectura DDD + Clean Architecture organizada por bounded context. Cada integrante asumió el liderazgo del o los contextos que desarrolló en su totalidad, incluyendo las cuatro capas (Domain, Application, Infrastructure, Interfaces) y los endpoints REST correspondientes. Los aspectos identificados para organizar el liderazgo y la colaboración en este sprint son los siguientes:
+
+**IAM (Identity & Access Management):** Comprende el registro y autenticación de usuarios (JWT HS256, BCrypt), la gestión del perfil, sesiones, objetivos de salud y restricciones dietéticas. Expone 11 endpoints bajo `api/v1/authentication`, `api/v1/users` y `api/v1/users/{userId}/sessions`, además del ACL `IIamContextFacade` consumido por otros bounded contexts.
+
+**BodyHealthMetrics:** Comprende el registro de biometría inicial y la saga de cálculo encadenada IMC → BMR (Mifflin-St Jeor) → TDEE → meta diaria de calorías y macros, el historial de peso, las medidas corporales y el objetivo de peso. Expone 8 endpoints bajo `api/v1/body-metrics` y publica los eventos de dominio `BmiCalculated`, `BmrCalculated`, `TdeeCalculated` y `DailyCaloricGoalSet`.
+
+**NutritionTracking:** Comprende el catálogo de alimentos (búsqueda, registro e importación USDA), el registro diario de comidas con cálculo proporcional de macros, el historial y el resumen diario, y el escaneo de platos y menús con IA (Gemini para visión + DeepSeek como fallback de estimación de macros). Expone 14 endpoints bajo `api/v1/foods` y `api/v1/nutrition-logs`.
+
+**ActivityWearable:** Comprende el registro manual de actividad física, el recálculo del balance calórico diario, la conexión y sincronización de dispositivos wearable (Google Fit), y la verificación de propiedad antes de eliminar registros. Expone 8 endpoints bajo `api/v1/activity-logs` y `api/v1/wearable-connections`, y publica los eventos `ActivityImported`, `ActiveCaloriesCalculated` y `CaloricBalanceAdjusted`.
+
+**SmartRecommendations:** Comprende la generación de recomendaciones contextuales con DeepSeek (clima vía OpenWeatherMap, objetivo, restricciones dietéticas y doble filtro), la gestión de despensa, el catálogo de ingredientes, las sugerencias de recetas, el modo viaje y la detección de ubicación por coordenadas. Expone 19 endpoints y consume los ACL de IAM, BodyHealthMetrics, NutritionTracking y Subscriptions.
+
+**Subscriptions & Billing:** Comprende el ciclo de vida completo de la suscripción (selección de plan, pago vía Stripe, upgrade/downgrade, cancelación y renovación), los métodos de pago y el historial de pagos. Expone 11 endpoints bajo `api/v1/subscription-plans`, `api/v1/user-subscriptions`, `api/v1/payment-methods` y `api/v1/payments`. Los eventos críticos `BenefitsEnabled` / `BenefitsDisabled` gobiernan el desbloqueo de funciones premium en SmartRecommendations.
+
+**AnalyticsReporting:** Comprende el cálculo de adherencia (ponderación 50 % calorías / 50 % proteína), la gestión de rachas (streaks), los snapshots de progreso (90 días), el dashboard diario y la exportación de reportes PDF (función Premium). Expone 5 endpoints bajo `api/v1/analytics` y opera de forma reactiva escuchando los eventos `ConsumptionUpdated`, `CaloricBalanceAdjusted` y `TdeeCalculated` de otros bounded contexts.
+
+**Shared & Infrastructure Transversal:** Comprende el `AppDbContext` con todas las configuraciones EF Core, el `UnitOfWork`, el `BaseRepository<T>`, el `Result Pattern`, los interceptores de auditoría (`AuditableEntityInterceptor`, `UtcDateTimeInterceptor`), las migraciones Code-First, el `CatalogImportHostedService` y los clientes compartidos `DeepSeekClient` y `GeminiClient`. Es una responsabilidad transversal en la que todos los integrantes colaboran.
+
+| Team Member (Last Name, First Name) | GitHub Username | IAM | BodyHealthMetrics | NutritionTracking | ActivityWearable | SmartRecommendations | Subscriptions & Billing | AnalyticsReporting | Shared & Infra |
+|-------------------------------------|-----------------|:---:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:-----------------------:|:------------------:|:--------------:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha_14 | C | C | C | C | C | C | L | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C | C | L | C | C | C | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C | L | C | C | C | C | C |
+| Vergraray Calderon, Rose Almendra | roseal28 | C | L | C | C | C | C | C | C |
+| Villarreal Bazan, Angel Martin | nevatrix | L | C | C | C | L | L | C | L |
 
 #### 5.2.3.3. Sprint Backlog 3
 
@@ -1223,6 +1308,10 @@ URL del Board (Trello): [Enlace Trello](https://trello.com/b/QxmJTyBW/sprint-bac
 #### 5.2.3.7. Software Deployment Evidence for Sprint Review
 
 #### 5.2.3.8. Team Collaboration Insights during Sprint
+
+Durante el Sprint 3, todos los miembros del equipo participaron activamente en las actividades de implementación, tal como se refleja en los analíticos de colaboración de GitHub. Como se puede observar en la gráfica de contribuciones, los integrantes Nevatrix, xJoelFMRx, olenkisha14, Emy127 y roseal28 realizaron commits de manera constante a lo largo del sprint, cada uno liderando el desarrollo y refinamiento de su bounded context asignado, así como colaborando en la integración del backend con el frontend y en las correcciones derivadas de las entrevistas de validación.
+
+![Insight](../assets/img/sprint3/insight.png)
 
 ## 5.3. Validation Interviews
 
