@@ -1,0 +1,168 @@
+@startuml NutriSense - IAM - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "NutriSense.IAM.Interfaces" {
+
+  package "Acl" {
+    interface IIamContextFacade {
+      +GetDietaryRestrictionsByUserId(userId: int, ct): Task<IReadOnlyList<string>>
+    }
+  }
+
+  package "REST" {
+    class AuthenticationController {
+      +SignUp(resource: RegisterUserResource): Task<IActionResult>
+      +SignIn(resource: LoginUserResource): Task<IActionResult>
+    }
+    class UsersController {
+      +GetById(id: int): Task<IActionResult>
+      +GetByEmail(email: string): Task<IActionResult>
+      +UpdateProfile(id: int, resource: UpdateProfileResource): Task<IActionResult>
+      +SetHealthGoal(id: int, resource: SetHealthGoalResource): Task<IActionResult>
+      +SetDietaryRestrictions(id: int, resource: SetDietaryRestrictionsResource): Task<IActionResult>
+      +GetDietaryRestrictions(id: int): Task<IActionResult>
+      +DeleteUser(id: int): Task<IActionResult>
+    }
+    class SessionsController {
+      +GetSessions(userId: int): Task<IActionResult>
+      +Logout(userId: int, sessionId: int): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class RegisterUserResource <<record>>
+    class LoginUserResource <<record>>
+    class LoginResponseResource <<record>>
+    class UpdateProfileResource <<record>>
+    class SetHealthGoalResource <<record>>
+    class SetDietaryRestrictionsResource <<record>>
+    class UserResource <<record>>
+    class SessionResource <<record>>
+  }
+
+  package "REST.Transform" {
+    class RegisterUserCommandAssembler <<static>>
+    class LoginUserCommandAssembler <<static>>
+    class UpdateProfileCommandAssembler <<static>>
+    class SetHealthGoalCommandAssembler <<static>>
+    class SetDietaryRestrictionsCommandAssembler <<static>>
+    class UserResourceAssembler <<static>>
+    class SessionResourceAssembler <<static>>
+    class RegisterUserResultAssembler <<static>>
+    class LoginUserResultAssembler <<static>>
+    class LogoutUserResultAssembler <<static>>
+    class UpdateProfileResultAssembler <<static>>
+    class SetHealthGoalResultAssembler <<static>>
+    class SetDietaryRestrictionsResultAssembler <<static>>
+    class DeleteUserResultAssembler <<static>>
+  }
+}
+
+package "IAM.Application" <<external>> {
+  interface IUserCommandService
+  interface IUserQueryService
+  class IamContextFacade
+  class LoginResult
+}
+
+package "IAM.Domain" <<external>> {
+  class User
+  class UserSession
+  class UserId
+  class RegisterUserCommand
+  class LoginUserCommand
+  class LogoutUserCommand
+  class UpdateProfileCommand
+  class SetHealthGoalCommand
+  class SetDietaryRestrictionsCommand
+  class DeleteUserCommand
+  class GetUserByIdQuery
+  class GetUserByEmailQuery
+  class GetAllSessionsByUserIdQuery
+  class GetDietaryRestrictionsByUserIdQuery
+}
+
+package "Shared / ASP.NET" <<external>> {
+  class ControllerBase
+  class "Result<TValue, TError>" as Result
+  interface "IStringLocalizer<SharedResource>" as IStringLocalizer
+}
+
+' --- Controllers ---
+AuthenticationController --|> ControllerBase
+UsersController --|> ControllerBase
+SessionsController --|> ControllerBase
+AuthenticationController --> IUserCommandService : uses
+AuthenticationController --> IStringLocalizer : uses
+UsersController --> IUserCommandService : uses
+UsersController --> IUserQueryService : uses
+UsersController --> IStringLocalizer : uses
+SessionsController --> IUserCommandService : uses
+SessionsController --> IUserQueryService : uses
+SessionsController --> IStringLocalizer : uses
+
+' --- Controllers -> assemblers / queries / commands ---
+AuthenticationController ..> RegisterUserCommandAssembler : uses
+AuthenticationController ..> RegisterUserResultAssembler : uses
+AuthenticationController ..> LoginUserCommandAssembler : uses
+AuthenticationController ..> LoginUserResultAssembler : uses
+UsersController ..> UpdateProfileCommandAssembler : uses
+UsersController ..> UpdateProfileResultAssembler : uses
+UsersController ..> SetHealthGoalCommandAssembler : uses
+UsersController ..> SetHealthGoalResultAssembler : uses
+UsersController ..> SetDietaryRestrictionsCommandAssembler : uses
+UsersController ..> SetDietaryRestrictionsResultAssembler : uses
+UsersController ..> DeleteUserResultAssembler : uses
+UsersController ..> UserResourceAssembler : uses
+UsersController ..> GetUserByIdQuery : builds
+UsersController ..> GetUserByEmailQuery : builds
+UsersController ..> GetDietaryRestrictionsByUserIdQuery : builds
+UsersController ..> DeleteUserCommand : builds
+UsersController ..> UserId : builds
+SessionsController ..> SessionResourceAssembler : uses
+SessionsController ..> LogoutUserResultAssembler : uses
+SessionsController ..> GetAllSessionsByUserIdQuery : builds
+SessionsController ..> LogoutUserCommand : builds
+
+' --- Request resource -> command assemblers ---
+RegisterUserCommandAssembler ..> RegisterUserResource : from
+RegisterUserCommandAssembler ..> RegisterUserCommand : to
+LoginUserCommandAssembler ..> LoginUserResource : from
+LoginUserCommandAssembler ..> LoginUserCommand : to
+UpdateProfileCommandAssembler ..> UpdateProfileResource : from
+UpdateProfileCommandAssembler ..> UpdateProfileCommand : to
+SetHealthGoalCommandAssembler ..> SetHealthGoalResource : from
+SetHealthGoalCommandAssembler ..> SetHealthGoalCommand : to
+SetDietaryRestrictionsCommandAssembler ..> SetDietaryRestrictionsResource : from
+SetDietaryRestrictionsCommandAssembler ..> SetDietaryRestrictionsCommand : to
+
+' --- Entity -> response resource assemblers ---
+UserResourceAssembler ..> User : from
+UserResourceAssembler ..> UserResource : to
+SessionResourceAssembler ..> UserSession : from
+SessionResourceAssembler ..> SessionResource : to
+
+' --- Result -> IActionResult assemblers ---
+RegisterUserResultAssembler ..> Result : maps
+RegisterUserResultAssembler ..> UserResourceAssembler : uses
+LoginUserResultAssembler ..> Result : maps
+LoginUserResultAssembler ..> LoginResult : from
+LoginUserResultAssembler ..> LoginResponseResource : produces
+LogoutUserResultAssembler ..> Result : maps
+UpdateProfileResultAssembler ..> Result : maps
+UpdateProfileResultAssembler ..> UserResourceAssembler : uses
+SetHealthGoalResultAssembler ..> Result : maps
+SetHealthGoalResultAssembler ..> UserResourceAssembler : uses
+SetDietaryRestrictionsResultAssembler ..> Result : maps
+SetDietaryRestrictionsResultAssembler ..> UserResourceAssembler : uses
+DeleteUserResultAssembler ..> Result : maps
+
+' --- ACL facade contract & its implementation ---
+IamContextFacade ..|> IIamContextFacade
+IamContextFacade --> IUserQueryService : uses
+
+@enduml

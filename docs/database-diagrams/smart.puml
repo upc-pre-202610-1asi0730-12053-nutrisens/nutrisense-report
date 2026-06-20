@@ -8,78 +8,143 @@ hide methods
 !define PK(x) <u>x</u>
 !define FK(x) <i>x</i>
 
-TABLE(recommendation_engines, "recommendation_engines") {
-  PK(id) : UUID NOT NULL
+TABLE(cities, "cities") {
+  PK(id) : INT AUTO_INCREMENT
   --
-  FK(user_id) : UUID NOT NULL
-  travel_mode_active : BOOLEAN NOT NULL DEFAULT FALSE
-  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  updated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  key : VARCHAR(50) NOT NULL
+  name_en : VARCHAR(100) NOT NULL
+  name_es : VARCHAR(100) NOT NULL
+  country : VARCHAR(50) NOT NULL
+  timezone : VARCHAR(50) NOT NULL
+  lat : DECIMAL(9,6) NOT NULL
+  lng : DECIMAL(9,6) NOT NULL
 }
 
-TABLE(recommendations, "recommendations") {
-  PK(id) : UUID NOT NULL
+TABLE(ingredient_catalog_items, "ingredient_catalog_items") {
+  PK(id) : INT AUTO_INCREMENT
   --
-  FK(engine_id) : UUID NOT NULL
-  title : VARCHAR(255) NOT NULL
-  description : TEXT NOT NULL
-  recommendation_type : VARCHAR(20) NOT NULL
-    CHECK (recommendation_type IN
-      ('WEATHER_BASED','GOAL_BASED','TRAVEL_MODE','PANTRY_BASED'))
-  weather_temperature_celsius : NUMERIC(5,2)
-  weather_humidity : NUMERIC(5,2)
-  weather_condition : VARCHAR(100)
-  weather_city : VARCHAR(150)
-  generated_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  key : VARCHAR(100) NOT NULL
+  name_en : VARCHAR(200) NOT NULL
+  name_es : VARCHAR(200) NOT NULL
+  category : VARCHAR(50) NOT NULL
+  default_unit : VARCHAR(20) NOT NULL
+  grams_per_unit : DECIMAL(10,3)
+  food_id : INT
 }
 
-TABLE(meal_suggestions, "meal_suggestions") {
-  PK(id) : UUID NOT NULL
+TABLE(location_preferences, "location_preferences") {
+  PK(id) : INT AUTO_INCREMENT
   --
-  FK(recommendation_id) : UUID NOT NULL
-  name : VARCHAR(255) NOT NULL
-  calories_kcal : NUMERIC(8,2) NOT NULL
-  preparation_time_min : INT
-  is_travel_friendly : BOOLEAN NOT NULL DEFAULT FALSE
+  user_id : INT NOT NULL
+  FK(home_city_id) : INT
+  FK(current_city_id) : INT
+  location_permission_granted : TINYINT(1) NOT NULL
+  is_manual_override : TINYINT(1) NOT NULL
+  travel_mode_active : TINYINT(1) NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
 }
 
-TABLE(meal_suggestion_ingredients, "meal_suggestion_ingredients") {
-  PK(id) : UUID NOT NULL
+TABLE(recommendation_cards, "recommendation_cards") {
+  PK(id) : INT AUTO_INCREMENT
   --
-  FK(meal_suggestion_id) : UUID NOT NULL
-  ingredient_name : VARCHAR(200) NOT NULL
-  sort_order : SMALLINT NOT NULL DEFAULT 0
+  user_id : INT NOT NULL
+  food_id : INT
+  FK(city_id) : INT
+  food_name_en : VARCHAR(200) NOT NULL
+  food_name_es : VARCHAR(200) NOT NULL
+  badge : VARCHAR(30) NOT NULL
+  context_label_en : VARCHAR(300) NOT NULL
+  context_label_es : VARCHAR(300) NOT NULL
+  goal_type : VARCHAR(50)
+  weather_type : VARCHAR(20)
+  estimated_calories : DECIMAL(10,2) NOT NULL
+  estimated_protein_g : DECIMAL(10,2) NOT NULL
+  estimated_carbs_g : DECIMAL(10,2) NOT NULL
+  estimated_fat_g : DECIMAL(10,2) NOT NULL
+  restrictions_conflict : JSON NOT NULL
+  is_active : TINYINT(1) NOT NULL
+  created_at : DATETIME NOT NULL
+}
+
+TABLE(pantries, "pantries") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  user_id : INT NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
 }
 
 TABLE(pantry_items, "pantry_items") {
-  PK(id) : UUID NOT NULL
+  PK(id) : INT AUTO_INCREMENT
   --
-  FK(engine_id) : UUID NOT NULL
-  name : VARCHAR(200) NOT NULL
-  quantity : NUMERIC(8,2) NOT NULL CHECK (quantity >= 0)
-  unit : VARCHAR(50) NOT NULL
-  expires_at : DATE
-  created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  FK(pantry_id) : INT NOT NULL
+  FK(ingredient_catalog_item_id) : INT NOT NULL
+  quantity : DECIMAL(10,3) NOT NULL
+  unit : VARCHAR(20) NOT NULL
+  expires_at : DATETIME
+}
+
+TABLE(recipes, "recipes") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  key : VARCHAR(100) NOT NULL
+  name_en : VARCHAR(200) NOT NULL
+  name_es : VARCHAR(200) NOT NULL
+  goal_type : VARCHAR(50) NOT NULL
+  prep_time_minutes : INT NOT NULL
+  servings : INT NOT NULL
+  total_calories : DECIMAL(10,2) NOT NULL
+  total_protein_g : DECIMAL(10,2) NOT NULL
+  total_carbs_g : DECIMAL(10,2) NOT NULL
+  total_fat_g : DECIMAL(10,2) NOT NULL
+  total_fiber_g : DECIMAL(10,2) NOT NULL
+  restrictions_conflict : JSON NOT NULL
+}
+
+TABLE(recipe_ingredient_items, "recipe_ingredient_items") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(recipe_id) : INT NOT NULL
+  FK(ingredient_catalog_item_id) : INT NOT NULL
+  quantity : DECIMAL(10,3) NOT NULL
+  unit : VARCHAR(20) NOT NULL
 }
 
 ' Constraints
-note right of recommendation_engines
+note bottom of cities
+  UNIQUE (key)  [ix_cities_key]
+end note
+
+note bottom of ingredient_catalog_items
+  UNIQUE (key)
+  [ix_ingredient_catalog_items_key]
+end note
+
+note bottom of location_preferences
   UNIQUE (user_id)
+  [ix_location_preferences_user_id]
 end note
 
-note right of recommendations
-  INDEX (engine_id, generated_at DESC)
-  INDEX (recommendation_type)
+note bottom of pantries
+  UNIQUE (user_id)  [ix_pantries_user_id]
 end note
 
-note right of pantry_items
-  INDEX (engine_id, expires_at)
+note bottom of recommendation_cards
+  INDEX (user_id)
+  [ix_recommendation_cards_user_id]
+end note
+
+note bottom of recipes
+  UNIQUE (key)  [ix_recipes_key]
 end note
 
 ' Relationships
-recommendation_engines ||--o{ recommendations : "generates\n(1 to 0..*)"
-recommendation_engines ||--o{ pantry_items : "stores\n(1 to 0..*)"
-recommendations ||--o{ meal_suggestions : "contains\n(1 to 0..*)"
-meal_suggestions ||--o{ meal_suggestion_ingredients : "has\n(1 to 0..*)"
+pantries ||--o{ pantry_items                       : "stocks\n(1 to 0..*)"
+recipes ||--o{ recipe_ingredient_items             : "composed of\n(1 to 0..*)"
+ingredient_catalog_items ||--o{ pantry_items       : "stored as\n(1 to 0..*)"
+ingredient_catalog_items ||--o{ recipe_ingredient_items : "used in\n(1 to 0..*)"
+cities ||--o{ location_preferences                 : "set as home/current\n(1 to 0..*)"
+cities ||--o{ recommendation_cards                 : "contextualizes\n(1 to 0..*)"
 
 @enduml

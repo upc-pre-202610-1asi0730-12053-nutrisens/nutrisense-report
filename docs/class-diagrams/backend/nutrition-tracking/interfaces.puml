@@ -1,0 +1,190 @@
+@startuml NutriSense - Nutrition Tracking - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "NutriSense.NutritionTracking.Interfaces" {
+
+  package "Acl" {
+    interface INutritionTrackingContextFacade {
+      +GetFoodCatalog(ct): Task<IReadOnlyList<FoodCatalogItem>>
+      +ResolveOrCreateFoodsByNames(namesEn, source, ct): Task<IReadOnlyList<ProvisionedFoodItem>>
+      +GetDailyMacroSummary(userId, date, ct): Task<DailyMacroSummaryItem?>
+      +GetLoggedMealTypes(userId, date, ct): Task<IReadOnlyList<string>>
+    }
+    class FoodCatalogItem <<record>>
+    class ProvisionedFoodItem <<record>>
+    class DailyMacroSummaryItem <<record>>
+  }
+
+  package "REST" {
+    class FoodsController {
+      +SearchFood(query: string, language: string): Task<IActionResult>
+      +GetById(id: int): Task<IActionResult>
+      +RegisterFood(resource: RegisterFoodResource): Task<IActionResult>
+      +ImportFoods(resource: ImportFoodsResource): Task<IActionResult>
+    }
+    class NutritionLogsController {
+      +UpdateEntry(entryId: int, resource: UpdateNutritionLogResource): Task<IActionResult>
+      +DeleteEntry(entryId: int): Task<IActionResult>
+      +LogMeal(resource: LogMealResource): Task<IActionResult>
+      +GetByUserAndDate(userId: int, date: string): Task<IActionResult>
+      +GetDailySummary(userId: int, date: string): Task<IActionResult>
+      +GetHistory(userId: int, from: string?, to: string?): Task<IActionResult>
+      +ScanDish(resource: ScanPhotoResource): Task<IActionResult>
+      +ConfirmScan(resource: ConfirmScanResource): Task<IActionResult>
+      +ScanMenu(resource: ScanPhotoResource): Task<IActionResult>
+      +SelectMenuOption(resource: SelectMenuOptionResource): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class RegisterFoodResource <<record>>
+    class ImportFoodsResource <<record>>
+    class FoodResource <<record>>
+    class FoodSearchResultResource <<record>>
+    class LogMealResource <<record>>
+    class UpdateNutritionLogResource <<record>>
+    class ConfirmScanResource <<record>>
+    class SelectMenuOptionResource <<record>>
+    class ScanPhotoResource <<record>>
+    class NutritionLogResource <<record>>
+    class DailyMacroSummaryResource <<record>>
+    class ScannedDishItemResource <<record>>
+    class ScanPreviewResource <<record>>
+    class MenuOptionResource <<record>>
+    class MenuOptionsPreviewResource <<record>>
+  }
+
+  package "REST.Transform" {
+    class RegisterFoodCommandAssembler <<static>>
+    class LogMealCommandAssembler <<static>>
+    class UpdateNutritionLogEntryCommandAssembler <<static>>
+    class ConfirmScanCommandAssembler <<static>>
+    class SelectMenuOptionCommandAssembler <<static>>
+    class FoodResourceAssembler <<static>>
+    class NutritionLogResourceAssembler <<static>>
+    class RegisterFoodResultAssembler <<static>>
+    class LogMealResultAssembler <<static>>
+    class UpdateNutritionLogEntryResultAssembler <<static>>
+    class DeleteNutritionLogEntryResultAssembler <<static>>
+    class ConfirmScanResultAssembler <<static>>
+    class SelectMenuOptionResultAssembler <<static>>
+    class ScanPreviewResultAssembler <<static>>
+    class MenuOptionsPreviewAssembler <<static>>
+  }
+}
+
+package "NutritionTracking.Application" <<external>> {
+  interface IFoodCommandService
+  interface IFoodQueryService
+  interface IFoodImportCommandService
+  interface INutritionLogCommandService
+  interface INutritionLogQueryService
+  class ScanPreviewResult
+  class MenuOptionsPreview
+}
+
+package "NutritionTracking.Domain" <<external>> {
+  class Food
+  class NutritionLog
+  class DailyMacroSummary
+  class RegisterFoodCommand
+  class ImportFoodsCommand
+  class LogMealToDailyLogCommand
+  class UpdateNutritionLogEntryCommand
+  class ConfirmScanResultCommand
+  class SelectMenuOptionCommand
+  class ScanMealPhotoCommand
+  class ScanMenuPhotoCommand
+}
+
+package "Shared / ASP.NET" <<external>> {
+  class ControllerBase
+  class "Result<TValue, TError>" as Result
+  interface "IStringLocalizer<SharedResource>" as IStringLocalizer
+}
+
+' --- Controllers ---
+FoodsController --|> ControllerBase
+NutritionLogsController --|> ControllerBase
+FoodsController --> IFoodCommandService : uses
+FoodsController --> IFoodQueryService : uses
+FoodsController --> IFoodImportCommandService : uses
+FoodsController --> IStringLocalizer : uses
+NutritionLogsController --> INutritionLogCommandService : uses
+NutritionLogsController --> INutritionLogQueryService : uses
+NutritionLogsController --> IStringLocalizer : uses
+
+' --- Controllers ↔ assemblers / inline resources ---
+FoodsController ..> RegisterFoodCommandAssembler : uses
+FoodsController ..> RegisterFoodResultAssembler : uses
+FoodsController ..> FoodResourceAssembler : uses
+FoodsController ..> ImportFoodsResource : reads
+FoodsController ..> ImportFoodsCommand : builds
+NutritionLogsController ..> LogMealCommandAssembler : uses
+NutritionLogsController ..> LogMealResultAssembler : uses
+NutritionLogsController ..> UpdateNutritionLogEntryCommandAssembler : uses
+NutritionLogsController ..> UpdateNutritionLogEntryResultAssembler : uses
+NutritionLogsController ..> DeleteNutritionLogEntryResultAssembler : uses
+NutritionLogsController ..> ConfirmScanCommandAssembler : uses
+NutritionLogsController ..> ConfirmScanResultAssembler : uses
+NutritionLogsController ..> SelectMenuOptionCommandAssembler : uses
+NutritionLogsController ..> SelectMenuOptionResultAssembler : uses
+NutritionLogsController ..> ScanPreviewResultAssembler : uses
+NutritionLogsController ..> MenuOptionsPreviewAssembler : uses
+NutritionLogsController ..> NutritionLogResourceAssembler : uses
+NutritionLogsController ..> ScanPhotoResource : reads
+NutritionLogsController ..> ScanMealPhotoCommand : builds
+NutritionLogsController ..> ScanMenuPhotoCommand : builds
+
+' --- Request resource → command assemblers ---
+RegisterFoodCommandAssembler ..> RegisterFoodResource : from
+RegisterFoodCommandAssembler ..> RegisterFoodCommand : to
+LogMealCommandAssembler ..> LogMealResource : from
+LogMealCommandAssembler ..> LogMealToDailyLogCommand : to
+UpdateNutritionLogEntryCommandAssembler ..> UpdateNutritionLogResource : from
+UpdateNutritionLogEntryCommandAssembler ..> UpdateNutritionLogEntryCommand : to
+ConfirmScanCommandAssembler ..> ConfirmScanResource : from
+ConfirmScanCommandAssembler ..> ConfirmScanResultCommand : to
+SelectMenuOptionCommandAssembler ..> SelectMenuOptionResource : from
+SelectMenuOptionCommandAssembler ..> SelectMenuOptionCommand : to
+
+' --- Entity → response resource assemblers ---
+FoodResourceAssembler ..> Food : from
+FoodResourceAssembler ..> FoodResource : to
+FoodResourceAssembler ..> FoodSearchResultResource : to
+NutritionLogResourceAssembler ..> NutritionLog : from
+NutritionLogResourceAssembler ..> NutritionLogResource : to
+NutritionLogResourceAssembler ..> DailyMacroSummary : from
+NutritionLogResourceAssembler ..> DailyMacroSummaryResource : to
+
+' --- Result → IActionResult assemblers ---
+RegisterFoodResultAssembler ..> Result : maps
+RegisterFoodResultAssembler ..> FoodResourceAssembler : uses
+LogMealResultAssembler ..> Result : maps
+LogMealResultAssembler ..> NutritionLogResourceAssembler : uses
+UpdateNutritionLogEntryResultAssembler ..> Result : maps
+UpdateNutritionLogEntryResultAssembler ..> NutritionLogResourceAssembler : uses
+DeleteNutritionLogEntryResultAssembler ..> Result : maps
+ConfirmScanResultAssembler ..> Result : maps
+ConfirmScanResultAssembler ..> NutritionLogResourceAssembler : uses
+SelectMenuOptionResultAssembler ..> Result : maps
+SelectMenuOptionResultAssembler ..> NutritionLogResourceAssembler : uses
+ScanPreviewResultAssembler ..> ScanPreviewResult : from
+ScanPreviewResultAssembler ..> ScanPreviewResource : to
+MenuOptionsPreviewAssembler ..> MenuOptionsPreview : from
+MenuOptionsPreviewAssembler ..> MenuOptionsPreviewResource : to
+
+' --- Preview resource composition ---
+ScanPreviewResource o--> "0..*" ScannedDishItemResource : contains
+MenuOptionsPreviewResource o--> "0..*" MenuOptionResource : contains
+
+' --- ACL facade contract & its DTOs ---
+INutritionTrackingContextFacade ..> FoodCatalogItem : returns
+INutritionTrackingContextFacade ..> ProvisionedFoodItem : returns
+INutritionTrackingContextFacade ..> DailyMacroSummaryItem : returns
+
+@enduml

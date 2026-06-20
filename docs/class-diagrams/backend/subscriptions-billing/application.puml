@@ -1,52 +1,168 @@
-@startuml NutriSense - Subscriptions & Billing - Application
+@startuml NutriSense - Subscriptions - Application
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
-package "NutriSense.SubscriptionsBilling" {
+package "Nutrisense.Platform.Subscriptions" {
 
-  package "Domain [stubs]" {
-    interface ISubscriptionRepository
+  package "Shared [stubs]" {
+    interface IUnitOfWork {
+      +CompleteAsync(): Task
+    }
+    abstract class "Result<TValue, TError>" as Result {
+      +IsSuccess: bool
+      +IsFailure: bool
+    }
   }
 
-  package "Infrastructure [stubs]" {
-    interface IStripeClient
+  package "Domain [stubs]" {
+    class UserSubscription
+    class SubscriptionPlan
+    class PaymentMethod
+    class PaymentRecord
+    interface IUserSubscriptionRepository
+    interface ISubscriptionPlanRepository
+    interface IPaymentMethodRepository
+    interface IPaymentGateway
+  }
+
+  package "Interfaces.Acl [stub]" {
+    interface ISubscriptionsContextFacade {
+      +GetPlanKey(userId: int): Task<string>
+      +IsProOrAbove(userId: int): Task<bool>
+      +IsPremium(userId: int): Task<bool>
+    }
   }
 
   package "Application" {
-    interface IBillingCommandService {
-      +Handle(command: SubscribeCommand): SubscriptionResponse
-      +Handle(command: CancelSubscriptionCommand): void
+
+    package "CommandServices" {
+      interface IUserSubscriptionCommandService {
+        +HandleSelectPlan(command: SelectSubscriptionPlanCommand): Task<Result<UserSubscription, SelectSubscriptionPlanError>>
+        +HandleCancel(command: CancelSubscriptionCommand): Task<Result<UserSubscription, CancelSubscriptionError>>
+        +HandleRenew(command: RenewSubscriptionCommand): Task<Result<UserSubscription, RenewSubscriptionError>>
+        +HandleChangePlan(command: ChangeSubscriptionPlanCommand): Task<Result<UserSubscription, ChangeSubscriptionPlanError>>
+      }
+      interface IPaymentMethodCommandService {
+        +Handle(command: RegisterPaymentMethodCommand): Task<Result<PaymentMethod, RegisterPaymentMethodError>>
+        +RemoveAsync(id: int): Task<bool>
+      }
     }
 
-    interface IBillingQueryService {
-      +Handle(query: GetAvailablePlansQuery): List<SubscriptionPlanResponse>
-      +Handle(query: GetActiveSubscriptionQuery): SubscriptionResponse
-      +Handle(query: GetPaymentHistoryQuery): List<PaymentResponse>
+    package "QueryServices" {
+      interface IUserSubscriptionQueryService {
+        +Handle(query: GetUserSubscriptionByUserIdQuery): Task<UserSubscription?>
+        +Handle(query: GetPaymentHistoryBySubscriptionIdQuery): Task<IEnumerable<PaymentRecord>>
+      }
+      interface ISubscriptionPlanQueryService {
+        +Handle(query: GetAllSubscriptionPlansQuery): Task<IEnumerable<SubscriptionPlan>>
+        +Handle(query: GetSubscriptionPlanByKeyQuery): Task<SubscriptionPlan?>
+      }
+      interface IPaymentMethodQueryService {
+        +Handle(query: GetPaymentMethodsByUserIdQuery): Task<IEnumerable<PaymentMethod>>
+      }
     }
 
-    class BillingCommandServiceImpl {
-      -subscriptionRepository: ISubscriptionRepository
-      -stripeClient: IStripeClient
-      +Handle(command: SubscribeCommand): SubscriptionResponse
-      +Handle(command: CancelSubscriptionCommand): void
+    package "Errors" {
+      enum SelectSubscriptionPlanError {
+        PlanNotFound
+        PaymentMethodNotFound
+        PaymentFailed
+        AlreadySubscribed
+        UnexpectedError
+      }
+      enum CancelSubscriptionError {
+        NotFound
+        NotActive
+        UnexpectedError
+      }
+      enum RenewSubscriptionError {
+        NotFound
+        PaymentFailed
+        UnexpectedError
+      }
+      enum ChangeSubscriptionPlanError {
+        SubscriptionNotFound
+        PlanNotFound
+        SamePlan
+        PaymentFailed
+        UnexpectedError
+      }
+      enum RegisterPaymentMethodError {
+        InvalidCard
+        UnexpectedError
+      }
     }
 
-    class SubscribeCommand {
-      +UserId: Guid
-      +PlanId: Guid
-      +StripePaymentToken: String
+    package "Internal.CommandServices" {
+      class UserSubscriptionCommandService {
+        +HandleSelectPlan(command): Task<Result>
+        +HandleCancel(command): Task<Result>
+        +HandleRenew(command): Task<Result>
+        +HandleChangePlan(command): Task<Result>
+      }
+      class PaymentMethodCommandService {
+        +Handle(command): Task<Result>
+        +RemoveAsync(id: int): Task<bool>
+      }
     }
 
-    class CancelSubscriptionCommand {
-      +SubscriptionId: Guid
-      +UserId: Guid
+    package "Internal.QueryServices" {
+      class UserSubscriptionQueryService
+      class SubscriptionPlanQueryService
+      class PaymentMethodQueryService
+    }
+
+    package "Acl" {
+      class SubscriptionsContextFacade {
+        -DefaultPlanKey: string
+        +GetPlanKey(userId: int): Task<string>
+        +IsProOrAbove(userId: int): Task<bool>
+        +IsPremium(userId: int): Task<bool>
+      }
     }
   }
 }
 
-BillingCommandServiceImpl ..|> IBillingCommandService
-BillingCommandServiceImpl --> ISubscriptionRepository : uses
-BillingCommandServiceImpl --> IStripeClient : uses
+' --- Service interface realizations ---
+IUserSubscriptionCommandService <|.. UserSubscriptionCommandService
+IPaymentMethodCommandService <|.. PaymentMethodCommandService
+IUserSubscriptionQueryService <|.. UserSubscriptionQueryService
+ISubscriptionPlanQueryService <|.. SubscriptionPlanQueryService
+IPaymentMethodQueryService <|.. PaymentMethodQueryService
+ISubscriptionsContextFacade <|.. SubscriptionsContextFacade
+
+' --- Command service dependencies (application -> domain) ---
+UserSubscriptionCommandService ..> IUserSubscriptionRepository : uses
+UserSubscriptionCommandService ..> ISubscriptionPlanRepository : uses
+UserSubscriptionCommandService ..> IPaymentMethodRepository : uses
+UserSubscriptionCommandService ..> IPaymentGateway : charges via
+UserSubscriptionCommandService ..> IUnitOfWork : commits
+UserSubscriptionCommandService ..> UserSubscription : orchestrates
+UserSubscriptionCommandService ..> PaymentRecord : creates
+
+PaymentMethodCommandService ..> IPaymentMethodRepository : uses
+PaymentMethodCommandService ..> IUnitOfWork : commits
+PaymentMethodCommandService ..> PaymentMethod : creates
+
+' --- Query service dependencies (application -> domain) ---
+UserSubscriptionQueryService ..> IUserSubscriptionRepository : reads
+SubscriptionPlanQueryService ..> ISubscriptionPlanRepository : reads
+PaymentMethodQueryService ..> IPaymentMethodRepository : reads
+
+' --- Result / error usage ---
+UserSubscriptionCommandService ..> Result : returns
+PaymentMethodCommandService ..> Result : returns
+UserSubscriptionCommandService ..> SelectSubscriptionPlanError : signals
+UserSubscriptionCommandService ..> CancelSubscriptionError : signals
+UserSubscriptionCommandService ..> RenewSubscriptionError : signals
+UserSubscriptionCommandService ..> ChangeSubscriptionPlanError : signals
+PaymentMethodCommandService ..> RegisterPaymentMethodError : signals
+
+' --- ACL facade ---
+SubscriptionsContextFacade ..> IUserSubscriptionCommandService : delegates
+SubscriptionsContextFacade ..> IUserSubscriptionQueryService : delegates
+
+SubscriptionPlanQueryService ..> SubscriptionPlan : returns
 
 @enduml

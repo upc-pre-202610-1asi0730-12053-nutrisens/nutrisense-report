@@ -2,50 +2,178 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.IAM" {
+package "NutriSense.IAM.Application" {
 
-  package "Domain [stubs]" {
-    interface IUserRepository
+  package "CommandServices" {
+    interface IUserCommandService {
+      +Handle(command: RegisterUserCommand): Task<Result<User, RegisterUserError>>
+      +Handle(command: LoginUserCommand): Task<Result<LoginResult, LoginUserError>>
+      +Handle(command: LogoutUserCommand): Task<Result<bool, LogoutUserError>>
+      +Handle(command: UpdateProfileCommand): Task<Result<User, UpdateProfileError>>
+      +Handle(command: SetHealthGoalCommand): Task<Result<User, SetHealthGoalError>>
+      +Handle(command: SetDietaryRestrictionsCommand): Task<Result<User, SetDietaryRestrictionsError>>
+      +Handle(command: DeleteUserCommand): Task<Result<bool, DeleteUserError>>
+    }
   }
 
-  package "Application" {
-    interface IAuthCommandService {
-      +Handle(command: RegisterUserCommand): AuthResponse
-      +Handle(command: LoginCommand): AuthResponse
-      +Handle(command: UpdateProfileCommand): UserProfileResponse
+  package "QueryServices" {
+    interface IUserQueryService {
+      +Handle(query: GetUserByIdQuery): Task<User?>
+      +Handle(query: GetUserByEmailQuery): Task<User?>
+      +Handle(query: GetAllSessionsByUserIdQuery): Task<IEnumerable<UserSession>>
+      +Handle(query: GetDietaryRestrictionsByUserIdQuery): Task<IEnumerable<DietaryRestriction>>
+    }
+  }
+
+  package "Errors" {
+    enum RegisterUserError
+    enum LoginUserError
+    enum LogoutUserError
+    enum UpdateProfileError
+    enum SetHealthGoalError
+    enum SetDietaryRestrictionsError
+    enum DeleteUserError
+  }
+
+  package "Internal" {
+    class LoginResult <<record>> {
+      +UserId: UserId
+      +Token: string
+      +SessionId: int
     }
 
-    interface IAuthQueryService {
-      +Handle(query: GetUserProfileQuery): UserProfileResponse
+    package "Internal.CommandServices" {
+      class UserCommandService {
+        +Handle(command: RegisterUserCommand): Task<Result<User, RegisterUserError>>
+        +Handle(command: LoginUserCommand): Task<Result<LoginResult, LoginUserError>>
+        +Handle(command: LogoutUserCommand): Task<Result<bool, LogoutUserError>>
+        +Handle(command: UpdateProfileCommand): Task<Result<User, UpdateProfileError>>
+        +Handle(command: SetHealthGoalCommand): Task<Result<User, SetHealthGoalError>>
+        +Handle(command: SetDietaryRestrictionsCommand): Task<Result<User, SetDietaryRestrictionsError>>
+        +Handle(command: DeleteUserCommand): Task<Result<bool, DeleteUserError>>
+      }
     }
 
-    class AuthCommandServiceImpl {
-      -userRepository: IUserRepository
-      +Handle(command: RegisterUserCommand): AuthResponse
-      +Handle(command: LoginCommand): AuthResponse
-      +Handle(command: UpdateProfileCommand): UserProfileResponse
+    package "Internal.QueryServices" {
+      class UserQueryService {
+        +Handle(query: GetUserByIdQuery): Task<User?>
+        +Handle(query: GetUserByEmailQuery): Task<User?>
+        +Handle(query: GetAllSessionsByUserIdQuery): Task<IEnumerable<UserSession>>
+        +Handle(query: GetDietaryRestrictionsByUserIdQuery): Task<IEnumerable<DietaryRestriction>>
+      }
     }
+  }
 
-    class RegisterUserCommand {
-      +FirstName: String
-      +LastName: String
-      +Email: String
-      +PasswordHash: String
-    }
-
-    class LoginCommand {
-      +Email: String
-      +Password: String
-    }
-
-    class GetUserProfileQuery {
-      +UserId: Guid
+  package "Acl" {
+    class IamContextFacade {
+      +GetDietaryRestrictionsByUserId(userId: int, ct): Task<IReadOnlyList<string>>
     }
   }
 }
 
-AuthCommandServiceImpl ..|> IAuthCommandService
-AuthCommandServiceImpl --> IUserRepository : uses
+package "IAM.Domain" <<external>> {
+  class User
+  class UserSession
+  class DietaryRestriction
+  class Email
+  class Password
+  class RegisterUserCommand
+  class LoginUserCommand
+  class LogoutUserCommand
+  class UpdateProfileCommand
+  class SetHealthGoalCommand
+  class SetDietaryRestrictionsCommand
+  class DeleteUserCommand
+  class GetUserByIdQuery
+  class GetUserByEmailQuery
+  class GetAllSessionsByUserIdQuery
+  class GetDietaryRestrictionsByUserIdQuery
+  class UserRegistered
+  class UserLoggedIn
+  class UserLoggedOut
+  class UserDeleted
+  class ProfileUpdated
+  class GoalDefined
+  class RestrictionsConfigured
+  interface IUserRepository
+  interface IHashingService
+  interface ITokenService
+}
+
+package "IAM.Interfaces.Acl" <<external>> {
+  interface IIamContextFacade
+}
+
+package "Shared / Cortex" <<external>> {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+  interface "ILogger<T>" as ILogger
+}
+
+' --- Service interface realizations ---
+UserCommandService ..|> IUserCommandService
+UserQueryService ..|> IUserQueryService
+IamContextFacade ..|> IIamContextFacade
+
+' --- UserCommandService dependencies ---
+UserCommandService --> IUserRepository : uses
+UserCommandService --> IUnitOfWork : uses
+UserCommandService --> IHashingService : uses
+UserCommandService --> ITokenService : uses
+UserCommandService --> IMediator : publishes via
+UserCommandService --> ILogger : logs
+UserCommandService ..> User : manages
+UserCommandService ..> LoginResult : produces
+UserCommandService ..> Email : validates
+UserCommandService ..> Password : validates
+
+' --- Events published by the command service ---
+UserCommandService ..> UserRegistered : publishes
+UserCommandService ..> UserLoggedIn : publishes
+UserCommandService ..> UserLoggedOut : publishes
+UserCommandService ..> UserDeleted : publishes
+UserCommandService ..> ProfileUpdated : publishes
+UserCommandService ..> GoalDefined : publishes
+UserCommandService ..> RestrictionsConfigured : publishes
+
+' --- UserQueryService dependencies ---
+UserQueryService --> IUserRepository : uses
+UserQueryService ..> User : returns
+UserQueryService ..> UserSession : returns
+UserQueryService ..> DietaryRestriction : returns
+UserQueryService ..> Email : validates
+
+' --- ACL facade orchestration ---
+IamContextFacade --> IUserQueryService : uses
+IamContextFacade ..> GetDietaryRestrictionsByUserIdQuery : builds
+
+UserCommandService ..> RegisterUserCommand : handles
+UserCommandService ..> LoginUserCommand : handles
+UserCommandService ..> LogoutUserCommand : handles
+UserCommandService ..> UpdateProfileCommand : handles
+UserCommandService ..> SetHealthGoalCommand : handles
+UserCommandService ..> SetDietaryRestrictionsCommand : handles
+UserCommandService ..> DeleteUserCommand : handles
+UserQueryService ..> GetUserByIdQuery : handles
+UserQueryService ..> GetUserByEmailQuery : handles
+UserQueryService ..> GetAllSessionsByUserIdQuery : handles
+
+' --- LoginResult composition ---
+LoginResult ..> User : identifies
+
+' --- Result wrapper & error enums surfaced by the command service ---
+IUserCommandService ..> Result
+IUserQueryService ..> User : returns
+IUserCommandService ..> RegisterUserError
+IUserCommandService ..> LoginUserError
+IUserCommandService ..> LogoutUserError
+IUserCommandService ..> UpdateProfileError
+IUserCommandService ..> SetHealthGoalError
+IUserCommandService ..> SetDietaryRestrictionsError
+IUserCommandService ..> DeleteUserError
 
 @enduml

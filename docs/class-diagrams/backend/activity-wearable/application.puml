@@ -1,52 +1,158 @@
-@startuml NutriSense - Activity & Wearable Sync - Application
+@startuml NutriSense - ActivityWearable - Application
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
-package "NutriSense.ActivityWearableSync" {
+package "ActivityWearable.Application" {
 
   package "Domain [stubs]" {
-    interface IActivitySyncRepository
+    class ActivityLog
+    class WearableConnection
+    class DailyActivitySummary
+    interface IActivityLogRepository
+    interface IWearableConnectionRepository
+    interface ICaloricBalanceCalculator
+    interface IWearableSyncProvider
   }
 
-  package "Infrastructure [stubs]" {
-    interface IGoogleFitClient
+  package "Shared [stubs]" {
+    interface IUnitOfWork
+    interface IMediator
+    class "Result<TValue, TError>" as Result
   }
 
-  package "Application" {
-    interface IActivityCommandService {
-      +Handle(command: LogManualActivityCommand): ActivityResponse
-      +Handle(command: SyncGoogleFitCommand): SyncStatusResponse
+  package "CommandServices" {
+    interface IActivityLogCommandService {
+      +Handle(command: LogManualActivityCommand, ct: CancellationToken): Task<Result<ActivityLog, LogManualActivityError>>
+      +Handle(command: DeleteActivityLogCommand, ct: CancellationToken): Task<Result<bool, DeleteActivityLogError>>
     }
-
-    interface IActivityQueryService {
-      +Handle(query: GetActivityHistoryQuery): List<ActivityResponse>
-      +Handle(query: GetCaloricBalanceQuery): CaloricBalanceResponse
+    interface IWearableConnectionCommandService {
+      +Handle(command: ConnectDeviceCommand, ct: CancellationToken): Task<Result<WearableConnection, ConnectDeviceError>>
+      +Handle(command: SyncActivityDataCommand, ct: CancellationToken): Task<Result<WearableConnection, SyncActivityDataError>>
+      +Handle(command: DisconnectDeviceCommand, ct: CancellationToken): Task<Result<bool, DisconnectDeviceError>>
     }
+  }
 
-    class ActivityCommandServiceImpl {
-      -activityRepository: IActivitySyncRepository
-      -googleFitClient: IGoogleFitClient
-      +Handle(command: LogManualActivityCommand): ActivityResponse
-      +Handle(command: SyncGoogleFitCommand): SyncStatusResponse
+  package "QueryServices" {
+    interface IActivityLogQueryService {
+      +Handle(query: GetActivityLogsByUserQuery, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
+      +Handle(query: GetDailyActivitySummaryQuery, ct: CancellationToken): Task<DailyActivitySummary>
     }
-
-    class LogManualActivityCommand {
-      +UserId: Guid
-      +ActivityType: ActivityType
-      +DurationMinutes: Int32
-      +CaloriesBurned: Decimal
+    interface IWearableConnectionQueryService {
+      +Handle(query: GetWearableConnectionsByUserIdQuery, ct: CancellationToken): Task<IEnumerable<WearableConnection>>
     }
+  }
 
-    class SyncGoogleFitCommand {
-      +UserId: Guid
-      +AccessToken: String
+  package "Internal.CommandServices" {
+    class ActivityLogCommandService {
+      -activityLogRepository: IActivityLogRepository
+      -unitOfWork: IUnitOfWork
+      -caloricBalanceCalculator: ICaloricBalanceCalculator
+      -logger: ILogger
+      -mediator: IMediator
+      +Handle(command: LogManualActivityCommand, ct: CancellationToken): Task<Result<ActivityLog, LogManualActivityError>>
+      +Handle(command: DeleteActivityLogCommand, ct: CancellationToken): Task<Result<bool, DeleteActivityLogError>>
+    }
+    class WearableConnectionCommandService {
+      -wearableConnectionRepository: IWearableConnectionRepository
+      -activityLogRepository: IActivityLogRepository
+      -unitOfWork: IUnitOfWork
+      -syncProvider: IWearableSyncProvider
+      -caloricBalanceCalculator: ICaloricBalanceCalculator
+      -logger: ILogger
+      -mediator: IMediator
+      +Handle(command: ConnectDeviceCommand, ct: CancellationToken): Task<Result<WearableConnection, ConnectDeviceError>>
+      +Handle(command: SyncActivityDataCommand, ct: CancellationToken): Task<Result<WearableConnection, SyncActivityDataError>>
+      +Handle(command: DisconnectDeviceCommand, ct: CancellationToken): Task<Result<bool, DisconnectDeviceError>>
+      -RunSubflow51(connection: WearableConnection, userId: int, ct: CancellationToken): Task
+      -PublishActivityChain(userId: int, date: DateOnly, count: int, ct: CancellationToken): Task
+    }
+  }
+
+  package "Internal.QueryServices" {
+    class ActivityLogQueryService {
+      -repository: IActivityLogRepository
+      +Handle(query: GetActivityLogsByUserQuery, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
+      +Handle(query: GetDailyActivitySummaryQuery, ct: CancellationToken): Task<DailyActivitySummary>
+    }
+    class WearableConnectionQueryService {
+      -repository: IWearableConnectionRepository
+      +Handle(query: GetWearableConnectionsByUserIdQuery, ct: CancellationToken): Task<IEnumerable<WearableConnection>>
+    }
+  }
+
+  package "Acl" {
+    class ActivityWearableContextFacade {
+      -commandService: IActivityLogCommandService
+      -queryService: IActivityLogQueryService
+      +GetDailyCaloriesBurned(userId: int, date: DateOnly, ct: CancellationToken): Task<decimal>
+    }
+  }
+
+  package "Errors" {
+    enum LogManualActivityError {
+      InvalidActivity
+      UnexpectedError
+    }
+    enum DeleteActivityLogError {
+      NotFound
+      NotOwner
+      UnexpectedError
+    }
+    enum ConnectDeviceError {
+      AlreadyConnected
+      AuthorizationFailed
+      InvalidProvider
+      UnexpectedError
+    }
+    enum SyncActivityDataError {
+      ConnectionNotFound
+      SyncFailed
+      UnexpectedError
+    }
+    enum DisconnectDeviceError {
+      ConnectionNotFound
+      UnexpectedError
     }
   }
 }
 
-ActivityCommandServiceImpl ..|> IActivityCommandService
-ActivityCommandServiceImpl --> IActivitySyncRepository : uses
-ActivityCommandServiceImpl --> IGoogleFitClient : uses
+' --- Service contracts implemented by internal services ---
+ActivityLogCommandService ..|> IActivityLogCommandService
+WearableConnectionCommandService ..|> IWearableConnectionCommandService
+ActivityLogQueryService ..|> IActivityLogQueryService
+WearableConnectionQueryService ..|> IWearableConnectionQueryService
+
+' --- Command services dependencies (Application -> Domain / Shared) ---
+ActivityLogCommandService --> IActivityLogRepository : uses
+ActivityLogCommandService --> ICaloricBalanceCalculator : uses
+ActivityLogCommandService --> IUnitOfWork : uses
+ActivityLogCommandService --> IMediator : publishes
+ActivityLogCommandService ..> Result : returns
+ActivityLogCommandService ..> LogManualActivityError : reports
+ActivityLogCommandService ..> DeleteActivityLogError : reports
+
+WearableConnectionCommandService --> IWearableConnectionRepository : uses
+WearableConnectionCommandService --> IActivityLogRepository : uses
+WearableConnectionCommandService --> IWearableSyncProvider : uses
+WearableConnectionCommandService --> ICaloricBalanceCalculator : uses
+WearableConnectionCommandService --> IUnitOfWork : uses
+WearableConnectionCommandService --> IMediator : publishes
+WearableConnectionCommandService ..> Result : returns
+WearableConnectionCommandService ..> ConnectDeviceError : reports
+WearableConnectionCommandService ..> SyncActivityDataError : reports
+WearableConnectionCommandService ..> DisconnectDeviceError : reports
+
+' --- Query services dependencies (Application -> Domain) ---
+ActivityLogQueryService --> IActivityLogRepository : uses
+ActivityLogQueryService ..> DailyActivitySummary : builds
+WearableConnectionQueryService --> IWearableConnectionRepository : uses
+WearableConnectionQueryService ..> WearableConnection : reads
+
+' --- ACL facade delegates to activity-log services ---
+ActivityWearableContextFacade --> IActivityLogQueryService : delegates
+ActivityWearableContextFacade --> IActivityLogCommandService : delegates
+
+ActivityLogCommandService ..> ActivityLog : creates
 
 @enduml

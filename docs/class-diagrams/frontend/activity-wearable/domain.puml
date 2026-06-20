@@ -40,7 +40,7 @@ package "activity-wearable/domain/model" {
     + value: ActivityTypeValue
     --
     + triggersPostWorkoutBanner(): boolean
-    + estimateCalories(intensity, durationMinutes): number
+    + estimateCalories(intensityValue, durationMinutes): number
   }
 
   class Intensity <<value object>> {

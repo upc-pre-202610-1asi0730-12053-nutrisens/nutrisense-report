@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -22,48 +22,61 @@ package "subscriptions-billing/domain/model" {
   }
 
   class SubscriptionPlan <<entity>> {
-    + id: string
+    + id: number
     + key: string
     + priceMonthly: number
+    + priceAnnual: number|null
+    + currency: string
     + features: string[]
     --
     + hasFeature(feature): boolean
     + isFree(): boolean
     + isUpgradeFrom(lowerPlan): boolean
+    + planChangeType(fromPlan): 'upgrade'|'downgrade'
     + featuresGainedOver(lowerPlan): string[]
   }
 
   class UserSubscription <<entity>> {
-    + id: string
-    + userId: string
-    + planId: string
+    + id: number
+    + userId: number
+    + planId: number
+    + planKey: string
     + status: SubscriptionStatus
     + billingPeriod: BillingPeriod
     + periodStart: string|null
     + periodEnd: string|null
     + cancelAtPeriodEnd: boolean
     + stripeSubscriptionId: string|null
+    + lastPlanChangeAt: string|null
+    + paymentMethodId: number|null
     --
     + isActive(): boolean
     + willCancel(): boolean
     + renewalDate(): Date|null
     + daysUntilRenewal(now?): number|null
     + isFree(): boolean
+    + canChangePlanToday(now?): boolean
+    + proratedChangeAmount(fromPlan, toPlan, now?): number
   }
 
   class PaymentRecord <<entity>> {
-    + id: string
-    + userId: string
-    + planId: string
+    + id: number
+    + userSubscriptionId: number
+    + amount: number
     + amountUsd: number
+    + currency: string
     + status: string
+    + processedAt: string|null
     + paidAt: string|null
+    + stripePaymentIntentId: string|null
+    + type: string
     --
     + isPaid(): boolean
     + isFailed(): boolean
     + isRefunded(): boolean
     + isPending(): boolean
     + formattedAmount(): string
+    + isPlanChange(): boolean
   }
 
   class BillingPeriod <<value object>> {
@@ -81,6 +94,8 @@ package "subscriptions-billing/domain/model" {
     + isActive(): boolean
     + isCancelled(): boolean
     + requiresAttention(): boolean
+    + isPendingPayment(): boolean
+    + isExpired(): boolean
   }
 
   class PlanTier <<value object>> {
@@ -92,6 +107,7 @@ package "subscriptions-billing/domain/model" {
   }
 
   class PlanFeature <<value object>> {
+    + {static} ALL_FEATURES: PlanFeatureValue[]
     + value: PlanFeatureValue
   }
 }
@@ -99,9 +115,9 @@ package "subscriptions-billing/domain/model" {
 UserSubscription *--> SubscriptionStatus : status >
 UserSubscription *--> BillingPeriod : billingPeriod >
 UserSubscription --> SubscriptionPlan : subscribes to >
-SubscriptionPlan *--> PlanTier : tier >
-SubscriptionPlan *--> PlanFeature : features >
-PaymentRecord --> SubscriptionPlan : references >
-PaymentRecord --> PaymentMethod : paid with >
+UserSubscription --> PaymentMethod : paid with >
+SubscriptionPlan --> PlanTier : tier >
+SubscriptionPlan --> PlanFeature : features >
+PaymentRecord --> UserSubscription : billed for >
 
 @enduml

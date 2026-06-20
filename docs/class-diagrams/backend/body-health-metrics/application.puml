@@ -3,45 +3,160 @@
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
-package "NutriSense.BodyHealthMetrics" {
+package "Nutrisense.BodyHealthMetrics.Application" {
 
-  package "Domain [stubs]" {
-    interface IHealthProfileRepository
+  package "CommandServices" {
+    interface IBodyMetricsCommandService {
+      +Handle(command: RegisterBodyMetricsCommand): Task<Result<BodyMetrics, RegisterBodyMetricsError>>
+      +Handle(command: UpdateWeightCommand): Task<Result<BodyMetrics, UpdateWeightError>>
+      +Handle(command: RegisterBodyMeasurementCommand): Task<Result<BodyMetrics, RegisterBodyMeasurementError>>
+      +Handle(command: SetHealthGoalCommand): Task<Result<BodyMetrics, SetHealthGoalError>>
+      +Handle(command: CalculateDailyCaloricGoalCommand): Task<Result<BodyMetrics, CalculateDailyCaloricGoalError>>
+    }
   }
 
-  package "Application" {
-    interface IBodyCommandService {
-      +Handle(command: RecordBodyMetricsCommand): BodyMetricsResponse
-      +Handle(command: SetHealthGoalCommand): HealthGoalResponse
+  package "QueryServices" {
+    interface IBodyMetricsQueryService {
+      +Handle(query: GetBodyMetricsByUserIdQuery): Task<BodyMetrics?>
+      +Handle(query: GetWeightHistoryByUserIdQuery): Task<IEnumerable<WeightLog>>
+    }
+  }
+
+  package "Internal.CommandServices" {
+    class BodyMetricsCommandService {
+      -bodyMetricsRepository: IBodyMetricsRepository
+      -unitOfWork: IUnitOfWork
+      -calculator: IBodyMetricsCalculator
+      -logger: ILogger
+      -mediator: IMediator
+      +Handle(command: RegisterBodyMetricsCommand): Task<Result<...>>
+      +Handle(command: UpdateWeightCommand): Task<Result<...>>
+      +Handle(command: RegisterBodyMeasurementCommand): Task<Result<...>>
+      +Handle(command: SetHealthGoalCommand): Task<Result<...>>
+      +Handle(command: CalculateDailyCaloricGoalCommand): Task<Result<...>>
+      -RunCalculationChain(bodyMetrics: BodyMetrics, command: RegisterBodyMetricsCommand): Task
+      -TrySeedDefaultGoal(bodyMetrics, command, currentWeightKg): void
+    }
+  }
+
+  package "Internal.QueryServices" {
+    class BodyMetricsQueryService {
+      -bodyMetricsRepository: IBodyMetricsRepository
+      +Handle(query: GetBodyMetricsByUserIdQuery): Task<BodyMetrics?>
+      +Handle(query: GetWeightHistoryByUserIdQuery): Task<IEnumerable<WeightLog>>
+    }
+  }
+
+  package "Internal.EventHandlers" {
+    class OnGoalDefinedInIamHandler {
+      -commandService: IBodyMetricsCommandService
+      -logger: ILogger
+      +Handle(notification: GoalDefined, ct): Task
     }
 
-    interface IBodyQueryService {
-      +Handle(query: GetLatestMetricsQuery): BodyMetricsResponse
-      +Handle(query: GetWeightHistoryQuery): List<BodyMetricsResponse>
-      +Handle(query: CalculateTDEEQuery): TDEEResponse
+    class OnUserRegisteredHandler {
+      -logger: ILogger
+      +Handle(notification: UserRegistered, ct): Task
     }
+  }
 
-    class BodyCommandServiceImpl {
-      -healthProfileRepository: IHealthProfileRepository
-      +Handle(command: RecordBodyMetricsCommand): BodyMetricsResponse
-      +Handle(command: SetHealthGoalCommand): HealthGoalResponse
+  package "Acl" {
+    class BodyHealthMetricsContextFacade {
+      -commandService: IBodyMetricsCommandService
+      -queryService: IBodyMetricsQueryService
+      +GetActiveGoalByUserId(userId: int, ct): Task<UserGoalSummaryItem?>
     }
+  }
 
-    class RecordBodyMetricsCommand {
-      +UserId: Guid
-      +Measurements: BodyMeasurements
+  package "Errors" {
+    enum RegisterBodyMetricsError {
+      AlreadyExists
+      InvalidData
+      UnexpectedError
     }
-
-    class SetHealthGoalCommand {
-      +UserId: Guid
-      +GoalType: GoalType
-      +TargetWeightKg: Decimal
-      +TargetDate: DateOnly
+    enum UpdateWeightError {
+      BodyMetricsNotFound
+      InvalidData
+      UnexpectedError
+    }
+    enum RegisterBodyMeasurementError {
+      BodyMetricsNotFound
+      InvalidData
+      UnexpectedError
+    }
+    enum SetHealthGoalError {
+      BodyMetricsNotFound
+      InvalidData
+      UnexpectedError
+    }
+    enum CalculateDailyCaloricGoalError {
+      BodyMetricsNotFound
+      NoActiveGoal
+      TdeeNotCalculated
+      UnexpectedError
     }
   }
 }
 
-BodyCommandServiceImpl ..|> IBodyCommandService
-BodyCommandServiceImpl --> IHealthProfileRepository : uses
+package "Domain [stubs]" {
+  class BodyMetrics
+  class WeightLog
+  interface IBodyMetricsRepository
+  interface IBodyMetricsCalculator
+}
+
+package "Interfaces.Acl [stubs]" {
+  interface IBodyHealthMetricsContextFacade
+  class UserGoalSummaryItem <<record>>
+}
+
+package "IAM.Domain [stubs]" {
+  class GoalDefined <<event>>
+  class UserRegistered <<event>>
+}
+
+package "Shared [stubs]" {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+  interface "INotificationHandler<T>" as INotificationHandler
+}
+
+' --- Command service ---
+BodyMetricsCommandService ..|> IBodyMetricsCommandService
+BodyMetricsCommandService --> IBodyMetricsRepository
+BodyMetricsCommandService --> IBodyMetricsCalculator
+BodyMetricsCommandService --> IUnitOfWork
+BodyMetricsCommandService --> IMediator
+BodyMetricsCommandService ..> BodyMetrics
+BodyMetricsCommandService ..> RegisterBodyMetricsError
+BodyMetricsCommandService ..> UpdateWeightError
+BodyMetricsCommandService ..> RegisterBodyMeasurementError
+BodyMetricsCommandService ..> SetHealthGoalError
+BodyMetricsCommandService ..> CalculateDailyCaloricGoalError
+
+' --- Query service ---
+BodyMetricsQueryService ..|> IBodyMetricsQueryService
+BodyMetricsQueryService --> IBodyMetricsRepository
+BodyMetricsQueryService ..> WeightLog
+
+' --- Contract dependencies ---
+IBodyMetricsCommandService ..> Result
+IBodyMetricsCommandService ..> BodyMetrics
+IBodyMetricsQueryService ..> BodyMetrics
+IBodyMetricsQueryService ..> WeightLog
+
+' --- Event handlers ---
+OnGoalDefinedInIamHandler ..|> INotificationHandler
+OnGoalDefinedInIamHandler --> IBodyMetricsCommandService
+OnGoalDefinedInIamHandler ..> GoalDefined
+OnUserRegisteredHandler ..|> INotificationHandler
+OnUserRegisteredHandler ..> UserRegistered
+
+' --- ACL facade ---
+BodyHealthMetricsContextFacade ..|> IBodyHealthMetricsContextFacade
+BodyHealthMetricsContextFacade --> IBodyMetricsCommandService
+BodyHealthMetricsContextFacade --> IBodyMetricsQueryService
+BodyHealthMetricsContextFacade ..> UserGoalSummaryItem
 
 @enduml

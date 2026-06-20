@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -8,21 +8,56 @@ package "body-health-metrics/application [stub]" {
   class useBodyHealthMetricsStore <<store>>
 }
 
+package "external bounded contexts [stubs]" {
+  class useIamStore <<store>>
+  class useSubscriptionsBillingStore <<store>>
+}
+
 package "body-health-metrics/presentation/routes" {
-  class BodyHealthMetricsRoutes <<router>>
+  class BodyHealthMetricsRoutes <<router>> {
+    + path: 'body-progress'
+    + name: 'body-progress'
+    + meta: { requiresAuth, title }
+  }
 }
 
 package "body-health-metrics/presentation/views" {
-  class BodyProgressView <<view>>
+  class BodyProgressView <<view>> {
+    -- state --
+    + newWeight: number|null
+    + showWeightForm: boolean
+    + weightError: string
+    + chartRange: string
+    -- computed --
+    + rangeTabs: Tab[]
+    + latestWeightLog: WeightLog|null
+    + bmi: BmiResult|null
+    + bmiLabel: string
+    + bmiColor: string
+    + bmr: number|null
+    + tdee: number|null
+    + filteredWeightLogs: WeightLog[]
+    + latestMeasurement: BodyMeasurement|null
+    + goalProgress: number
+    -- methods --
+    + handleLogWeight(): void
+  }
 }
 
 package "body-health-metrics/presentation/components" {
-  class WeightChartComponent <<component>>
+  class WeightChartComponent <<component>> {
+    -- props --
+    + weightLogs: WeightLog[]
+    + label: string
+    -- methods --
+    + buildChart(): void
+  }
 }
 
-BodyHealthMetricsRoutes ..> BodyProgressView : navigates to >
-BodyProgressView ..> WeightChartComponent : contains >
-BodyProgressView o--> useBodyHealthMetricsStore : uses >
-WeightChartComponent o--> useBodyHealthMetricsStore : uses >
+BodyHealthMetricsRoutes ..> BodyProgressView : lazy-loads >
+BodyProgressView *--> WeightChartComponent : renders >
+BodyProgressView --> useBodyHealthMetricsStore : uses >
+BodyProgressView --> useIamStore : uses >
+BodyProgressView --> useSubscriptionsBillingStore : uses >
 
 @enduml

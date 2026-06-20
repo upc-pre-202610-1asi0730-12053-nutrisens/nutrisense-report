@@ -1,0 +1,176 @@
+@startuml NutriSense - ActivityWearable - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "ActivityWearable.Interfaces" {
+
+  package "Application [stubs]" {
+    interface IActivityLogCommandService
+    interface IActivityLogQueryService
+    interface IWearableConnectionCommandService
+    interface IWearableConnectionQueryService
+    class "Result<TValue, TError>" as Result
+  }
+
+  package "Domain [stubs]" {
+    class ActivityLog
+    class WearableConnection
+    class DailyActivitySummary
+    class LogManualActivityCommand
+    class DeleteActivityLogCommand
+    class ConnectDeviceCommand
+    class SyncActivityDataCommand
+    class DisconnectDeviceCommand
+    class GetActivityLogsByUserQuery
+    class GetDailyActivitySummaryQuery
+    class GetWearableConnectionsByUserIdQuery
+  }
+
+  package "Acl" {
+    interface IActivityWearableContextFacade {
+      +GetDailyCaloriesBurned(userId: int, date: DateOnly, ct: CancellationToken): Task<decimal>
+    }
+  }
+
+  package "REST" {
+    class ActivityLogsController {
+      -commandService: IActivityLogCommandService
+      -queryService: IActivityLogQueryService
+      -localizer: IStringLocalizer<SharedResource>
+      +LogManualActivity(resource: LogManualActivityResource): Task<IActionResult>
+      +GetByUser(userId: int, from: string?, to: string?): Task<IActionResult>
+      +GetDailySummary(userId: int, date: string): Task<IActionResult>
+      +DeleteActivityLog(id: int, userId: int): Task<IActionResult>
+    }
+    class WearableConnectionsController {
+      -commandService: IWearableConnectionCommandService
+      -queryService: IWearableConnectionQueryService
+      -localizer: IStringLocalizer<SharedResource>
+      +ConnectDevice(resource: ConnectDeviceResource): Task<IActionResult>
+      +GetByUser(userId: int): Task<IActionResult>
+      +SyncActivityData(id: int): Task<IActionResult>
+      +DisconnectDevice(id: int): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class LogManualActivityResource {
+      +UserId: int
+      +Date: string
+      +ActivityType: string
+      +DurationMinutes: int
+      +Intensity: string
+      +CaloriesBurned: decimal
+    }
+    class ActivityLogResource {
+      +Id: int
+      +UserId: int
+      +Date: string
+      +ActivityType: string
+      +DurationMinutes: int
+      +Intensity: string
+      +CaloriesBurned: decimal
+      +Source: string
+      +LoggedAt: DateTimeOffset
+    }
+    class DailyActivitySummaryResource {
+      +Date: string
+      +TotalCaloriesBurned: decimal
+      +TotalDurationMinutes: int
+      +ActivityCount: int
+    }
+    class ConnectDeviceResource {
+      +UserId: int
+      +Provider: string
+      +OAuthCode: string
+    }
+    class WearableConnectionResource {
+      +Id: int
+      +UserId: int
+      +Provider: string
+      +Status: string
+      +LastSyncedAt: DateTimeOffset?
+      +AuthorizedAt: DateTimeOffset
+    }
+  }
+
+  package "REST.Transform" {
+    class ActivityLogAssembler {
+      +{static} ToCommand(resource: LogManualActivityResource): LogManualActivityCommand
+      +{static} ToResource(log: ActivityLog): ActivityLogResource
+      +{static} ToSummaryResource(summary: DailyActivitySummary): DailyActivitySummaryResource
+    }
+    class WearableConnectionAssembler {
+      +{static} ToCommand(resource: ConnectDeviceResource): ConnectDeviceCommand
+      +{static} ToResource(connection: WearableConnection): WearableConnectionResource
+    }
+    class LogManualActivityResultAssembler {
+      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
+    }
+    class DeleteActivityLogResultAssembler {
+      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
+    }
+    class ConnectDeviceResultAssembler {
+      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
+    }
+    class SyncActivityResultAssembler {
+      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
+    }
+    class DisconnectDeviceResultAssembler {
+      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
+    }
+  }
+}
+
+' --- Controllers depend on application services ---
+ActivityLogsController --> IActivityLogCommandService : uses
+ActivityLogsController --> IActivityLogQueryService : uses
+WearableConnectionsController --> IWearableConnectionCommandService : uses
+WearableConnectionsController --> IWearableConnectionQueryService : uses
+
+' --- ActivityLogsController flow ---
+ActivityLogsController ..> LogManualActivityResource : receives
+ActivityLogsController ..> ActivityLogAssembler : uses
+ActivityLogsController ..> LogManualActivityResultAssembler : uses
+ActivityLogsController ..> DeleteActivityLogResultAssembler : uses
+ActivityLogsController ..> GetActivityLogsByUserQuery : builds
+ActivityLogsController ..> GetDailyActivitySummaryQuery : builds
+ActivityLogsController ..> DeleteActivityLogCommand : builds
+
+' --- WearableConnectionsController flow ---
+WearableConnectionsController ..> ConnectDeviceResource : receives
+WearableConnectionsController ..> WearableConnectionAssembler : uses
+WearableConnectionsController ..> ConnectDeviceResultAssembler : uses
+WearableConnectionsController ..> SyncActivityResultAssembler : uses
+WearableConnectionsController ..> DisconnectDeviceResultAssembler : uses
+WearableConnectionsController ..> GetWearableConnectionsByUserIdQuery : builds
+WearableConnectionsController ..> SyncActivityDataCommand : builds
+WearableConnectionsController ..> DisconnectDeviceCommand : builds
+
+' --- Assemblers map resources <-> domain ---
+ActivityLogAssembler ..> LogManualActivityResource
+ActivityLogAssembler ..> ActivityLogResource
+ActivityLogAssembler ..> DailyActivitySummaryResource
+ActivityLogAssembler ..> LogManualActivityCommand
+ActivityLogAssembler ..> ActivityLog
+ActivityLogAssembler ..> DailyActivitySummary
+
+WearableConnectionAssembler ..> ConnectDeviceResource
+WearableConnectionAssembler ..> WearableConnectionResource
+WearableConnectionAssembler ..> ConnectDeviceCommand
+WearableConnectionAssembler ..> WearableConnection
+
+LogManualActivityResultAssembler ..> Result : maps
+LogManualActivityResultAssembler ..> ActivityLogAssembler : uses
+DeleteActivityLogResultAssembler ..> Result : maps
+ConnectDeviceResultAssembler ..> Result : maps
+ConnectDeviceResultAssembler ..> WearableConnectionAssembler : uses
+SyncActivityResultAssembler ..> Result : maps
+SyncActivityResultAssembler ..> WearableConnectionAssembler : uses
+DisconnectDeviceResultAssembler ..> Result : maps
+
+' --- ACL contract implemented by the Application-layer facade ---
+IActivityWearableContextFacade ..> ActivityLog : exposes data of
+
+@enduml

@@ -1,35 +1,44 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 skinparam linetype ortho
 
-package "shared/infrastructure [stubs]" {
-  class BaseApi <<api>>
-  class BaseEndpoint <<api>>
+package "shared/infrastructure [stub]" {
+  class BaseApi <<api>> {
+    - #http: AxiosInstance
+    --
+    + http: AxiosInstance
+  }
+}
+
+package "iam/domain/model [stubs]" {
+  class User <<entity>>
+  class UserSession <<entity>>
+  class DietaryRestriction <<entity>>
 }
 
 package "iam/infrastructure" {
 
   class IamApi <<api>> {
-    - users: BaseEndpoint
-    - sessions: BaseEndpoint
-    - signIn: BaseEndpoint
-    - signUp: BaseEndpoint
+    + IamApi()
     --
-    + getMe(): Promise
-    + updateProfile(id, resource): Promise
-    + getSessions(): Promise
-    + revokeSession(id): Promise
     + signIn(credentials): Promise
     + signUp(resource): Promise
+    + getMe(userId): Promise
     + deleteAccount(id): Promise
+    + updateUserProfile(id, profileFields): Promise
+    + setHealthGoal(id, goal): Promise
+    + setDietaryRestrictions(id, restrictions): Promise
+    + setHomeCity(userId, cityId): Promise
+    + getSessions(userId): Promise
+    + revokeSession(userId, sessionId): Promise
   }
 
   class UserAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): User|null
-    + {static} toEntityFromResponse(response): User|null
     + {static} toEntitiesFromResponse(response): User[]
+    + {static} toEntityFromResponse(response): User|null
   }
 
   class UserSessionAssembler <<assembler>> {
@@ -39,13 +48,13 @@ package "iam/infrastructure" {
 
   class DietaryRestrictionAssembler <<assembler>> {
     + {static} toEntityFromResource(resource): DietaryRestriction|null
+    + {static} toEntitiesFromResponse(response): DietaryRestriction[]
   }
 }
 
 IamApi --|> BaseApi
-BaseApi *--> BaseEndpoint
-UserAssembler ..> IamApi : uses >
-UserSessionAssembler ..> IamApi : uses >
-DietaryRestrictionAssembler ..> IamApi : uses >
+UserAssembler ..> User : builds >
+UserSessionAssembler ..> UserSession : builds >
+DietaryRestrictionAssembler ..> DietaryRestriction : builds >
 
 @enduml

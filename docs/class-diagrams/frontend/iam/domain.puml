@@ -1,10 +1,10 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 skinparam linetype ortho
 
-package "shared/domain/model [stubs]" {
+package "shared/domain/model [stub]" {
   class GoalType <<value object>> {
     + value: GoalTypeValue
     --
@@ -14,26 +14,6 @@ package "shared/domain/model [stubs]" {
 }
 
 package "iam/domain/model" {
-
-  class DateOfBirth <<value object>> {
-    + isoString: string
-    --
-    + age(): number
-    + {static} validate(value): string|null
-  }
-
-  class Height <<value object>> {
-    + cm: number
-    --
-    + {static} isValid(cm): boolean
-  }
-
-  class WaistMeasurement <<value object>> {
-    + {static} pantsSizes: number[]
-    + {static} visualKeys: string[]
-    --
-    + WaistMeasurement(method, value): number
-  }
 
   class User <<entity>> {
     + id: string
@@ -56,6 +36,7 @@ package "iam/domain/model" {
     + fullName(): string
     + age(): number
     + avatarInitials(): string
+    + isOnboardingComplete(): boolean
     + isOnAtLeastPlan(minimumPlan): boolean
   }
 
@@ -77,6 +58,8 @@ package "iam/domain/model" {
     + userId: string
     + restriction: RestrictionValue
     --
+    + {static} RESTRICTION_VALUES: RestrictionValue[]
+    + {static} CONFLICT_TAGS: Record<string,string[]>
     + conflictsWith(foodTags): boolean
     + isNone(): boolean
   }
@@ -119,6 +102,26 @@ package "iam/domain/model" {
     + weightUnit(): string
     + heightUnit(): string
   }
+
+  class DateOfBirth <<value object>> {
+    + isoString: string
+    --
+    + age(): number
+    + {static} validate(value): string|null
+  }
+
+  class Height <<value object>> {
+    + cm: number
+    --
+    + {static} isValid(cm): boolean
+  }
+
+  class WaistMeasurement <<value object>> {
+    + {static} pantsSizes: number[]
+    + {static} visualKeys: string[]
+    --
+    + WaistMeasurement(method, value): number
+  }
 }
 
 User *--> Email : email >
@@ -127,8 +130,8 @@ User *--> ActivityLevel : activityLevel >
 User *--> PlanTier : plan >
 User *--> PreferredUnits : preferredUnits >
 User *--> GoalType : goal >
-User "1" o--> "*" UserSession : has sessions >
-User "1" o--> "*" DietaryRestriction : has restrictions >
+User "1" o--> "*" UserSession : owns >
+User "1" o--> "*" DietaryRestriction : declares >
 User ..> DateOfBirth : validates dateOfBirth >
 User ..> Height : validates heightCm >
 User ..> WaistMeasurement : resolves waist >

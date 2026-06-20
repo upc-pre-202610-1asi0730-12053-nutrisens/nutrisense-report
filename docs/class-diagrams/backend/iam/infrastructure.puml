@@ -2,31 +2,83 @@
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
 
-package "NutriSense.IAM" {
+package "NutriSense.IAM.Infrastructure" {
 
-  package "Domain [stubs]" {
-    interface IUserRepository
+  package "Hashing.BCrypt" {
+    class BCryptHashingService {
+      +Hash(plain: string): string
+      +Verify(plain: string, hash: string): bool
+    }
   }
 
-  package "Infrastructure" {
-    class UserRepositoryImpl {
-      -context: NutriSenseDbContext
-      +FindById(id: Guid): User
-      +FindByEmail(email: String): User
-      +Save(user: User): void
-      +Update(user: User): void
-    }
-
+  package "Tokens.JWT" {
     class JwtTokenService {
-      -secretKey: String
-      -issuer: String
-      +GenerateToken(user: User): String
-      +ValidateToken(token: String): ClaimsPrincipal
+      +Generate(user: User, sessionId: int): string
+      +ValidateAndGetUserId(token: string): int?
+    }
+  }
+
+  package "Persistence.EFC.Configuration" {
+    class UserEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<User>): void
+    }
+    class UserSessionEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<UserSession>): void
+    }
+    class DietaryRestrictionEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<DietaryRestriction>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    class UserRepository {
+      +FindByIdAsync(id: int, ct): Task<User?>
+      +FindByEmailAsync(email: Email, ct): Task<User?>
+      +ExistsByEmailAsync(email: Email, ct): Task<bool>
+      -WithRelations(): IQueryable<User>
     }
   }
 }
 
-UserRepositoryImpl ..|> IUserRepository
+package "IAM.Domain" <<external>> {
+  class User
+  class UserSession
+  class DietaryRestriction
+  class Email
+  interface IUserRepository
+  interface IHashingService
+  interface ITokenService
+}
+
+package "Shared / EF Core" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  interface IConfiguration
+}
+
+' --- Domain-service implementations (ports -> adapters) ---
+BCryptHashingService ..|> IHashingService
+JwtTokenService ..|> ITokenService
+JwtTokenService --> IConfiguration : reads settings
+JwtTokenService ..> User : reads claims from
+
+' --- EF Core entity configurations ---
+UserEntityTypeConfiguration ..|> IEntityTypeConfiguration
+UserSessionEntityTypeConfiguration ..|> IEntityTypeConfiguration
+DietaryRestrictionEntityTypeConfiguration ..|> IEntityTypeConfiguration
+UserEntityTypeConfiguration ..> User : maps
+UserSessionEntityTypeConfiguration ..> UserSession : maps
+DietaryRestrictionEntityTypeConfiguration ..> DietaryRestriction : maps
+
+' --- Repository ---
+UserRepository --|> BaseRepository
+UserRepository ..|> IUserRepository
+UserRepository --> AppDbContext : queries
+UserRepository ..> User : persists
+UserRepository ..> Email : looks up by
 
 @enduml

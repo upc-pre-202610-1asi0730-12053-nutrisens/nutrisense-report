@@ -1,73 +1,238 @@
-@startuml NutriSense - Activity & Wearable Sync - Domain
+@startuml NutriSense - ActivityWearable - Domain
 
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
-package "NutriSense.ActivityWearableSync" {
+package "ActivityWearable.Domain" {
 
-  package "Domain" {
-    class ActivitySync {
-      +Id: Guid
-      +UserId: Guid
-      -records: List<ActivityRecord>
-      +LogActivity(record: ActivityRecord): void
-      +SyncFromExternal(records: List<ActivityRecord>): void
-      +CalculateCaloricBalance(nutritionCalories: Decimal): CaloricBalance
+  package "Shared [stubs]" {
+    interface IAuditableEntity {
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
     }
-
-    class ActivityRecord {
-      +Id: Guid
-      +ActivityType: ActivityType
-      +DurationMinutes: Int32
-      +CaloriesBurned: Decimal
-      +Steps: Int32
-      +RecordedAt: DateTime
-      +Source: SyncSource
+    abstract class DomainEventBase
+    interface "IBaseRepository<T>" as IBaseRepository {
+      +AddAsync(entity: T, ct: CancellationToken): Task
+      +FindByIdAsync(id: int, ct: CancellationToken): Task<T?>
+      +Update(entity: T): void
+      +Remove(entity: T): void
     }
+  }
 
-    class CaloricBalance {
+  package "Model.Aggregates" {
+    class ActivityLog {
+      +Id: int
+      +UserId: int
       +Date: DateOnly
-      +TotalConsumedKcal: Decimal
-      +TotalBurnedKcal: Decimal
-      +NetCalories(): Decimal
-      +IsDeficit(): Boolean
+      +ActivityType: string
+      +DurationMinutes: int
+      +Intensity: string
+      +CaloriesBurned: decimal
+      +Source: string
+      +LoggedAt: DateTimeOffset
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
+      #ActivityLog()
+      +ActivityLog(command: LogManualActivityCommand)
+      +ActivityLog(userId: int, date: DateOnly, activityType: string, durationMinutes: int, intensity: string, caloriesBurned: decimal, source: string)
     }
 
-    enum ActivityType {
-      RUNNING
-      WALKING
-      CYCLING
-      SWIMMING
-      GYM
-      OTHER
+    class WearableConnection {
+      +Id: int
+      +UserId: int
+      +Provider: string
+      +Status: string
+      +LastSyncedAt: DateTimeOffset?
+      +AuthorizedAt: DateTimeOffset
+      +CreatedAt: DateTimeOffset?
+      +UpdatedAt: DateTimeOffset?
+      #WearableConnection()
+      +WearableConnection(command: ConnectDeviceCommand, authorizedAt: DateTimeOffset)
+      +ApplySync(syncedAt: DateTimeOffset): void
+      +ApplyDisconnect(): void
     }
+  }
 
-    enum SyncSource {
-      MANUAL
-      GOOGLE_FIT
-      WEARABLE
+  package "Model.ValueObjects" {
+    class ActivityType {
+      +Value: string
+      +ActivityType(value: string)
     }
-
-    class ActivityLoggedEvent {
-      +SyncId: Guid
-      +UserId: Guid
-      +CaloriesBurned: Decimal
-      +OccurredOn: DateTime
+    class Intensity {
+      -{static} Valid: HashSet<string>
+      +Value: string
+      +Intensity(value: string)
     }
+    class ActivitySource {
+      -{static} Valid: HashSet<string>
+      +Value: string
+      +ActivitySource(value: string)
+    }
+    class WearableProvider {
+      -{static} Valid: HashSet<string>
+      +Value: string
+      +WearableProvider(value: string)
+    }
+    class WearableStatus {
+      -{static} Valid: HashSet<string>
+      +Value: string
+      +WearableStatus(value: string)
+    }
+  }
 
-    interface IActivitySyncRepository {
-      +FindByUserId(userId: Guid): ActivitySync
-      +Save(sync: ActivitySync): void
-      +Update(sync: ActivitySync): void
-      +FindRecordsByDate(userId: Guid, date: DateOnly): List<ActivityRecord>
+  package "Model.Commands" {
+    class LogManualActivityCommand {
+      +UserId: int
+      +Date: DateOnly
+      +ActivityType: string
+      +DurationMinutes: int
+      +Intensity: string
+      +CaloriesBurned: decimal
+    }
+    class DeleteActivityLogCommand {
+      +ActivityLogId: int
+      +UserId: int
+    }
+    class ConnectDeviceCommand {
+      +UserId: int
+      +Provider: string
+      +OAuthCode: string
+    }
+    class SyncActivityDataCommand {
+      +WearableConnectionId: int
+    }
+    class DisconnectDeviceCommand {
+      +WearableConnectionId: int
+    }
+    class AdjustCaloricBalanceCommand {
+      +UserId: int
+      +Date: DateOnly
+    }
+    class CalculateActiveCaloriesCommand {
+      +UserId: int
+      +Date: DateOnly
+    }
+  }
+
+  package "Model.Queries" {
+    class GetActivityLogsByUserQuery {
+      +UserId: int
+      +FromDate: DateOnly?
+      +ToDate: DateOnly?
+    }
+    class GetDailyActivitySummaryQuery {
+      +UserId: int
+      +Date: DateOnly
+    }
+    class DailyActivitySummary {
+      +Date: DateOnly
+      +TotalCaloriesBurned: decimal
+      +TotalDurationMinutes: int
+      +ActivityCount: int
+    }
+    class GetWearableConnectionsByUserIdQuery {
+      +UserId: int
+    }
+  }
+
+  package "Model.Events" {
+    class ActivityImported {
+      +UserId: int
+      +Date: DateOnly
+      +ActivitiesCount: int
+    }
+    class ActiveCaloriesCalculated {
+      +UserId: int
+      +Date: DateOnly
+      +ActiveCalories: decimal
+    }
+    class CaloricBalanceAdjusted {
+      +UserId: int
+      +Date: DateOnly
+      +BalanceKcal: decimal
+    }
+    class DeviceConnected {
+      +UserId: int
+      +WearableConnectionId: int
+      +Provider: string
+    }
+  }
+
+  package "Repositories" {
+    interface IActivityLogRepository {
+      +FindByUserAndDateAsync(userId: int, date: DateOnly, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
+      +FindByUserAsync(userId: int, from: DateOnly?, to: DateOnly?, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
+      +GetDailyCaloriesBurnedAsync(userId: int, date: DateOnly, ct: CancellationToken): Task<decimal>
+    }
+    interface IWearableConnectionRepository {
+      +FindByUserIdAsync(userId: int, ct: CancellationToken): Task<IEnumerable<WearableConnection>>
+      +FindByUserAndProviderAsync(userId: int, provider: string, ct: CancellationToken): Task<WearableConnection?>
+    }
+  }
+
+  package "Services" {
+    interface ICaloricBalanceCalculator {
+      +CalculateDailyActiveCalories(logs: IEnumerable<ActivityLog>, date: DateOnly): decimal
+      +CalculateBalance(tdee: decimal, activeCalories: decimal, consumedCalories: decimal): decimal
+    }
+    interface IWearableSyncProvider {
+      +AuthorizeAsync(oauthCode: string, ct: CancellationToken): Task<WearableAuthorization>
+      +FetchActivitiesAsync(wearableConnectionId: int, from: DateOnly, to: DateOnly, ct: CancellationToken): Task<IEnumerable<ImportedActivity>>
+    }
+    class WearableAuthorization {
+      +Success: bool
+      +AccessToken: string?
+      +FailureReason: string?
+    }
+    class ImportedActivity {
+      +ActivityType: string
+      +DurationMinutes: int
+      +Intensity: string
+      +CaloriesBurned: decimal
+      +Date: DateOnly
     }
   }
 }
 
-ActivitySync *--> ActivityRecord : contains "0..*"
-ActivitySync --> CaloricBalance : computes "0..1"
-ActivityRecord --> ActivityType : has "1"
-ActivityRecord --> SyncSource : has "1"
-ActivitySync --> ActivityLoggedEvent : fires "0..*"
+' --- Aggregates: auditing & value-object validation ---
+ActivityLog ..|> IAuditableEntity
+WearableConnection ..|> IAuditableEntity
+ActivityLog ..> ActivityType : validates
+ActivityLog ..> Intensity : validates
+ActivityLog ..> ActivitySource : validates
+WearableConnection ..> WearableProvider : validates
+WearableConnection ..> WearableStatus : validates
+
+' --- Commands acting on aggregates ---
+ActivityLog ..> LogManualActivityCommand : created from
+DeleteActivityLogCommand ..> ActivityLog : targets
+WearableConnection ..> ConnectDeviceCommand : created from
+SyncActivityDataCommand ..> WearableConnection : targets
+DisconnectDeviceCommand ..> WearableConnection : targets
+AdjustCaloricBalanceCommand ..> ActivityLog : recomputes balance of
+CalculateActiveCaloriesCommand ..> ActivityLog : totals calories of
+
+' --- Queries / read models ---
+GetActivityLogsByUserQuery ..> ActivityLog : reads
+GetDailyActivitySummaryQuery ..> DailyActivitySummary : produces
+DailyActivitySummary ..> ActivityLog : aggregates
+GetWearableConnectionsByUserIdQuery ..> WearableConnection : reads
+
+' --- Events ---
+ActivityImported --|> DomainEventBase
+ActiveCaloriesCalculated --|> DomainEventBase
+CaloricBalanceAdjusted --|> DomainEventBase
+DeviceConnected --|> DomainEventBase
+
+' --- Repositories ---
+IActivityLogRepository --|> IBaseRepository
+IWearableConnectionRepository --|> IBaseRepository
+IActivityLogRepository ..> ActivityLog : manages
+IWearableConnectionRepository ..> WearableConnection : manages
+
+' --- Domain services ---
+ICaloricBalanceCalculator ..> ActivityLog : sums
+IWearableSyncProvider ..> WearableAuthorization : returns
+IWearableSyncProvider ..> ImportedActivity : fetches
 
 @enduml

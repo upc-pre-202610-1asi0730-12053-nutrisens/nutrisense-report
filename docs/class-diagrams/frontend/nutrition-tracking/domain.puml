@@ -1,4 +1,4 @@
-﻿@startuml
+@startuml
 skinparam monochrome false
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
@@ -14,6 +14,13 @@ package "shared/domain/model [stubs]" {
     + sugarG: number
     --
     + add(other): Macros
+    + scale(factor): Macros
+  }
+}
+
+package "iam/domain/model [stub]" {
+  class DietaryRestriction <<entity>> {
+    + {static} CONFLICT_TAGS: Record<string, string[]>
   }
 }
 
@@ -22,6 +29,7 @@ package "nutrition-tracking/domain/model" {
   class Food <<entity>> {
     + id: string
     + key: string
+    + name: string
     + source: string
     + externalId: string|null
     + servingSizeG: number
@@ -38,17 +46,19 @@ package "nutrition-tracking/domain/model" {
     + id: string
     + userId: string
     + foodId: string
-    + foodKey: string
+    + nameEn: string
+    + nameEs: string
     + mealType: MealType
     + date: string
     + quantityG: number
     + source: LogSource
     + loggedAt: string
     --
+    + displayName(locale): string
     + macros(): Macros
     + isToday(): boolean
     + isOnDate(date): boolean
-    + isFromSmartScan(): boolean
+    + isFromScan(): boolean
   }
 
   class MealType <<value object>> {
@@ -62,8 +72,8 @@ package "nutrition-tracking/domain/model" {
     + value: LogSourceValue
     --
     + isManual(): boolean
-    + isSmartScan(): boolean
-    + isRecipe(): boolean
+    + isScanDish(): boolean
+    + isScanMenu(): boolean
   }
 
   class FoodSource <<value object>> {
@@ -81,7 +91,7 @@ package "nutrition-tracking/domain/services" {
   }
 
   class StreakCriteriaService <<domain service>> {
-    + {static} isStreakDayMet(params): boolean
+    + {static} isStreakDayMet(input): boolean
   }
 }
 
@@ -91,6 +101,7 @@ NutritionLog ..> Macros : returns >
 Food ..> Macros : returns >
 Food ..> FoodSource : source type >
 FoodRestrictionService ..> Food : evaluates >
+FoodRestrictionService ..> DietaryRestriction : reads tags >
 StreakCriteriaService ..> NutritionLog : evaluates >
 
 @enduml
