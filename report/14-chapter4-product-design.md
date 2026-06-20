@@ -1474,6 +1474,8 @@ Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.
 
 Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context y del Shared Kernel, se presenta a continuación un diagrama de detalle individual por cada uno.
 
+El detalle individual se acota a la capa de Interfaces porque es la única que expone la comunicación entre Bounded Contexts: las fachadas ACL representan los contratos que un contexto ofrece a los demás y los Controllers REST definen los puntos de entrada hacia el exterior. Las capas de Application, Domain e Infrastructure encapsulan lógica interna a cada contexto y no forman parte de su frontera de integración, por lo que su descomposición no aporta a la lectura de las relaciones inter-BC en este nivel; dicho detalle interno (servicios, agregados, repositorios y subdivisiones como las carpetas ACL de Infrastructure) corresponde a niveles más profundos del modelo C4, donde sí se desarrolla cada capa por separado.
+
 **Shared Kernel:**
 
 Componente transversal utilizado por todos los Bounded Contexts del backend que agrupa clases base, interfaces compartidas y objetos de valor reutilizables. No contiene lógica de negocio propia ni acceso a base de datos.
