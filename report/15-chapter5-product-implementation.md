@@ -1058,6 +1058,85 @@ Durante el Sprint 2, todos los miembros del equipo participaron activamente en l
 
 ![Insight](../assets/img/sprint2/insight.png)
 
+### 5.2.3. Sprint 3
+
+#### 5.2.3.1. Sprint Planning 3
+
+#### 5.2.3.2. Aspect Leaders and Collaborators
+
+#### 5.2.3.3. Sprint Backlog 3
+
+El Sprint 3 tiene como objetivo principal entregar la plataforma de NutriSense con cobertura funcional completa para los bounded contexts de IAM, BodyHealthMetrics, NutritionTracking, ActivityWearable, SmartRecommendations, Subscriptions y AnalyticsReporting, incluyendo además las correcciones de seguridad transversal (validación de ownership/IDOR y restricción de rol admin) identificadas durante la documentación de endpoints. El backlog contempla 25 Technical Stories distribuidas en 7 bounded contexts, con un total de 109 Story Points.
+
+![Board Sprint 3](../assets/img/sprint3/sprintbacklog.png)
+URL del Board (Trello): [Enlace Trello](pendiente)
+
+| US ID | US Title | Task ID | Task Title | Description | Est. (h) | Assigned To | Status |
+|-------|----------|---------|------------|-------------|----------|-------------|--------|
+| TS01 | API: User Registration and Authentication Endpoints | T01 | Implement sign-up and sign-in endpoints | Implement POST /api/v1/authentication/sign-up and POST /api/v1/authentication/sign-in including password hashing and JWT issuance. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS01 | API: User Registration and Authentication Endpoints | T02 | Write authentication tests | Unit and integration tests for sign-up/sign-in success and failure paths (duplicate email, invalid credentials). | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS02 | API: User Profile Management Endpoints | T03 | Implement user profile CRUD endpoints | Implement GET, PUT profile, PUT health-goal, GET/PUT dietary-restrictions, and DELETE for api/v1/users. | 8 | Villarreal Bazan, Angel Martin | Done |
+| TS02 | API: User Profile Management Endpoints | T04 | Write profile management tests | Unit and integration tests covering profile update, dietary restriction replacement, and account deletion. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS03 | API: User Session Management Endpoints | T05 | Implement session listing and logout endpoints | Implement GET /sessions and POST /sessions/{sessionId}/logout with token invalidation. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS03 | API: User Session Management Endpoints | T06 | Write session management tests | Tests for session listing and logout including ownership validation. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS04 | API: Body Metrics Registration and Update Endpoints | T07 | Implement body metrics registration and update endpoints | Implement POST body-metrics, PUT weight, POST body-measurements, PUT health-goal including BMI/TDEE recalculation. | 8 | Vergraray Calderon, Rose Almendra | Done |
+| TS04 | API: Body Metrics Registration and Update Endpoints | T08 | Write body metrics write-path tests | Tests covering profile creation conflicts and recalculation accuracy. | 5 | Vergraray Calderon, Rose Almendra | Done |
+| TS05 | API: Body Metrics Query and Computed Values Endpoints | T09 | Implement body metrics query endpoints | Implement GET by-user, GET bmi, GET daily-caloric-goal, GET weight-history with pagination. | 5 | Vergraray Calderon, Rose Almendra | Done |
+| TS05 | API: Body Metrics Query and Computed Values Endpoints | T10 | Write body metrics query tests | Tests for BMI categorization and weight-history pagination/filtering. | 3 | Vergraray Calderon, Rose Almendra | Done |
+| TS06 | API: Food Catalog Endpoints | T11 | Implement food catalog search and CRUD endpoints | Implement GET search, GET by id, POST, and POST import (USDA integration). | 8 | Mora Rivera, Joel Fernando | Done |
+| TS06 | API: Food Catalog Endpoints | T12 | Write food catalog tests | Tests covering search, USDA import failure handling (502), and admin-only access. | 5 | Mora Rivera, Joel Fernando | Done |
+| TS07 | API: Nutrition Log CRUD Endpoints | T13 | Implement nutrition log CRUD endpoints | Implement POST, PATCH, DELETE for nutrition-logs including date validation and ownership checks. | 5 | Mora Rivera, Joel Fernando | Done |
+| TS07 | API: Nutrition Log CRUD Endpoints | T14 | Write nutrition log CRUD tests | Tests for invalid date format and ownership-based delete restriction. | 3 | Mora Rivera, Joel Fernando | Done |
+| TS08 | API: Nutrition Log Query Endpoints | T15 | Implement nutrition log query endpoints | Implement GET by date, GET daily-summary, GET history with aggregation. | 5 | Mora Rivera, Joel Fernando | Done |
+| TS08 | API: Nutrition Log Query Endpoints | T16 | Write nutrition log query tests | Tests for daily-summary macro aggregation and history date filtering. | 3 | Mora Rivera, Joel Fernando | Done |
+| TS09 | API: Dish and Menu Scan Endpoints | T17 | Implement dish scan preview/confirm flow | Implement POST scan-dish and scan-dish/confirm with Vision API integration. | 8 | Mora Rivera, Joel Fernando | Done |
+| TS09 | API: Dish and Menu Scan Endpoints | T18 | Implement menu scan preview/select flow | Implement POST scan-menu and scan-menu/select. | 8 | Mora Rivera, Joel Fernando | Done |
+| TS09 | API: Dish and Menu Scan Endpoints | T19 | Write smart scan tests | Tests validating preview endpoints do not persist and confirm/select endpoints do. | 5 | Mora Rivera, Joel Fernando | Done |
+| TS10 | API: Wearable Connection and Sync Endpoints | T20 | Implement wearable connection endpoint with OAuth | Implement POST wearable-connections including OAuth code exchange and conflict handling. | 8 | Espinoza Cruz, Angela Milagros | Done |
+| TS10 | API: Wearable Connection and Sync Endpoints | T21 | Implement wearable sync and disconnect endpoints | Implement GET by-user, POST {id}/sync, DELETE {id}. | 8 | Espinoza Cruz, Angela Milagros | Done |
+| TS10 | API: Wearable Connection and Sync Endpoints | T22 | Write wearable connection tests | Tests for sync chain trigger and disconnect token revocation. | 5 | Espinoza Cruz, Angela Milagros | Done |
+| TS11 | API: Activity Log Endpoints | T23 | Implement activity log endpoints | Implement POST, GET by-user, GET daily-summary, DELETE with caloric balance recalculation. | 8 | Espinoza Cruz, Angela Milagros | Done |
+| TS11 | API: Activity Log Endpoints | T24 | Write activity log tests | Tests for ownership validation on delete and caloric balance recalculation. | 5 | Espinoza Cruz, Angela Milagros | Done |
+| TS12 | API: Recommendation Endpoints | T25 | Implement recommendation endpoints | Implement GET by-user and POST generate/{userId}. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS12 | API: Recommendation Endpoints | T26 | Write recommendation tests | Tests for active card filtering and trigger-based generation. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS13 | API: Recipe Endpoints | T27 | Implement recipe catalog and suggestion endpoints | Implement GET filtered, GET by id, POST suggest/{userId}, POST import. | 8 | Villarreal Bazan, Angel Martin | Done |
+| TS13 | API: Recipe Endpoints | T28 | Write recipe tests | Tests for goal/pantry-based suggestion matching and admin-only import. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS14 | API: Pantry Management Endpoints | T29 | Implement pantry management endpoints | Implement GET, POST items, DELETE item, PATCH item with plan gating. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS14 | API: Pantry Management Endpoints | T30 | Write pantry tests | Tests for plan-gated item limits and item update/removal. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS15 | API: Location Preferences and Travel Mode Endpoints | T31 | Implement location preferences and travel mode endpoints | Implement GET, PUT enable/disable travel mode, POST detect, PUT home-city. | 8 | Villarreal Bazan, Angel Martin | Done |
+| TS15 | API: Location Preferences and Travel Mode Endpoints | T32 | Write travel mode tests | Tests for plan-gated travel mode and coordinate-to-city detection. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS16 | API: City Catalog and Weather Endpoints | T33 | Implement city catalog and weather endpoints | Implement GET, GET search, GET by id, POST, GET weather with geocoding integration. | 8 | Villarreal Bazan, Angel Martin | Done |
+| TS16 | API: City Catalog and Weather Endpoints | T34 | Write city catalog tests | Tests for idempotent city import and weather retrieval. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS17 | API: Ingredient Catalog Endpoint | T35 | Implement ingredient catalog endpoint | Implement public GET ingredient-catalog endpoint. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS18 | API: Subscription Plan Catalog Endpoints | T36 | Implement subscription plans catalog endpoints | Implement GET plans and GET plan by key. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS19 | API: User Subscription Lifecycle Endpoints | T37 | Implement subscription selection and activation | Implement POST user-subscriptions with payment processing and conflict handling. | 8 | Villarreal Bazan, Angel Martin | Done |
+| TS19 | API: User Subscription Lifecycle Endpoints | T38 | Implement cancel/renew/plan-change endpoints | Implement POST cancel, POST renew, PUT plan. | 8 | Villarreal Bazan, Angel Martin | Done |
+| TS19 | API: User Subscription Lifecycle Endpoints | T39 | Write subscription lifecycle tests | Tests for payment failure handling and plan change behavior. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS20 | API: Payment Method Endpoints | T40 | Implement payment methods endpoints | Implement POST, GET by-user, DELETE with Stripe validation. | 8 | Villarreal Bazan, Angel Martin | Done |
+| TS20 | API: Payment Method Endpoints | T41 | Write payment methods tests | Tests for Stripe card validation and method removal. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS21 | API: Payment History Endpoint | T42 | Implement payment history endpoint | Implement GET payments by-subscription with chronological ordering. | 4 | Villarreal Bazan, Angel Martin | Done |
+| TS22 | API: Analytics Dashboard, Progress and Streak Endpoints | T43 | Implement dashboard, progress and streak endpoints | Implement GET dashboard, GET progress, GET streaks, POST dashboard-views. | 8 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS22 | API: Analytics Dashboard, Progress and Streak Endpoints | T44 | Write analytics dashboard tests | Tests for streak calculation and progress snapshot aggregation. | 5 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS23 | API: Premium Analytics Export Endpoint | T45 | Implement Premium analytics export endpoint | Implement POST export/{userId} generating PDF reports gated by Premium plan. | 8 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS23 | API: Premium Analytics Export Endpoint | T46 | Write analytics export tests | Tests for PDF generation and 403 on non-Premium plans. | 5 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS24 | API: Cross-Cutting IDOR Ownership Validation | T47 | Implement IDOR filter for IAM, Subscriptions & SmartRecommendations endpoints | Apply the ownership-validation filter to users, sessions, subscriptions, pantry, recommendations, recipes and location-preferences endpoints. | 5 | Villarreal Bazan, Angel Martin | To Do |
+| TS24 | API: Cross-Cutting IDOR Ownership Validation | T48 | Implement IDOR filter for Nutrition Tracking endpoints | Apply the ownership-validation filter to nutrition-logs endpoints. | 3 | Mora Rivera, Joel Fernando | To Do |
+| TS24 | API: Cross-Cutting IDOR Ownership Validation | T49 | Implement IDOR filter for Body Health Metrics endpoints | Apply the ownership-validation filter to body-metrics endpoints. | 3 | Vergraray Calderon, Rose Almendra | To Do |
+| TS24 | API: Cross-Cutting IDOR Ownership Validation | T50 | Implement IDOR filter for Activity & Wearable endpoints | Apply the ownership-validation filter to activity-logs and wearable-connections endpoints. | 3 | Espinoza Cruz, Angela Milagros | To Do |
+| TS24 | API: Cross-Cutting IDOR Ownership Validation | T51 | Implement IDOR filter for Analytics & Reporting endpoints | Apply the ownership-validation filter to analytics endpoints. | 3 | Del Aguila Del Aguila, Olenka Priscilla | To Do |
+| TS25 | API: Cross-Cutting Admin Role Restriction | T52 | Restrict admin role on foods endpoints | Apply role-based authorization to POST /foods and POST /foods/import. | 2 | Mora Rivera, Joel Fernando | To Do |
+| TS25 | API: Cross-Cutting Admin Role Restriction | T53 | Restrict admin role on recipes import endpoint | Apply role-based authorization to POST /recipes/import. | 2 | Villarreal Bazan, Angel Martin | To Do |
+
+#### 5.2.3.4. Development Evidence for Sprint Review
+
+#### 5.2.3.5. Execution Evidence for Sprint Review
+
+#### 5.2.3.6. Services Documentation Evidence for Sprint Review
+
+#### 5.2.3.7. Software Deployment Evidence for Sprint Review
+
+#### 5.2.3.8. Team Collaboration Insights during Sprint
+
 ## 5.3. Validation Interviews
 
 ### 5.3.1. Diseño de Entrevistas
