@@ -1261,7 +1261,7 @@ A continuación, se identifican y describen los contextos delimitados que compon
 | Bounded Context | Descripción | Módulos incluidos |
 | :--- | :--- | :--- |
 | **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
-| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
+| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos mediante Health API. | Wearable Sync |
 | **Analytics & Reporting** | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
 
 ### Generic
