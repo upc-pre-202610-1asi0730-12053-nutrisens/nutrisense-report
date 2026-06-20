@@ -1768,6 +1768,39 @@ como en el Premium.
 
 ---
 
+### Conclusión general de la auditoría
+
+La evaluación identificó **24 problemas** en total, distribuidos de la siguiente manera:
+
+- **Severidad 3 (alta prioridad):** #1, #3, #10, #16, #17, #23, #24 — 7 problemas
+- **Severidad 2 (prioridad media):** #2, #4, #5, #8, #9, #11, #12, #13, #14, #15, #18, #19, #20, #21, #22 — 15 problemas
+- **Severidad 1 (baja prioridad):** #6, #7 — 2 problemas
+
+Se identificaron tres patrones sistémicos que afectan múltiples pantallas y planes:
+
+**1. Internacionalización (i18n) incompleta:** Se detectaron instancias en al menos
+6 pantallas distintas (problemas #3, #8, #15, #18, #21, #22) donde textos, etiquetas
+o palabras clave permanecen en inglés cuando la interfaz está configurada en español.
+Se recomienda realizar una auditoría de i18n exhaustiva sobre todos los componentes
+antes del siguiente release, en lugar de corregirlos caso por caso.
+
+**2. Base de datos de alimentos insuficiente:** Los problemas #13, #20 y #21
+comparten la misma causa raíz: el catálogo de alimentos, recetas e ingredientes
+es demasiado limitado para el segmento objetivo latinoamericano. Esta limitación
+escala con el plan: en Basic afecta el buscador, en Pro afecta además las
+recomendaciones y la despensa, y en Premium se esperaría mayor variedad pero
+el catálogo sigue siendo el mismo.
+
+**3. Bug de cámara transversal:** Los problemas #23 y #24 comparten el mismo
+origen técnico. El botón "Tomar foto" no activa la cámara en ningún flujo de
+escaneo, afectando tanto el plan Pro como el Premium e inutilizando las
+funcionalidades más diferenciadas de estos planes.
+
+Los problemas más críticos a resolver con prioridad inmediata son:
+
+- **#10:** Pérdida de datos de restricciones alimenticias durante el onboarding.
+- **#16 y #17:** Duplicación de actividades sin posibilidad de corrección posterior.
+- **#23 y #24:** Botón "Tomar foto" inoperativo en todos los flujos de escaneo.
 
 ## 5.4. Video About-the-Product
 
