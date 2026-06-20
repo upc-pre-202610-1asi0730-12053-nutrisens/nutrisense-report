@@ -1261,7 +1261,7 @@ A continuación, se identifican y describen los contextos delimitados que compon
 | Bounded Context | Descripción | Módulos incluidos |
 | :--- | :--- | :--- |
 | **Body & Health Metrics** | Seguimiento de indicadores corporales (IMC, TDEE) y metas. | Body Tracking |
-| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos (Google Fit). | Wearable Sync |
+| **Activity & Wearable Sync** | Integración y sincronización con dispositivos físicos mediante Health API. | Wearable Sync |
 | **Analytics & Reporting** | Generación de dashboards, progreso visual y reportes. | Dashboard & Analytics |
 
 ### Generic
@@ -1279,19 +1279,19 @@ A continuación, se detalla la matriz de interdependencias que asegura la reacti
 | :--- | :--- | :--- |
 | **Identity:** User Registered | **Body Metrics:** Register Body Metrics | Inicializa el perfil de salud y metas al crear la cuenta. |
 | **Nutrition:** Consumption Updated (Created/Updated/Deleted) | **Analytics:** Generate Progress Insights | Sincroniza indicadores y gráficas de consumo diario ante cualquier cambio en el log. |
-| **Nutrition:** Consumption Updated (Created/Updated/Deleted) | **Smart Recs:** Generate Recommendation | Ajusta las sugerencias alimenticias en tiempo real según los macros consumidos y el déficit calórico del día. |
 | **Activity:** Caloric Balance Adjusted | **Analytics:** Generate Progress Insights | Refleja el gasto energético por actividad física o sincronización con wearable en los reportes de progreso. |
 | **Body Metrics:** TDEE Calculated | **Analytics:** Generate Progress Insights | Compara objetivos metabólicos teóricos frente al progreso real registrado. |
 | **Body Metrics:** TDEE Calculated | **Smart Recs:** Generate Recommendation | Personaliza las porciones y sugerencias de comida según el perfil físico y la meta calórica actualizada del usuario. |
 | **Subscriptions:** Benefits Enabled | **Smart Recs:** Unlock Premium Features | Habilita el acceso a algoritmos de recomendación avanzada y análisis detallado por IA. |
 | **Subscriptions:** Benefits Disabled | **Smart Recs:** Lock Premium Features | Restringe el acceso a funcionalidades avanzadas tras la expiración o cancelación del plan. |
+| **Identity:** Goal Defined | **Body Metrics:** Calculate Daily Caloric Goal | Recalcula la meta calórica diaria cuando el usuario actualiza su objetivo de salud. |
 
 **EventStorming**
 
 ![EventStorming Diagram](../assets/img/artifacts/eventStorming.png)
 
 Para poder apreciar mejor el EventStorming le recomendamos ingresar al siguiente link:
-<br>[Visualizar EventStorming en Miro](https://miro.com/app/live-embed/uXjVGhe0w8o=/?embedMode=view_only_without_ui&moveToViewport=-3505%2C-10094%2C61440%2C33040&embedId=964424783628)
+<br>[Visualizar EventStorming en Miro](https://miro.com/welcomeonboard/aytKTWo5cmFZLzZ5QmhqRmRHY3Z6amtFc0l0aVQyMGlpQkZNUHNuaHdReHJmYjN5cGhQeFNSL3dOQ0tham1JM2pZc1VSeG5aWEpMSXh4ZzUrWGV6RGpqSXhvNThQV28wWnlBTXZDMFE5SXFqTHAzUHpKZUw3NDNvbWFuYy9mRCt3VHhHVHd5UWtSM1BidUtUYmxycDRnPT0hdjE=?share_link_id=50406416456)
 
 ### 4.6.2. Software Architecture Context Diagram
 
@@ -1302,12 +1302,12 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a NutriSense como un 
  - **NutriSense:** Sistema central que provee las funcionalidades de seguimiento nutricional, escaneo de comidas y recomendaciones inteligentes.
  - **User:** Persona que utiliza la plataforma para gestionar sus objetivos de salud, registrar sus comidas y monitorear su actividad física.
  - **External Systems:**
-	- `Google Cloud Vision API:` Procesa las imágenes para el análisis de alimentos.
-	- `Nutrition Data Providers:` Fuentes de consulta para información calórica y macronutrientes.
-	- `Google Fit API:` Sincroniza datos de actividad física y gasto energético.
-	- `OpenWeatherMap:` Provee datos climáticos para ajustar las sugerencias de comidas.
+	- `Google Gemini Vision:` Procesa las imágenes para el análisis de alimentos y menús mediante visión artificial.
+	- `USDA Food Data Central:` Fuente de consulta para información calórica y macronutrientes de alimentos.
+	- `Health API:` Sincroniza datos de actividad física y gasto energético desde dispositivos wearable.
+	- `OpenWeatherMap:` Provee datos climáticos y geocoding para ajustar las sugerencias de comidas.
 	- `Stripe:` Gestiona de forma segura los pagos y el estado de las suscripciones.
-	- `Geolocation API:` Provee la ubicación actual del usuario para el Modo Viaje y las recomendaciones contextuales.
+	- `DeepSeek API:` Enriquece datos nutricionales, genera recetas y produce recomendaciones personalizadas mediante IA.
 
 ![Context Diagram](../assets/img/artifacts/nutrisense-SystemContext.png)
 
@@ -1470,7 +1470,7 @@ El diagrama a continuación muestra todos los componentes de la arquitectura en 
 
 ![API Component Diagram](../assets/img/artifacts/nutrisense-BackendBCsDiagram.png)
 
-Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. Todos los BCs del backend utilizan el Shared Kernel a través de su capa Application.
+Cada Bounded Context contiene una capa de Interfaces con los Controllers de ASP.NET Core que reciben las peticiones HTTP y las fachadas ACL que exponen contratos a otros Bounded Contexts, una capa de Application con los servicios y comandos que orquestan los casos de uso, una capa de Domain con los agregados y entidades del dominio, y una capa de Infrastructure con los repositorios de Entity Framework Core y los clientes de APIs externas cuando corresponda. Todos los BCs del backend utilizan el Shared Kernel a través de su capa Application.
 
 Para apreciar la separación por capas Domain-Driven Design de cada Bounded Context y del Shared Kernel, se presenta a continuación un diagrama de detalle individual por cada uno.
 
@@ -1486,29 +1486,91 @@ Componente transversal utilizado por todos los Bounded Contexts del backend que 
 
   ![IAM Backend Diagram](../assets/img/artifacts/nutrisense-IAMBackendDiagram.png)
 
- - **Nutrition Tracking:** Gestiona el registro de comidas y el procesamiento de Smart Scan. Se integra con Google Cloud Vision y Nutrition Data Providers.
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![IAM ACL Diagram](../assets/img/artifacts/nutrisense-IAMAclDiagram.png)
+
+  - **REST:**
+
+    ![IAM REST Diagram](../assets/img/artifacts/nutrisense-IAMRestDiagram.png)
+
+ - **Nutrition Tracking:** Gestiona el registro de comidas y el procesamiento de Smart Scan. Se integra con Google Gemini Vision, USDA Food Data Central y DeepSeek API.
 
   ![Nutrition Backend Diagram](../assets/img/artifacts/nutrisense-NutritionBackendDiagram.png)
+
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Nutrition ACL Diagram](../assets/img/artifacts/nutrisense-NutritionAclDiagram.png)
+
+  - **REST:**
+
+    ![Nutrition REST Diagram](../assets/img/artifacts/nutrisense-NutritionRestDiagram.png)
 
  - **Body & Health Metrics:** Calcula índices de salud como BMI y TDEE y registra el historial de peso.
 
   ![Body Backend Diagram](../assets/img/artifacts/nutrisense-BodyBackendDiagram.png)
 
- - **Smart Recommendations:** Procesa datos contextuales para generar sugerencias personalizadas. Se integra con OpenWeatherMap y Geolocation API.
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Body ACL Diagram](../assets/img/artifacts/nutrisense-BodyAclDiagram.png)
+
+  - **REST:**
+
+    ![Body REST Diagram](../assets/img/artifacts/nutrisense-BodyRestDiagram.png)
+
+ - **Smart Recommendations:** Procesa datos contextuales para generar sugerencias personalizadas. Se integra con OpenWeatherMap y DeepSeek API.
 
   ![Recs Backend Diagram](../assets/img/artifacts/nutrisense-RecsBackendDiagram.png)
 
- - **Activity & Wearable Sync:** Sincroniza pasos y datos de actividad desde Google Fit.
+  La capa Interfaces contiene únicamente endpoints REST para este Bounded Context, ya que no expone contrato ACL hacia otros BCs. El detalle se presenta a continuación:
+
+  - **REST:**
+
+    ![Recs REST Diagram](../assets/img/artifacts/nutrisense-RecsRestDiagram.png)
+
+ - **Activity & Wearable Sync:** Sincroniza pasos y datos de actividad desde Health API.
 
   ![Activity Backend Diagram](../assets/img/artifacts/nutrisense-ActivityBackendDiagram.png)
+
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Activity ACL Diagram](../assets/img/artifacts/nutrisense-ActivityAclDiagram.png)
+
+  - **REST:**
+
+    ![Activity REST Diagram](../assets/img/artifacts/nutrisense-ActivityRestDiagram.png)
 
  - **Analytics & Reporting:** Genera gráficas de progreso, rachas y reportes del usuario.
 
   ![Analytics Backend Diagram](../assets/img/artifacts/nutrisense-AnalyticsBackendDiagram.png)
 
+  La capa Interfaces contiene únicamente endpoints REST para este Bounded Context, ya que no expone contrato ACL hacia otros BCs. El detalle se presenta a continuación:
+
+  - **REST:**
+
+    ![Analytics REST Diagram](../assets/img/artifacts/nutrisense-AnalyticsRestDiagram.png)
+
  - **Subscriptions & Billing:** Gestiona los niveles de suscripción y se integra con Stripe para el procesamiento de pagos.
 
   ![Billing Backend Diagram](../assets/img/artifacts/nutrisense-BillingBackendDiagram.png)
+
+  La capa Interfaces contiene un contrato ACL y endpoints REST para este Bounded Context. El detalle se presenta a continuación:
+
+  - **ACL:**
+
+    ![Billing ACL Diagram](../assets/img/artifacts/nutrisense-BillingAclDiagram.png)
+
+  - **REST:**
+
+    ![Billing REST Diagram](../assets/img/artifacts/nutrisense-BillingRestDiagram.png)
 
 ## 4.7. Software Object-Oriented Design
 
