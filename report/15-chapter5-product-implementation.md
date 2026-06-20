@@ -1069,7 +1069,7 @@ Durante el Sprint 2, todos los miembros del equipo participaron activamente en l
 El Sprint 3 tiene como objetivo principal entregar la plataforma de NutriSense con cobertura funcional completa para los bounded contexts de IAM, BodyHealthMetrics, NutritionTracking, ActivityWearable, SmartRecommendations, Subscriptions y AnalyticsReporting, incluyendo además las correcciones de seguridad transversal (validación de ownership/IDOR y restricción de rol admin) identificadas durante la documentación de endpoints. El backlog contempla 25 Technical Stories distribuidas en 7 bounded contexts, con un total de 109 Story Points.
 
 ![Board Sprint 3](../assets/img/sprint3/sprintbacklog.png)
-URL del Board (Trello): [Enlace Trello](pendiente)
+URL del Board (Trello): [Enlace Trello](https://trello.com/b/QxmJTyBW/sprint-backlog-3)
 
 | US ID | US Title | Task ID | Task Title | Description | Est. (h) | Assigned To | Status |
 |-------|----------|---------|------------|-------------|----------|-------------|--------|
