@@ -1302,12 +1302,12 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a NutriSense como un 
  - **NutriSense:** Sistema central que provee las funcionalidades de seguimiento nutricional, escaneo de comidas y recomendaciones inteligentes.
  - **User:** Persona que utiliza la plataforma para gestionar sus objetivos de salud, registrar sus comidas y monitorear su actividad física.
  - **External Systems:**
-	- `Google Cloud Vision API:` Procesa las imágenes para el análisis de alimentos.
-	- `Nutrition Data Providers:` Fuentes de consulta para información calórica y macronutrientes.
-	- `Google Fit API:` Sincroniza datos de actividad física y gasto energético.
-	- `OpenWeatherMap:` Provee datos climáticos para ajustar las sugerencias de comidas.
+  - `Google Gemini Vision:` Procesa las imágenes para el análisis de alimentos y menús mediante visión artificial.
+	- `USDA Food Data Central:` Fuente de consulta para información calórica y macronutrientes de alimentos.
+	- `Health API:` Sincroniza datos de actividad física y gasto energético desde dispositivos wearable.
+	- `OpenWeatherMap:` Provee datos climáticos y geocoding para ajustar las sugerencias de comidas.
 	- `Stripe:` Gestiona de forma segura los pagos y el estado de las suscripciones.
-	- `Geolocation API:` Provee la ubicación actual del usuario para el Modo Viaje y las recomendaciones contextuales.
+	- `DeepSeek API:` Enriquece datos nutricionales, genera recetas y produce recomendaciones personalizadas mediante IA.
 
 ![Context Diagram](../assets/img/artifacts/nutrisense-SystemContext.png)
 
