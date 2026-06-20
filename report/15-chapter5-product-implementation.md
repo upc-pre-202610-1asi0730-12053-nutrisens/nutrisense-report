@@ -1,4 +1,4 @@
-# CAPÍTULO V: Product Implementation, Validation & Deployment
+﻿# CAPÍTULO V: Product Implementation, Validation & Deployment
 
 El proceso de construcción, verificación y puesta en marcha de NutriSense representa la fase donde los conceptos arquitectónicos se materializan en una solución funcional. Esta etapa es determinante para transformar los modelos de diseño en una plataforma operativa, permitiendo validar la viabilidad de nuestra propuesta tecnológica y asegurar que el producto final cumpla con los estándares de calidad esperados por los usuarios en el ecosistema de salud digital.
 
@@ -1301,11 +1301,786 @@ URL del Board (Trello): [Enlace Trello](https://trello.com/b/QxmJTyBW/sprint-bac
 
 #### 5.2.3.4. Development Evidence for Sprint Review
 
+Durante el Sprint 3, el equipo concentró la implementación en los dos productos restantes del alcance de la solución: el Web Service (`nutrisense-platform`), backend desarrollado desde cero en .NET 10 / C# bajo una arquitectura DDD + Clean Architecture, y la Web Application (`nutrisense-webapp`), reconectada para consumir dicho backend en reemplazo del mock `json-server`. La Landing Page (`nutrisense-website`), entregada y desplegada en el Sprint 1, no recibió cambios de implementación en esta iteración.
+
+El grueso del esfuerzo correspondió al backend, donde se construyeron los siete bounded contexts de la plataforma —IAM, Body Health Metrics, Subscriptions & Billing, Nutrition Tracking, Activity & Wearable, Smart Recommendations y Analytics & Reporting— cada uno desarrollado en su propia rama `feature/*` y liberado de forma incremental hacia `develop` y `main` con versionado semántico (de `v0.0.1` a `v1.0.0`). El trabajo abarcó las capas de dominio (aggregates, entities, value objects, domain events y commands/queries), aplicación (command/query services, contratos y manejadores de eventos), infraestructura (repositorios EFC, configuraciones de entidad, migraciones e integraciones con servicios externos: Gemini, DeepSeek, USDA FoodData Central, OpenWeatherMap y Stripe) e interfaz REST (controllers, recursos, assemblers y documentación OpenAPI/Swagger con códigos de estado y mensajes de error en lenguaje natural). En paralelo, en la Web Application se integraron los endpoints reales de los siete bounded contexts mediante la rama `feature/integration`, incluyendo interceptores HTTP, el composable de Stripe y la actualización de rutas e i18n.
+
+A continuación se presenta, para cada repositorio, la relación de commits asociados a la implementación del sprint.
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/base | `6f9051b` | feat(shared): add domain result and base abstractions | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/base | `60f9d60` | feat(shared): add persistence base (dbcontext, unit of work, interceptors) | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/base | `ca40ca2` | feat(shared): add external clients (deepseek, gemini) | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/base | `fd14b50` | feat(shared): add localization resources and asp configuration | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/base | `bd30b35` | feat: add host entry point (program) base | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/base | `002d6df` | chore: set version to 0.0.1 | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `d4bc434` | feat(iam): add user value objects | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `001dc57` | feat(iam): add dietary restriction and user session entities | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `ff7dac2` | feat(iam): add RegisterUserCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `607b7aa` | feat(iam): add user aggregate | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `2ea675d` | feat(iam): add UserRegistered domain event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `8ed1606` | feat(iam): add user repository contract | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `acf740d` | feat(iam): add hashing and token service contracts | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `f9285aa` | feat(iam): add RegisterUserError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `d4b4347` | feat(iam): add login result | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `3070802` | feat(iam): add user command service contract | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `45687e2` | feat(iam): add user command service | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `235ea95` | feat(iam): add user repository and efc configuration | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `adcbe5b` | feat(iam): add bcrypt hashing service | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `5d5c21c` | feat(iam): add jwt token service | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `a20bce8` | feat(iam): add register user resources | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `0135585` | feat(iam): add register user assemblers | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `18221d2` | feat(iam): add register user endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `0853986` | feat(iam): add LoginUserCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `ce084e9` | feat(iam): add UserLoggedIn domain event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `1f57952` | feat(iam): add LoginUserError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `1039459` | feat(iam): add login user resources | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `a24233f` | feat(iam): add login user assemblers | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `e52c032` | feat(iam): add sign in endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `c91b0c4` | feat(iam): add LogoutUserCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `1ddb7b8` | feat(iam): add UserLoggedOut domain event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `c2d2599` | feat(iam): add LogoutUserError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `4801f27` | feat(iam): add logout user assembler | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `9a7e75a` | feat(iam): add logout endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `a340257` | feat(iam): add SetHealthGoalCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `9c73015` | feat(iam): add GoalDefined domain event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `531d0c0` | feat(iam): add SetHealthGoalError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `04feb79` | feat(iam): add set health goal resource | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `2112d67` | feat(iam): add set health goal assemblers | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `372219f` | feat(iam): add set health goal endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `f20174c` | feat(iam): add SetDietaryRestrictionsCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `8d4ee21` | feat(iam): add RestrictionsConfigured domain event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `7206430` | feat(iam): add SetDietaryRestrictionsError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `f96c76b` | feat(iam): add set dietary restrictions resource | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `0f00f5e` | feat(iam): add set dietary restrictions assemblers | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `4763279` | feat(iam): add set dietary restrictions endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `35d91a2` | feat(iam): add UpdateProfileCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `ac5ff8f` | feat(iam): add ProfileUpdated domain event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `0111829` | feat(iam): add UpdateProfileError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `6686a01` | feat(iam): add update profile resource | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `211fcf7` | feat(iam): add update profile assemblers | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `24afe34` | feat(iam): add update profile endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `9eb83d9` | feat(iam): add DeleteUserCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `2231a37` | feat(iam): add UserDeleted domain event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `7dc6579` | feat(iam): add DeleteUserError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `c73c46d` | feat(iam): add delete user assembler | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `a5cd794` | feat(iam): add delete user endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `893f8a4` | feat(iam): add GetUserByIdQuery | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `1837fbc` | feat(iam): add user query service contract | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `7822841` | feat(iam): add user query service | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `8755bdb` | feat(iam): add get user by id endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `48aa7da` | feat(iam): add GetUserByEmailQuery | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `f7531c6` | feat(iam): add get user by email endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `2e0c1ee` | feat(iam): add GetDietaryRestrictionsByUserIdQuery | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `71eda65` | feat(iam): add get dietary restrictions endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `e907817` | feat(iam): add GetAllSessionsByUserIdQuery | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `2803b5c` | feat(iam): add session resource | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `c5bd6ce` | feat(iam): add session resource assembler | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `bc0a185` | feat(iam): add get sessions endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `5dcec74` | feat(iam): add iam context facade | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `2afd6fd` | feat(iam): register iam dependencies | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `9b72125` | feat(iam): add iam initial migration | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam | `1776e6c` | chore: bump version to 0.0.2 | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `bcfedd0` | feat(body-health-metrics): add weight value object | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `d3ed258` | feat(body-health-metrics): add BMI and macro target value objects | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `af0dafe` | feat(body-health-metrics): add weight log entity | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `97ce80d` | feat(body-health-metrics): add body metrics aggregate | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `83a36f5` | feat(body-health-metrics): add RegisterBodyMetricsCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `54d959a` | feat(body-health-metrics): add body metrics registration saga events | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `2735df0` | feat(body-health-metrics): add body metrics repository contract | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `ef71482` | feat(body-health-metrics): add body metrics calculator contract | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `7dbc8f6` | feat(body-health-metrics): add RegisterBodyMetricsError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `2294b39` | feat(body-health-metrics): add body metrics command service contract | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `973fb39` | feat(body-health-metrics): add body metrics query service contract | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `bf4c4a4` | feat(body-health-metrics): add body metrics command service | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `eaae63d` | feat(body-health-metrics): add Mifflin-St Jeor body metrics calculator | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `54c0353` | feat(body-health-metrics): add body metrics repository | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `c30b777` | feat(body-health-metrics): add body metrics and weight log EFC configurations | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `a980ec1` | feat(body-health-metrics): add register body metrics REST resources | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `c0aba1d` | feat(body-health-metrics): add register body metrics assemblers | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `261d9c8` | feat(body-health-metrics): add body metrics controller with register endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `dbae991` | feat(body-health-metrics): add WeightUpdated event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `10b8b31` | feat(body-health-metrics): add UpdateWeightCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `1741cf9` | feat(body-health-metrics): add UpdateWeightError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `620fc58` | feat(body-health-metrics): add update weight resource and assembler | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `b568c68` | feat(body-health-metrics): add update weight endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `fd739ec` | feat(body-health-metrics): add waist and neck measurement value objects | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `e86f5ad` | feat(body-health-metrics): add body measurement entity | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `ece0c8b` | feat(body-health-metrics): add RegisterBodyMeasurementCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `7615f99` | feat(body-health-metrics): add RegisterBodyMeasurementError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `0e8ce9b` | feat(body-health-metrics): add body measurement EFC configuration | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `7471c67` | feat(body-health-metrics): add register body measurement resource and assembler | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `01a0a0b` | feat(body-health-metrics): add register body measurement endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `93f965d` | feat(body-health-metrics): add goal type and weekly rate value objects | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `d16cc20` | feat(body-health-metrics): add user goal entity | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `874ac8d` | feat(body-health-metrics): add SetHealthGoalCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `bf444b8` | feat(body-health-metrics): add GoalDefinedInMetrics event | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `c49cc4f` | feat(body-health-metrics): add SetHealthGoalError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `dd16364` | feat(body-health-metrics): add user goal EFC configuration | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `5fd9750` | feat(body-health-metrics): add set health goal resource and assembler | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `6f41839` | feat(body-health-metrics): add set health goal endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `2123322` | feat(body-health-metrics): add CalculateDailyCaloricGoalCommand | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `df6c69f` | feat(body-health-metrics): add CalculateDailyCaloricGoalError | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `7e70a8b` | feat(body-health-metrics): add body metrics calculation commands | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `7434f95` | feat(body-health-metrics): add GetBodyMetricsByUserIdQuery | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `9882900` | feat(body-health-metrics): add body metrics query service | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `30d2d79` | feat(body-health-metrics): add get body metrics by user id endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `516508d` | feat(body-health-metrics): add bmi resource | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `4464b37` | feat(body-health-metrics): add get bmi endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `21f8fa0` | feat(body-health-metrics): add daily caloric goal resource | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `0dd66d6` | feat(body-health-metrics): add get daily caloric goal endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `7407da8` | feat(body-health-metrics): add GetWeightHistoryByUserIdQuery | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `1d7f1fa` | feat(body-health-metrics): add weight log resource and assembler | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `607fbf9` | feat(body-health-metrics): add get weight history endpoint | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `3dee117` | feat(body-health-metrics): add body health metrics IAM event handlers | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `6dc686c` | feat(body-health-metrics): add body health metrics context facade | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `37dc1de` | feat(body-health-metrics): register body health metrics dependencies | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `32c947d` | feat(body-health-metrics): add body health metrics initial migration | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics | `e50de75` | chore: bump version to 0.0.3 | — | 19/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `3c61499` | feat(subscriptions): add card brand and card expiry value objects | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `d2ac650` | feat(subscriptions): add payment method aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `b896324` | feat(subscriptions): add RegisterPaymentMethodCommand | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `6c625a8` | feat(subscriptions): add payment method repository contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `e209c22` | feat(subscriptions): add RegisterPaymentMethodError | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `e19a3f9` | feat(subscriptions): add payment method command service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `44d9af7` | feat(subscriptions): add payment method command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `4b96579` | feat(subscriptions): add payment method repository | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `411d973` | feat(subscriptions): add payment method EFC configuration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `b8ee1aa` | feat(subscriptions): add payment method REST resources and assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `74e4111` | feat(subscriptions): add payment methods controller with register endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `aa73b0d` | feat(subscriptions): add delete payment method endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `a688583` | feat(subscriptions): add subscription value objects | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `1f3ae86` | feat(subscriptions): add payment record entity | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `3b0a412` | feat(subscriptions): add user subscription aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `752989a` | feat(subscriptions): add subscription plan aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `204b3b9` | feat(subscriptions): add SelectSubscriptionPlanCommand | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `4b13c48` | feat(subscriptions): add CancelSubscriptionCommand | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `29c2cf5` | feat(subscriptions): add RenewSubscriptionCommand | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `0ea938f` | feat(subscriptions): add ChangeSubscriptionPlanCommand | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `8f1aa9f` | feat(subscriptions): add subscription domain events | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `faf51be` | feat(subscriptions): add user subscription repository contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `f477a70` | feat(subscriptions): add subscription plan repository contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `00d81de` | feat(subscriptions): add payment gateway contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `76b4581` | feat(subscriptions): add SelectSubscriptionPlanError | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `2d29193` | feat(subscriptions): add CancelSubscriptionError | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `da32ebf` | feat(subscriptions): add RenewSubscriptionError | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `3118f4b` | feat(subscriptions): add ChangeSubscriptionPlanError | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `ecfd5cc` | feat(subscriptions): add user subscription command service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `2a11be9` | feat(subscriptions): add user subscription command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `338ded8` | feat(subscriptions): add stripe payment gateway | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `208b440` | feat(subscriptions): add user subscription repository | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `8fbeda3` | feat(subscriptions): add subscription plan repository | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `6f4000d` | feat(subscriptions): add user subscription EFC configuration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `3e76bf1` | feat(subscriptions): add payment record EFC configuration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `808cc4f` | feat(subscriptions): add subscription plan EFC configuration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `54c101a` | feat(subscriptions): add GetUserSubscriptionByUserIdQuery | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `e3aa18d` | feat(subscriptions): add GetPaymentHistoryBySubscriptionIdQuery | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `a3edb93` | feat(subscriptions): add user subscription query service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `77a38e4` | feat(subscriptions): add user subscription query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `16c4f82` | feat(subscriptions): add user subscription REST resources and assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `bfeb232` | feat(subscriptions): add user subscriptions controller with select plan and get endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `2593587` | feat(subscriptions): add cancel subscription endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `72ae2f7` | feat(subscriptions): add renew subscription endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `5b029a8` | feat(subscriptions): add change subscription plan endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `ef87aec` | feat(subscriptions): add payment record resource and assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `dc30911` | feat(subscriptions): add payments controller with payment history endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `c3ddaf2` | feat(subscriptions): add GetPaymentMethodsByUserIdQuery | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `555eb7a` | feat(subscriptions): add payment method query service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `8ed88f8` | feat(subscriptions): add payment method query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `5901011` | feat(subscriptions): add get payment methods endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `092cb40` | feat(subscriptions): add GetAllSubscriptionPlansQuery | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `6fda0d0` | feat(subscriptions): add GetSubscriptionPlanByKeyQuery | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `aed2fa2` | feat(subscriptions): add subscription plan query service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `8ca3db8` | feat(subscriptions): add subscription plan query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `06ad435` | feat(subscriptions): add subscription plan resource and assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `e4455bc` | feat(subscriptions): add subscription plans controller | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `57d61df` | feat(subscriptions): add subscription lifecycle commands | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `96ca9d0` | feat(subscriptions): add subscriptions context facade | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `1229c03` | feat(subscriptions): add cross-context subscription tier lookup | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `9833f2c` | feat(subscriptions): add subscription plan seeder | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `b7006b5` | feat(subscriptions): register subscriptions dependencies, dbset and seeder | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `e535a11` | feat(subscriptions): add subscriptions initial migration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions | `7fca88b` | chore: bump version to 0.0.4 | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `4f3b67f` | feat(nutrition-tracking): add food value objects | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `5290b28` | feat(nutrition-tracking): add RegisterFoodCommand | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `153dd4f` | feat(nutrition-tracking): add food aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `7350176` | feat(nutrition-tracking): add food repository contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `3cbc585` | feat(nutrition-tracking): add register food error | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `ef3b346` | feat(nutrition-tracking): add food command service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `a8c00de` | feat(nutrition-tracking): add food command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `cb227bb` | feat(nutrition-tracking): add food entity type configuration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `146e060` | feat(nutrition-tracking): add food repository | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `087da82` | feat(nutrition-tracking): add register food resources and assemblers | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `b92ba92` | feat(nutrition-tracking): add foods controller with register endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `71b5dfb` | feat(nutrition-tracking): add external food data provider contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `ffc18ae` | feat(nutrition-tracking): add food enrichment service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `1cfc28b` | feat(nutrition-tracking): add ImportFoodsCommand | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `7218f82` | feat(nutrition-tracking): add import foods error | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `8b793f7` | feat(nutrition-tracking): add food import command service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `8821de3` | feat(nutrition-tracking): add food import command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `e9f8248` | feat(nutrition-tracking): add USDA food data provider | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `dffa217` | feat(nutrition-tracking): add DeepSeek food enrichment service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `f1b626d` | feat(nutrition-tracking): add import foods resource | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `aef1a10` | feat(nutrition-tracking): add import foods endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `cfe6103` | feat(nutrition-tracking): add SearchFoodQuery | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `b9d3f02` | feat(nutrition-tracking): add food query service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `eefb0f2` | feat(nutrition-tracking): add food query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `591c204` | feat(nutrition-tracking): add food search service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `68b928b` | feat(nutrition-tracking): add database food search service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `84b173f` | feat(nutrition-tracking): add food search result resource | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `c64531f` | feat(nutrition-tracking): add search foods endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `a637724` | feat(nutrition-tracking): add GetFoodByIdQuery | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `ce451ca` | feat(nutrition-tracking): add get food by id endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `99aa4ca` | feat(nutrition-tracking): add nutrition log value objects | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `f54d3f9` | feat(nutrition-tracking): add log meal, confirm scan and select menu option commands | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `8ad6fb8` | feat(nutrition-tracking): add nutrition log aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `2dedf45` | feat(nutrition-tracking): add nutrition log repository contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `6a517ed` | feat(nutrition-tracking): add daily macro summary value object | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `1a1dcea` | feat(nutrition-tracking): add vision and food estimation service contracts | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `b796f92` | feat(nutrition-tracking): add nutrition tracking events | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `fcce950` | feat(nutrition-tracking): add nutrition log mutation and scan commands | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `f9c1b2b` | feat(nutrition-tracking): add nutrition log application errors | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `b23f855` | feat(nutrition-tracking): add nutrition log command service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `732f27c` | feat(nutrition-tracking): add scan preview and menu options preview results | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `dc6ea94` | feat(nutrition-tracking): add nutrition log command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `7850950` | feat(nutrition-tracking): add nutrition log entity type configuration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `386787c` | feat(nutrition-tracking): add nutrition log repository | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `4019f2a` | feat(nutrition-tracking): add Gemini dish and menu vision services | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `1c34f3f` | feat(nutrition-tracking): add DeepSeek food nutrition estimation service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `48dfde6` | feat(nutrition-tracking): add log meal resources and assemblers | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `b309f16` | feat(nutrition-tracking): add nutrition logs controller with log meal endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `47c9b0c` | feat(nutrition-tracking): add scan meal photo resources and assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `2262743` | feat(nutrition-tracking): add scan meal photo endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `94eb3eb` | feat(nutrition-tracking): add confirm scan resources and assemblers | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `f1ae192` | feat(nutrition-tracking): add confirm scan endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `6fcb9ae` | feat(nutrition-tracking): add scan menu photo resources and assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `47959e8` | feat(nutrition-tracking): add scan menu photo endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `4540a66` | feat(nutrition-tracking): add select menu option resources and assemblers | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `9c2be25` | feat(nutrition-tracking): add select menu option endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `551dd6f` | feat(nutrition-tracking): add update nutrition log entry resource and assemblers | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `b4f950c` | feat(nutrition-tracking): add update nutrition log entry endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `9bc37d3` | feat(nutrition-tracking): add delete nutrition log entry result assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `6748aa3` | feat(nutrition-tracking): add delete nutrition log entry endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `97327be` | feat(nutrition-tracking): add GetNutritionLogByUserAndDateQuery | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `994dadb` | feat(nutrition-tracking): add nutrition log query service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `94e3ed2` | feat(nutrition-tracking): add nutrition log query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `6d88d86` | feat(nutrition-tracking): add nutrition log history and daily summary queries | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `386c084` | feat(nutrition-tracking): add get nutrition log by user and date endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `954c3ac` | feat(nutrition-tracking): add get nutrition log history endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `cbdeaad` | feat(nutrition-tracking): add daily macro summary resource | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `2cb8f2a` | feat(nutrition-tracking): add get daily macro summary endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `68b30e4` | feat(nutrition-tracking): add food restriction checker contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `c435381` | feat(nutrition-tracking): add food restriction checker | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `69bdfe7` | feat(nutrition-tracking): add food provisioning service contract | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `34c8d46` | feat(nutrition-tracking): add food provisioning service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `cd1bf58` | feat(nutrition-tracking): add food seeder | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `d381af8` | feat(nutrition-tracking): add nutrition tracking context facade | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `9684b53` | feat(nutrition-tracking): register nutrition tracking dependencies and dbset | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `212f9d8` | feat(nutrition-tracking): add nutrition tracking initial migration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking | `6a5e458` | chore: bump version to 0.0.5 | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `499c7d5` | feat(activity-wearable): add activity log aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `dd84c42` | feat(activity-wearable): add log manual activity command | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `5ae52e7` | feat(activity-wearable): add activity and caloric balance domain events | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `6574adb` | feat(activity-wearable): add activity log repository interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `db3f84f` | feat(activity-wearable): add caloric balance calculator interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `1721d8c` | feat(activity-wearable): add activity log command errors | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `2b0154a` | feat(activity-wearable): add activity log command service interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `e3101b8` | feat(activity-wearable): add activity log command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `5dbc86b` | feat(activity-wearable): add activity log entity configuration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `e615f66` | feat(activity-wearable): add activity log repository | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `df654b4` | feat(activity-wearable): add caloric balance calculator | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `3cc386e` | feat(activity-wearable): add activity log resources | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `e34ca77` | feat(activity-wearable): add activity log assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `f0009d9` | feat(activity-wearable): add log manual activity result assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `9097f60` | feat(activity-wearable): add log manual activity endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `407ff68` | feat(activity-wearable): add wearable connection aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `3be0b1b` | feat(activity-wearable): add connect device command | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `d59c51a` | feat(activity-wearable): add device connected domain event | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `dee3e22` | feat(activity-wearable): add wearable connection repository interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `29db175` | feat(activity-wearable): add wearable sync provider interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `089966f` | feat(activity-wearable): add wearable connection command errors | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `014fcc0` | feat(activity-wearable): add wearable connection command service interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `8f14d70` | feat(activity-wearable): add wearable connection command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `bb71d29` | feat(activity-wearable): add wearable connection entity configuration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `ada4006` | feat(activity-wearable): add wearable connection repository | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `34ab1f5` | feat(activity-wearable): add google fit sync provider | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `b283832` | feat(activity-wearable): add wearable connection resources | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `3889068` | feat(activity-wearable): add wearable connection assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `576bebe` | feat(activity-wearable): add connect device result assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `cef3482` | feat(activity-wearable): add connect device endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `1015324` | feat(activity-wearable): add sync activity data command | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `41ae6e7` | feat(activity-wearable): add sync activity result assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `9e4a5b8` | feat(activity-wearable): add sync activity data endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `535a651` | feat(activity-wearable): add disconnect device command | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `389472f` | feat(activity-wearable): add disconnect device result assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `dedb6e8` | feat(activity-wearable): add disconnect device endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `86abf66` | feat(activity-wearable): add delete activity log command | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `00645d1` | feat(activity-wearable): add delete activity log result assembler | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `df3bf3b` | feat(activity-wearable): add delete activity log endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `647adba` | feat(activity-wearable): add get activity logs by user query | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `47c0707` | feat(activity-wearable): add activity log query service interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `a6c4d9f` | feat(activity-wearable): add activity log query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `5f63470` | feat(activity-wearable): add get activity logs by user endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `3b405e1` | feat(activity-wearable): add get daily activity summary query | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `437e5e4` | feat(activity-wearable): add daily activity summary resource | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `9c0c6c2` | feat(activity-wearable): add daily activity summary endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `765d86f` | feat(activity-wearable): add get wearable connections by user query | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `3f91da4` | feat(activity-wearable): add wearable connection query service interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `aefafbb` | feat(activity-wearable): add wearable connection query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `e393f63` | feat(activity-wearable): add get wearable connections by user endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `53e17fa` | feat(activity-wearable): add caloric balance and active calories commands | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `b96abf8` | feat(activity-wearable): add activity wearable context facade | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `4904c0f` | feat(activity-wearable): register activity wearable dependencies | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `08ce4ed` | feat(activity-wearable): add activity wearable initial migration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable | `85279dd` | chore: bump version to 0.0.6 | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `2308b96` | feat(smart-recommendations): add domain value objects | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `0967706` | feat(smart-recommendations): add domain events | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `73d7178` | feat(smart-recommendations): add domain commands | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `45b8ed9` | feat(smart-recommendations): add domain queries | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `777bc17` | feat(smart-recommendations): add city aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `688034c` | feat(smart-recommendations): add ingredient catalog item aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `7840978` | feat(smart-recommendations): add recipe aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `cba48f6` | feat(smart-recommendations): add pantry aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `8b5dbe8` | feat(smart-recommendations): add location preference aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `dde5009` | feat(smart-recommendations): add recommendation card aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `41a29c4` | feat(smart-recommendations): add domain repository interfaces | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `0bc551d` | feat(smart-recommendations): add domain service interfaces | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `8151803` | feat(smart-recommendations): add application errors | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `e18fec4` | feat(smart-recommendations): add recs engine command service interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `0068a27` | feat(smart-recommendations): add recs engine query service interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `26a0eaf` | feat(smart-recommendations): add catalog import command service interfaces | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `78964a2` | feat(smart-recommendations): add recs engine command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `4367e40` | feat(smart-recommendations): add recs engine query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `ac414eb` | feat(smart-recommendations): add ingredient catalog import command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `7482e7d` | feat(smart-recommendations): add recipe import command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `6d0abbd` | feat(smart-recommendations): add subscription and tdee event handlers | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `28471b3` | feat(smart-recommendations): add efc entity type configurations | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `0d35dd6` | feat(smart-recommendations): add efc repositories | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `fb14026` | feat(smart-recommendations): add openweathermap and geolocation services | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `b73bb70` | feat(smart-recommendations): add deepseek recipe and local food services | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `d858663` | feat(smart-recommendations): add catalog seeders | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `b3adcfb` | feat(smart-recommendations): add cities endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `4af72b5` | feat(smart-recommendations): add ingredient catalog endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `4fde434` | feat(smart-recommendations): add recipes endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `81b85bd` | feat(smart-recommendations): add pantry endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `02bfe3d` | feat(smart-recommendations): add location preferences endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `6cd3f8e` | feat(smart-recommendations): add recommendations endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `069d80b` | feat(smart-recommendations): add catalog import hosted service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `3d55e21` | feat(smart-recommendations): register smart recommendations dependencies and dbsets | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `3dc5f2e` | feat(smart-recommendations): add smart recommendations initial migration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations | `76d9061` | chore: bump version to 0.0.7 | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `1578778` | feat(analytics-reporting): add domain value objects | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `b42d308` | feat(analytics-reporting): add domain events | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `b3cd192` | feat(analytics-reporting): add domain commands | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `e7bfca3` | feat(analytics-reporting): add domain queries | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `d26a398` | feat(analytics-reporting): add progress snapshot entity | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `42d7bfb` | feat(analytics-reporting): add user analytics aggregate | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `919cadc` | feat(analytics-reporting): add domain repository interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `899bd50` | feat(analytics-reporting): add domain service interfaces | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `26cb467` | feat(analytics-reporting): add application errors | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `0171057` | feat(analytics-reporting): add analytics command service interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `34e3312` | feat(analytics-reporting): add analytics read models | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `c241447` | feat(analytics-reporting): add analytics query service interface | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `a69ffea` | feat(analytics-reporting): add analytics command service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `e4e59b8` | feat(analytics-reporting): add analytics query service | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `58c55b0` | feat(analytics-reporting): add analytics event handlers | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `1682466` | feat(analytics-reporting): add efc entity type configurations | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `739d177` | feat(analytics-reporting): add efc repositories | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `2f50a0a` | feat(analytics-reporting): add adherence and streak calculators | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `72ae0d5` | feat(analytics-reporting): add pdf report generator | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `0934f55` | feat(analytics-reporting): add dashboard endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `d9b0ce4` | feat(analytics-reporting): add progress chart endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `1a64e35` | feat(analytics-reporting): add streak endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `df5145c` | feat(analytics-reporting): add export report endpoint | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `433231a` | feat(analytics-reporting): register analytics reporting dependencies | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `1cc7070` | feat(analytics-reporting): add analytics reporting initial migration | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting | `1c7ea7c` | chore: bump version to 0.0.8 | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/swagger-status-codes-natural-errors | `e817c1f` | feat(shared): add natural-language error messages and typed ErrorResponse | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/swagger-status-codes-natural-errors | `bba2c5f` | refactor(rest): return typed ErrorResponse from result assemblers | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/swagger-status-codes-natural-errors | `ce31275` | feat(rest): document HTTP status codes in Swagger with natural-language errors | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/swagger-status-codes-natural-errors | `83de12f` | chore: bump version to 1.0.0 | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `9766f91` | feat(shared): add HTTP interceptors and Stripe composable | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `1709e96` | feat(iam): integrate C# .NET backend endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `9b01111` | feat(body-health-metrics): integrate C# .NET backend endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `ad180f4` | feat(nutrition-tracking): integrate C# .NET backend endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `838586c` | feat(activity-wearable): integrate C# .NET backend endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `7e25c1d` | feat(analytics-reporting): integrate C# .NET backend endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `d2deae8` | feat(smart-recommendations): integrate C# .NET backend endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `77dd7d0` | feat(subscriptions-billing): integrate C# .NET backend endpoints | — | 20/06/2026 |
+| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp | feature/integration | `4358e8e` | feat(router,i18n): update routes and locale strings for backend integration | — | 20/06/2026 |
+
 #### 5.2.3.5. Execution Evidence for Sprint Review
+
+Durante el Sprint 3, el equipo completó la implementación y despliegue del backend de NutriSense (`Nutrisense.Platform`) en **.NET 10 / C#** bajo una arquitectura DDD + Clean Architecture distribuida en siete bounded contexts: IAM, BodyHealthMetrics, NutritionTracking, ActivityWearable, SmartRecommendations, Subscriptions & Billing y AnalyticsReporting. Se entregaron los 76 endpoints REST versionados bajo `api/v1/`, integrando servicios externos de inteligencia artificial (Gemini, DeepSeek), fuentes de datos nutricionales (USDA FoodData Central), clima (OpenWeatherMap) y pagos (Stripe). La totalidad de los endpoints fue documentada con **OpenAPI / Swagger UI** y desplegada en producción. Adicionalmente, se realizó la integración completa con el frontend Vue del Sprint 2, que migró de `json-server` a los endpoints reales, habilitando flujos end-to-end: onboarding con saga de cálculo IMC → BMR → TDEE → meta diaria, escaneo de plato con visión por IA, log nutricional persistido, activación de suscripción vía Stripe y generación de recomendaciones contextualizadas con restricciones dietéticas y clima en tiempo real. El Sprint Goal se cumplió al 100 %.
+
+A continuación se presentan screenshots de las principales vistas implementadas y desplegadas durante el sprint.
+
+**Swagger UI — Documentación completa de los 76 endpoints REST**
+
+La interfaz de OpenAPI/Swagger desplegada en producción expone la totalidad de los bounded contexts, sus rutas, parámetros, cuerpos de solicitud y respuesta, y esquemas de seguridad (Bearer JWT). Desde aquí el equipo de frontend y los evaluadores pueden explorar y probar cada endpoint directamente.
+
+![Swagger UI](../assets/img/sprint3/5swagger.png)
+
+**Aplicación web integrada con el backend real**
+
+El frontend Vue, que en el Sprint 2 operaba con datos mock de `json-server`, fue reconectado a los endpoints REST de producción. La imagen muestra la aplicación web en funcionamiento completo: el dashboard refleja datos reales calculados por los servicios de BodyHealthMetrics y AnalyticsReporting, el log nutricional persiste entradas validadas por NutritionTracking, y las recomendaciones son generadas en tiempo real por SmartRecommendations con integración de DeepSeek y OpenWeatherMap.
+
+![Frontend integrado con backend](../assets/img/sprint3/6frontend.png)
+
+El video de demostración del Sprint 3 ilustra el flujo completo end-to-end de la plataforma: registro de usuario y disparo de la saga onboarding (IMC → BMR → TDEE → meta diaria de calorías y macros), escaneo de plato con visión por IA de Gemini y persistencia en el log nutricional, generación de recomendaciones contextualizadas con clima en tiempo real y filtro por restricciones dietéticas, activación de suscripción premium vía Stripe con habilitación automática de funciones en SmartRecommendations, sincronización de actividad desde Google Fit y recálculo del balance calórico, y exportación del reporte PDF de analíticas (función Premium). Toda la navegación ocurre sobre el frontend en producción consumiendo los endpoints reales del backend desplegado.
+
+**URL del video de demostración del Sprint 3:** [URL del Sprint3](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQBgEMJ6UyueRIQnRWhIuMW2AQ68s3YjwHNILv_AZIsMhBA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=gZiw5I)
 
 #### 5.2.3.6. Services Documentation Evidence for Sprint Review
 
+Durante el Sprint 3, el equipo documentó la totalidad de los Web Services de la plataforma NutriSense con **OpenAPI 3**, generada automáticamente por Swashbuckle a partir de las anotaciones del código fuente (`[SwaggerOperation]`, `[SwaggerResponse]`, `[ProducesResponseType]`) y de los DTO de request/response de la capa `Interfaces/REST`. La especificación se expone mediante **Swagger UI**, habilitada de forma intencional en todos los entornos —incluido producción—, lo que permite tanto a los evaluadores como al equipo de frontend explorar y probar cada endpoint directamente desde el navegador, sin configuración adicional.
+
+En esta iteración se documentaron los **78 endpoints REST** versionados bajo `/api/v1/`, distribuidos en los siete bounded contexts del backend. Para cada operación la documentación detalla: el verbo HTTP, la ruta y sintaxis de llamada, los parámetros (path, query y headers), el cuerpo de solicitud, el esquema de respuesta y los códigos de estado, incorporando además mensajes de error en lenguaje natural mediante un tipo `ErrorResponse` localizable por cultura (`Accept-Language`). También se documentó el esquema de seguridad **Bearer JWT** (botón *Authorize* de Swagger UI) y los content-types especiales, como `application/pdf` para la exportación de reportes de analíticas. El principal logro de documentación del sprint fue la incorporación de los códigos de estado HTTP y los `ErrorResponse` tipados a la especificación OpenAPI, entregados en la rama `feature/swagger-status-codes-natural-errors`.
+
+**Acceso a la documentación desplegada**
+
+| Recurso | URL |
+|---|---|
+| Swagger UI (producción) | [https://sense-api.nutriproject.xyz/swagger/index.html](https://sense-api.nutriproject.xyz/swagger/index.html) |
+| OpenAPI JSON (producción) | [https://sense-api.nutriproject.xyz/swagger/v1/swagger.json](https://sense-api.nutriproject.xyz/swagger/v1/swagger.json) |
+| API base URL | `https://sense-api.nutriproject.xyz/api/v1` |
+| Repositorio del Web Service | [https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform) |
+
+**Commits relacionados con Documentación (Sprint 3)**
+
+Rama `feature/swagger-status-codes-natural-errors` del repositorio `nutrisense-platform`:
+
+| Commit Id | Mensaje |
+|---|---|
+| `e817c1f` | feat(shared): add natural-language error messages and typed ErrorResponse |
+| `bba2c5f` | refactor(rest): return typed ErrorResponse from result assemblers |
+| `ce31275` | feat(rest): document HTTP status codes in Swagger with natural-language errors |
+| `83de12f` | chore: bump version to 1.0.0 |
+
+**Convenciones aplicables a todos los endpoints**
+
+- **Base path:** todas las rutas cuelgan de `/api/v1/...`, con enrutamiento en minúsculas y kebab-case.
+- **Content type:** `application/json` para solicitudes y respuestas (excepto la exportación de reportes, que devuelve `application/pdf`).
+- **Autenticación:** los endpoints marcados como *Bearer* requieren la cabecera `Authorization: Bearer <JWT>`, obtenida desde `POST /api/v1/authentication/sign-in`. Los marcados como *Público* permiten acceso anónimo.
+- **Formato de error:** los errores de negocio devuelven un `ErrorResponse` tipado `{ "message": "..." }`; los fallos de autenticación y los no controlados usan `ProblemDetails` (RFC 7807, `application/problem+json`).
+- **Localización:** culturas soportadas `en`, `en-US`, `es`, `es-PE`.
+
+**Distribución de endpoints documentados por bounded context**
+
+| Bounded Context | Endpoints |
+|---|---|
+| IAM (Identity & Access Management) | 11 |
+| Body Health Metrics | 8 |
+| Nutrition Tracking | 14 |
+| Activity & Wearable | 8 |
+| Analytics & Reporting | 5 |
+| Subscriptions & Billing | 11 |
+| Smart Recommendations | 21 |
+| **Total** | **78** |
+
+A continuación se detalla, para cada bounded context, la relación de endpoints documentados con su verbo HTTP, sintaxis de llamada, parámetros, esquema de autenticación y respuesta de éxito. Cada grupo incluye el enlace directo a su sección en la documentación desplegada.
+
+##### IAM — Identity & Access Management
+
+Documentación desplegada: [Authentication](https://sense-api.nutriproject.xyz/swagger/index.html#/Authentication) · [Users](https://sense-api.nutriproject.xyz/swagger/index.html#/Users) · [Sessions](https://sense-api.nutriproject.xyz/swagger/index.html#/Sessions)
+
+| Verbo | Sintaxis de llamada | Parámetros | Auth | Respuesta de éxito |
+|---|---|---|---|---|
+| POST | `/api/v1/authentication/sign-up` | Body: `RegisterUserResource` | Público | `201` · `UserResource` (perfil creado) |
+| POST | `/api/v1/authentication/sign-in` | Body: `LoginUserResource` | Público | `200` · `LoginResponseResource` (userId, token JWT, sessionId) |
+| GET | `/api/v1/users/{id}` | Path: `id` | Bearer | `200` · `UserResource` |
+| GET | `/api/v1/users/by-email` | Query: `email` | Bearer | `200` · `UserResource` |
+| PUT | `/api/v1/users/{id}/health-goal` | Path: `id`; Body: `SetHealthGoalResource` | Bearer | `200` · `UserResource` |
+| PUT | `/api/v1/users/{id}/dietary-restrictions` | Path: `id`; Body: `SetDietaryRestrictionsResource` | Bearer | `200` · `UserResource` |
+| PUT | `/api/v1/users/{id}/profile` | Path: `id`; Body: `UpdateProfileResource` | Bearer | `200` · `UserResource` |
+| DELETE | `/api/v1/users/{id}` | Path: `id` | Bearer | `204` No Content |
+| GET | `/api/v1/users/{id}/dietary-restrictions` | Path: `id` | Bearer | `200` · `string[]` |
+| GET | `/api/v1/users/{userId}/sessions` | Path: `userId` | Bearer | `200` · `SessionResource[]` |
+| POST | `/api/v1/users/{userId}/sessions/{sessionId}/logout` | Path: `userId`, `sessionId` | Bearer | `204` No Content |
+
+##### Body Health Metrics
+
+Documentación desplegada: [Body Metrics](https://sense-api.nutriproject.xyz/swagger/index.html#/Body%20Metrics)
+
+| Verbo | Sintaxis de llamada | Parámetros | Auth | Respuesta de éxito |
+|---|---|---|---|---|
+| POST | `/api/v1/body-metrics` | Body: `RegisterBodyMetricsResource` | Bearer | `201` · `BodyMetricsResource` (IMC/BMR/TDEE calculados) |
+| PUT | `/api/v1/body-metrics/{userId}/weight` | Path: `userId`; Body: `UpdateWeightResource` | Bearer | `200` · `BodyMetricsResource` (recalcula IMC/TDEE) |
+| POST | `/api/v1/body-metrics/{userId}/body-measurements` | Path: `userId`; Body: `RegisterBodyMeasurementResource` | Bearer | `201` · `BodyMetricsResource` |
+| PUT | `/api/v1/body-metrics/{userId}/health-goal` | Path: `userId`; Body: `SetHealthGoalResource` | Bearer | `200` · `BodyMetricsResource` |
+| GET | `/api/v1/body-metrics/by-user/{userId}` | Path: `userId` | Bearer | `200` · `BodyMetricsResource` (`null` si no existe perfil) |
+| GET | `/api/v1/body-metrics/{userId}/bmi` | Path: `userId` | Bearer | `200` · `BmiResource` (value, category) |
+| GET | `/api/v1/body-metrics/{userId}/daily-caloric-goal` | Path: `userId` | Bearer | `200` · `DailyCaloricGoalResource` |
+| GET | `/api/v1/body-metrics/{userId}/weight-history` | Path: `userId`; Query: `from`, `to` | Bearer | `200` · `WeightLogResource[]` |
+
+##### Nutrition Tracking
+
+Documentación desplegada: [Nutrition Logs](https://sense-api.nutriproject.xyz/swagger/index.html#/Nutrition%20Logs) · [Foods](https://sense-api.nutriproject.xyz/swagger/index.html#/Foods)
+
+| Verbo | Sintaxis de llamada | Parámetros | Auth | Respuesta de éxito |
+|---|---|---|---|---|
+| POST | `/api/v1/nutrition-logs` | Body: `LogMealResource` | Bearer | `201` · `NutritionLogResource` |
+| GET | `/api/v1/nutrition-logs/by-user/{userId}` | Path: `userId`; Query: `date` (`yyyy-MM-dd`) | Bearer | `200` · `NutritionLogResource[]` |
+| PATCH | `/api/v1/nutrition-logs/{entryId}` | Path: `entryId`; Body: `UpdateNutritionLogResource` | Bearer | `200` · `NutritionLogResource` |
+| DELETE | `/api/v1/nutrition-logs/{entryId}` | Path: `entryId` (owner del JWT) | Bearer | `204` No Content |
+| GET | `/api/v1/nutrition-logs/by-user/{userId}/daily-summary` | Path: `userId`; Query: `date` | Bearer | `200` · `DailyMacroSummaryResource` |
+| GET | `/api/v1/nutrition-logs/by-user/{userId}/history` | Path: `userId`; Query: `from`, `to` | Bearer | `200` · `NutritionLogResource[]` |
+| POST | `/api/v1/nutrition-logs/scan-dish` | Body: `ScanPhotoResource` | Bearer | `200` · `ScanPreviewResource` (visión Gemini; no persiste) |
+| POST | `/api/v1/nutrition-logs/scan-dish/confirm` | Body: `ConfirmScanResource` | Bearer | `201` · `NutritionLogResource` |
+| POST | `/api/v1/nutrition-logs/scan-menu` | Body: `ScanPhotoResource` | Bearer | `200` · `MenuOptionsPreviewResource` (no persiste) |
+| POST | `/api/v1/nutrition-logs/scan-menu/select` | Body: `SelectMenuOptionResource` | Bearer | `201` · `NutritionLogResource` |
+| GET | `/api/v1/foods` | Query: `query`, `language` | Público | `200` · `FoodSearchResultResource[]` |
+| GET | `/api/v1/foods/{id}` | Path: `id` | Público | `200` · `FoodResource` |
+| POST | `/api/v1/foods` | Body: `RegisterFoodResource` | Bearer (admin) | `201` · `FoodResource` |
+| POST | `/api/v1/foods/import` | Body: `ImportFoodsResource` | Bearer (admin) | `200` · `{ imported }` (importación USDA) |
+
+##### Activity & Wearable
+
+Documentación desplegada: [Activity Logs](https://sense-api.nutriproject.xyz/swagger/index.html#/Activity%20Logs) · [Wearable Connections](https://sense-api.nutriproject.xyz/swagger/index.html#/Wearable%20Connections)
+
+| Verbo | Sintaxis de llamada | Parámetros | Auth | Respuesta de éxito |
+|---|---|---|---|---|
+| POST | `/api/v1/activity-logs` | Body: `LogManualActivityResource` | Bearer | `201` · `ActivityLogResource` (dispara balance calórico) |
+| GET | `/api/v1/activity-logs/by-user/{userId}` | Path: `userId`; Query: `from`, `to` | Bearer | `200` · `ActivityLogResource[]` |
+| GET | `/api/v1/activity-logs/by-user/{userId}/daily-summary` | Path: `userId`; Query: `date` | Bearer | `200` · `DailyActivitySummaryResource` |
+| DELETE | `/api/v1/activity-logs/{id}` | Path: `id`; Query: `userId` | Bearer | `204` No Content |
+| POST | `/api/v1/wearable-connections` | Body: `ConnectDeviceResource` | Bearer | `201` · `WearableConnectionResource` |
+| GET | `/api/v1/wearable-connections/by-user/{userId}` | Path: `userId` | Bearer | `200` · `WearableConnectionResource[]` |
+| POST | `/api/v1/wearable-connections/{id}/sync` | Path: `id` | Bearer | `200` · `WearableConnectionResource` |
+| DELETE | `/api/v1/wearable-connections/{id}` | Path: `id` | Bearer | `204` No Content |
+
+##### Analytics & Reporting
+
+Documentación desplegada: [Analytics](https://sense-api.nutriproject.xyz/swagger/index.html#/Analytics)
+
+| Verbo | Sintaxis de llamada | Parámetros | Auth | Respuesta de éxito |
+|---|---|---|---|---|
+| GET | `/api/v1/analytics/dashboard/by-user/{userId}` | Path: `userId`; Query: `date` | Bearer | `200` · `DashboardResource` |
+| GET | `/api/v1/analytics/progress/by-user/{userId}` | Path: `userId`; Query: `from`, `to` | Bearer | `200` · `ProgressChartResource` |
+| GET | `/api/v1/analytics/streaks/by-user/{userId}` | Path: `userId` | Bearer | `200` · `StreakResource` |
+| POST | `/api/v1/analytics/dashboard-views/{userId}` | Path: `userId` | Bearer | `204` No Content |
+| POST | `/api/v1/analytics/export/{userId}` | Path: `userId`; Query: `from`, `to` | Bearer | `200` · `application/pdf` (requiere Premium) |
+
+##### Subscriptions & Billing
+
+Documentación desplegada: [Subscription Plans](https://sense-api.nutriproject.xyz/swagger/index.html#/Subscription%20Plans) · [User Subscriptions](https://sense-api.nutriproject.xyz/swagger/index.html#/User%20Subscriptions) · [Payment Methods](https://sense-api.nutriproject.xyz/swagger/index.html#/Payment%20Methods) · [Payments](https://sense-api.nutriproject.xyz/swagger/index.html#/Payments)
+
+| Verbo | Sintaxis de llamada | Parámetros | Auth | Respuesta de éxito |
+|---|---|---|---|---|
+| GET | `/api/v1/subscription-plans` | — | Público | `200` · `SubscriptionPlanResource[]` |
+| GET | `/api/v1/subscription-plans/{key}` | Path: `key` | Público | `200` · `SubscriptionPlanResource` |
+| POST | `/api/v1/user-subscriptions` | Body: `SelectSubscriptionPlanResource` | Bearer | `201` · `UserSubscriptionResource` (activación vía Stripe) |
+| GET | `/api/v1/user-subscriptions/by-user/{userId}` | Path: `userId` | Bearer | `200` · `UserSubscriptionResource` |
+| POST | `/api/v1/user-subscriptions/{id}/cancel` | Path: `id`; Body: `CancelSubscriptionResource` | Bearer | `200` · `UserSubscriptionResource` |
+| POST | `/api/v1/user-subscriptions/{id}/renew` | Path: `id` | Bearer | `200` · `UserSubscriptionResource` |
+| PUT | `/api/v1/user-subscriptions/{id}/plan` | Path: `id`; Body: `ChangeSubscriptionPlanResource` | Bearer | `200` · `UserSubscriptionResource` |
+| POST | `/api/v1/payment-methods` | Body: `RegisterPaymentMethodResource` | Bearer | `201` · `PaymentMethodResource` |
+| GET | `/api/v1/payment-methods/by-user/{userId}` | Path: `userId` | Bearer | `200` · `PaymentMethodResource[]` |
+| DELETE | `/api/v1/payment-methods/{id}` | Path: `id` | Bearer | `204` No Content |
+| GET | `/api/v1/payments/by-subscription/{subscriptionId}` | Path: `subscriptionId` | Bearer | `200` · `PaymentRecordResource[]` |
+
+##### Smart Recommendations
+
+Documentación desplegada: [Recommendations](https://sense-api.nutriproject.xyz/swagger/index.html#/Recommendations) · [Ingredient Catalog](https://sense-api.nutriproject.xyz/swagger/index.html#/Ingredient%20Catalog) · [Pantry](https://sense-api.nutriproject.xyz/swagger/index.html#/Pantry) · [Location Preferences](https://sense-api.nutriproject.xyz/swagger/index.html#/Location%20Preferences) · [Cities](https://sense-api.nutriproject.xyz/swagger/index.html#/Cities) · [Recipes](https://sense-api.nutriproject.xyz/swagger/index.html#/Recipes)
+
+| Verbo | Sintaxis de llamada | Parámetros | Auth | Respuesta de éxito |
+|---|---|---|---|---|
+| GET | `/api/v1/recommendations/by-user/{userId}` | Path: `userId` | Bearer | `200` · `RecommendationCardResource[]` |
+| POST | `/api/v1/recommendations/generate/{userId}` | Path: `userId`; Body: `GenerateRecommendationResource` | Bearer | `200` · `RecommendationCardResource` |
+| GET | `/api/v1/ingredient-catalog` | — | Público | `200` · `IngredientCatalogItemResource[]` |
+| GET | `/api/v1/pantry/by-user/{userId}` | Path: `userId` | Bearer | `200` · `PantryResource` (`null` si no existe) |
+| POST | `/api/v1/pantry/{userId}/items` | Path: `userId`; Body: `RegisterPantryItemsResource` | Bearer | `200` · `PantryResource` |
+| DELETE | `/api/v1/pantry/{userId}/items/{itemId}` | Path: `userId`, `itemId` | Bearer | `200` · `PantryResource` |
+| PATCH | `/api/v1/pantry/{userId}/items/{id}` | Path: `userId`, `id`; Body: `UpdatePantryItemResource` | Bearer | `200` · `PantryResource` |
+| GET | `/api/v1/location-preferences/by-user/{userId}` | Path: `userId` | Bearer | `200` · `LocationPreferenceResource` |
+| PUT | `/api/v1/location-preferences/{userId}/travel-mode/enable` | Path: `userId`; Body: `EnableTravelModeResource` | Bearer | `200` · `LocationPreferenceResource` |
+| PUT | `/api/v1/location-preferences/{userId}/travel-mode/disable` | Path: `userId` | Bearer | `200` · `LocationPreferenceResource` |
+| POST | `/api/v1/location-preferences/{userId}/detect` | Path: `userId`; Body: `DetectLocationResource` | Bearer | `200` · `LocationPreferenceResource` |
+| PUT | `/api/v1/location-preferences/{userId}/home-city` | Path: `userId`; Body: `SetHomeCityResource` | Bearer | `200` · `LocationPreferenceResource` |
+| GET | `/api/v1/cities` | — | Público | `200` · `CityResource[]` |
+| GET | `/api/v1/cities/search` | Query: `q`, `limit` | Público | `200` · `CitySearchResultResource[]` |
+| GET | `/api/v1/cities/{id}` | Path: `id` | Público | `200` · `CityResource` |
+| POST | `/api/v1/cities` | Body: `ImportCityResource` | Bearer | `200` · `CityResource` |
+| GET | `/api/v1/cities/{id}/weather` | Path: `id` | Bearer | `200` · `WeatherResource` (OpenWeatherMap) |
+| GET | `/api/v1/recipes` | Query: `goal`, `maxPrepMinutes` | Público | `200` · `RecipeResource[]` |
+| GET | `/api/v1/recipes/{id}` | Path: `id` | Público | `200` · `RecipeResource` |
+| POST | `/api/v1/recipes/suggest/{userId}` | Path: `userId` | Bearer | `200` · `RecipeResource` |
+| POST | `/api/v1/recipes/import` | Body: `ImportRecipesResource` | Bearer (admin) | `200` · `{ generated }` (recetas IA) |
+
+**Ejemplos de llamada y explicación del response**
+
+A modo ilustrativo se presentan, con datos de muestra, ejemplos representativos de las operaciones más relevantes del backend, mostrando el cuerpo de solicitud, la respuesta de éxito y su interpretación.
+
+*1. Autenticación — `POST /api/v1/authentication/sign-in`*
+
+Solicitud:
+
+```json
+{ "email": "ana.torres@example.com", "password": "Str0ng!Pass", "deviceLabel": "iPhone 14" }
+```
+
+Respuesta `200 OK`:
+
+```json
+{ "userId": 42, "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "sessionId": 1001 }
+```
+
+El response devuelve el identificador del usuario, el **token JWT** (HMAC-SHA256, emisor `nutrisense-platform`, audiencia `nutrisense-clients`) que debe enviarse como `Authorization: Bearer <token>` en los endpoints protegidos, y el `sessionId` de la sesión recién abierta. Ante credenciales incorrectas el endpoint responde `401` y, si el correo no existe, `404`.
+
+*2. Registro de métricas corporales — `POST /api/v1/body-metrics`*
+
+Solicitud:
+
+```json
+{
+  "userId": 42, "heightCm": 168.5, "weightKg": 64.0, "dateOfBirth": "1995-04-12",
+  "biologicalSex": "F", "activityLevel": "Moderate", "goal": "Lose", "weeklyRateKg": 0.5
+}
+```
+
+Respuesta `201 Created` (extracto):
+
+```json
+{
+  "userId": 42, "currentWeightKg": 64.0, "bmiValue": 22.5, "bmiCategory": "Normal",
+  "bmr": 1395.0, "tdee": 2162.0, "activeGoal": "Lose", "activeGoalCaloricAdjustment": -550.0,
+  "dailyCalories": 1612, "proteinG": 121.0, "carbsG": 160.0, "fatG": 45.0, "fiberG": 25.0
+}
+```
+
+El response materializa la saga de cálculo del onboarding: a partir de los datos antropométricos el servicio computa el **IMC** y su categoría OMS, el **BMR** (Mifflin-St Jeor), el **TDEE** según el nivel de actividad y, en función de la meta, el ajuste calórico y la **meta diaria** de calorías y macronutrientes. Si el usuario ya tenía métricas registradas, devuelve `409`.
+
+*3. Escaneo de plato con IA — `POST /api/v1/nutrition-logs/scan-dish`*
+
+Solicitud:
+
+```json
+{ "userId": 42, "imageBase64OrUri": "data:image/jpeg;base64,/9j/4AAQSkZJRg..." }
+```
+
+Respuesta `200 OK` (extracto):
+
+```json
+{
+  "items": [
+    { "foodId": 88, "nameEn": "Grilled chicken", "nameEs": "Pollo a la parrilla",
+      "estimatedQuantityG": 220.0, "caloriesPer100g": 165.0, "proteinPer100g": 31.0,
+      "carbsPer100g": 0.0, "fatPer100g": 3.6, "isEstimate": true }
+  ]
+}
+```
+
+El endpoint analiza la foto del plato mediante visión por IA (Gemini) y devuelve una **vista previa** de los alimentos detectados con su cantidad estimada y aporte nutricional, sin persistir nada todavía (`isEstimate: true`). El usuario confirma posteriormente el registro con `POST /api/v1/nutrition-logs/scan-dish/confirm`. Si la imagen no puede analizarse, responde `422`.
+
+*4. Activación de suscripción — `POST /api/v1/user-subscriptions`*
+
+Solicitud:
+
+```json
+{ "userId": 42, "planKey": "premium", "paymentMethodId": 55, "billingPeriod": "monthly" }
+```
+
+Respuesta `201 Created` (extracto):
+
+```json
+{
+  "id": 900, "userId": 42, "planKey": "premium", "status": "active", "billingPeriod": "monthly",
+  "periodStart": "2026-06-20T00:00:00.000Z", "periodEnd": "2026-07-20T00:00:00.000Z",
+  "stripeSubscriptionId": "sub_1Nxyz...", "paymentMethodId": 55
+}
+```
+
+El response confirma la suscripción activa con su periodo de vigencia y el identificador de la suscripción en **Stripe**. Si el cobro no puede procesarse devuelve `402`, y si el usuario ya cuenta con una suscripción activa, `409`.
+
+*5. Exportación de reporte PDF (Premium) — `POST /api/v1/analytics/export/{userId}`*
+
+Llamada: `POST /api/v1/analytics/export/42?from=2026-06-01&to=2026-06-20`
+
+Respuesta `200 OK`: el endpoint devuelve directamente un archivo **PDF** (`Content-Type: application/pdf`) con el reporte de analíticas del rango solicitado. Por tratarse de una función Premium, si el usuario no posee dicha suscripción responde `403`.
+
+**Evidencia de interacción con la documentación desplegada**
+
+La siguiente captura muestra la interfaz Swagger UI desplegada en producción, donde se exponen los siete bounded contexts con sus respectivas operaciones agrupadas por tag. Desde esta interfaz es posible expandir cada endpoint, inspeccionar sus parámetros y esquemas, autenticarse con un token JWT mediante el botón **Authorize** y ejecutar llamadas reales con datos de muestra a través de la función *Try it out*.
+
+![Swagger UI desplegado en producción con los endpoints documentados](../assets/img/sprint3/5swagger.png)
+
 #### 5.2.3.7. Software Deployment Evidence for Sprint Review
+
+Durante el Sprint 3 se realizaron los despliegues correspondientes a los tres productos que conforman la plataforma NutriSense: la Landing Page (ya publicada desde el Sprint 1 y sin cambios en este sprint), la Web Application (reconfigurada para consumir el backend real en lugar del mock), y el nuevo Web Service (`nutrisense-platform`), el backend .NET 10 desplegado por primera vez en producción. El proceso abarcó la creación del repositorio del backend, el aprovisionamiento de una base de datos MySQL en la nube, la configuración de variables de entorno para conexión con servicios externos, y el despliegue continuo del backend mediante Coolify. A continuación se describen los pasos realizados.
+
+##### Creación del repositorio en GitHub
+
+Se creó el repositorio público `nutrisense-platform` bajo la organización `upc-pre-202610-1asi0730-12053-nutrisens` en GitHub. Este repositorio centraliza el código fuente del backend .NET 10 organizado por bounded contexts y sirve como base para el despliegue continuo mediante Coolify.
+
+![Repositorio nutrisense-platform en GitHub](../assets/img/sprint3/0repositorio_platform.png)
+
+[Link del repositorio nutrisense-platform](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform)
+
+##### Configuración de ramas bajo Gitflow
+
+Se estableció la estructura de ramas siguiendo Gitflow:
+
+- `main` → rama de producción (fuente de despliegue)
+- `develop` → rama de integración
+- `feature/*` → ramas de desarrollo por bounded context
+
+Todo el trabajo fue integrado mediante Pull Requests desde las ramas `feature/*` hacia `develop`, y finalmente desde `develop` hacia `main` como parte del release `v1.0.0`.
+
+##### Merge a main y creación del tag de release
+
+Una vez completadas todas las features del sprint, se realizó el merge de `develop` a `main` mediante un Pull Request en GitHub, etiquetando el commit resultante como `v1.0.0`.
+
+##### Aprovisionamiento de la base de datos MySQL en la nube
+
+Para la persistencia de datos del backend se aprovisionó una instancia MySQL en la nube. Se configuraron las credenciales de acceso, el nombre de la base de datos y las reglas de red necesarias para permitir la conexión desde el servidor de Coolify. El esquema de tablas fue generado automáticamente por EF Core al iniciar la aplicación mediante `Database.EnsureCreated()`.
+
+![Base de datos MySQL aprovisionada](../assets/img/sprint3/1mysql.png)
+
+##### Configuración del despliegue del backend en Coolify
+
+Para habilitar el despliegue continuo del backend (`nutrisense-platform`) desde el repositorio se siguieron los pasos:
+
+1. Ingresar al panel de administración de Coolify
+2. Crear una nueva aplicación seleccionando **GitHub** como fuente
+3. Conectar el repositorio `nutrisense-platform` de la organización `upc-pre-202610-1asi0730-12053-nutrisens`
+4. Configurar los parámetros de build:
+   - **Build pack:** Dockerfile
+   - **Branch:** `main`
+5. Asignar el dominio personalizado `api.nutriproject.xyz` en la sección **Domains**
+6. Configurar las variables de entorno necesarias (detalladas en el paso siguiente)
+7. Guardar la configuración y ejecutar el primer despliegue manual
+
+Coolify procesó el `Dockerfile` del repositorio, construyó la imagen .NET 10, y levantó el contenedor del backend bajo el dominio configurado.
+
+![Backend desplegado en Coolify](../assets/img/sprint3/2platform.png)
+
+##### Configuración de variables de entorno
+
+El backend requirió la configuración de variables de entorno para la conexión a la base de datos MySQL y para la integración con los servicios externos: Gemini (visión por IA), DeepSeek (estimación de macros y recomendaciones), USDA FoodData Central (catálogo de alimentos), OpenWeatherMap (clima en tiempo real), Google Fit (wearables) y Stripe (pagos). Estas variables fueron registradas de forma segura en el panel de Coolify bajo la sección **Environment Variables**, sin exponerlas en el código fuente.
+
+![Variables de entorno configuradas en Coolify](../assets/img/sprint3/3env.png)
+
+##### Reconexión del frontend al backend real
+
+Con el backend operativo en producción, el frontend Vue (`nutrisense-webapp`) fue actualizado para apuntar a los endpoints reales de `api.nutriproject.xyz` en lugar del mock `json-server` utilizado durante el Sprint 2. Se actualizó la variable de entorno `VITE_API_BASE_URL` en la configuración de Coolify del frontend y se ejecutó un nuevo despliegue. La imagen a continuación muestra la aplicación web funcionando de extremo a extremo con datos reales.
+
+![Web App integrada con el backend en producción](../assets/img/sprint3/4webapp_desplegada_ajustada_con_backend.png)
+
+##### Swagger UI disponible en producción
+
+La documentación OpenAPI/Swagger generada automáticamente por el backend fue habilitada en el entorno de producción, permitiendo explorar y probar los 76 endpoints REST desde el navegador sin configuración adicional.
+
+![Swagger UI en producción](../assets/img/sprint3/5swagger.png)
+
+##### URLs de despliegue
+
+| Producto | URL |
+|---|---|
+| Landing Page | [https://upc-pre-202610-1asi0730-12053-nutrisens.github.io/nutrisense-website/index.html](https://upc-pre-202610-1asi0730-12053-nutrisens.github.io/nutrisense-website/index.html) |
+| Web Application | [https://app-sense.nutriproject.xyz](https://app-sense.nutriproject.xyz) |
+| Web Service (API) | [https://sense-api.nutriproject.xyz/api/v1](https://sense-api.nutriproject.xyz/api/v1) |
+| Swagger UI | [https://sense-api.nutriproject.xyz/swagger/index.html](https://sense-api.nutriproject.xyz/swagger/index.html) |
 
 #### 5.2.3.8. Team Collaboration Insights during Sprint
 
