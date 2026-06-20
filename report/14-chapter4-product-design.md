@@ -1279,19 +1279,19 @@ A continuación, se detalla la matriz de interdependencias que asegura la reacti
 | :--- | :--- | :--- |
 | **Identity:** User Registered | **Body Metrics:** Register Body Metrics | Inicializa el perfil de salud y metas al crear la cuenta. |
 | **Nutrition:** Consumption Updated (Created/Updated/Deleted) | **Analytics:** Generate Progress Insights | Sincroniza indicadores y gráficas de consumo diario ante cualquier cambio en el log. |
-| **Nutrition:** Consumption Updated (Created/Updated/Deleted) | **Smart Recs:** Generate Recommendation | Ajusta las sugerencias alimenticias en tiempo real según los macros consumidos y el déficit calórico del día. |
 | **Activity:** Caloric Balance Adjusted | **Analytics:** Generate Progress Insights | Refleja el gasto energético por actividad física o sincronización con wearable en los reportes de progreso. |
 | **Body Metrics:** TDEE Calculated | **Analytics:** Generate Progress Insights | Compara objetivos metabólicos teóricos frente al progreso real registrado. |
 | **Body Metrics:** TDEE Calculated | **Smart Recs:** Generate Recommendation | Personaliza las porciones y sugerencias de comida según el perfil físico y la meta calórica actualizada del usuario. |
 | **Subscriptions:** Benefits Enabled | **Smart Recs:** Unlock Premium Features | Habilita el acceso a algoritmos de recomendación avanzada y análisis detallado por IA. |
 | **Subscriptions:** Benefits Disabled | **Smart Recs:** Lock Premium Features | Restringe el acceso a funcionalidades avanzadas tras la expiración o cancelación del plan. |
+| **Identity:** Goal Defined | **Body Metrics:** Calculate Daily Caloric Goal | Recalcula la meta calórica diaria cuando el usuario actualiza su objetivo de salud. |
 
 **EventStorming**
 
 ![EventStorming Diagram](../assets/img/artifacts/eventStorming.png)
 
 Para poder apreciar mejor el EventStorming le recomendamos ingresar al siguiente link:
-<br>[Visualizar EventStorming en Miro](https://miro.com/app/live-embed/uXjVGhe0w8o=/?embedMode=view_only_without_ui&moveToViewport=-3505%2C-10094%2C61440%2C33040&embedId=964424783628)
+<br>[Visualizar EventStorming en Miro](https://miro.com/welcomeonboard/aytKTWo5cmFZLzZ5QmhqRmRHY3Z6amtFc0l0aVQyMGlpQkZNUHNuaHdReHJmYjN5cGhQeFNSL3dOQ0tham1JM2pZc1VSeG5aWEpMSXh4ZzUrWGV6RGpqSXhvNThQV28wWnlBTXZDMFE5SXFqTHAzUHpKZUw3NDNvbWFuYy9mRCt3VHhHVHd5UWtSM1BidUtUYmxycDRnPT0hdjE=?share_link_id=50406416456)
 
 ### 4.6.2. Software Architecture Context Diagram
 
