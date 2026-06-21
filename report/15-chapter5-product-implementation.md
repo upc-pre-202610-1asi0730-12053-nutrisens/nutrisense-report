@@ -1111,11 +1111,11 @@ Durante el Sprint 2, todos los miembros del equipo participaron activamente en l
   </tr>
   <tr>
     <td colspan="2">Sprint 3 Velocity</td>
-    <td colspan="2">89 Story Points</td>
+    <td colspan="2">109 Story Points</td>
   </tr>
   <tr>
     <td colspan="2">Sum of Story Points</td>
-    <td colspan="2">89 Story Points</td>
+    <td colspan="2">109 Story Points</td>
   </tr>
 </table>
 
